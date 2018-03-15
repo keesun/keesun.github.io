@@ -1,4 +1,0 @@
-<p>AbstractCommandController :: 특정 객체로 request의 파라미터를 바인딩 할 수 있습니다. 폼 기능은 제공하지 않지만 validation을 할 수 있으며 바인딩 객체를 사용하여 원하는 일을 할 수 있습니다.</p>
-<p>AbstractFormController :: submit 기능을 제공하기 위한 추상 클레스 입니다. 사용자의 화면의 폼에 입력할 값을 채우면 각각의 필드로 바인딩하고 validation 할 수 있으며 폼을 보여줄 view와 입력이 성공적으로 완료 했을 때 보여줄 success view를 구현해야 합니다.</p>
-<p>SimpleFormController :: 위에 있는 폼 컨트롤러 보다 진보한 것으로 폼 입력을 받을 커맨드 객체와 폼 view, success view를 설정할 수 있습니다.<br />이 녀석 라이프 사이클이 굉장히 복잡한 것 같던데 레퍼런스에는 설명이 없군요.</p>
-<p>AbstractWizardFormController :: <br />이 클레스를 상속하는 클레스는 validatePage(), processFinish(), processCancel() 세 개의 메소드를 구현해야 합니다. 모델 객체를 view에게 넘겨 줄 때 referenceData(..) 메소드를 재정의 하여 사용할 수 있습니다. <br />getTargetPage() 를 사용하여 페이지를 넘길 수 있으며, 기본 바인딩과 validation을 재정의 하고 싶다면 onBindAndValidate()를 사용합니다.<br />getTargetPage() 에서 현재 페이지가 검증에 실패하면 앞이나 뒤로 움직일 수 있도록 setAllowDirtyBack() 와 setAllowDirtyForward()를 사용할 수 있습니다.</p>

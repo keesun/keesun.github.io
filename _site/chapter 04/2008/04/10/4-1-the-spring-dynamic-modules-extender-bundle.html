@@ -1,8 +1,0 @@
-<p>스프링 DM은 org.springframework.osgi.bundle.extender라는 번들을 제공한다.</p>
-<p>이 번들은 번들에서 사용할 스프링 application context를 생성해준다. 스프링 웹 애플리케이션의 ContextLoaderListener와 같은 역할을 한다.</p>
-<p>extender 번들이 설치 installed 되고 시작 started 되면 이미 Activce인 상태의 번들 중에 스프링 DM을 사용하는 번들을 찾아서 application context를 만들어 준다.</p>
-<p>또한, 번들 시작 이벤트를 주시 listening 하다가 스프링 DM을 사용한 번들이 시작되면 application context를 만들어 준다.</p>
-<p>5.1에서 extender가 어떻게 스프링 DM을 사용한 번들로 인식하는지 알아본다.</p>
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">Extender Pattern</p>
-<p>"allow other bundles to extend the functionality in a specific domain"<br />특정 도메인에 있는 기능을 다른 번들들이 확장할 수 있도록 하는 패턴.</div>
-<p></p>

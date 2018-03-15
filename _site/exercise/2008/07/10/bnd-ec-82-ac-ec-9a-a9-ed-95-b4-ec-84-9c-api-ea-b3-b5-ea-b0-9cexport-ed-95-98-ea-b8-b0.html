@@ -1,7 +1,0 @@
-<p>Export-Package 헤더를 사용하면 된다. 예를 들어 다음과 같이..</p>
-<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Export-Package: whiteship.service.*;version=1.0.0</div>
-<p>뒤에 버전은 해당 패키지를 1.0.0 버전으로 공개하겠다는 설정이다. 버전에 대해서는 조금 있다가 정리하자. bnd가 저 설정을 읽으면 다음 작업을 하게 된다.</p>
-<p>1. 해당 JAR(번들) 안에 명시한 패키지가 들어있는지 검사한다.<br />2. MANIFEST.MF 파일에 대상이 되는 패키지를 Export-Package 헤더에 추가한다.</p>
-<p>*와 !를 적절히 사용해서 다음과 같이 작성할 수 도 있다.</p>
-<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Export-Package: !com.*, *</div>
-<p>com. 이하 모든 패키지는 제외하고 그 나머지 패키지들만 공개하겠다는 설정이다. 이 얼마나 간단한가.. 귿!</p>

@@ -1,5 +1,0 @@
-<p>참조: Effective Java 2nd Edition Item 4. Enforce noninstantiability with private constructor</p>
-<p>때로는 static 메소드나 static 필드만 가지고 있는 클래스를 작성하고 싶을 떄가 있을 것이다. (ㅇㅇ. XXUtils 같은 클래스들이 그런 경우겠다.)</p>
-<p>이때 abstract 클래스로 만드는 건 효과가 없다.<br />- 상속 받아서 객체 생성할 수 도 있으니깐..<br />- 또 abstract를 보면 왠지 상속받아서 사용하도록 만들어둔 클래스로 생각하게 한다.</p>
-<p>public class UtilityClass {<br />&nbsp; // 객체 생성 방지<br />&nbsp; private UtilityClass(){<br />&nbsp; &nbsp; throw new AssertionError();<br />&nbsp; }<br />}</p>
-<p>명시적으로 기본 생성자라를 private으로 설정한다.<br />- 생성자 안에서 던지는 AssertionError는 보험.<br />- 반직관적이기 때문에 생성자에는 주석을 달아주는게 좋다.<br />- 상속 받아도 소용없다. 명시적이든 암묵적이든 상위 클래스 생성자를 호출할테니까..</p>

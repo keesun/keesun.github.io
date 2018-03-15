@@ -1,6 +1,0 @@
-<p><font size="3"><span style="font-weight: bold;">OSGi 번들</span></font></p>
-<p>OSGi에서 배포 단위는 번들.<br />번들은 런타임시에 세 가지 steady 상태 중 하나가 됨. installed, resolved, active.<br />번들은 서비스를 OSGi 서비스(객체) 레지스트리에 등록하여 다른 번들이 해당 서비스를 사용하도록 할 수 있슴.<br />번들은 패키지를 노출 시켜서 다른 번들들이 노출 된 타입들을 import 해서 사용하도록 할 수 있음.</p>
-<p><font size="3"><span style="font-weight: bold;">스프링 Application Context</span></font></p>
-<p>스프링의 기본적인 모듈화 단위는 application context.<br />이 안에 스프링이 관리할&nbsp; 빈들을 담고 있다.<br />상속 구조를 가질 수 있다. 하위 context에서 상위 context에 있는 빈들을 참조할 수 있지만, 그 반대는 안 된다.<br />(Spring MVC를 잘 보면 이 구조가 있죠.)<br />스프링의 exporter나 factory bean들은 외부 클라이언트쪽 application context에서 해당 bean에 대한 레퍼런스를 사용할 수 있도록 제공해준다.<br />(Spring의 Expoter들은 JMS나 RPC 쪽을 보면 잘 나와 있습니다. 아주 일관된 패턴으로 Exporter들을 제공해 줍니다.)</p>
-<p><font size="3"><span style="font-weight: bold;">OSGi 번들과&nbsp; 스프링 Application Context</span></font></p>
-<p>잘 어울린다.<br />스프링 DM을 사용해서, 번들은 번들 내부에 있는 객체들(bean)을 생성하고, 설정하고, 묶고, 꾸며줄 applicaion context를 가질 수 있다.<br />그런 Bean들 중에 일부를 선택적으로 OSGi 서비스로 노출시켜서 외부의 다른 번들에서 사용할 수 있도록 할 수 있고, 그런 빈들은 깔끔하게<font style="color: rgb(0, 153, 102);" size="3"><span style="font-weight: bold;">Transparently</span></font> 다른 OSGi 서비스에 주입 될 수 있다.</p>

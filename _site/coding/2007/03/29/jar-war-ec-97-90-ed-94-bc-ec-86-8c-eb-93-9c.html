@@ -1,6 +1,0 @@
-<p><img src="/assets/cl117.jpg" class="aligncenter" width="237" height="43" alt="사용자 삽입 이미지" /><br />이렇게 두 개의 프로젝트가 있습니다. 아래 있는 녀석이 그냥 java 프롲게트이고 위에 있는 녀석이 war로 웹 프로젝트입니다.</p>
-<p>문제는 아래있는 프로젝트의 src에 있는 파일들을 jar로 묶어서 웹 프로젝트의 web/WEB-INF/lib에 넣어 줄 때 발생했습니다.</p>
-<p><img src="/assets/dl110.jpg" class="aligncenter" width="300" height="304" alt="사용자 삽입 이미지" />classicManiaComponent_v0.1.jar로 넣어 뒀는데요. </p>
-<p>문제는..jar프로젝트가 계속해서 수정, 개발이 되는데 이걸 어떻게 war에 반영시키느냐 입니다.</p>
-<p>현재 사용하고 있는 방법은 다소 복잡한 룰을 필요로 합니다.<br />1. war 프로젝트에서 개발을 할 때는 jar 프로젝트를 업데이트 받은 뒤 jar로 묶어서 war에 넣어 준 다음에 해야 합니다.<br />2. jar 파일을 war 프로젝트에 넣기 전에는 기존에 있던 jar파일을 삭제 한 뒤에 넣어 줘야 합니다. - 덮어쓰기가 제대로 안되서 그런지 다소 황당한 경우가 생겼었습니다.(1시간 뺏겼습니다.ㅠ.ㅠ)</p>
-<p>Ant를 잘 쓰면 이런 귀찮은 일을 줄일 수 있을까요?</p>

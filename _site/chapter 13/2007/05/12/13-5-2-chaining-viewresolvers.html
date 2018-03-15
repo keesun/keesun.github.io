@@ -1,9 +1,0 @@
-<p>다수의 ViewResolver들을 등록해 둘 수 있습니다. 그 때 특정 view 이름을 해석할 View Resolver들을 순서대로 나열하는 것을 Chaining ViewResolver라고 하는 것 같습니다. ViewResolver들의 순서는 Ordered 인터페이스를 사용하여 설정할 수 있습니다.</p>
-<p>레퍼런스의 예를 보겠습니다.
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;<br />&nbsp; &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/&gt;<br />&nbsp; &lt;property name="prefix" value="/WEB-INF/jsp/"/&gt;<br />&nbsp; &lt;property name="suffix" value=".jsp"/&gt;<br />&lt;/bean&gt;</p>
-<p>&lt;bean id="excelViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver"&gt;<br />&nbsp; &lt;property name="order" value="1"/&gt;<br />&nbsp; &lt;property name="location" value="/WEB-INF/views.xml"/&gt;<br />&lt;/bean&gt;</p>
-<p>&lt;!-- in views.xml --&gt;</p>
-<p>&lt;beans&gt;<br />&nbsp; &lt;bean name="report" class="org.springframework.example.ReportExcelView"/&gt;<br />&lt;/beans&gt;</div>
-<p>이렇게 등록 해두면 InternalResourceViewResolver는 특성상 ViewReslove 체인의 맨 마지막에 위치 하기 때문에 굳이 ExcelViewResolver에 order 속성에 숫자를 주지 않아도 되겠죠.</p>
-<p>만약에 해당 ViewResolver에서 적당한 view를 찾지 못하면 그 다음 ViewResolver를 사용하여 찾게 됩니다. 끝까지 못찾으면 Exception이 발생합니다.</p>
-<p><span style="background-color: rgb(255, 218, 237);">InternalResouceViewResolver와 VelocityViewResolver, FreeMarkerViewResolver 들은 맨 뒤에 위치 해야 합니다.</span><br style="background-color: rgb(255, 218, 237);" /></p>

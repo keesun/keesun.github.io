@@ -1,9 +1,0 @@
-<p>오늘은 몸 상태가 안 좋아서 많이 살펴보진 못했습니다.</p>
-<p>일단은 간단한 웹 애플리케이션에 XQuared를 붙여봤습니다.</p>
-<p><img src="/assets/do426.jpg" class="aligncenter" width="600" height="424" alt="사용자 삽입 이미지" />버튼 이미지파일을 찾지 못해서 이런 화면을 보게 되었습니다.</p>
-<p>IE로 보면 조금 다른 화면으로 보입니다.<br /><img src="/assets/do427.jpg" class="aligncenter" width="600" height="480" alt="사용자 삽입 이미지" />예제 코드 작성은 XQueared 소스 파일과 동봉되어 있는 예제 코드 중에서 form_and_textarea.html을 참조하였습니다.</p>
-<p>해결해야할 문제는 js에서 참조하는 이미지 파일들의 위치인데... js중에 이런 구문을 발견했습니다.</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; this.config.imagePathForDefaultToobar = 'img/toolbar/';</p>
-<p>이러면, js를 사용하고 있는 곳을 기점으로 이미지 기본 폴더를 설정하게 되는 듯 합니다. 따라서 다음과 같은 패키지 구조에서..</p>
-<p><img src="/assets/do428.jpg" class="aligncenter" width="217" height="625" alt="사용자 삽입 이미지" />form.jsp에서 위의 js 파일을 사용한다면, post/img/toolbar 폴더 안에 이미지가 들어있어야 합니다. 그런데 이미지를 그렇게 관리하진 않겠죠. 이미지는 위의 폴더 구조처럼 web/img 안에 모두 두고, 그 안에 toolbar 폴더를 생성하고 그 안에 둘 것입니다.</p>
-<p>그럼.. js 파일에서 절대경로를 참조하도록 하려면 어떻게 수정해야 할까요.. 글쎄요.. jsp도 약하고, 자바스크립트는 문외한이라 좀 더 살펴봐야 될 것 같습니다. 어지러워서 이만;; 감기야 떠나라...ㅠ.ㅠ</p>

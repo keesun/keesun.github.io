@@ -1,8 +1,0 @@
-<p>ConcurrentModificationException 을 처음 본 것은 영회 형이 Agile Java 블러그에 올려두신 글을 통해서 입니다. 그 글의 요지를 파악하지 못하고 계속 섯부른 질문을 계속 하는 저의 모습이 부끄럽게 느껴집니다.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169)"><span style="font-weight: bold;">Checked Exception과 Unchecked Exception의 차이</span></p>
-<p>Check Exception을 발생하는 메소드를 사용 할 경우에는 반드시 메소드 헤드 부분에 throws XXXException 이라고 명시를 해서 이 메소드를 호출하는 다른 메소드에게 Exception 처리에 대한 책임을 넘겨주거나 try-catch로 잡아야 합니다.</p>
-<p>Unchecked Exception을 발생시킬 수 있는 메소드를 사용할 경우에는 경우에는 아무것도 안해도 됩니다. 따라서 코드처리가 훨~씬 간편합니다. 하지만 Unchecked Exception이 발동하면 프로그램이 바로 에러를 내면서 멈춰버립니다. 또 하지만 Unchecked Exception도 try-catch로 잡거나 throws 를 사용해서 다른 메소드에게 넘겨버릴 수도 있습니다.</p></div>
-<p>
-둘 중에 어떤 것이 좋을까요? 저도 잘 모르겠습니다.</p>
-<p>일단 IO관련된 Java API를 사용하게 되면 try-catch를 정신없이 써야만 하는데 막상 catch 블럭 안에서 하는 일은 Exceptoin이 발생했다고 찍어 주는 정도의 일을 합니다. 어떤 txt파일로 부터 데이타를 읽어오는 경우에 발생 시킬 수 있는 FileNotFoundException의 경우에 Checked Exception입니다. 따라서 Try-Catch 해야겠죠. 그래서 막상 try-catch로 묶어서 catch 블럭에서 무엇을 해야되나 고민을 해봐도.. 마땅히 떠오르는 일은 스택 트레이스 찍어 주기 뿐입니다. 이렇게 해두면 만약에 정말 파일을 못찾아서 이 블럭으로 온 경우에 스택 트레이스를 찍은 담에 할일을 계속 합니다. 이게 과연 제대로 프로그램이 돌아가는 걸까요. 그 파일이 이 프로그램에서 완전 핵심이라면 어떻하죠? 프로그램이 아예 멈춰도 당연한 상황이라면 Catch 했다고 안심해도 되는 걸까요?</p>
-<p>좀 더 조사와 고민을 해봐야겠습니다.</p>

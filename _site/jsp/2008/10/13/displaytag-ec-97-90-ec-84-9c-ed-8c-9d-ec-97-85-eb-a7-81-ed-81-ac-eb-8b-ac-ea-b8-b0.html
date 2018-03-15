@@ -1,5 +1,0 @@
-<p>DisplayTag를 계속해서 사용해보니, 한계점들이 들어납니다. 역시 직접 사용해서 뭔가 만들어보기 전까진 모르는건가 봅니다. 암튼, 찾아보니 어떻게든 방법은 있길래 적용했습니다.</p>
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;d:column title="No"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;a href="javascript:sendToUpdate(&lt;c:out value="${maingrid.id}" /&gt;)"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;%out.print(count++);%&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/a&gt;<br />&nbsp; &nbsp; &lt;/d:column&gt;</div>
-<p>거의뭐.. displaytag가 해주는 일은 없습니다. 그냥 자바스크립트를 이용해서 팝업창 띄우기라고 글 제목을 바꿔야할지도 몰겠습니다.</p>
-<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;script type="text/javascript"&gt; <br />function sendToUpdate(selectedId) { <br />&nbsp; &nbsp; popup("update.do?id=" + selectedId + "&amp;gridid=maingrid", "maingridpopup", 500, 600, "yes", "yes");<br />}</div>
-<p>이제, 그리드 완성입니다. 태그 파일로 다듬고, 태그 파일 서술자 만들어서 url로 태그 파일 참조해서 사용할 수 있는지만 확인하면 OSAF 배포합니다. 이번 주를 목표로 합니다. 아자 아자 파이팅!!!!</p>

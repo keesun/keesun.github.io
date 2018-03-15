@@ -1,9 +1,0 @@
-<p>&lt;property /&gt; 와 &lt;constructor-arg /&gt; 에서 DI를 할 때 다른 bean을 참조 한다면 idref 를 사용할 수 있습니다.
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="theTargetBean" class="..."/&gt;</p>
-<p>&lt;bean id="theClientBean" class="..."&gt;<br />&nbsp; &nbsp; &lt;property name="targetName"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;idref bean="theTargetBean" /&gt;<br />&nbsp; &nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
-<p>이건 아래의 것과 같습니다.
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="theTargetBean" class="..."/&gt;</p>
-<p>&lt;bean id="client" class="..."&gt;<br />&nbsp; &nbsp; &lt;property name="targetName"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;theTargetBean&lt;/value&gt;<br />&nbsp; &nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
-<p>차이점<br />1. idref를 사용하면 참조하는 이름의 bean이 실제 존재하는지 배포 시에 검증하게 됩니다.<br />2. 참조<br />
-하는 bean이 같은 파일 안에 정의 되어 있을 때 &lt;idref local="빈이름" /&gt;형태로 쓸 수 있는데 이렇게<br />
-쓰면 XML 파싱 할 때 XML 검증을 통해 설정에 문제가 있을 때 에러를 발견할 수 있습니다.</p>

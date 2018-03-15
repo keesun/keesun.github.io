@@ -1,5 +1,0 @@
-<p>기본의 테스트 클래스 모습입니다.</p>
-<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1127503814.bmp" class="aligncenter" width="600" height="315" alt="">1127503814.bmp</a>이 그림은 현재 개발 중인 어플리케이션의 클래스 다이어그램 입니다. 왼쪽의 파란 테스트 클래스가 테스트 하는 대상이 현재 MemberRepository와 MemberDao 두 계층을 모두 통과합니다. 그 뿐만 아니라 DAO를 통해서 DB까지도 들렸다 오지요.</p>
-<p>그래서 이전 수정 사항 중에 하나로 저 테스트 클래스를 Service 을 통해서 Dao 로 가지 않고 바로 MemberDao를 사용하도록 수정하였습니다.<br />
-<a href="http://whiteship.epril.com/wp-content/uploads/1/1138072720.bmp" class="aligncenter" width="455" height="325" alt="">1138072720.bmp</a>이상태도 단위 테스트라고 할 수 있을지 의심이 됩니다. 의심이 된다는 자체가... 좀... 아 어지럽네요. 이렇게 안하고 어떻게 MemberDao 인터페이스가 제대로 동작하는지 확인 할 수 있을까요?</p>
-<p>EasyMock이라는 것을 공부하다가 머리가 더 복잡해져서 잠시 쉬면서 현재 상태를 정리해 둡니다.</p>

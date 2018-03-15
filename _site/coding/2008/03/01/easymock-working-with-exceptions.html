@@ -1,3 +1,0 @@
-<p>예외를 던지는 메소드가 있다면, andReturn()을 사용해서 정말 예외를 던지는 지 확인할 수 있습니다.</p>
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &nbsp; &nbsp; memberDao.remove(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">expectLastCall().andThrow(new RuntimeException());</span><br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberServiceImpl.remove(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);</div>
-<p>간단하지요.&nbsp; 인자로 왠지..class 타입을 넘겨줄 것 같았는데, andThrow(RuntimeException.class) 이렇게 말이죠. 근데;; 역시 객체를 넘겨야 되네요. 이런게 EasyMock 스타일인가 봅니다.</p>

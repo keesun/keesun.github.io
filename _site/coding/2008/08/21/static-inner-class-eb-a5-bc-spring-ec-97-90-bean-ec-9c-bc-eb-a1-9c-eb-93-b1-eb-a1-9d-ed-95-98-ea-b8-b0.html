@@ -1,8 +1,0 @@
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Foo {<br />&nbsp; &nbsp; static class Bar {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;static String say() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "Bar-Bar-Bar";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;}<br />}</div>
-<p>요런 클래스가 있습니다. static inner class는 일반 inner class완 다르게 outter 객체가 없이도 접근할 수 있습니다. 사실상 outter 클래스를 통해서 접근할 뿐 보통 static 클래스랑 다를게 없습니다. inner class는 다르죠. outter 클래스의 인스턴스(객체)를 통해서만 접근할 수 있습니다.</p>
-<p>따라서 일반 inner class를 bean으로 등록한다는 건 좀 이상합니다. outter 객체에 종속되어 있는 inner class만 독립적으로 사용할 수 없으니까요. 그걸 bean으로 등록하는 방법도 모르겠을 뿐더러, 등록한다고 해도.. 어떻게 쓸까요? 그 녀석들 만들려면 outter 객체를 항상 만들어서 inner class의 객체를 만들어서 반환하도록??.. 흠.. 좀 아닌거 같습니다. 그렇게 독립적으로 사용할 녀석이었다면 inner class가 아니였겠죠.</p>
-<p>그렇다면, static inner class는 어떨까요? 얘는 bean으로 등록할 수 있더군요!! 왜냐면, 단순히 outter 클래스를 통해서만 접근할 뿐 일반 static 클래스와 다를것이 없거든요. 마치 outter 클래스 이름이 네임스페이스처럼 느껴질 뿐입니다.</p>
-<p>등록하는 방법은 간단합니다. "$"를 사용해서 
-<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;bean id="bar" class="net.openseed.sandbox.innerclass.<span style="font-weight: bold; color: rgb(0, 153, 102);">Foo$Bar</span>" /&gt;</div>
-<p>요런식으로 등록하면 됩니다. $를 사용해서 Bar 클래스가 Foo 클래스 안에 있다는 것을 알려줍니다. 간단하죠. 캬;; 스프링엔 참 별에 별게 많아요.</p>
-<p>ps : 알려주신 사부님께 쌩큐.</p>

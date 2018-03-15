@@ -1,6 +1,0 @@
-<p><img src="/assets/dk52.jpg" class="aligncenter" width="500" height="383" alt="사용자 삽입 이미지" /><br />Tdd Helper가 저한테는 ToDo List 기능과 기량 측정에 도움이 되고 있습니다.</p>
-<p>하나의 작업이 끝나고 '다음엔.. 뭘 해야 하더라..' 라고 생각하다가 헬퍼를 클릭해보니 다음에 뭘 할지 적어 놓은 목록이 보이고 거기서 하나를 골라서 Start 시키면 됩니다.</p>
-<p>목록 관리는.. 1, 2, 3 과 같이 큰 번호로 어느정도 Corse-Grained 하게 적어놓고 코딩을 시작했습니다. 2-1, 2-1, 이런 Fined-Grained 한 작업들은 처음에 생각났었다면 적었을 텐데 막상 코딩 하다가 부가적으로 신경써야 할 것들이 생각나서 개발 중에 추가한 작업들입니다.</p>
-<p>예상외로 엄청난 시간이 걸린 1번 작업과 3번 작업을 보면 <span style="color: rgb(255, 0, 0);">저는 IO에 굉장히 약하다는 걸 확인</span>할 수 있었습니다. <span style="color: rgb(23, 127, 205);">1번의 경우</span> IO 관련 코드에서 문제가 발생하지 않고 ArrayList 객체를 만들지도 않고 넣으려는 <span style="color: rgb(23, 127, 205);">바보 같은 실수를 잡아 내지 못하는 어처구니 없는 상황</span>이였습니다.</p>
-<p><span style="color: rgb(23, 127, 205);">3번에서 많은 시간을 빼앗긴 건</span>.. 한 줄씩 저장하고 싶은데<span style="color: rgb(23, 127, 205);"> fileWriter.write(string + "\n")</span> 이렇게 저장할 문자열 뒤에 \n 이걸 빼먹어서 맨 윗 줄에 연달아 문자열이 붙게 되었고 그래서 test를 통과하지 않는 문제를 발견하는데 걸린 시간입니다.</p>
-<p>그리고 <span style="color: rgb(23, 127, 205);">2-2 작업에 걸린 시간을 보면 <span style="color: rgb(255, 0, 0);">저는 Set을 다루는데도 미숙</span></span>합니다. 보통 List만 사용해 보고 다른 것들(Tree, Map, Set)들은 전혀 사용해보질 않기 때문인 것 같습니다. 문제는 List 보다 Set을 사용하면 더 좋은 상황에서도 List를 사용하고 있는 겁니다. <span style="color: rgb(23, 127, 205);">적절한 상황에 적절한 콜렉션을 사용할 줄 알아야겠습니다.</span></p>

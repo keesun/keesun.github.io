@@ -1,8 +1,0 @@
-<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2/reference/html/naming-strategy.html" target="_blank">Chapter 5. Naming strategy<br /></a><br />지금까지의 모든 예제들은, 메소드 이름으로 메소드를 호출하여 bean을 받아왔다.</p>
-<p>@Configuration<br />public class ColoursConfiguration {<br />&nbsp; // create a bean with name 'blue'<br />&nbsp; @Bean<br />&nbsp; public Color blue() {<br />&nbsp; &nbsp; ...<br />&nbsp; }<br />&nbsp; ...<br />}</p>
-<p>// dependency lookup for the blue colour<br />applicationContext.getBean("blue");</p>
-<p>몇몇 경우에는, 이러한 네이밍 스키마가 적합하지 않을 수도 있다. 즉 서로 다른 설정 클래스에서 같은 이름의 정의를 사용하고 있는 경우가 그렇다. 이러한 네이밍 지침을 사용하는 입장에서 맘대로 변경할 수 있도록 BeanNamingStrategy 인터페이스를 제공하고 있다.</p>
-<p>물론, 코드를 작성하기 전에, Spring이 기본으로 제공하고 있는 MethodNameStrategy 구현체들을 살펴보는 것이 좋겠다.</p>
-<p>&nbsp;&lt;!-- Java Configuration post processor --&gt;<br />&nbsp;&lt;bean class="org.springframework.config.java.process.ConfigurationPostProcessor"&gt;<br />&nbsp; &nbsp; &lt;property name="namingStrategy"&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;bean class="org.springframework.config.java.naming.MethodNameStrategy"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="prefix" value="CLASS"/&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;/bean&gt;<br />&nbsp; &nbsp; &lt;/property&gt;<br />&nbsp;&lt;/bean&gt;</p>
-<p>이런 설정을 해두면, bean을 생성할 때 메소드 이름에 클래스 이름까지 붙여주게 된다.</p>
-<p>// 새로운 작명 지침을 사용하여 blue 빈 가져오기<br />applicationContext.getBean("ColoursConfiguration.blue");</p>

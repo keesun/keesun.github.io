@@ -1,8 +1,0 @@
-<p>Member와 MemberGroup의 1대다 관계를 표시해 보겠습니다.</p>
-<p><span style="font-weight: bold;">1. Member의 getMemberGroup 메소드 위에 @OneToMany 어노테이션을 사용해서 Member입장에서 이 관계가 1대다 임을 표시합니다. </span></p>
-<p>이때 @OneToMane의 속성중에 mappedBy의 값에 상대방 객체에서 자기 자신의 객체를 참조하는 멤버 변수 이름을 적어 줍니다.<br />MemberGroup에서는 Member객체를 member라는 변수로 참조 하고 있기 때문에 다음과 같이 적어 줍니다.</p>
-<p>&nbsp; &nbsp; @OneToMany(mappedBy="member")<br />&nbsp; &nbsp; public Set&lt;MemberGroup&gt; getMemberGroups() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return memberGroups;<br />&nbsp; &nbsp; }<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. MemberGroup의 getMember 메소드 위에는 @ManyToOne 을 사용해서 MemberGroup 입장에서는 이 관계가 다대1 임을 표시합니다.</span></p>
-<p>이 때 Owner Side를 1대다 관계에서 '다'쪽에 해당하는 MemberGroup으로 정하기위해서 @JoinColumn을 추가하고 속성중에 name 속성을 참조하는 객체가 가지고 있는 주키에 해당하는 멤버변수의 이름(Join관계에서 자신의 FK에 해당하는 상대방의 PK)을 적어 줍니다.</p>
-<p>&nbsp; &nbsp; @ManyToOne(fetch=FetchType.LAZY)<br />&nbsp; &nbsp; @JoinColumn(name="memberId")<br />&nbsp; &nbsp; public Member getMember() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return member;<br />&nbsp; &nbsp; }</p>
-<p><span style="font-weight: bold;">3. 클래스를 로딩할 시점에 이 객체와 연관된 다른 객체들을 미리 읽어 들이겠냐는 설정을 합니다</span>. </p>
-<p>위에 보이는 FetchType.LAZY 로 설정하면 getMember 메소드가 호출 될 시점에 연관된 객체들을 불러 오게 됩니다. 이와 반대로 연관된 객체를 클래스 로딩 시점에서 모두 읽어들이고 싶을 때는 FetchType.EAGER 로 설정을 하면 됩니다. 저희가 사용하고 있는 JPA의 default 값은 EAGER 입니다.</p>

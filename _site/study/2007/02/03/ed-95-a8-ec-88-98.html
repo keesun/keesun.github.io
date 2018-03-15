@@ -1,7 +1,0 @@
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; def sum(*args):<br />... &nbsp; &nbsp; sum = 0<br />... &nbsp; &nbsp; for i in args:<br />... &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sum = sum + i<br />... &nbsp; &nbsp; return sum<br />...</div>
-<p>위와 같은 형태로 sum이라는 함수를 만들었습니다. def 함수명(인수): 이렇게 선언하고 그 아래에 정의를 해주면 되는 듯 합니다. *args 는 가변인수를 뜻합니다. 인자를 초기화 할 수 도 있습니다.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; def call(name, age=20):<br />... &nbsp; &nbsp; print name<br />... &nbsp; &nbsp; print age<br />...</div>
-<p>age를 20으로 초기화 해놨기 때문에 name만 전해 줘도 됩니다. 물론 age도 주면 그에 맞게 값이 변합니다.
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; call("기선")<br />기선<br />20<br />&gt;&gt;&gt; call("기선", 26)<br />기선<br />26<br />&gt;&gt;&gt; name = '기선'<br />&gt;&gt;&gt; call(name)<br />기선<br />20<br />&gt;&gt;&gt; myName = '기선'<br />&gt;&gt;&gt; call(myName)<br />기선<br />20<br />&gt;&gt;&gt; name = "기선"<br />&gt;&gt;&gt; call(name)<br />기선<br />20</div>
-<p>return을 만나면 함수에서 나가는 것은 java와 같은데 약간 특이합니다. 여러 개의 값을 return하고 싶을때 return 값1, 값2, 값3 이렇게 적어 주면 터플로 리턴해줍니다.
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; def call():<br />... &nbsp; &nbsp; return 1, 2, 3<br />...<br />&gt;&gt;&gt; a = call()<br />&gt;&gt;&gt; a<br />(1, 2, 3)</div>

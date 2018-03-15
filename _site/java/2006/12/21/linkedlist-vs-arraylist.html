@@ -1,8 +1,0 @@
-<p>Agile Java 번역본 p467 두 번째 단락이 끝나는 지점에서 이런 문구가 있습니다.</p>
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">"리스트의 끝이 아닌 부분에서 제거와 추가가 반복되는 콜렉션에 대해서는 링크드 리스트가 ArrayList보다 나은 성능을 보인다."</div>
-<p>ArrayList와 LinkedList의 특성 때문에 그렇다고 짐작이 됩니다. <span style="background-color: rgb(153, 204, 102);">ArrayList의 경우에는 배열을 기반으로 만들어진 자료구조</span>이고 <span style="background-color: rgb(153, 204, 102);">LinkedList는 현재 자신이 가지고 있는 값과 다음 노드를 가리키고 있는 변수를 가진 노드로 구성되어있는 자료구조</span> 입니다.</p>
-<p>따라서 ArrayList의 경우 배열의 특징인 인덱스를 사용하여 각각의 값에 바로 접근 할 수 있는 반면에 LinkedList는 맨 첫 노드 부터 원하는 위치 만큼 이동한 뒤에 값에 접근 할 수 있다는 단점이 있습니다.</p>
-<p>대신 LinkedList는 책에서 언급한 대로 중간에 끼워 넣을 때 다음 노드를 참조하는 변수만 바꾸는 간단한 작업만 하면 되지만 ArrayList는 중간에 끼워 넣으려면 끼워 넣고 싶은 위치 다음에 있는 자료들을 한칸씩 쭉~ 미뤄야 하는 단점이 있습니다.</p>
-<p>결국 그때 그때 다르다는 결론이 날 것 같아서 표를 찾아봤습니다.<br /><img src="/assets/moz-screenshot.jpg" alt="" /><img src="/assets/bk38.jpg" class="aligncenter" width="500" height="207" alt="사용자 삽입 이미지" />빅O 노테이션[footnote]최악의 상황에서의 효율성을 최대한 단순화 시켜서 나타내는 표시법[/footnote]으로 ArrayList와 LinkedList의 효율성을 나타낸 표입니다.<br />ArrayList의 경우 최악의 경우에서도 효율성이 O(1)[footnote]어떠한 경우에서도 고정된 수의 연산이 발생하는 가장 이상적인 효율성[/footnote]을 나타내는 operation들이 3개나[footnote]맨 아래 메소드들은 제외합니다.[/footnote] 됩니다. 하지만 LinkedList의 경우에는 하나도 없는 셈이나 마찬가지입니다.</p>
-<p>이유는...첫 번째 노드 부터 차근차근 찾아 들어가야 한다는 것 때문입니다. 중간에 끼워 넣으려고 해도 결국 첫 번째 노드 부터 원하는 위치 까지 찾아 가야 하기 때문에 찾고자 하는 위치가 만약 List의 거의 마지막에 위치해 있다면 길이가 n인 List에서의 효율성이 n에 비례해서 커지기 때문입니다.</p>
-<p>그래도 경우의 수를 따졌을 때 종단에 문언가를 추가할 확률이 그렇치 않을 확률에 비해 낮기 때문에 책에서는 이렇게 얘기를 하고 있는것 같습니다. 빅O는 어디까지나 최악의 경우이니깐요.</p>

@@ -1,9 +1,0 @@
-<p>참조 :<br /><a href="http://blog.daum.net/nibal/9380431" target="_blank">http://blog.daum.net/nibal/9380431</a><br /><a href="http://blog.naver.com/bluefortune?Redirect=Log&amp;logNo=110018382353" target="_blank">http://blog.naver.com/bluefortune?Redirect=Log&amp;logNo=110018382353</a></p>
-<p>설치는 매우 간단합니다.<br /><span style="font-weight: bold;">yum -y install vsftpd</span></p>
-<p>가동 시키기<br /><span style="font-weight: bold;">/etc/rc.d/init.d/vsftpd start</span></p>
-<p>부팅할 때 자동 실행<br /><span style="font-weight: bold;">/sbin/chkconfig vsftpd on</span></p>
-<p>설정 파일<br /><span style="font-weight: bold;">/etc/vsftpd/vsftpd.conf</span></p>
-<p>설정 내용(해당 하는 내용의 주석을 풀어 줍니다.)<br />1. 익명 사용자 접근 금지<br /><span style="font-weight: bold;">anonymous_enable=NO</span><br />2. 접속 메시지<br /><span style="font-weight: bold;">ftpd_banner=Welcome to JEDI FTP service.</span><br />3. 상위 폴더로 이동 금지<br /><span style="font-weight: bold;">chroot_list_enable=YES</span><br style="font-weight: bold;" /><span style="font-weight: bold;">chroot_list_file=/etc/vsftpd/chroot_list</span><br />4. 상위 폴더로 이동 금지 시킬 사용자 목록 작성<br /><span style="font-weight: bold;">vi ./etc/vsftpd/chroot_list</span><br />파일을 안만들어 주면 접속이 안됩니다.<br />파일을 만들어 주고 계정명을 적어 줍니다.</p>
-<p>설치할 때 SELinux 설정을 디폴트(강제)로 설치하셨다면 <span style="color: rgb(255, 0, 0);">이렇게 해도 결국은 접속이 되지 않을 것입니다.</span></p>
-<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">500 oops: cannot change directory<br />이런 메시지가 보입니다.<br /><span style="font-weight: bold;">/usr/sbin/setsebool -P ftp_home_dir=1</span><br />이런 명령을 사용해주면 됩니다.</div>
-<p></p>

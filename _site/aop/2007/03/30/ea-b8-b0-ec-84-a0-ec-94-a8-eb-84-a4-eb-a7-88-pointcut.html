@@ -1,5 +1,0 @@
-<p>영화관에서 표를 팔 때(sellTicket)만 welcome과 thankyou Advice를 적용하려면 <a href="http://whiteship.tistory.com/632" target="_blank">이전</a>에 살펴봤던 NameMathMethodPointcut이나 NameMathMethodPointcutAdvisor를 이용하면 됩니다.</p>
-<p><img src="/assets/dl116.jpg" class="aligncenter" width="500" height="250" alt="사용자 삽입 이미지" />이렇게 Advisor를 만들면서 pointcut을 정의해줘도 되고, Pointcut만 따로 만든 다음에 DefaultPointcutAdvisor로 합쳐도 됩니다.</p>
-<p><img src="/assets/cl123.jpg" class="aligncenter" width="500" height="314" alt="사용자 삽입 이미지" />이번에는 포인트 컷을 따로 만들고 DefaultPointcutAdvisor를 사용해서 advice와 pointcut을 묶고 그것을 ProxyFactoryBean에 주입시켰습니다.</p>
-<p>둘 다 결과는 원하던데로 sellTicket() 메소드에만 welcome, thank Advice가 적용됩니다.</p>
-<p></p>

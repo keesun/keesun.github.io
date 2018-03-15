@@ -1,6 +1,0 @@
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp;Service myService = (Service) ctx.getBean("service");</p>
-<p>대부분 위처럼 캐스팅을 해서 사용합니다. 저는 캐스팅이 정말 싫었습니다.</p>
-<p>&nbsp;Service myService = ctx.getBean(Service.class);</p>
-<p>이렇게 캐스팅 없이 사용할 수 있는 방법이 있습니다.</p></div>
-<p>정답은? <span style="color: rgb(255, 255, 255);">JavaConfig, http://www.springframework.org/javaconfig, </span><font style="color: rgb(255, 255, 255);" class="FrameItemFont">JavaConfigApplicationContext<br />
-</font></p>

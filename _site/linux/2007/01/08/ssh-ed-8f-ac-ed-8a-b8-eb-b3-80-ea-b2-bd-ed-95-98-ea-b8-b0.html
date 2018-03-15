@@ -1,6 +1,0 @@
-<p>참고 : <a href="http://blog.naver.com/introsoul?Redirect=Log&amp;logNo=70005363124">네이버</a> 지식인</p>
-<p>학교에서 ssh 사용하는 곳에 접속이 되지 않아서 포트 번호를 바꾼다음에 접속을 시도해보려고 합니다.</p>
-<p>ssh에 대한 설정 파일은</p>
-<p><font color="#ff0000" face="Verdana">/etc/ssh/sshd_config <br /><font color="#000000">여기에 있습니다. 열어 보면 딱 포트 번호가 적혀있는 문장이 주석처리 되어 있는 것이 보이는데 주석을 풀고 원하는 포트를 적어주면 됩니다.</p>
-<p>아무것도 안적으면 기본으로 22번 포트를 사용한 것 같네요.</p>
-<p>설정을 바꾼 뒤 저장을 하고 재가동을 해야합니다.</font><br />/etc/init.d/sshd restart</font></p>

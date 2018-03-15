@@ -1,3 +1,0 @@
-<p>@Entity 애노테이션이 붙은 클래스의 모든 속성들은 기본으로 모두 테이블의 필드로 생성하게 됩니다. 만약 어떤 속성을 테이블의 필드로 만들고 싶지 않다면, @Transient 애노테이션을 해당 속성 또는 해당 속성의 getter위에 붙여주면 됩니다.</p>
-<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">@Entity<br />public class Member {<br />&nbsp; &nbsp; private Long memberId;<br />&nbsp; &nbsp; private String password;<br />&nbsp; &nbsp; @Transient<br />&nbsp; &nbsp; private String confirmPassword;<br />&nbsp; &nbsp; ...<br />}</div>
-<p>회원가입을 할 때 확인하는 패스워드의 경우 제대로 입력했는지 확인하기 위해서 한 번 더 입력을 하는데, 이러한 속성은 DB에 저장할 필요가 없기 때문에, @Transient로 설정해 줄 수 있습니다.</p>

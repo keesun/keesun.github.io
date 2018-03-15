@@ -1,9 +1,0 @@
-<p><img src="/assets/ck81.jpg" class="aligncenter" width="364" height="573" alt="사용자 삽입 이미지" />Spring 과 Hibernate 로 모델 부분을 구현하여 jar로 묶어서 나중에 war에 넣을 부분을 코딩할 프로젝트 베이스 입니다.</p>
-<p>어노테이션 기반으로 퍼시스턴스를 표현할 것입니다. 
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberTest {<br />&nbsp; &nbsp; @Test public void persistence(){<br />&nbsp; &nbsp; &nbsp; &nbsp; ApplicationContext ac = new ClassPathXmlApplicationContext(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; new String[] { "applicationContext-dao.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "applicationContext-jdbc-datasource.xml" });<br />&nbsp; &nbsp; &nbsp; &nbsp; SessionFactory sf = (SessionFactory) ac.getBean("sessionFactory");</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; Session s = sf.openSession();<br />&nbsp; &nbsp; &nbsp; &nbsp; Transaction tx = s.beginTransaction();</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; Member keesun = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; keesun.setName("기선");<br />&nbsp; &nbsp; &nbsp; &nbsp; keesun.setAccount("whiteship");<br />&nbsp; &nbsp; &nbsp; &nbsp; keesun.setPassword("pass");</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; s.save(keesun);<br />&nbsp; &nbsp; &nbsp; &nbsp; tx.commit();<br />&nbsp; &nbsp; &nbsp; &nbsp; s.close();</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(keesun.getId());<br />&nbsp; &nbsp; }<br />}</div>
-<p>위와 같은 예제 코드가 하나 들어있으며 DB 설정은 database.properties 에서 적절하게 바꿔주시면 됩니다. hibernate.dialect 에 넣어야 할 값은 <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/dialect/package-summary.html" target="_blank">여기</a>를 참조해서 사용하시는 DB에 맞게 바꿔주시면 됩니다.</p>
-<p><a href="http://whiteship.epril.com/wp-content/uploads/1/dk87.zip" class="aligncenter">dk87.zip</a><br />나중에 war 프로젝트 베이스도 만들면 올려둬야쥐~</p>

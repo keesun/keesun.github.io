@@ -1,3 +1,0 @@
-<p><img src="/assets/cfile3.uf.2070BD194A37611B7F4071.png" class="aligncenter" width="600" height="589" alt="" filename="1.png" filemime="image/png" /><br />
-Repository 역할이 DAO로 단순 위임 밖에 없어서, Repository를 없애고 그 자리에 DAO를 뒀습니다. Entity에서 이 객체를 사용하여 필요한 작업들을 할 겁니다. 이전의 Facade 역시 이름을 Service로 바꾸고, Transaction을 책임지게 했습니다. 이 서비스는 별다른 역할 없이 Domain 객체나 Dao로 역할을 위임하는 Thin Service입니다.</p>
-<p>구조는 기존의 계층형 구조(Controller -&gt; Service -&gt; Dao)와 거의 비슷해 보이지만, 일단 Entity에서 Dao를 들고 예전에 서비스 계층에서 처리했던 비즈니스 로직을 담당하게 되었다는 것, 그 결과 Service의 일은 도메인 객체로의 단순 위임으로 바뀌었다는 점이 주요 특징으로 볼 수 있겠습니다. 또한, 모든 domain 클래스에 대한 C, S, D를 만들던 것과 달리 Entry Point에 해당하는 Entity에 대해 C, S, D를 제공하는 구조입니다. 즉 그림에서 Address라는 Value 타입과 OrderLine이라는 레퍼런스 타입에 대한 C, S, D는 볼 수 없죠.</p>

@@ -1,7 +1,0 @@
-<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp;&nbsp; &nbsp;public void foo(Bar bar) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; ...<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; bar.toby(whiteship);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; bar.whiteship(toby);<br />&nbsp;&nbsp; &nbsp;}</div>
-<p>위와 같은 메소드를 테스트 할 때 EasyMock을 사용해서 다음과 같은 테스트를 작성할 수 있습니다.</p>
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Test<br />public void foo(){<br />&nbsp;&nbsp; Bar mockBar = createMock(Bar.class);<br />&nbsp;&nbsp; ...<br />&nbsp;&nbsp; mockBar.toby(whiteship);<br />&nbsp;&nbsp; mockBar.whiteship(toby);<br />&nbsp;&nbsp; replay(mockBar);<br />&nbsp;&nbsp; a.foo(mockBar);<br />&nbsp;&nbsp; verify(mockBar);<br />}</div>
-<p>테스트가 통과할 것만 같은 코드입니다. 그렇쵸? 대부분은 테스트가 통과 합니다. 그런데 통과하지 않는 경우도 있습니다.</p>
-<p>java.lang.IllegalStateException: missing behavior definition for the preceeding method call toby(whiteship);</p>
-<p>이런 메시지와 함께 테스트가 통과하지 않습니다.</p>
-<p>그럴 때는 뭘 확인해 봐야 할까요? <span style="color: rgb(255, 255, 255);">Bar 인터페이스에 있는 whiteship과 foo라는 메소드의 리턴타입이 있는지 확인해봐야 합니다. 리턴타입이 있으면 http://whiteship.tistory.com/1504</span></p>

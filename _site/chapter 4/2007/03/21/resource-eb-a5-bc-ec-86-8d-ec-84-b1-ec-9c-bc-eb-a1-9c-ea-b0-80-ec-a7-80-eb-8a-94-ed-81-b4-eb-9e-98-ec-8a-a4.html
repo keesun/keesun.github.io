@@ -1,9 +1,0 @@
-<p>Resource로 사용할 파일의 이름이나 위치가 자주 바뀌는 경우에 Resource 타입의 변수를 가지고 있는 클래스의 속성을 configuration 파일에 설정 해두는 것이 편할 수 있습니다.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class PlainResourceHolder {<br />&nbsp; &nbsp; private Resource resource;</p>
-<p>&nbsp; &nbsp; public Resource getResource() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return resource;<br />&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; public void setResource(Resource resource) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.resource = resource;<br />&nbsp; &nbsp; }<br />}</div>
-<p>이렇게 Resource를 가지고 있는 클래스가 있을 때 설정 파일에서도 prefix를 사용해서 Resourc에 값을 넣어 줄 수 있습니다.
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="holder2" class="resource.PlainResourceHolder"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="resource" value="file:resourceTest.txt" /&gt;<br />&lt;/bean&gt;</div>
-<p>다음과 같이 테스트를 해보면 원하는 대로 일이 처리 된 걸 확인할 수 있습니다.
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test public void resourceFromConfiguration(){<br />&nbsp; &nbsp; &nbsp; &nbsp; PlainResourceHolder holder = (PlainResourceHolder)context.getBean("holder2");<br />&nbsp; &nbsp; &nbsp; &nbsp; Resource resource =&nbsp; holder.getResource();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(resource.exists());<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(resource.getFilename().equals("resourceTest.txt"));<br />&nbsp; &nbsp; }</div>
-<p></p>

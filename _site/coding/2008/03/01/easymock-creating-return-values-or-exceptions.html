@@ -1,5 +1,0 @@
-<p>리턴값이나 예외를 실제 메소드가 호출되는 시점에 만들고 싶을 수 있는데 그럴 때는 andAnswer()을 사용합니다.
-<pre class="code-java"><div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">expectLastCall().<span style="color: rgb(255, 0, 0);">andAnswer</span>(<span class="code-keyword">new</span> IAnswer&lt;<span class="code-object">Object</span>&gt;() {<br />	<span class="code-keyword">public</span> <span class="code-object">Object</span> answer() <span class="code-keyword">throws</span> Throwable {<br />		((User) <span style="color: rgb(255, 0, 0);">getCurrentArguments()</span>[0]).setUserId(1);<br />		<span class="code-keyword">return</span> <span class="code-keyword">null</span>;<br />	}<br />});</div></pre>
-<p>이 전 글들에서 사용했던 andReturn()이나, andThrow()의 인자로는 미리 만들어 둔 객체들을 넘겨줬다면, andAnswer()에서는 IAnswer 인터페이스를 구현하여 특정 조건에 따라 각기 다른 결과를 반환하는 구현체를 만들어 둘 수 있습니다. </p>
-<p>특정 조건이라고 한다면.. 어떤 데이터를 가지고 판단을 하겠다는 건데, 저 안에서 접근할 수 있는 데이터는&nbsp; Obejct 타입의 배열을 반환하는 getCurrentAurguments()를 사용하여, 인지로 넘겨준 값에 접근할 수 있습니다.</p>
-<p>반환하는 값이 없으면 위 처러 null을 리턴하면 되고, 반환하는 값이 있으면 그 값을 반환하고, 예외를 던지고 싶으면 던져주면 됩니다.</p>

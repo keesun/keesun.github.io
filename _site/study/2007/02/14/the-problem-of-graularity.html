@@ -1,6 +1,0 @@
-<p>참조 : Java Persistence With Hibernate</p>
-<p><span style="color: rgb(0, 153, 102);">객체는 덩어리의 사이즈가 다양하고 DB에는 덩어리라고 할 수 있는 것이 테이블과 레코드밖에 없기 때문에 생기는 불일치</span>를 말합니다.</p>
-<p>덩어리 사이즈에 대한 이해가 쉽지 않았습니다. 예전에 corse-grained와 fine-grained에 대해서 <a href="http://www.openseed.net/forum/viewtopic.php?p=188#188" target="_blank">OpenSeed 온라인 강좌에 댓글로 질문</a>을 올렸었는데요. 그 때 승택님께서 답변을 해주셨지만 사실..그땐 잘 이해를 못했었습니다. 지금 다시 보니까 이해가 되는 것 같습니다.</p>
-<p><img src="/assets/bk370000000000.jpg" class="aligncenter" width="442" height="272" alt="사용자 삽입 이미지" /><br />그림에 보이듯이 User는 알갱이가 크다고 합니다. 반면에 Address는 알갱이가 작다고 합니다. 좀 더 자세히 살펴 보자면 다음과 같이 그릴 수 있겠네요.</p>
-<p><img src="/assets/bk370000000001.jpg" class="aligncenter" width="432" height="285" alt="사용자 삽입 이미지" /><br />저기 있는 것들을 단순하게 객체의 속성은 필드로 클래스는 테이블로 매칭시키기에는..뭔가 안맞는 것 같은 느낌이 드는데요. 이걸 해결하는 방법은 p177쪽 부터 설명이 나옵니다.</p>
-<p>component라는 것을 사용한다고 하는데요. DDD quickly에서 보았던 Value Object가 나옵니다. 즉 identity를 가질 필요가 없고 값으로써 존재가치가 있는 개체 같은데요. 위에서 Address나 name이 그런 경우에 해당하지 않을까 생각해 봅니다. Account는 고유한 객체를 식별할 필요가 있게 느껴져서요.</p>

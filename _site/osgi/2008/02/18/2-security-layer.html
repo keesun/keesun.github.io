@@ -1,5 +1,0 @@
-<p>The OSGi Security Layer is an optional layer that underlies the OSGi Service Platform. The layer is based on the Java 2 security architecture. It provides the infrastructure to deploy and manage applications that must run in fine-grained controlled environments.</p>
-<p>OSGi Security Layer는 선택적인 레이어다. 자바 2 security 아키텍처를 기반으로 만들었다. 반드시 세밀하게 제어된 환경에서 동작해야하는 애플리케이션을 배포하고 관리할 때 필요한 기반시설을 제공한다.</p>
-<p>- Code Authentication: By location(Permission Admin service가 담당)과 By signer(Conditional Permission Admin service가 담당)방식으로 코드의 인증을 할 수 있다.</p>
-<p>- Digitally Signed JAR Files: signer 방식의 Authentication이다. Principal에 의해 sign된 이 후에 그 내용이 수저오되지 않았음을 보장한다. Jar 파일에 public key cryptography를 적용하여 사용 권한을 줄 수 있다.</p>
-<p><img src="/assets/ek100000000000.png" class="aligncenter" width="452" height="264" alt="사용자 삽입 이미지" /><br />- JAR 구조와 Manifest: manifest 파일과 괕은 형식이지만 SF확장자로 끝나는 파일을 META-INF 폴더에 위치 시킨다. 이런 signing 자원들은 MENIFEST.MF 파일 바로 다음에 와야 한다. 그렇지 않으면 해당 JAR 파일을 unsigned로 인식한다.<br /><img src="/assets/fk100000000002.png" class="aligncenter" width="555" height="209" alt="사용자 삽입 이미지" /><br />나머지 복잡해서 패스;</p>

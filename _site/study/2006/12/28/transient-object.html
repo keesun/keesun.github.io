@@ -1,6 +1,0 @@
-<p>참조 : Hibernate In Action 4.1.1</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">Transient Object</span></p>
-<p>new라는 키워드를 사용하여 생성된 객체는 그 즉시 persistent 상태가 아니다. <span style="color: rgb(23, 127, 205);">이 상태는 transient상태이며 이것은 DB의 테이블의 어떤 레코드와도 연관이 없으며</span> 따라서 언제라도 참조를 잃게 되면(null 이 되면) 상태에 대한 정보를 잃게 된다.</p>
-<p>트랜잭션 관리의 대상이 되지 않는다. 따라서 Transient 객체에는 롤백 기능을 제공하지 않는다.</p>
-<p>transient 상태의 객체가 <span style="color: rgb(23, 127, 205);">save()의 대상이 되거나</span> 다른 <span style="color: rgb(23, 127, 205);">persistent 상태의 객체로 부터 참조되는 경우</span>에 persistent 상태가 된다.</div>
-<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bl100.bmp" class="aligncenter" width="455" height="343" alt="사용자 삽입 이미지">bl100.bmp</a></p>

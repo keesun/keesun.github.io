@@ -1,7 +1,0 @@
-<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-new-framework">https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-new-framework</a></p>
-<div class="sect3">
-<div class="paragraph">
-<p>적은 수의 쓰레드로 동시성(concurrency)을 처리하고 더 적은 하드웨어 리소스로도 확장성(scale)을 꽤할 수 있는 논-블럭킹 웹 스택이 필요하다. 서블릿 3.1은 논-블럭킹 I/O API를 제공했다. 하지만 그것을 사용하면 동기적이거나 (Filter, Servlet) 블럭킹적인(getParameter, getPart) 서블릿 API와는 멀어진다. 이것이 다양한 논-블럭킹 런타임을 아우르는 새로운 공통 API를 만들게된 주요한 동기다. 이점은 네티 같은 서버는 매우 잘 만들어진 비동기, 논-블럭킹 영역이 있었기 때문에 중요했다.</p>
-</div>
-</div>
-<div class="sect3">반면 또 다른 답변으로는 펑셔널 프로그래밍을 들 수 있다. 이것은 마치 자바 5에서 애노테이션을 추가해 애노테이션을 붙인 REST 컨트롤러나 단위 테스트 같은 기회를 만들어낸 것처럼, 자바 8에서 람다 표현식으로 자바에 펑셔널 API라는 가능성을 만들어낸 것이다. 이는 논-블럭킹 애플리케이션과 <a href="https://en.wikipedia.org/wiki/Continuation-passing_style">컨티뉴에이션 스타일</a> API의 친구 격이다. CPS (Continuation-passing style)는 비동기 적인 로직을 선언적으로 조합할 수 있게 해주는 CompletableFuture와 <a href="http://reactivex.io/">ReactiveX</a>로 인해 유명해졌다. 자바 8 프로그래밍 모델은 스프링 웹플러스가 펑셔널 웹 엔드포인트를 애노테이션 기반 컨트롤러와 함께 제공할 수 있게 해준다.</div>

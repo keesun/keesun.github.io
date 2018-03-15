@@ -1,9 +1,0 @@
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Controller<br />public class MemberController {</p>
-<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; private MemberService memberService;</p>
-<p>&nbsp; &nbsp; <span style="font-weight: bold; color: rgb(255, 0, 0);">@RequestMapping</span><br />&nbsp; &nbsp; public ModelAndView list(){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("member/list")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .addObject("members", memberService.getAll());<br />&nbsp; &nbsp; }<br />}</div>
-<p>요렇게만 해두면, /member/list.xxx 라는 요청이 오면 알아서(Conversion) 저 메소드가 처리하도록 합니다. ㄴXxx-servlet.xml에는 XML에는 </p>
-<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" /&gt;</div>
-<p>애만 등록해주면 됩니다. 저 한 줄의 XML로 URL 맵핑을 손수 적는 수고를 덜 수 있습니다.</p>
-<p>계속해서 진화하는 Spring MVC 어디까지 갈텐가~~ 멋있어 멋있어 끝까지 가는거야~~</p>
-<p><a href="/1571">2008/04/08 - [모하니?/Coding] - ControllerClassNameHandlerMapping가 찾아 준댔는데...</a><br />
-ps : 새벽에 괜히 삽질만 하고... 잠이나 계속 잘껄..</p>

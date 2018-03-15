@@ -1,7 +1,0 @@
-<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">@Aspect<br />public class SystemArchitecture {</p>
-<p>&nbsp;&nbsp; &nbsp;@Pointcut("execution(* org.opensprout.dao..*(..))")<br />&nbsp;&nbsp; &nbsp;public void executeDao(){}<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;@Pointcut("call(* org.opensprout.service..*(..))")<br />&nbsp;&nbsp; &nbsp;public void callToService(){}<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;@Before("cflowbelow(executeDao()) &amp;&amp; callToService()")<br />&nbsp;&nbsp; &nbsp;public void checkDao(JoinPoint jp){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("daoToService architechure checking");<br />&nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException("Dao can't call Service's method.");<br />&nbsp;&nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;<br />}</div>
-<p>뭐하는 녀석이냐면, DAO에서 Service에 있는 메소드 호출을 하지 못하게하는.. 그런 애스팩트입니다. 이걸 응용하면, 개발자 100여명에 제각각 코딩 실력일 경우 컨트롤러에서 DAO를 직접 호출한다던가, 서비스 계층에서 컨트롤러에 있는 메소드를 사용한다던가 하는 어처구니 없는 코드를 찾아낼 수 있습니다.</p>
-<p>흐아~ 이 녀석 어떻게 구현할지 생각해내느라, PPT 만들다가 고민하고, 고민하다가 집에 맥주 사들고와서 코딩해보고 테스트까지 완료, call이랑 cflowbelow 포인트컷을 아직 스프링 @AOP에서 지원하지 않기 때문에, AspectJ를 써야 하는데, 클래식 스프링 AOP를 사용하면 구현 가능합니다.</p>
-<p>CFlow뭐시기Pointcut 클래스를 사용하면 되고, call대신에 method execution 포인트컷을 사용해도 무관합니다. 그 구현은 자바 5 미만 버전을 사용하시는 분에게 맡기겠습니다. 전 자바 5 미만이 싫어효. ^^;</p>
-<p>잠잘 시간 전에 해내서 정말 기쁩니다. 아~ 맘편히 잘 수 있겠다. 휴우~~~ </p>
-<p>ps: 헤어진 여친 나오는 꿈은 제발 그만, 나 정말 꿈에서 깨기 싫었다. 나타나지 말아줘. 마이 뉴 여친. 원더걸스 나와라~ 원더걸스 나와라~ 원더걸스 나와라~</p>

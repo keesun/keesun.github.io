@@ -1,8 +1,0 @@
-<p>이전 글의 예상이 맞았습니다.</p>
-<p>AspectJ 파일(aj 확장자)을 ajc라는 것으로 컴파일을 해야 하는데 이 녀석을 Eclipse에서는 어떻게 컴파일 할 지 모르기 때문에 컴파일을 못해서 class 파일이 없으니까 결국 Spring 컨테이너는 class 파일이 없어서 AspectJ로 작성한 Aspect를 못 읽어 들이고 에러를 내고 만 것이였습니다.</p>
-<p>해결책은 ajc 사용해서 컴파일 해도 되겠지만.. 커맨드 라인에서 무언가를 하는것이 상당히 귀찮은 저 같은 분들은 AJDT 플러그인을 설치하시면 됩니다.</p>
-<p><a href="http://www.eclipse.org/ajdt/" target="_blank">AJDT 홈페이지</a>에 가시면 Eclipse 버전에 따라 release 정보가 표시되어 있습니다.</p>
-<p>저는 Eclipse 3.3을 사용하기 때문에 다음의 URL로 업데이트 사이트를 등록하고 플러그인을 설치했습니다.<br />http://download.eclipse.org/tools/ajdt/33/update</p>
-<p>설치한 뒤 해당 프로젝트에 "Convert to AspectJ Project"를 실행해주면 aj 파일은 ajc 사용해서 자동으로 컴파일 해주고, aspecjrt.jar 파일을 클래스패스에 추가해 줍니다.</p>
-<p><img src="/assets/cn352.png" class="aligncenter" width="527" height="134" alt="사용자 삽입 이미지" /><br />그럼 Advice가 적용되는 지점에 해당 Advice가 몇 개 적용되는지 보여 줍니다.<br /><img src="/assets/cn353.png" class="aligncenter" width="600" height="168" alt="사용자 삽입 이미지" /><br />멋진 툴입니다.</p>
-<p>Class를 못찾던 문제도 해결 됐고 Spring AOP와 AspectJ를 연동도 간단하게 해결되었습니다.</p>

@@ -1,6 +1,0 @@
-<p><span style="font-weight: bold;">6.4.1. Spring AOP or full AspectJ?</span></p>
-<p>Spring AOP는 별도의 컴파일러나 위버가 필요 없으며 AspectJ 보다 단순합니다. 하지만 컨테이너에 의해 관리되는 bean에만 advice를 적용할 수 있고 적용되는 joinpoint가 메소드 실행 시점 뿐 입니다.</p>
-<p>도메인 객체 또는 컨테이너에 의해 관리되지 않는 객체들에 Advice를 적용해야 하거나 더 다양한 joinpoint가 필요하다면 AspectJ를 사용하는 것이 좋겠습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">6.4.2. @AspectJ or XML for Spring AOP?</span></p>
-<p>XML 기반의 Spring AOP는 JDK 버젼이랑 관계 없이 사용할 수 있다는 장점이 있으며 설정 파일을 보고 aspect가 적용된 상태를 파악할 수 있습니다. 하지만 필요한 정보를 두 곳에 나눠 놓는 다는 점에서 DRY(Don't Repeat Youeself) 원칙을 어긴다고 볼 수 있습니다. @AspectJ 에서는 &amp;&amp; || ! 를 사용하여 포인트컷 끼리의 연산을 할 수가 있었는데 그걸 못합니다.</p>
-<p>5.0 미만의 JDK를 사용해야 한다면 스키마 기반 Spring AOP를 사용하시고(유일한 선택 사항이죠.) 5.0 이상일 때 단순한 설정(예를 들어 선언적 트랙잭션 관리 같은 것) 이외에 애스팩트가 필요하다면 @AspectJ 를 사용하는게 좋겠습니다.</p>
-<p>예제 만들면서 써보니까 전 @AspectJ가 훨씬 편하더군요.</p>

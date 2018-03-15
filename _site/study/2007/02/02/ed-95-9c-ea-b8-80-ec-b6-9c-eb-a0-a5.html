@@ -1,8 +1,0 @@
-<p>참조 : <a href="http://bbs.python.or.kr/viewtopic.php?t=21725&amp;highlight=%ED%95%9C%EA%B8%80+%EC%9E%85%EC%B6%9C%EB%A0%A5" target="_blank">파이썬 마을</a></p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = "한글입력"<br />&gt;&gt;&gt; a<br />한글입력</div>
-<p>이렇게 출력 될 줄 알았는데 그게 아니더군요.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = "한글입력"<br />&gt;&gt;&gt; a<br />'\xc7\xd1\xb1\xdb\xc0\xd4\xb7\xc2'<br />&gt;&gt;&gt; print a<br />한글입력<br />&gt;&gt;&gt;</div>
-<p>이렇게 해야 원하는 대로 나옵니다. 하지만 영어는 그냥 변수명을 찍어도 배열에 있는 내용이 그대로 나옵니다.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; b = "Spring"<br />&gt;&gt;&gt; b<br />'Spring'<br />&gt;&gt;&gt; print b<br />Spring</div>
-<p>한글이 차지하는 바이트 수가 2바이트인데 배열에 1byte밖에 못들어가서 그러는 건지...repr()이라는 함수는 뭐하는 녀석인지 궁금해지네요.</p>
-<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; repr(a)<br />"'\\xc7\\xd1\\xb1\\xdb\\xc0\\xd4\\xb7\\xc2'"<br />&gt;&gt;&gt; repr(b)<br />"'Spring'"<br />&gt;&gt;&gt; print repr(a)<br />'\xc7\xd1\xb1\xdb\xc0\xd4\xb7\xc2'<br />&gt;&gt;&gt; print repr(b)<br />'Spring'</div>

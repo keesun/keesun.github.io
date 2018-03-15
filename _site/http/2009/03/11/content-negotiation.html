@@ -1,7 +1,0 @@
-<p>참조: <a href="http://en.wikipedia.org/wiki/Content_negotiation" target="_blank">http://en.wikipedia.org/wiki/Content_negotiation</a></p>
-<p>컨텐츠 네고는 사용자가 서버로 어떤 요청을 보낼 때 사용자가 어떤 응답 타입을 선호하는지에 대한 정보도 같이 전달하는 매커니즘입니다. 요청 보낼 때 Accept-Language, Accept-Charset, Accept-Encoding, Accept-Ranges, Accept헤더 정보에 선호하는 응답 관련 정보를 전달하면 됩니다. 서버에서는 이 응답 타입을 보고 해당 형태의 응답을 전달할 수 있습니다.</p>
-<p>예1. 불어로 응답을 받고 싶을 때</p>
-<p>Accept-Language: fr</p>
-<p>예2. 불어와 영어를 모두 받을 수 있지만 불어를 더 선호하며, text/html 형태 응답을 가장 선호하고 모든 text와 image를 받을 수 있다.</p>
-<p>Accept-Language: fr; q=1.0, en; q=0.5<br />Accept: text/html; q=1.0, text/*; q=0.8, image/gif; q=0.6, image/jpeg; q=0.6, image/*; q=0.5, */*; q=0.1</p>
-<p>스프링 웹 플로우 레퍼런스 번역 중에 나온 단어인데 모르는 내용이라 정리해 둡니다.</p>

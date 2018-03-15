@@ -1,9 +1,0 @@
-<p>몇일 전에 경험했던 삽질을 공개합니다.</p>
-<p>xxx.properties 라는 파일이 있고 이 파일에 있는 내용을 yyy.xml 에서 사용하고 있었습니다. xxx.properties는 db connection 정보를 담고 있었고, yyy.xml은 spring에서 사용할 datasource를 정의할 때 xxx.properties에 있는 내용을 읽어다가 사용했습니다. 이때 xxx.properties의 내용을 변경했습니다.</p>
-<p>저는 '음.. 그래 단순히 설정이 바뀐 것 뿐인데, Java 코드도 아니고 재컴파일 할 필요는 없겠지?'라고 생각했습니다.</p>
-<p>그러나 왠 걸 서버를 실행해 보니, DB connection을 가져올 때 수정하기 전에 사용한 URL과 user, password를 사용하고 있는 것이었습니다. -_-;;</p>
-<p>이런.. 컴파일 해야 되는구나.</p>
-<p>왜?<br /><img src="/assets/dn398.jpg" class="aligncenter" width="600" height="121" alt="사용자 삽입 이미지" /><br />이 녀석이 프로퍼티 파일을 읽어들인 다음 정보를 가지고 있는데, 이 녀석을 컴파일 한 class 파일로부터 정보를 가져오기 때문입니다. 프로퍼티 파일이 XML이었다면 어떨까요? 그때도 컴파일이 필요할까요? 흠.. 그건 아닐 겁니다.</p>
-<p>여기서 생기는 의문점 하나..<br /><img src="/assets/dn399.jpg" class="aligncenter" width="600" height="68" alt="사용자 삽입 이미지" /><br />이 녀석도 똑같이 프로퍼티파일을 읽어들여서 사용하긴 하지만, 국제화 지원을 위해서 또는 그냥 텍스트를 별도로 관리하기 위해 사용합니다. 앞서 본 프로퍼티 플레이스 홀더와 다른 점은 이 녀석은 프로퍼티파일을 변경한뒤 페이지 새로고침을 하면 view에 바로바로 적용이 된다는 것입니다.</p>
-<p>흠... 어찌된 영문일까요?&nbsp; ResourceBundleMessageSource API를 살펴보아도 번들은 VM이 살아있는 동안 영원히 캐쉬 된다고 합니다. 그럼 새로고침 한다고 해서 반영이 되면 안되고 이 역시 재컴파일이 필요할텐데 말이죠. 그래서 주기적으로 번들을 다시 읽어들이는 ReloadableResourceBundleMessageSource도 존재 하는데 말입니다. 흠.. 신기할 따름입니다. 프로퍼티파일을 변경하면, JSP가 변경 된 것으로 생각하고, JSP를 Servlet으로 바꾸고, 그걸 다시 컴파일 하면서 ResourceBundleMessageSource도 다시 컴파일 하게 되는 걸까요?? 그렇다면 프로퍼티파일을 변경한 것을 JSP가 어떻게 알았을까요? 흠;; 미궁속으로 빠져드는 느낌입니다.</p>
-<p>XML과 프로퍼티파일 그리고 JSP의 특징으로 인해 빚어진 에피소드였습니다.</p>

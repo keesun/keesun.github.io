@@ -1,9 +1,0 @@
-<p>기존 코드는 getter위에 어노테이션들을 적용했었는데요. 필드 위에 써도 된다고 합니다. 그래서 한번 실험 삼아 해봅니다. 먼저 pgAdmin으로 기존에 있던 테이블을 지웠습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk97.bmp" class="aligncenter" width="330" height="432" alt="사용자 삽입 이미지">bk97.bmp</a>그리고 Pizza 클래스를 다음과 같이 어노테이션들의 위치를 getter위에서 필드 위로 이동시켰습니다.
-<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Id<br />&nbsp; &nbsp; @GeneratedValue(generator = "Pizza_PizzaId_Seq", strategy = GenerationType.AUTO)<br />&nbsp; &nbsp; private Integer pizzaId;</p>
-<p>&nbsp; &nbsp; @Column(nullable = false, length = 50)<br />&nbsp; &nbsp; private String name;</p>
-<p>&nbsp; &nbsp; @Column<br />&nbsp; &nbsp; private Integer price;</p>
-<p>&nbsp; &nbsp; @Column(length = 50)<br />&nbsp; &nbsp; private String size;</p>
-<p>&nbsp; &nbsp; @Column(nullable = false)<br />&nbsp; &nbsp; private String toping;</div>
-<p>그리고 PizzaApp를 실행했습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk98.bmp" class="aligncenter" width="500" height="296" alt="사용자 삽입 이미지">bk98.bmp</a>오호 되는군요~</p>
-<p>어라! 근데 table이 두 개 입니다. Member 테이블 까지 생겼네요. Member 모델과 MemberApp라는 어플리케이션을 만들어서 실험해본 적이 있었는데 MemberApp를 실행하지 않았는데도 Member 테이블이 생긴이유는...</p>
-<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk99.bmp" class="aligncenter" width="474" height="273" alt="사용자 삽입 이미지">bk99.bmp</a>applicationContext-dao.xml의 윗 부분과 같이 설정해 두었기 때문인듯 합니다. 저기서 어노테이션이 붙은 클래스들을 전부 읽어 가기 때문에 PizzaApp가 실행되면서 Member 테이블 까지 만들어 준 것으로 결론이 지어집니다.</p>

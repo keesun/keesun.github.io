@@ -1,8 +1,0 @@
-<p><font size="3"><span style="font-weight: bold;">site</span></font></p>
-<p>지금까지 생성된 파일(구조물 artifact)을 저장소에 빌드하고 위치시키는 과정에 대해 살펴봤습니다. 그러나 Maven은 단순히 코드를 생성하는 것보다 뭔가를 더 해줍니다, 프로젝트에 대한 리포트나 다큐먼트를 생성해주기도 합니다. 그런 일들을 해주는 site는 다음과 같은 Phase로 구성되어있습니다.</p>
-<p>pre-site<br />site - site와 보고서를 생성<br />post-site<br />site-depoly - site를 원격 서버에 배포</p>
-<p>site 라이프사이클에 묶여있는 기본 Goal은 다음과 같습니다.</p>
-<p>site - site:site <br />site-deploy - site:deploy </p>
-<p>default 빌드 라이프사이클과 다르게, 패키징 타입에 따라 달라지는 것이 없습니다. 이전에도 이 Phase를 사용해 본적이 있습니다.</p>
-<p>mvn site</p>
-<p>이것에 대해서는 나중에 다른 챕터에 다룹니다.</p>

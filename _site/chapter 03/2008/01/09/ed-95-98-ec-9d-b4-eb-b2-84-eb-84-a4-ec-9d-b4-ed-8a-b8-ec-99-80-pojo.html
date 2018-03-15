@@ -1,6 +1,0 @@
-<p>하이버네이트는 Pesistent 클래스가 Serializable 인터페이스를 구현하도록 강요하지 않지만, 객체가 HttpSession에 저장되어야 하거나 RMI를 사용하여 전송할 것이라면 구현해야한다.</p>
-<p>JavaBeans 스펙은 특정 생성자를 필요로 하지 않지만, 하이버네이트(와 JPA)에서 모든 Persistent Class들은 인자가 없는 기본 생성자를 필요로 한다.</p>
-<p>생성자는 public이 아니여도 괜찮지만, 만약에 프록시를 사용할 거라면, 최소한 package-visivle(public, protected, default 접근 지시자 사용 가능)해야한다.</p>
-<p>프록시를 생성할 때는 클래스가 final이여서도 안되고 final 메소드를 가지고 있어도 안 된다!</p>
-<p>Persistent Class 객체들의 상태를 어떻게 하이버네이트가 영속화할지는 필드에 직접 접근하거나 게터, 세터 메소드를 사용하는 방법 중에 선택할 수 있다.</p>
-<p>참조 : <a href="http://www.amazon.com/Java-Persistence-Hibernate-Christian-Bauer/dp/1932394885/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1199863766&amp;sr=8-1" target="_blank">Java Persistence With Hibernate</a></p>

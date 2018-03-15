@@ -1,6 +1,0 @@
-<p>스프링 2.0은 보다 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/xsd-config.html" target="_blank">쉬운</a> XML 설정과 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/extensible-xml.html" target="_blank">확장 가능한</a> XML을 도입했다. 이 중 후자는 커스텀 스키마를 만들어 스프링 XML 인프라가 자동으로 해당 설정을 읽을 수 있는 것이 가능해졌다. 그냥 그것들을 클래스패스에 두기만 하면 된다.(이 부분은 토비 사부님이 1회 KSUG에서 발표하셨던 내용) 스프링 DM은 이 기본 지식을 활용해서 OSGi 환경에서 부가적인 코드나 menifest 선언 필요 없이 커스텀 스키마를 사용할 수 있도록 했다.</p>
-<p>Spring DM은 OSGi 공간에 배포되는 모든 번들(스프링 DM 번들이든 아니든 상관없이)들을 조사하여 커스텀 스프링 네임스페이스 선언을 가지고 있는지 스캔한다.(META-INF/spring.handlers 와 META-INF/spring.schemas 번들 영역을 확인한다.) 만약에 해당하는 선언을 찾으면, 스프링 DM은 해당 스키마를 만들고 해당 네임스페이스는 OSGi 서비스를 통해서 자동으로 스프링 번들에 의해 사용이 가능해진다</p>
-<p>=&gt; 즉, 커스텀 스키마를 사용하는 번들을 배포할 때 필요한 건, 네임스페이스 파서와 스키마를 제공하는 라이브러리를 OSGi 플랫폼에 배포하기만 하면 된다는 것이다.</p>
-<p>번들의 클래스 패스 내부에 있는 커스컴 스키마는 OSGi 공간에서 다른 번들들에 의해 사용될 수 있다. 하지만, 번들 내부 라이브리의 네임스페이스는 다른 번들들에의해 공유되지 않는다. 다른 번들들이 볼 수 없다.</p>
-<p>=&gt; 번들로 배포된 네임스페이스만 공개 되고, 내장된 라이브러리의 네임스페이스는 공개하지 않음.</p>
-<p>스프링 DM을 사용하면, 커스컴 네임스페이스 기능을 어떠한 부가작없도 필요없이 투명하게 지원한다. 내장된 네임스페이스 제공자(Embedded namespace provider)들은 우선권을 가지지만 공유하지는 않는다. 이와 반대로 번들로 배포된 제공자(providers deployed as bundle)들은 다른 번들들에서 참조할 수 있다.</p>

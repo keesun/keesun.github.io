@@ -1,7 +1,0 @@
-<p>참조 : <a href="http://www.theserverside.com/news/thread.tss?thread_id=47771" target="_blank">http://www.theserverside.com/news/thread.tss?thread_id=47771</a>, <a href="http://www.zeroturnaround.com/javarebel/features/" target="_blank">http://www.zeroturnaround.com/javarebel/features/</a></p>
-<p>웹 서버를 다시 배포하지 않아도 클래스의 변경 사항을 다시 로딩줍니다.<br />"변경 사항"이라는 것을 자세히 보면 다음과 같습니다.</p>
-<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);"># Changing, adding and removing class/interface methods<br /># Changing, adding and removing class fields<br /># Changing, adding and removing class constructors<br /># Overriding existing methods<br /># Creating new classes or renaming old ones (as long as some other class superclass doesn’t change)<br /># Changing method parameter or return types or field type without changing its name<br /># Changing, adding and removing class/interface constant fields is supported, but will not get reinitialized and thus is only useful for primitive types and Strings</div>
-<p>Java 실행 할때 "-noverify -javaagent:javarebel.jar" 이 옵션을 주면 된다고 합니다. javaagent라는 옵션 참.. 익숙한데, @Configurable 사용할 때 애먹었던 옵션이네요. 이 옵션을 여러번 사용할 수 있는지 궁금해 집니다.</p>
-<p><a href="http://www.zeroturnaround.com/javarebel-demonstration-screencast/" target="_blank">5분짜리 동영상</a>으로 동작하는 모습을 확인할 수 있습니다.</p>
-<p>아.. 상용툴입니다. 하지만 OSS License를 가지고 있는 오픈 소스 개발을 하고 있다면, 무료 라이선스를 준다고합니다.</p>
-<p><a href="http://www.zeroturnaround.com/javarebel/features/" target="_blank"><br /></a></p>

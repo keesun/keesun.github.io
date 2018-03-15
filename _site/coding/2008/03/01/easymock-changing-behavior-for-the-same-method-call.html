@@ -1,5 +1,0 @@
-<p>같은 메소드가 여러번 호출 될 때, 매번 예측되는 결과가 다르다면..</p>
-<p>memberDao.add(member); // Member 객체가 무사히 저장된다.<br />memberDao.add(member); // 예외가 발생한다.</p>
-<p>이런 경우에 그냥 fluent interface로 계속해서 andReturn() 이나 andThrow()를 호출하여 recording 할 수 있습니다.</p>
-<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">memberDao.add(member)<br />&nbsp; &nbsp; .andReturn(resultMember);<br />&nbsp; &nbsp; .adndThrow(new DuplicatedEmailException());</div>
-<p>테스트 클래스 내부에서 의존하는 객체를 여러번 호출할 때, 각각이 다른 행위를 해야 한다면 유용하겠습니다.</p>

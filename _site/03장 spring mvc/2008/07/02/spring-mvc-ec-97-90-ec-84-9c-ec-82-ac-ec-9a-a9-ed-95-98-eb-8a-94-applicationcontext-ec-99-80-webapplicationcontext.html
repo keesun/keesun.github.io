@@ -1,7 +1,0 @@
-<p>보통 스프링 설정 파일이 최소한 두 개이상 있을 겁니다. xxx-servlet.xml 과 나머지로 나눌 수 있습니다. 그중에서 xxx-servlet.xml은 DispatcherServlet이 WebApplicationContext를 만들 때 사용하고, 나머지는&nbsp; ContextLoaderListener 또는 ContextLoaderServlet이 일반적인 ApplicationContext를 만들 때 사용합니다.</p>
-<p>이게 끝이 아닙니다. WebApplicationContext는 바로 이 ApplicationContext를 상속받아서 여러 서블릿들이 공통으로 사용하는 빈들을 사용할 수 있게 되는 겁니다. 따라서 만들어지는 순서도 중요한데, Listener가 아니라 ContextLoaderServlet을 사용했을 때는 load 머시기 설정 값에 1을 줘서 DispatcherServlet보다 먼저 만들게 해야 합니다. 그래서 WebApplicationContext를 만들 때 해당 ApplicationContext를 상속받아서 그 안에 있는 빈들을 사용할 수 있게 되겠죠.</p>
-<p>이런 구조로 설계한 건, DispatcherServlet이 하나의 웹 애플리케이션에서 여러 개일 수 있기 때문입니다. 여러 개의 DispatcherServlet에서 공통으로 사용할 빈들을 상위에 있는 ApplicationContext에 선언해두고 공유할 수 있게 하는 거죠.</p>
-<p><img src="/assets/ik20.png" class="aligncenter" width="319" height="342" alt="사용자 삽입 이미지" /><br />자. 그럼 여기서 문제</p>
-<p>만약에 스프링 2.5 컨트롤러를 사용하고 있고 이 컨트롤러에 특정 @Aspect를 적용하고 싶을 때 해당 AOP 관련 설정(aop:autoproxy 머시기 엘리먼트 + @Aspect 빈 등록)은 xxx-servlet.xml과 applicationContext.xml 둘 중 어디에 둬야 할까요?</p>
-<p>xxx-servlet.xml에는 컨트롤러 설정, 뷰 리졸버, 핸들러 맵퍼 등의 설정이 되어 있고, applicationContext.xml에는 서비스, DAO 등의 설정이 들어있습니다.<br />&nbsp;<br />ㄱ. xxx-servlet.xml<br />ㄴ. applicationContext.xml<br />ㄷ. 어디에 두든지 상관없다.<br />ㄹ. 스프링 2.5 컨트롤러에는 Spring AOP를 사용할 수 없다.</p>
-<p>정답은?? <span style="color: rgb(255, 255, 255);">ㄱ 입니다. 왜냐면, applicationContext.xml을 사용해서 ApplicationContext를 만드는 순간에는 컨트롤러들이 미쳐 빈으로 등록되어 있지도 않기 때문에, 프록시를 만들 대상이 없습니다. 다시 말해, AOP 빈은 있지만, 이 AOP를 적용할 대상이 되는 빈이 없는겁니다. 따라서 컨트롤러들과 관련된 설정이 있는 xxx-servlet.xml에 해당 설정을 위치해야 합니다.</span></p>
