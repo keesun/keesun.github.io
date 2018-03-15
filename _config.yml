@@ -19,12 +19,25 @@ email: whiteship2000@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   This is blog of Keesun (A.K.A Whiteship).
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://keesun.github.io" # the base hostname & protocol for your site, e.g. http://keesun.github.io
+url: "" # the base hostname & protocol for your site, e.g. http://keesun.github.io
 twitter_username: keesun
 github_username:  keesun
+repository: keesun/keesun.github.io
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-cayman
+theme: minima
 plugins:
   - jekyll-feed
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
