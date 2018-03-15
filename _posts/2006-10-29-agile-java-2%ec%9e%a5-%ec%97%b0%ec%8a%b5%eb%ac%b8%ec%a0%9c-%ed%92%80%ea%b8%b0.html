@@ -1,0 +1,208 @@
+---
+layout: post
+title: Agile Java 2장 연습문제 풀기
+date: 2006-10-29 02:47:46.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Agile Java
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322999306'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. TestPawn에 색이 없이 말을 생성하는 테스트를 추가한다. 이 테스트는 왜 컴파일 에러를 발생시키는가? 기본으로 횐색의 말을 생성하는 두 번째 생성자를 추가하여 이 컴파일 에러를 고쳐보자.</p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+1장 연습문제를 풀 때 기본 생성자를 지웠기 때문에 당연히 에러가 발생합니다.</p>
+<p>PawnTest 클래스에 다음의 메소드를 추가합니다.<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void CreateWithoutColor(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn firstPawn = new Pawn();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String defaultColor = "white";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(defaultColor, firstPawn.getColor());<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+Pawn 클래스에는 다음의 코드를 추가합니다.<br />
+[#M_ more.. | less.. | <br />
+public Pawn() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this("white");<br />
+ &nbsp;&nbsp; }<br />
+_M#]</p>
+<p>_M#]<br />
+2. 두 색상에 대한 상수를 만들고 그 상수를 Pawn 클래스로 옮긴다.</p>
+<p>코드보기<br />
+[#M_ more.. | less.. | <br />
+public class Pawn {</p>
+<p> &nbsp;&nbsp; String color;</p>
+<p> &nbsp;&nbsp; static final String White = "white";</p>
+<p> &nbsp;&nbsp; static final String Black = "black";</p>
+<p> &nbsp;&nbsp; public Pawn() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this("white");<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public Pawn(String color) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.color = color;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public String getColor() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return color;<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>public class PawnTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void Create(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; final String firstPawnColor = "white";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn firstPawn = new Pawn(Pawn.White);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(firstPawnColor, firstPawn.getColor());</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; final String secondPawnColor = "black";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn secondPawn = new Pawn(Pawn.Black);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(secondPawnColor, secondPawn.getColor());<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void CreateWithoutColor(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn firstPawn = new Pawn();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String defaultColor = Pawn.White;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(defaultColor, firstPawn.getColor());<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+3. 장기 말은 체스 판이 없이는 쓸 수 없다. Board 클래스를 정의하기 위한 테스트를 사용한다. 체스 판이 위에 말이 없는 상태로 시작하는 것을 확인한다. TDD(테스트 위주 개발, test driven development) 과정을 적용한다. 가능한 가장 작은 테스트를 작성하고 붉은 막대를 보이며 실패하거나 컴파일 에러가 일어나는 것을 확인한다. 점차적으로 조금씩 코드를 추가하면서 컴파일이 되도록 하고 테스트에서 녹색 막대가 나타나도록 한다.</p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1094424774.bmp" class="aligncenter" width="434" height="150" alt="">1094424774.bmp</a><br />
+코드보기<br />
+[#M_ more.. | less.. | <br />
+public class BoardTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void create(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; new Board();<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>public class Board {</p>
+<p>}<br />
+_M#]<br />
+_M#]<br />
+4. 장기말을 체스판에 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">추가할 수 있는 코드</span>를 작성한다. 테스트에서 검은 색과 흰색의 말을 체스판에 추가한다. 말을 추가할 때마다<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> 말의 수가 맞는 것을 확인</span>한다. 또한 말을 추가할 때마다 체스판에서 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">말의 목록을 얻어서 원하는 말 객체를 가지고 있는 것을 확인</span>한다.</p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+문제 하나로 바라는 것도 많군..<br />
+BoardTest 에 다음의 코드를 추가합니다.<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void addPawn(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Board chessBoard = new Board();</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; Pawn newPawn = new Pawn(Pawn.Black);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; chessBoard.add(newPawn);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( 1, chessBoard.getNumberOfPawns());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( newPawn, chessBoard.getPawn(0));</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; newPawn = new Pawn(Pawn.White);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; chessBoard.add(newPawn);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( 2, chessBoard.getNumberOfPawns());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( newPawn, chessBoard.getPawn(1));<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+Board 클래스입니다.<br />
+[#M_ more.. | less.. | <br />
+public class Board {</p>
+<p> &nbsp;&nbsp; List pawns = new ArrayList();</p>
+<p> &nbsp;&nbsp; public void add(Pawn newPawn) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pawns.add(newPawn);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public int getNumberOfPawns() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return pawns.size();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public Pawn getPawn(int i) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return (Pawn) pawns.get(i);<br />
+ &nbsp;&nbsp; }</p>
+<p>}<br />
+_M#]<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1047834291.bmp" class="aligncenter" width="434" height="173" alt="">1047834291.bmp</a>_M#]<br />
+5. 지금까지 작성한 각각의 결과 클래스와 메소드에 javadoc을 작성한다. 메소드가 이미 나타내고 있는 정보를 중복해서 보이지 않는다! javadoc은 단지 보충 정보일 뿐이다.</p>
+<p>javadoc -package -classpath "소스파일 있는 곳";"junit-4.1.jar파일 있는 곳" *.java</p>
+<p>6. 작성한 클래스와 네 개의 테스트를 패키지로 묶는다. 패키지 이름을 chess로 한다. 컴파일 문제를 해결하고 녹색 막대를 다시 확인하자. 또한 import 문을 사용해서 List와 ArrayList의 전체 클래스 이름을 바꾼다.</p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+네 개의 테스트가 아니라 두 개의 테스트인데.. 책의 오타인듯. <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1291328692.bmp" class="aligncenter" width="246" height="173" alt="">1291328692.bmp</a>이미 import문은 사용해버려서.. 고칠게 없습니다.<br />
+java.util.List pawns = new java.util.ArrayList(); 이런식으로 사용하길 바랬나봅니다.<br />
+_M#]</p>
+<p>7. TestPawn과 Pawn을 pices라는 이름의 패키지로 옮기고 이 과정에서의 문제를 해결한다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1191917577.bmp" class="aligncenter" width="246" height="208" alt="">1191917577.bmp</a></p>
+<p>8. 체스판에 Pawn 이외의 객체가 추가되지 않도록 한다. 말의 리스트에 new Integer("7")객체를 추가해 보고 컴파일 에러가 발생하는 것을 확인한다.</p>
+<p>Board 클래스를 수정합니다.<br />
+[#M_ more.. | less.. | <br />
+public class Board {</p>
+<p> &nbsp;&nbsp; List&lt;Pawn&gt; pawns = new ArrayList&lt;Pawn&gt;();</p>
+<p> &nbsp;&nbsp; public void add(Pawn newPawn) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pawns.add(newPawn);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public int getNumberOfPawns() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return pawns.size();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public Pawn getPawn(int i) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return pawns.get(i);<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]</p>
+<p>9. 각각의 테스트 클래스를 실행하는 테스트 스위트를 생성한다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1123310080.bmp" class="aligncenter" width="434" height="173" alt="">1123310080.bmp</a><br />
+10. 지금까지 작성한 코드를 둘러보고 코드에 중복되는 부분이 없는지 확인한다. 테스트 코드 역시 코드임을 기억하자. 필요하다면 setUp 메소드를 사용한다.</p>
+<p>BoardTest 클래스를 수정합니다.<br />
+[#M_ more.. | less.. | <br />
+public class BoardTest {</p>
+<p> &nbsp;&nbsp; Board chessBoard;</p>
+<p> &nbsp;&nbsp; @Before<br />
+ &nbsp;&nbsp; public void setUp(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; chessBoard = new Board();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void addPawn(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn newPawn = new Pawn(Pawn.Black);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; chessBoard.add(newPawn);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( 1, chessBoard.getNumberOfPawns());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( newPawn, chessBoard.getPawn(0));</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; newPawn = new Pawn(Pawn.White);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; chessBoard.add(newPawn);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( 2, chessBoard.getNumberOfPawns());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals( newPawn, chessBoard.getPawn(1));</p>
+<p> &nbsp;&nbsp; }<br />
+}<br />
+_M#]</p>

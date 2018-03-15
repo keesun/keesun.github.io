@@ -1,0 +1,81 @@
+---
+layout: post
+title: Null은 객체인가 아닌가? 2
+date: 2006-11-12 03:54:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Null Object 없슴
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323013509'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.faqs.org/docs/thinkjava/chap08.htm">http://www.faqs.org/docs/thinkjava/chap08.htm </a>이곳의 8.10에 있는 원문입니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228)">
+<h3>8.10 <span class="code"><span class="keyword">null</span></span></h3>
+<p>When you create an object variable, remember that you are creating a <em>reference</em> to an object.  Until you make the variable point to an object, the value of the variable is <span class="code"><span class="keyword">null</span></span>.  <span class="code"><span class="keyword">null</span></span> is a special value in Java (and a Java keyword) that is used to mean "no object."</p>
+<p>The declaration <span class="code">Point blank;</span> is equivalent to this initialization</p>
+<p><span class="code">&nbsp; &nbsp; Point blank = <span class="keyword">null</span>;<br />
+</span>
+<p>and is shown in the following state diagram:</p>
+<p align="center"><img src="{{ site.baseurl }}/assets/reference2.png" alt="" /></p>
+<p>The value <span class="code"><span class="keyword">null</span></span> is represented by a dot with no arrow.</p>
+<p>If you try to use a null object, either by accessing an instance variable or invoking a method, you will get a <span class="code">NullPointerException</span>.  The system will print an error message and terminate the program.</p>
+<p><span class="code">&nbsp; &nbsp; Point blank = <span class="keyword">null</span>;<br />
+&nbsp; &nbsp; <span class="keyword">int</span> x = blank.x;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="comment">// NullPointerException</span><br />
+&nbsp; &nbsp; blank.translate (50, 50);&nbsp; &nbsp; &nbsp;<span class="comment">// NullPointerException</span><br />
+</span>
+<p>On the other hand, it is legal to pass a nullobject as an argument or receive one as a return value. In fact, it iscommon to do so, for example to represent an empty set or indicate anerror condition.</p>
+</div>
+<p>
+이렇게 나와있습니다.</p>
+<p>import java.awt.Point;</p>
+<p>public class NullTest {<br />
+ &nbsp;&nbsp; public static void main(String args[]){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Point blank = null;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; int x = blank.x; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />
+ &nbsp;&nbsp; &nbsp; &nbsp; blank.translate (50, 50); &nbsp; &nbsp; <br />
+ &nbsp;&nbsp; }<br />
+}<br />
+를 실험해본 결과.. compile은 통과 되고 실행시 NullPointerException이 발생합니다.</p>
+<p>결국.. null은 그냥 그 레퍼런스가 아무것도 가리키고 있지 않다는 것을 나타내고 이러한 비어있는.. 즉 아무것도 가리키고 있지 않은 레퍼런스에 뭐든 call을 하면(레퍼런스의 타입에 정의되어 있는 메소드나 변수) NullPointerException이 발생한다는 것으로 결론을 맺는것이 해피하고 맞는것 같습니다.</p>
+<p>결국 제가 잘못 생각했던 것 같습니다. Null Object라는 단어를 Null 객체가 아니라 비어있는 객체라고 비어있는 레퍼런스라고 생각을 했어야 했는데 너무 제멋대로 받아들인 격이 되었군요. 디코더(대엽)님께서 지적해 주셔서 한번 더 살펴봤기에 망정이지 계속 잘못 생각하고 있을뻔했습니다. 감사합니다. 찬욱이랑 성일형도 썡큐요~</p>

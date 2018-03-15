@@ -1,0 +1,19 @@
+<p><strong>psql로 접속</strong></p>
+<p>sudo su - postgres</p>
+<p>psql -U postgres DB이름</p>
+<p>이렇게 하면 콘솔이 DB이름이 됨. 이제 여기서 할 일을 하면 되는데..</p>
+<ul>
+<li>\h를 입력하면 사용할 수 있는 SQL을 보여주고</li>
+<li>\?를 입력하면 사용할 수 있는 psql 커맨드를 보여준다.</li>
+<li>그리고 쿼리를 실행하려면 세미콜론으로 끝내면 된다.</li>
+</ul>
+<p><strong>컬럼 타입 변경하기</strong></p>
+<p>ALTER TABLE 테이블이름 ALTER COLUMN 컬럼이름 TYPE 원하는타입;</p>
+<p>예) Comment 테이블의 comment 컬럼 타입을 text로 변경하기</p>
+<p>ALTER TABLE Comment ALTER COLUMN comment TYPE text;</p>
+<p><strong>테이블 목록 출력</strong></p>
+<p>\dt</p>
+<p><strong>테이블 스키마 확인</strong></p>
+<p>\d 테이블이름</p>
+<p><strong>DB 목록 확인</strong></p>
+<p>\l (엘)</p>

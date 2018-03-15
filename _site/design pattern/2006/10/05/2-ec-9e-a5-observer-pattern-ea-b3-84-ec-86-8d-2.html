@@ -1,0 +1,41 @@
+<div>기상 스테이션</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26059931_683x330.jpg');" alt="" src="/assets/26059931_683x330.jpg" border="0" /> </div>
+<div>복잡해 보일 수도 있지만 매우 간단한 class diageam입니다. 각각의 display들이 Display interface를 구현하도록 추가한 것만 빼면 기본적인 observer패턴의 모습과 같습니다.</div>
+<div>WeatherData class에는 observer들을 등록, 삭제할 List를 가지고 있어야 합니다. 그래야 나중에 상태가 바뀌었을 때(measurementsChanged()가 호출됐을 때) notifyObservers() 메소드에서 자신의 정보를 원하는 옵저버들에게 정보를 줄 수 있겠죠.</div>
+<div>정보를 전달하는 방법은 옵저버들이 가지고 있는 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">update 메소드를 호출하여 update 메소들의 인자로 data를 넘기는 방법을 사용합니다.</span> 이 방법은 subject에서 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">정보가 바뀔때 마다 모든 옵저버들에게 정보를 넘겨주는 방식으로 push 하는 방식</span>입니다.</div>
+<div>이러한 방법의 단점은 옵저버가 원하든 원치 않든 등록되어 있으면 무조건 정보가 바뀔 때 마다 갱신 받는 것입니다.(물론 그러고 싶어서 등록한거겠지만 가끔가다 단체로 가족여행 갔을 때 신문이 쌓여 있으면 도둑이 들기 쉽기 때문에 잠깐만 신문배달을 중지하고 싶기도 하겠죠..)</div>
+<div>따라서 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">무조건 받는 방법 말고 옵저버가 원할 때 원하는 정보만 가져 갈 수 있도록 하는 pull방식을 사용하는 것이 유용할 때도 있습니다.</span></div>
+<div>그리고 자바 API에 이미 pull방식과 push방식이 모두 가능한 class들을 구현해 두었습니다.
+</div>
+<div>(update의 인자로 Observale객체 자체를 넘기도록 구현해 두었습니다. 구독자 입장에서는 원하는 시점에서 원하는 정보를 getter를 사용해서 가져가면 되기 때문이지요.)
+</div>
+<div>앞에서 보았던 Subject interface에 해당하는 것이 java의 Observable abstract class입니다. class이기 때문에 상속을 사용해야겠지요.</p>
+<h2><font size="-1">java.util</font> <br />
+Class Observable</h2>
+<pre><a title="class in java.lang" href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html">java.lang.Object</a>  <img alt="extended by" src="/assets/inherit.gif" /><strong>java.util.Observable</strong></pre>
+<p><img src="/assets/1292439885.jpg" class="aligncenter" width="640" height="461" alt="" />
+<div>setChanged() 메소드는 객체의 정보가 바꼈는지 체크하는 플래그를 true로 만드는 메소드입니다. 이 메소드를 사용하면 매번 정보가 바뀔 때마다 알려주는 것이 아니라 subject에서 알려주고 싶을 때 알리도록 조절할 수 있다는 유용함이 생기겠네요.</div>
+<div>그리고 다음은 앞에서 보았던 Observer와 거의 같은 Observer 인터페이스입니다.<br />
+notifyObservers() 메소드가 Observer 인터페이스에 있는 update() 메소드를 호출할 것입니다.</p>
+<p><img src="/assets/1373353310.jpg" class="aligncenter" width="640" height="77" alt="" /></div>
+</div>
+<p></p>
+<div>update의 인자가 우리가 사용한 것( update( teperature, humidity, pressure) )와는 약간 다르네요. 처음에 넘겨주는 것이 observeable( subject 객체 ) 그리고 정보를 객체형태로 넘겨줍니다.</div>
+<div>이 둘을 이용해서 class diagram을 수정하면 다음과 같습니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26060160_581x318.jpg');" alt="" src="/assets/26060160_581x318.jpg" border="0" /> </div>
+<div>자바에 내장된 옵저버 패턴을 사용하려면</div>
+<div>먼저 옵저버가 되어야 하기 때문에 addObserver() 메소드를 호출하면 되고 탈퇴하고 싶을 때는 deleteObserver()를 호출하면 됩니다.</div>
+<div>이 부분은 전에 사용한 방법과 같습니다 단지 메소드 이름만 바뀐거죠.</div>
+<div>다음으로 달라진 부분인데 바로 정보를 전달하는 부분입니다.</div>
+<div>연락을 돌리려면 먼저 setChanged()를 호출해서 바꼈다는 flag를 true로 만들어 주어야 합니다.</div>
+<div>그리고 그 다음에 notifyObservers() 또는 notifyObservers(Object arg) 를 호출하여 그 내부에서 옵저버에 있는 update(Observable o, Object arg)를 호출하도록 합니다.</div>
+<div>전에 사용하던 방법에 setChanged()를 호출하는 부분이 추가 된 것입니다.</div>
+<div>이렇게 함으로써 정말 필요로도 할 때 정보를 갱신할 수 있는 유용함이 생기는 것입니다.</div>
+<div>아! 그리고 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">update 메소드에 subject객체 자체를 보내기 때문에 이 객체에 있는 getter를 통해서 원하는 정보만 가져갈 수도 있게 되었군요.</span></div>
+<div>풀방식을 이런식으로 사용할 수 있었네요 ㅎㅎ</div>
+<div>p106에 제일 하단의 음영처리된 부분에 있는 gettere들을 보시면 무슨 말인지 이해하실 수 있을 것입니다.</div>
+<div>그리고 또 차이점이 있는데</div>
+<div>연락을 돌리는 순서가 옵저버들이 등록된 순서에 의존하지 않는 다는 것입니다.</div>
+<div>(신문 배달이 옆집다음에 우리집에 주든 우리집에 주고 옆집을 주든 별 상관이 없죠? 신문을 받는 다는것 자체가 중요하죠.)</div>

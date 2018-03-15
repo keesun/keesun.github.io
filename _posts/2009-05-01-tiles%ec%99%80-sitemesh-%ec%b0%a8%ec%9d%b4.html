@@ -1,0 +1,106 @@
+---
+layout: post
+title: Tiles와 SiteMesh 차이
+date: 2009-05-01 05:42:50.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Composite View
+- decorator
+- sitemesh
+- Tiles
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323123855'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://tiles.apache.org/framework/tutorial/pattern.html]로 이동합니다." target="_blank" href="http://tiles.apache.org/framework/tutorial/pattern.html">http://tiles.apache.org/framework/tutorial/pattern.html</a></p>
+<p>이 두 가지 툴이 비슷한 일을 하지만, 그 일을 하는 방식은 다른 것 같습니다. Tiles는 Composite View 패턴을 사용하고 SiteMesh는 Decorator 패턴을 사용하는 차이가 있더군요.</p>
+<p>두 패턴을 비교한 표가 있길래 옮겨 봅니다.</p>
+<table class="bodyTable">
+<tbody>
+<tr class="a">
+<td align="left"><b>Aspect</b></td>
+<td align="left"><b>Composite View</b></td>
+<td align="left"><b>Decorator</b></td>
+</tr>
+<tr class="b">
+<td align="left">Reusability</td>
+<td align="left">The different parts of the<br />
+page (template and pieces) can<br />
+be reused across the whole<br />
+application.</td>
+<td align="left">Each decorator can be<br />
+reused, but the decoration<br />
+itself can be applied to<br />
+one page at a time.</td>
+</tr>
+<tr class="a">
+<td align="left">Ease of<br />
+configuration</td>
+<td align="left">Each page must be defined<br />
+explicitly.</td>
+<td align="left">The decorator can be<br />
+applied even to the entire<br />
+application.</td>
+</tr>
+<tr class="b">
+<td align="left">Runtime<br />
+configuration</td>
+<td align="left">The pages can be configured<br />
+and organized at runtime</td>
+<td align="left">Since one page is decorated<br />
+at a time, this feature is<br />
+not present.</td>
+</tr>
+<tr class="a">
+<td align="left">Performances</td>
+<td align="left">Low overhead for composition.</td>
+<td align="left">The page to be decorated<br />
+has to be parsed.</td>
+</tr>
+</tbody>
+</table>
+<p>일단, 재사용성에 있어서는 매번 데코레이터를 적용하여 페이지를 만들어 내는 데코레이터 패턴 보다는 변하는 부분만 바뀌고 나머지는 재사용하는 컴포짓 뷰 패턴에 한표를 주고 싶습니다.</p>
+<p>두 번째, 설정에 있어서는 컴포짓 뷰 패턴이 모든 페이지에 (뷰 구성요소들을)명시적으로 정의해줘야 하는 불편함이 있기 때문에 데코레이터에게 한표 주겠습니다.</p>
+<p>세 번째. 실행시에 설정을 변경할 수 있는 것 때문에 컴포짓 뷰에 한표 주겠스니다.</p>
+<p>마지막으로 성능에 있어서도 컴포짓 뷰에 한표 주겠습니다.</p>
+<p></p>

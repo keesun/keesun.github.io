@@ -1,0 +1,63 @@
+---
+layout: post
+title: Git - 분산 버전 관리 시스템(Distributed VCS)
+date: 2008-08-10 11:35:22.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Git
+- SCM
+- VCS
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323111619'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조<br /><a href="http://www.infoq.com/articles/dvcs-guide" target="_blank">http://www.infoq.com/articles/dvcs-guide</a><br /><a href="http://betterexplained.com/articles/intro-to-distributed-version-control-illustrated/" target="_blank">http://betterexplained.com/articles/intro-to-distributed-version-control-illustrated/</a><br /><a href="http://bazaar-vcs.org/Workflows" target="_blank">http://bazaar-vcs.org/Workflows</a><br /><a href="http://github.com/" target="_blank">http://github.com/</a></p>
+<p>먼저, 분산 이라는 표현이 좀 애매해서 이해하는데 어려울 수 있는데, "독립적인" 또는 "peer-to-peer"라는 표현이 더 좋겠다는 생각에 동의합니다.(두번째 링크 참조)</p>
+<p><img src="{{ site.baseurl }}/assets/hk130000000000.png" class="aligncenter" width="421" height="302" alt="사용자 삽입 이미지" />첫번째 링크에서 퍼온 그림.</p>
+<p>위 그림을 보고 대충 짐작을 할 수 있습니다. 기존의 방식은 왼쪽처럼 한 곳에 중앙 리파를 두고 거기에 소스코드를 커밋or체크아웃/업데이트 하는 방식이었데, 분산 VCS에서는 각자가 자신만의 리파를 두고 그곳에 코드를 변경합니다. 외부로 접속하지 않으니깐 빠르겠죠. 그리고 서로 각자가 변경한 코드들을 상대방에서 push 해서 상대반 저장소의 코드를 업데이트 하거나, pull 해서 끌어올 수 있습니다. 마치 각자가 브랜치를 가지고 작업하는 것과 동일합니다. 그러다가 서로 충돌나는 부분이 있으면 merge를 하면 되는데, CVS나 SVN에서의 merge랑은 차원이 다르게 간편하고 유용하다고 합니다.</p>
+<p>리누즈 토발즈는 SVN을 뭘하는 건지 모르겠는 프로젝트(pointless project)라고 비아냥 거렸고, CVS를 좋아하는 사람들은 정신병원에 가야한다는 농담을 했습니다.(두번째 링크에 리누즈 토발즈의 동영상 중에 직접 언급을 하며, 첫 번째 링크에는 아래처럼 요약해 두었습니다.)<br />
+<blockquote>Linus Torvald: "Subversion has been the most pointless project ever started". "If you like using CVS, you should be in some kind of mental institution or somewhere else".</p></blockquote>
+<p>Git 같은 분산 VCS를 사용해서도, 중앙 리파를 쓰는 CVS나 SVN을 쓰듯이 워크 플로우를 잡을 수 있습니다. 하지만, CVS나 SVN으로는 구성할 수 없는 워크 플로우를 Git를 사용해서는 구성할 수 있습니다. 예를 들어, 세번째 링크에 있는 Decentralized with human gatekeeper 모델은.. 아래와 같습니다.<br /><img src="{{ site.baseurl }}/assets/hk130000000001.png" class="aligncenter" width="512" height="362" alt="사용자 삽입 이미지" />주 코드에 변경을 가하기 전에 누군가 코드를 검사한 다음 그 걸 반영하는 워크 플로웁니다. 개발자가 많고 각각의 실력 편차가 심한 상황에서 코드 품질을 관리하려면, 선임 개발자 몇명을 두고, 저런 워크 플로우로 개발하는 것이 좋겠죠. 그러나 SVN으로.. 저런 걸 어떻게 할까요? SVN에는 저런 워크 플로우를 지원하기 위한 어떤 것도 없습니다. Git같은 분산 VCM으로는 가능합니다. 하는 방법도 위에 써져있죠. ㅋ</p>
+<p>pull/push/update/merge에 대한 용어 설명은 두 번째 링크에 있습니다.</p>
+<p>재밌는 툴인거 같습니다. 저장소를 설치하기 귀찮다면 100메가까지 무료로 제공해주는 웹 리파를 사용할 수 있겠습니다. 네 번째 링크에 있습니다.</p>
+<p>위와 같은 신기한 툴을 알려주신 사부님께 땡큐입니다. SVN으로 평생 commit/update만 하면서 살뻔했는데, 이젠 branch나 merge같이 좀 더 SCM 스러운 툴을 써볼 수 있게 됐네요.</p>

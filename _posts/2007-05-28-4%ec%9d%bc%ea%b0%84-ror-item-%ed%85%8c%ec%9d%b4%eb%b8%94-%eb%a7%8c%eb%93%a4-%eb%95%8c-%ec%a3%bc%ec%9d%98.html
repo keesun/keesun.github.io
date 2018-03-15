@@ -1,0 +1,60 @@
+---
+layout: post
+title: '"4일간 RoR" Item 테이블 만들 때 주의~'
+date: 2007-05-28 03:10:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- on Rails
+tags:
+- 4일간 RoR
+- Four Days on Rails
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323016893'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>엄청나게 삽질을 했네요;; 분명히 레퍼런스대로 다 따라했는데 안 되는거에요. priority에 값을 줬는데 안줬다고 에러가 나는데 이것 참 난감하더군요.</p>
+<p>그래서 따라하던 소스코드는 지워버리고 <a href="http://rails.homelinux.org/" target="_blank">http://rails.homelinux.org/</a> 여기서 소스코드를 받아서 돌려보고 있는데 역시나 같은 에러가 발생합니다. 이거 대체 뭐야... 분명히 window랑 Linux에서 테스트 했다고 했는뎅;; 하며서 다시 위 링크를 살펴봤습니다.</p>
+<p>페이지 맨 아래에 두 줄..
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">In particular, I have had reports that the data type tinyint(1) causes<br />
+    problems in the Priority field in the Item table - if this happens to<br />
+    you, please try increasing the size of the field.</div>
+<p>=&gt; Item 테이블의 Priority 의 데이타 타입을 tinyint(1)로 했을 때 잘 안되는 경우가 있는데 그럴 떄는 필드 사이즈를 조정해 주세요.</p>
+<p>ㄷㄷㄷ;; 이것 때문에 몇 시간을 소비한거야!! ㅠ.ㅠ<br /><img src="{{ site.baseurl }}/assets/dm211.png" class="aligncenter" width="500" height="425" alt="사용자 삽입 이미지" />휴~ 이렇게 수정해주고 나니 잘 돌아가네요. 이런~ 날려버린 나의 소스 코드 다시 만들어야 겠네요.ㅋㅋ</p>

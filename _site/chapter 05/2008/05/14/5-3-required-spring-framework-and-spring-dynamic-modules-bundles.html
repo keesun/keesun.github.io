@@ -1,0 +1,3 @@
+<p>스프링 Extender가 제대로 동작하려면 OSGi 플랫폼에 배포해야 할 몇몇 번들 아티팩트들이 있다.<br />- org.springframework.osgi.extender : extender 번들 자신<br />- org.springframework.osgi.core : 스프링 DM을 지원하는 핵심 구현체 변들<br />- org.springframework.osgi.io : 스프링 DM I/O 지원 라이브러리 번들</p>
+<p>여기에 추가로 스프링 라이브러리가 필요한데, 스프링 2.5부터는 OSGi 플랫폼에 바로 배포가 가능한 형태로 배포하고 있다. 그 중에 다음을 필요로 한다.<br />- spring-core.jar<br />- spring-context.jar<br />- spring-beans.jar<br />- spring-aop.jar</p>
+<p>추가로 다음의 라이브러리 번들을 필요로 한다. OSGi 플랫폼에 배포 가능한 형태의 JAR 파일들을 Spring DM With Dependencies 형태로 배포한 파일에 들어있다.<br />- aopalliance<br />- backport-util(JDK 1.4에 돌릴 때만 필요)<br />- cglib-nodep<br />- commons-logging API(SLF4J 강추)<br />- logging 구현체</p>

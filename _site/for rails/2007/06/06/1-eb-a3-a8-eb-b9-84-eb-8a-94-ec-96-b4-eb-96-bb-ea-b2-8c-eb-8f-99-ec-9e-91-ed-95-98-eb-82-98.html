@@ -1,0 +1,10 @@
+<p>참조 : <a href="http://book.interpark.com/product/BookDisplay.do?_method=Detail&amp;sc.shopNo=0000400000&amp;sc.dispNo=&amp;sc.prdNo=200666398" target="_blank">레일스를 위한 루비<br /></a><br /><strong>- print 와 puts의 차이</strong><br />puts는 출력을 한 다음에 항상 개행 문자 붙여준다.<br />puts는 개행 문자가 맨뒤에 붙어있을 경우 무시한다.(일부 OS(winXXX)에서는 말을 안듣는다.)</p>
+<p><strong>- 메소드 호출의 특이함</strong><br />"100".to_i<br />100.to_s<br />직관적이고 편리하며 보다 더 객체지향적임</p>
+<p><strong>- 문법 오류 검사하기</strong><br />ruby -cw 루비파일(c2f.rb)<br />c :: 문법검사<br />w :: 경고 메시지 보여주기</p>
+<p><strong>- 입출력</strong><br />모니터로 출력은 살펴봤고<br />키보드로 입력은 gets<br />파일에서 입력은 File.read("파일명") 리턴값은 문자열<br />파일로 출력은 1. 파일 만들고(file = File.new("파일명") 2. 파일에 쓰고 file.puts "쓸것" 3. 닫기 file.close</p>
+<p><strong>- require 와 load</strong><br />둘 다 다른 파일에 이는 코드를 현재 파일로 불러 온다.<br />차이점 : load는 호출할 때마다 해당 코드를 삽입 하지만 require는 한번만 삽입한다.<br />require 사용하여 라이브러리 로딩<br />예) require 'cgi' require 'REXML/Document'</p>
+<p><strong>- Command Line switch</strong><br />-c 랑 -w는 살펴봤고<br />-e :: 뒤에 오는 문자열 실행<br />-v :: 버전 표시 + 상세 설명 모드에서 실행<br />-l :: 뒤에 오는 문자열 뒤에 무조건 개행<br />-rname :: name에 지정한 확장을 로드함(require)<br />--version :: 버전 표시</p>
+<p><strong>- Ruby 설치 폴더 찾기<br /></strong>1. irb -rrbconfig 실행<br />2. Config::CONFIG["찾을 폴더 식별자"]<br />찾을 폴더 식별자 :: bindir, rubylibdir, archdir, sitelibdir, sitearchdir</p>
+<p><strong>- 프로파일링<br /></strong>ruby -r profile 루비파일(c2f.rb)<br />프로그램을 수행하는데 드는 시간을 라인별로 확인할 수 있다. good</p>
+<p><strong>- ri 와 RDoc<br /></strong>RDoc은 JavaDoc와 같은 녀석<br />ri는 Java에 없는 것으로 RDoc의 정보를 찾아서 보여줌. 예)ri require</p>
+<p><strong>- ERb<br /></strong>매우 중요한 프로그램<br />HTML안에 루비코드를 포함시켜둔 다음 그 파일을 erb를 사용하여 읽으면 ERb가 루비 코드를 해석하여 HTML 파일을 재구성한다.<br />&lt;% %&gt;는 루비코드 실행 =&gt; JSP의 스크립틀릿<br />&lt;%= %&gt;는 루비코드로 출력 =&gt; JSP의 표현식</p>

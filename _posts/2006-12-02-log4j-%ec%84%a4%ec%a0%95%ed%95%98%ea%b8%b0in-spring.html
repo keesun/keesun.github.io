@@ -1,0 +1,68 @@
+---
+layout: post
+title: log4j 설정하기(in spring)
+date: 2006-12-02 04:28:27.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323007084'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(208, 255, 157)"><span style="font-weight: bold;">log4j.properties 파일을 작성합니다.</span></p>
+<p>[#M_ more.. | less.. | <br />
+log4j.rootLogger=DEBUG, stdout<br />
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender<br />
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout<br />
+log4j.appender.stdout.layout.ConversionPattern=%d %p %c - %m%n<br />
+_M#]<br />
+rootLogger에서 첫번째 DEBUG는 로깅 레벨을 지정합니다. 각 logging 툴 마다 지원하는 레벨이 다른데 <a href="http://blog.empas.com/ahnyounghoe">예전 영회형 블러그</a>에 log4j와 logging을 비교해둔 표가 있어서 퍼왔습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1122878350.bmp" class="aligncenter" width="588" height="875" alt="">1122878350.bmp</a><br />
+log4j 는 다섯 단계 logging은 7 단계가 있는 아래로 갈 수록 많은 메시지를 출력해 줍니다. 다른 부분은 log4j를 공부해 볼 시간이 없기 때문에 직관적으로 콘솔 창에 뿌려주겠다고 설정하는 부분과 출력하는 포맷을 지정하는 것 같습니다.</div>
+<p>
+이렇게 파일을 작성하는 데에는 역시 구글 신 님과 영회 형 블러그의 힘이 컸습니다. 감사합니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)"><span style="font-weight: bold;">파일 위치 시키기</span><br style="font-weight: bold" /><br />
+하지만 이 파일을 어디에 위치 시켜야 돌아가는지는 모르겠더군요. 그래서 이곳 저곳 열심히 복사해서 놓고 삭제하고 해보다 보니.. 소스코드폴더에 위치 시키면 된다는 것을 삽질로 발견했습니다. ㅎㅎㅎ;;<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1401683011.bmp" class="aligncenter" width="285" height="229" alt="">1401683011.bmp</a>소스 코드 폴더가 두 개이기 때문에 두 곳에 모두 위치 시켜 놓지 않으면 log4j 설정파일을 못찾는 다면서 로그 메시지를 뿌려주지 않습니다.</p>
+<p>문제는 두 개의 설정 파일 중에서 낮은 레벨이 우선시 되어 처리 됩니다. 한쪽은 FATAL이고 한쪽은 DEBUG면 FATAL에 맞춰서 출력됩니다.(로그 메시지가 왠만한 상황에선 출력되지 않는것 같습니다.) 이렇게 같은 내용의 파일이 중복되다 보니 이것도 리팩토링이 필요할 것 같은데.. 현재로썬 어떻게 해야될지 모르겠네요. :)</p></div>
+<p></p>

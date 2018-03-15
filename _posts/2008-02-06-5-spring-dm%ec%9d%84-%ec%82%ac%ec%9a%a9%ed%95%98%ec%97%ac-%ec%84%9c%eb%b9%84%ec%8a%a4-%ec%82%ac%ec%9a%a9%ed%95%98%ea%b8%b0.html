@@ -1,0 +1,83 @@
+---
+layout: post
+title: 5. Spring DM을 사용하여 서비스 사용하기.
+date: 2008-02-06 07:34:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- Spring OSGI
+- 서비스 참조하기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323110453'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. StoreManager 번들 정리하기.</p>
+<p>- Activator를 없애버립니다.<br />- ServiceTracker도 없애버립니다.</p>
+<p>둘다 일단 MENIFEST.MF의 Dependencies에서 제거하고 소스코드도 제거합니다.<br />이 번들이 필요한 건 오직 Store 번들의 Service 패키지에 있는 Greeting이라는 인터페이스 뿐입니다.</p>
+<p>StoreManager의 MENIFEST.MF 파일이 다음과 같으면 깨끗하게 정리가 된 것입니다.</p>
+<p>Manifest-Version: 1.0<br />Bundle-ManifestVersion: 2<br />Bundle-Name: StoreManager Plug-in<br />Bundle-SymbolicName: StoreManager<br />Bundle-Version: 1.0.0<br />Import-Package: service<br />Eclipse-LazyStart: true</p>
+<p>2. 구현하기</p>
+<p>Keesun이라는 클래스를 하나 만들고 다음과 같이 구현했습니다.</p>
+<p>public class Keesun {</p>
+<p>&nbsp; &nbsp; private Greeting greeting;</p>
+<p>&nbsp; &nbsp; public void setGreeting(Greeting greeting) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.greeting = greeting;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void start(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(greeting.hi("기선"));<br />&nbsp; &nbsp; }<br />}</p>
+<p>Setter Injection을 사용하기로 했고, start() 메소드는 제대로 세팅됐나 확인하기 위해 만들어 뒀습니다.</p>
+<p>3. Bean 설정하기</p>
+<p>META-INF 폴더에 spring 폴더를 만들고 스프링 설정 파일 하나를 만듭니다.</p>
+<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; xmlns:osgi="http://www.springframework.org/schema/osgi"<br />&nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br />&nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean class="storemanager.Keesun" init-method="start"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="greeting" ref="greeting" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;osgi:reference id="greeting" interface="service.Greeting" /&gt;</p>
+<p>&lt;/beans&gt;</p>
+<p>Keesun 클래스에 start라는 init-method를 등록해두고, &lt;osgi:reference /&gt; 엘리먼트로 서비스를 참조합니다. 그러면 이 내부에서는 마치 자기가 원래 가지고 있던 bean 처럼 사용할 수 있습니다.</p>
+<p>4. 테스트</p>
+<p><img src="{{ site.baseurl }}/assets/ek38.png" class="aligncenter" width="600" height="431" alt="사용자 삽입 이미지" /><br />Run Dialog에서 Spring OSGi만 체크하고 Run 시킵니다. 나머지는 install을 사용해서 설치합니다.</p>
+<p>osgi&gt; install file:c:/plugins/Store_1.0.0.jar<br />Bundle id is 22</p>
+<p>osgi&gt; install file:c:/plugins/StoreManager_1.0.0.jar<br />Bundle id is 23</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; system.bundle_3.2.2.R32x_v20070118<br />1 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.log4j.osgi_1.2.15.SNAPSHOT<br />2 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.spring.context.support_2.5.1<br />3 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.osgi.core_1.0.0<br />4 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.aopalliance.osgi_1.0.0.SNAPSHOT<br />5 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.osgi.extender_1.0.0<br />6 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.spring.context_2.5.1<br />7 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.cglib-nodep.osgi_2.1.3.SNAPSHOT<br />8 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.osgi.extensions.annotations_1.0.0<br />9 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.junit.osgi_3.8.2.SNAPSHOT<br />10 &nbsp;&nbsp; INSTALLED &nbsp; org.springframework.bundle.osgi.test_1.0.0<br />11 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.osgi.io_1.0.0<br />12 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.asm.osgi_2.2.3.SNAPSHOT<br />13 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; jcl104.over.slf4j_1.4.3<br />14 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.spring.source_2.5.1<br />15 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.spring.core_2.5.1<br />16 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.source_1.0.0<br />17 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; slf4j.log4j12_1.4.3<br />18 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.osgi.backport-util-concurrent.osgi_3.1.0.SNAPSHOT<br />19 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.spring.beans_2.5.1<br />20 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; slf4j.api_1.4.3<br />21 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.springframework.bundle.spring.aop_2.5.1<br />22 &nbsp;&nbsp; INSTALLED &nbsp; Store_1.0.0<br />23 &nbsp;&nbsp; INSTALLED &nbsp; StoreManager_1.0.0</p>
+<p>osgi&gt; start 22</p>
+<p>osgi&gt; GreetingImpl Bean을 만들었습니다.<br />start 23</p>
+<p>osgi&gt; hi 기선</p>
+<p>끝~ 이 아니고 이제부터 시작입니다.<br />설특집은 끝입니다.</p>
+<p></p>

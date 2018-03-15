@@ -1,0 +1,14 @@
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Controller<br />@RequestMapping("board/*.do")<br />@SessionAttributes(value="board")<br />public class BoardController {</p>
+<p>&nbsp;&nbsp; &nbsp;@Autowired<br />&nbsp;&nbsp; &nbsp;private BoardService boardService;</p>
+<p>&nbsp;&nbsp; &nbsp;@Autowired<br />&nbsp;&nbsp; &nbsp;private BoardValidator validator;</p>
+<p>&nbsp;&nbsp; &nbsp;@RequestMapping<br />&nbsp;&nbsp; &nbsp;public void list(ModelMap model){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute(boardService.getAll());<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@RequestMapping(method=RequestMethod.GET)<br />&nbsp;&nbsp; &nbsp;public void add(ModelMap model){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute(new Board());<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@RequestMapping(method=RequestMethod.POST)<br />&nbsp;&nbsp; &nbsp;public String add(@ModelAttribute("board") Board board, BindingResult result, SessionStatus status){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;validator.validate(board, result);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "board/add";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;else{<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.boardService.saveOrUpdate(board);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "redirect:board/list.do";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@RequestMapping<br />&nbsp;&nbsp; &nbsp;public void delete(int id){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;boardService.deleteById(id);<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>}</div>
+<p>위 코드는 간단한 스프링 2.5 @MVC 컨트롤러입니다. CRUD 중에서 U 관련 코드는 생략했습니다.</p>
+<p>이 컨트롤러를 작성하면서 확인하고 싶었던 걸 정리하면 다음과 같습니다.<br />1. board/list.do 라는 요청 결과를 보여줄 뷰는 WEB-INF/board/list.jsp 파일이 맞는지..(ViewResolver 확인)<br />2. board/list.do 라는 요청을 했을 때 결과 뷰에 넘어가는 모델 객체 중에 List&lt;Board&gt;가 있는지. 그리고 그 모델 객체의 이름이 boardList가 맞는지.(ModelAndView 확인)<br />3. board/add.do GET 요청이 오면 저 컨트롤러의 add(ModelMap) 메소드가 호출되는지.(RequestMapping 확인)</p>
+<p>이 때 2번은 쉽게 테스트가 가능합니다. 인자로 넘겨주는 ModelMap 객체를 하나 만들어서 넘겨주고 해당 메소드를 호출 해보고 ModelMap 객체를 뒤져보면 테스트 하고자 하는 데이터를 찾을 수 있습니다.</p>
+<p>그러나.. 1번은 ModelAndVIew 객체를 반환하도록 컨트롤러 코드를 고치지 않는 이상 어떻게 테스트 할 수 있을지 감이 안잡힙니다. 스프링 MVC CoC를 적극 활용하려고 작성한 코드인데 명시적으로 뷰이름을 설정해버리면 그런 의도가 무색해지니까요..</p>
+<p>3번도 마찬가지 입니다. 이건 더 감이 안 잡힙니다. 테스트를 할 때 만드는 ApplicationContext가 WebApplicationContext도 아니라서 스프링이 기본으로 등록해주는 빈(request handler, adapter 등)들이 없을 것이기 때문에 스프링 테스트만 가지고는 테스트가 어려울 것 같다는 생각이 듭니다. </p>
+<p>어쩌면 컨트롤러 테스트가 아닐 수도 있겠습니다. 스프링 프레임워크가 제공하는 기능에 대한 테스트일 수도 있으니 스프링 코드에서 뷰 리졸버와 요청 맵핑 클래스에 대한 테스트로 만족하고 넘어갈 수도 있겠지만.. 글쎄요. 그래도 왠지 테스트가 하고 싶네요. 혹시 HttpUnit으로 이런걸 할 수 있는건가요. 써보지 않았는데.. 함 살펴봐야겠습니다.</p>

@@ -1,0 +1,4 @@
+<p>포인트컷이 매우 제한적입니다. 메소드 실행시점 뿐이여서 제한적이라는 것이 아니라 대상이 되는 메소드들이 ProxyFactoryBean의 Target 객체 하나 안에 들어있는 것들로 제한적이라는 것입니다.</p>
+<p>즉 다섯개의 Service 클래스가 있고 각각의 클래스에 있는 특정 메소드에 공통적으로 어떤 작업을 추가하고 싶을 때..</p>
+<p>Advice는 하나면 됩니다.<br />포인트컷도 하나면 되겠죠.<br />이 두 개를 묶어서 하나의 Advisor로 만들면 지금 까지 bean 두 개면 충분합니다.<br />하지만 ProxyFactoryBean 다섯개가 필요합니다. -_-;;</p>
+<p>이럴땐 DefaultAdvisorAutoProxyCreator 를 사용하면 간단해 지는군요~ </p>

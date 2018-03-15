@@ -1,0 +1,165 @@
+---
+layout: post
+title: 클래스 로더의 loadClass()와 findClass()
+date: 2010-02-25 04:30:21.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- findClass
+- loadClass
+- 클래스로더
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323076329'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font class="Apple-style-span" color="#333333" face="굴림">참조: <a href="http://onjava.com/pub/a/onjava/2005/01/26/classloading.html?page=1" target="_blank" title="[http://onjava.com/pub/a/onjava/2005/01/26/classloading.html?page=1]로 이동합니다.">http://onjava.com/pub/a/onjava/2005/01/26/classloading.html?page=1</a></font>
+<div id="">
+</div>
+<div id=""><b>클래스와 데이타</b></div>
+<div id="">
+</div>
+<div id="">
+모든 클래스는 first-class 자바 객체를 통해서 자신의 코드를 참조할 수 있다. 컴파일 할 때 컴파일러가 public static final class 라는 이름의 java.lang.Class 타입 필드를 추가해준다.</div>
+<div id="">
+</div>
+<div id="">
+일단 한 번 클래스가 JVM으로 로딩되면, 같은 클래스는 다시 로딩 되지 않는다. 여기서 "같은 클래스"란 해당 클래스를 로딩한 클래스로더와 해당 클래스의 풀네임으로 구성된 식별자로 구분한다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+예를 들어, WhiteshipClassLoader가 로딩한 springsprout 패키지의 Whiteship클래스는 (WhiteshipClassLoader, springsprout, Whiteship) 식별자를 가지게되고, SpringSproutClassLoader가 로딩한 springsprout 패키지의 Whiteship클래스는 (SpringSproutClassLoader, springsprout, Whiteship) 식별자를 가지기 때문에 별개의 클래스로 인식된다는 것이다.</div>
+<div id="">
+</div>
+<div id="">
+<b>클래스 로더</b></div>
+<div id="">
+</div>
+<div id="">
+모든 클래스는 java,lang.ClassLoader의 인스턴스가 로딩한다.</div>
+<div id="">
+</div>
+<div id="">
+부트스트랩 클래스 로더: java.lang.Object 같은 핵심 자바 클래스를 로딩한다. 런타임 클래스들은 JRE\lib\rt.jar에 들어있다. 접근이 안 됨. sout(String.class.getClassLoader())를 호출하면 null이 나온다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+확장 클래스 로더: 핵심 자바 런타임 코드 이외의 확장 라이브러리를 java.ext.dirs 속성의 경로에 넣어둘 수 있다. ExtClassLoader는 java.ext.dirs에 위치한 모든 .jar 파일을 로딩한다.</div>
+<div id="">
+</div>
+<div id="">
+애플리케이션 클래스 로더: AppClassLoader는 java.class.path 시스템 속성에 해당하는 경로의 모든 클래스를 로딩한다.</div>
+<div id="">
+</div>
+<div id="">
+컨텍스트 클래스 로더: java.lang.Thread는 getContextClassLoader()라는 메서드를 가지고 있다. 이 메서드는 특정 쓰레드에서 사용중인 클래스로더를 반환해준다. 컨텍스트 클래스 로더는 쓰레드를 만들 때 사용한 클래스 로더이며, 기본적으로 parent 쓰레드의 클래스로더가 할당 된다. setContextClassLoader로 변경 가능하다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<b>클래스로더 동작 방식</b></div>
+<div id="">
+</div>
+<div id="">
+<div id="">protected synchronized Class&lt;?&gt; loadClass</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp;(String name, boolean resolve)</div>
+<div id="">&nbsp;&nbsp; &nbsp;throws ClassNotFoundException{</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;// First check if the class is already loaded</div>
+<div id="">&nbsp;&nbsp; &nbsp;Class c = <b>findLoadedClass(name);</b></div>
+<div id="">&nbsp;&nbsp; &nbsp;if (c == null) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (parent != null) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c = <b>parent.loadClass(name, false);</b></div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c = <b>findBootstrapClass0(name);</b></div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (ClassNotFoundException e) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// If still not found, then invoke</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// findClass to find the class.</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c =<b><font class="Apple-style-span" color="#0686A8" id=""> findClass(name);</font></b></div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp;if (resolve) {</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span> &nbsp; &nbsp;resolveClass(c);</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp;return c;</div>
+<div id="">}</div>
+<div>
+</div>
+<div id="">
+java.lang.ClassLoader의 loadClass() 메서드 코드이며 이 클래스를 확장하는 클래스는 findClass()를 재정의하는 것이 기본적이다. java.lang.ClassLoader의 findClass()는 ClassNotFoundException을 던진다.</div>
+<div id="">
+</div>
+<div id="">
+findClass()를 구현할 떄는 특정 소스에서 바이트 코드를 가져오거나, 소스를 바이트 코드로 생성하거나, BCEL(Byte Code Engineering Library)를 사용할 수도 있다. 암튼.. 그렇게 해서 바이트 코드를 가져온 다음 defineClass() 메서드를 호출해서 byte 배열을 Class 인스턴스로 변환해야 한다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+defineClass() 메서드 호출이 중요한데, 이 것을 호출한 클래스 로더가 바로 해당 클래스의 defining 클래스 로더가 되는 것이며 이 defining 클래스로더가 다를 경우 다른 클래스로 인식하게 된다. Whiteship.class.getClassLoader()를 실행했을 때 반환되는 클래스 로더가 바로 defining 클래스 로더다.</div>
+<div id="">
+</div>
+<div id="">
+<b>findClass 구현 예제 코드</b></div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp;public Class findClass(String name)throws</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ClassNotFoundException{</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">
+</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;byte[] classBytes = findClassBytes(name);</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (classBytes==null){</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;throw new ClassNotFoundException();</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;else{</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return <b>defineClass(name, classBytes,</b></div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0, classBytes.length)</b>;</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">
+</div>
+</div>
+</div>

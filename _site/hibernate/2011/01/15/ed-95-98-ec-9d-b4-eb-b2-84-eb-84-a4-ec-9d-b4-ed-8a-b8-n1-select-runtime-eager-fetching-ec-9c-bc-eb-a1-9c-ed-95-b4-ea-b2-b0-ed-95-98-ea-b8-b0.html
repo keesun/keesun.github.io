@@ -1,0 +1,42 @@
+<p style="clear: both;">이전에 살펴본 방법은 Egaer Fetching 옵션을 매핑에 설정해두고 사용하는 방법이었는데, 그 방법 보다 좀 더 유연하게 해당 DAO 오퍼레이션을 수행할 때 FetchMode를 설정해서 사용하는 방법이 있다.</p>
+<p style="clear: both;">Criteria를 사용하는 경우</p>
+<p>[java]<br />
+    @Test<br />
+    public void eagerFetchingByCriteria(){<br />
+        int mostItemCount = 0;<br />
+        Member mostItemOwner = null;</p>
+<p>        List&lt;Member&gt; memberList = getSession().createCriteria(Member.class).setFetchMode(&quot;items&quot;, FetchMode.JOIN).list();<br />
+        for (Member thisMember : memberList) {<br />
+            Set&lt;Item&gt; memberItems = thisMember.getItems();<br />
+            if(mostItemCount &lt; memberItems.size()) {<br />
+                mostItemCount = memberItems.size();<br />
+                mostItemOwner = thisMember;<br />
+            }<br />
+        }</p>
+<p>        System.out.println(mostItemCount);<br />
+        System.out.println(mostItemOwner);<br />
+    }</p>
+<p>[/java]</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_domain_RuntimeEagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.1.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_domain_RuntimeEagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.1.jpg" alt="" width="380" height="306" /></a>쿼리는 똑같이 left outer join이 발생하며, FetchMode.EAGER는 deprecated 됐다. JOIN, SELECT, DEFAULT가 있는데 FetchMode.EAGER 대신 JOIN을 사용하면 되며, SELECT를 사용하며 FetchMode.LAZY와 같다. DEFAULT는 전역 설정을 따르는것 같지만 확인하진 않았다.</p>
+<p>HQL을 사용하는 경우<br />
+[java]<br />
+    @Test<br />
+    public void eagerFetchingByHQL(){<br />
+        int mostItemCount = 0;<br />
+        Member mostItemOwner = null;</p>
+<p>        List&lt;Member&gt; memberList = getSession().createQuery(&quot;from Member m left join fetch m.items&quot;).list();<br />
+        for (Member thisMember : memberList) {<br />
+            Set&lt;Item&gt; memberItems = thisMember.getItems();<br />
+            if(mostItemCount &lt; memberItems.size()) {<br />
+                mostItemCount = memberItems.size();<br />
+                mostItemOwner = thisMember;<br />
+            }<br />
+        }</p>
+<p>        System.out.println(mostItemCount);<br />
+        System.out.println(mostItemOwner);<br />
+    }<br />
+[/java]</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_domain_RuntimeEagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.2.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_domain_RuntimeEagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.2.jpg" alt="" width="378" height="305" /></a>HQL로 fetch join을 지원하지 때문에 위와 같이 left join fetch를 사용해서 Criteria를 사용할떄와 똑같은 쿼리를 만들어 낼 수 있다.</p>
+<p style="clear: both;">개인적으로 HQL과 Criteria 중에서는 Criteria를 선호한다. SQL을 싫어하는 이유는 패러다임을 떠나서 "문자열"이기 때문에 싫어하는데 HQL도 "문자열"이라서 되도록이면 Criteria를 사용한다. 그래야 에러가 덜 발생하며 관리하기도 편하다. 자동완성도 되고 얼마나 좋은가.</p>
+<p style="clear: both;">이것으로 N+1 Select 문제가 무엇이며 각 해결 방법을 살펴봤다. 끝!</p>
+<p><br class="final-break" style="clear: both;" /></p>

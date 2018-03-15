@@ -1,0 +1,73 @@
+---
+layout: post
+title: "[권한] 3단 구조"
+date: 2009-10-14 11:11:19.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 권한 설계
+- 스프링 시큐리티
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322765662'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>봄싹은 권한 관리는 3단계로 설계했습니다.</p>
+<p>사용자 - 역할 - 권한<br />
+Member *----&gt;1 Role *----&gt;1 Right</p>
+<p>현재 봄싹의 권한 관리 구조와 Role을 주로 사용하고 있습니다. 따라서 *와 **등을 이용해서 여러 URL을 큰 뭉탱이로 ROLE_ADMIN, ROLE_MEMBER로 구분하고 있죠. 굉장히 Coarse-grained 한 설정이죠. 이런 상태라면 설정하기는 간편하지만, 만약에...</p>
+<p>"일반 회원 중에서 관리자는 아니지만 스터디를 관리할 수 있었으면 좋겠다."</p>
+<p>이런 시나리오를 만족시키려면 다음과 해야합니다.</p>
+<p>1. StudyManager라는 Role을 만듭니다.<br />
+2. 해당 사용자에게 StudyManager Role을 추가해줍니다.<br />
+3. URL 설정 및 메서드 보안 설정을 찾아다니며 hasRole(Role_StudyManager)를 추가해줘야 합니다.</p>
+<p>만약에 URL 설정이 여러줄이고 메서드 보안이 여러줄이라면 어떻게 될까요??<br />
+이런 상태에서 RIght라는 것은 의미가 있기나 할까요?</p>
+<p>그럼, URL 설정을 Right 기반으로 바꿨다고 가정하겠습니다. 아마 지금보다 더 세부적으로 URL 권한을 설정할테니 갈아타는데 손이 좀 갈 것으로 예상됩니다. Role 기반 설정에 비하면 fine-grained 합니다. </p>
+<p>전부 Role 기반으로 바꿨다는 가정하에 다시 한 번 위의 시나리오를 적용하는 과정을 상상해 보겠습니다.</p>
+<p>1. StudyManager라는 Role을 만들고<br />
+2. 해당 Role에 Add_Study, Update_Study, Delete_Study, End_Study, Start_Study 등 Study와 관련된 모든 권한을 추가해둡니다.<br />
+3. 해당 사용자에게 StudyManager 권한을 줍니다.</p>
+<p>StudyManager라는 Role을 만드는 과정이 다소 귀찮을 순 있겠지만, A라는 사용자 말고 B 사용자에게 위와같은 시나리오를 적용해야 하는 상황이 온다면 어떨까요? 1, 2번은 필요없고 3번만 하면 됩니다.</p>
+<p>"스터디 관리자여도 스터디 삭제는 못하게 하고 싶다. 그건 오직 관리자만 할 수 있게해야지"</p>
+<p>이런 시나리오를 적용해야 한다면 Role 기반의 설정을 사용할때는 분명 study/34/delete.do URL이나 deleteStudy(study) 메서드에 hasRole(Role_StudyManager, Role_Admin)이라고 되어있을텐데, 저걸.. 다시 hasRole(Role_ADMIN)으로 바꿔줘야 할 겁니다.</p>
+<p>그런데 Right기반으로 설정되어 있는 경우 hasRole(Right_Delete_Study)라고 설정되어 있을것이기 때문에 건드릴건 아무것도 없고, 단지 Role_StudyManager에서 Right_Delete_Study 만 빼주면 됩니다.</p>
+<p>앗;; 전 이만 저녁먹으러... </p>

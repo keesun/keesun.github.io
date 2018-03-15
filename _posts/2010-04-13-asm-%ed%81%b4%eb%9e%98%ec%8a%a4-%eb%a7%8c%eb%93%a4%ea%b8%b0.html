@@ -1,0 +1,144 @@
+---
+layout: post
+title: "[ASM] 클래스 - 만들기"
+date: 2010-04-13 08:23:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- ASM
+- 클래스 생성
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323017284'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div id="">
+참조:&nbsp;<a href="http://download.fr.forge.objectweb.org/asm/asm-guide.pdf" target="_blank" title="[http://download.fr.forge.objectweb.org/asm/asm-guide.pdf]로 이동합니다.">http://download.fr.forge.objectweb.org/asm/asm-guide.pdf</a></div>
+<div id="">
+</div>
+<p>ClassWriter만 사용해서&nbsp;클래스를 만들수 있다.
+<div>
+<div id="">
+</div>
+<div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ClassWriter cw = new ClassWriter(0);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visit(V1_5, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"pkg/Comparable", null, "java/lang/Object",</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new String[]{"pkg/Mesurable"});</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "LESS", "I",</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;null, new Integer(-1)).visitEnd();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "EQUAL", "I",</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;null, new Integer(0)).visitEnd();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "GREATER", "I",</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;null, new Integer(1)).visitEnd();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "compareTo",</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"(Ljava/lang/Object;)I", null, null).visitEnd();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;cw.visitEnd();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;byte[] b = cw.toByteArray();</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="">
+</div>
+<div id="">한 줄씩 살펴보자.</div>
+<div id="">
+</div>
+<div id="">
+ClassWriter cw = new ClassWriter(0);</div>
+<div id="">- ClassWriter 객체를 생성한다. 인자값 0에 대해서는 다음에 설명한단다. 다음에 읽지 뭐... @_@;</div>
+<div id="">
+</div>
+<div id="">
+<div id="">cw.visit(<b><font class="Apple-style-span" id=""><font class="Apple-style-span" id=""><font class="Apple-style-span" color="#2B8400">V1_5</font></font></font><font class="Apple-style-span" color="#5C7FB0" id="">, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE</font><font class="Apple-style-span" color="#000000">,</font></b>&nbsp;<b><font class="Apple-style-span" color="#2B8400">"pkg/Comparable"</font>,</b> <b><font class="Apple-style-span" color="#C8056A" id="">null</font>,</b> <b><font class="Apple-style-span" color="#49B5D5">"java/lang/Object"</font>,</b>&nbsp;<b><font class="Apple-style-span" color="#EC9C2C" id="">new String[]{"pkg/Mesurable"}</font></b>);</div>
+<div id="">- 저 상수들은&nbsp;import static org.objectweb.asm.Opcodes.*; 이 안에 담겨있다.</div>
+<div id="">- 첫번째 인자(<b><font class="Apple-style-span" id=""><font class="Apple-style-span" id=""><font class="Apple-style-span" color="#2B8400">V1_5)<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; ">는 자바 클래스 버전이다. 자바 1.5 버전으로 컴파일한 클래스를 만들게 될 것이다.</span></font></font></font></b></div>
+<div id="">- 두번째 인자(<b><font class="Apple-style-span" color="#5C7FB0" id="">ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE)<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">는 public interface에 해당한다. 객체를 생성할 수 없으니 abstract를 선택한다.(이부분은 좀 애매함. INTERFACE인데 ABSTRACT가 꼭 들어가야 하나;;)</span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 세번째 인자(<b><font class="Apple-style-span" color="#2B8400">"pkg/Comparable"<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">)는 클래스 이름인데 풀패키지 경로로 설정해 줘야 한다. 그렇다고 타입명(Type descriptor)은 아니고 internal name으로 표기해준다.</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 네번째 인자(<b><font class="Apple-style-span" color="#C8056A" id="">null<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">)는 제네릭이다.</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 다섯번째 인자(<b><font class="Apple-style-span" color="#49B5D5">"java/lang/Object"<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">)는 상위 클래스이다. 이 때는 internal name으로 표기해준다.</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 마지막(<b><font class="Apple-style-span" color="#EC9C2C" id="">new String[]{"pkg/Mesurable"}<span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">)은 구현할 인터페이스 목록이다. 여기서도 클래스 이름을 internal name으로 표기한다.</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- visit 메서드는 리턴 타입이 void다.</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><br />
+</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">
+<div id="">
+cw.visitField(<b><font class="Apple-style-span" color="#0686A8">ACC_PUBLIC + ACC_FINAL + ACC_STATIC</font></b>, <b><font class="Apple-style-span" color="#2B8400">"LESS"</font></b>, <b><font class="Apple-style-span" color="#8C044B">"I"</font></b>,&nbsp;<b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">
+<div style="display: inline !important; " id="">
+<b><font class="Apple-style-span" color="#FF8B16">null</font></b>, <b><font class="Apple-style-span" color="#D18E0A">new Integer(-1)</font></b>).<b><font class="Apple-style-span" color="#000000">visitEnd()</font></b>;</div>
+<p></span></font></b></span></font></b></span></font></b></div>
+<div>- 첫번째 인자는 패스.</div>
+<div>- 두번째 인자는 필드 이름</div>
+<div>- 세번째 인자는 타입 (여기선 int)</div>
+<div>- 네번째 인자는 Generic</div>
+<div>- 다섯번째 인자는 값 (여기서는 final static 값이니까 설정했지. 보통은 null)</div>
+<div id="">- visitFiled 메서드의 리턴 타입은 FieldVisitor 타입 객체다. 이 뒤에 반환받은 객체로 할 일이 없으니 visitEnd() 호출한다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">cw.visitMethod(<b><font class="Apple-style-span" color="#0686A8">ACC_PUBLIC + ACC_ABSTRACT</font></b>, <b><font class="Apple-style-span" color="#2B8400">"compareTo"</font></b>,&nbsp;<b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">
+<div id="" style="display: inline !important; ">
+<div id="" style="display: inline !important; "><b><font class="Apple-style-span" color="#E31600">"(Ljava/lang/Object;)I"</font></b>, <b><font class="Apple-style-span" color="#FF8B16">null</font></b>, <b><font class="Apple-style-span" id=""><font class="Apple-style-span" color="#D18E0A">null</font></font></b>).<b><font class="Apple-style-span" color="#000000">visitEnd()</font></b>;</div>
+</div>
+<p></span></font></b></span></font></b></span></font></b></div>
+</div>
+<p></span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 첫번째 인자는 패스</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id=""><b><font class="Apple-style-span" color="#EC9C2C" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="">- 두번째 인자는 메서드 이름</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 세번째 인자는 메서드 시그너처 (Object를 인자로 받고 int 타입을 반환 한다.)</span></font></b></span></font></b></span></font></b></div>
+<div id=""><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 네번째는 Generic</span></font></b></span></font></b></span></font></b></div>
+<div id="">- 다섯번째는 해당 메서드에서 던지는 예외 타입 목록</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- visitMethod 메서드의 리턴 타입은 MethodVisitor 타입 객체다. 이 뒤에 반환받은 객체로 할 일이 없으니 visitEnd() 호출한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><br />
+</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">cw.visitEnd();</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- ClassWriter로 할 일 다 했으니 visitEnd() 호출한다.</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><br />
+</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">byte[] b = cw.toByteArray();</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- toByteArray()를 호출하여 생성된 클래스를 바이트 배열 형태로 얻을 수 있다. 이 녀석을 ClassLaoder의 defineClass에 넘겨주면 Class 타입을 받아서 사용할 수 있다.</span></font></b></span></font></b></span></font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b><font class="Apple-style-span" color="#EC9C2C" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; "><b><font class="Apple-style-span" color="#5C7FB0" id=""><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-weight: normal; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><br />
+</span></font></b></span></font></b></span></font></b></div>
+</div>
+</div>
+</div>

@@ -1,0 +1,26 @@
+<p><font style="font-family: verdana,arial,helvetica,sans-serif" size="6"><span style="color: rgb(255, 118, 53);">Regular Expressions</span></font></p>
+<p>모든 프로그래머들은 Ruby에 이미 만들어져 있는 문자열, 정수, 실수, 배열 등과 같은 것에 익숙할 것입니다. 하지만 Ruby가 가지고 있는 regular expression은 스크립트 언어라고 불리는 것에만 있습니다. 말하기 부끄럽지만<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> text를 다루는데는 regular expression이 매우 유용합니다.</span></p>
+<p>여기서는 그 전부에 대해 다루지는 않고 regular expression을 사용하는 몇가지 예만 살펴 보겠습니다. 56페이지 부터 시작하는 부분에서 이것에 대한 모든 것을 볼 수 있을 것입니다.</p>
+<p>regular expression은 문자열에서 특정 패턴을 구분하는 간단한 방법입니다. Ruby에서는 / / 슬러쉬 사이에 패턴을 적어 넣음으로써 regular expression을 작성할 수 있습니다(<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">/패턴/</span>). 그리고 Ruby에서 이것은 당연히 객체이고 객체처럼 다뤄 집니다.</p>
+<p>예를 들어 문자열에 Perl또는 Python을 포함하는 문자열에 매치하는 패턴을 작성하고 싶다면 다음과 같은 regular expression을 사용할 수 있습니다.</p>
+<blockquote><p>/Perl|Python/</p></blockquote>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">"|" 파이프 문자를 이용하여 여러개의 문자열을 구분 할 수 있습니다.</span> 그리고 괄호도 사용할 수 있지요. 따라서 위의 표현을 다음괕이 적을 수도 있습니다.</p>
+<blockquote><p>/P(erl|ython)/</p></blockquote>
+<p>그리고 반복되는 패턴을 기술 할 수도 있습니다. /ab+c/는 문자열이 a를 가지고 있고 a뒤에 하나 또는 그 이상의 b가 있고 그 뒤에 c가 있는 문자열에 매칭됩니다. +대신에 *를 써서 /ab+c/라고 표현하면 a뒤에 b가 없거나 하나 이상일 수 있고 그 뒤에 c가 있는 문자열에 매칭됩니다.</p>
+<p>여러 문자 그룹중 하나를 매칭 시킬 수도 있습니다.<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> \s</span> 는 공백 문자(스페이스, 탭, 새줄 등등)와 매칭 됩니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">\d</span>는 모든 정수를 매칭 됩니다. and ``<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"><code>\w</code></span>'', which matchesany character that may appear in a typical word. The single character<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">``.''</span> (a period) matches any character.</p>
+<p>이것들을 사용하여 몇가지 유용한 regular expression을 만들 수 있습니다.</p>
+<pre><blockquote>/\d\d:\d\d:\d\d/ &nbsp; &nbsp; #&nbsp;a time such as 12:34:56<br />
+/Perl.*Python/ &nbsp; &nbsp; &nbsp; #&nbsp;Perl, zero or more other chars, then Python<br />
+/Perl\s+Python/ &nbsp; &nbsp; &nbsp;# Perl, one or more spaces, then Python<br />
+/Ruby (Perl|Python)/ #&nbsp;Ruby, a&nbsp;space, and either Perl or Python</blockquote></pre>
+<p>
+"=~" 이 오퍼레이션은 문자열에 regular expression을 매칭 하는데 사용할 수 있습니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">만약에 문자열에서 해당하는 패턴이 발견되면 =~ 는 그 패턴이 시작하는 위치를 리턴하고 없다면 nil을 리턴합니다.</span> 이 말은 if문이나 while문의 조건식에 사용할 수 있다는 것입니다. 다음의 예는 문자열에 'Perl' 또는 'Python'이 있는지 확인합니다.</p>
+<pre><blockquote>if line =~ /Perl|Python/<br />
+ &nbsp;puts "Scripting language mentioned: #{line}"<br />
+end</blockquote></pre>
+<p>
+Ruby의 메소드를 사용하여 패턴에 매칭되는 문자열을 다른 문자열로 교체 할 수 있습니다.</p>
+<pre><blockquote>line.sub(/Perl/, 'Ruby') &nbsp; &nbsp;# replace first 'Perl' with 'Ruby'<br />
+line.gsub(/Python/, 'Ruby') #&nbsp;replace every 'Python' with 'Ruby'</blockquote></pre>
+<p>
+이 책 전반에 걸쳐 regular expression을 살펴 볼 것입니다.</p>

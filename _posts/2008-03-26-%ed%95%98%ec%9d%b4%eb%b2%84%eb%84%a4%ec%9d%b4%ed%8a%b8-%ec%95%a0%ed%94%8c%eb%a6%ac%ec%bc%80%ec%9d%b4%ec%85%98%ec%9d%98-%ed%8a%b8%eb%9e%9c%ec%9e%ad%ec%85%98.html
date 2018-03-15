@@ -1,0 +1,179 @@
+---
+layout: post
+title: 하이버네이트 애플리케이션의 트랜잭션
+date: 2008-03-26 22:52:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 10
+tags:
+- JTA
+- 트랜잭션 관리
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323156796'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>Java SE에서의 코딩을 통한 트랜잭션</h1>
+<ul>
+<li>hibernate.transaction.factory_class 설정 기본 값이 org.hibernate.transaction.JDBCTransactionFactory로 되어 있기 때문에 별도의 설정이 필요없다.</li>
+</ul>
+<ul>
+<li>TransactionFactory 구현체를 만들어서 Transaction 인터페이스를 확장하거나 커스터마이징 할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Session session = <span class="code-keyword">null</span>;<br />Transaction tx = <span class="code-keyword">null</span>;<br /><span class="code-keyword">try</span> {<br />    session = sessionFactory.openSession();<br />    tx = session.beginTransaction();<br />    concludeAuction(session);<br />    tx.commit();<br />} <span class="code-keyword">catch</span> (RuntimeException ex) {<br />    tx.rollback();<br />} <span class="code-keyword">finally</span> {<br />    session.close();<br />}</pre>
+</div>
+</div>
+<ul>
+<li>JDBC Connection은 트랜잭션이 시작할 때 얻어온다.</li>
+</ul>
+<ul>
+<li>beginTransaction()은 setAutoCommit(false)를 설정하게 된다.</li>
+</ul>
+<ul>
+<li>이렇게 하면 Session이 db 커넥션과 묶이게 된다.</li>
+</ul>
+<ul>
+<li>트랜잭션을 commit() 하면 db 커넥션은 반환되고, Session을 풀리게 된다. 또 다른 트랜잭션을 해당 Session에서 시작하면, 새로운 커넥션을 얻어온다.</li>
+</ul>
+<h1>예외 처리하기</h1>
+<ul>
+<li>3쩜대 버전 부터는 하이버네이트의 모든 메소드가 RuntimeException을 던지게 되어 있다.</li>
+</ul>
+<ul>
+<li>tx.rollback() 마져도 RuntimeException을 던지기 때문에, 로깅을 남길 때, Exception객체를 인자로 넘겨주는 것을 잊지 않도록 한다.</li>
+</ul>
+<ul>
+<li>tx.setTimeout(int second)를 사용하여 일정 시간 이내에 처리되지 않으면 예외를 던지도록 설정할 수 있다.</li>
+</ul>
+<ul>
+<li>Exception들이 분류되어 있다.</li>
+</ul>
+<ol>
+<li>HibernateExcepion은 getCause()를 사용해서 좀 더 구체적인 정보를 확인해봐야 한다.</li>
+<li>JDBCException은 SQL 문에서 발생한 에러이다. getSQL()을 호출하여 SQL을 확인해볼 수 있다. DB 벤더 에러 코드를 보려면 getErrorCode()를 호출하면 된다.</li>
+</ol>
+<h1>JTA를 사용하여 코드에서 트랜잭션 처리하기</h1>
+<ul>
+<li>JTA의 javax.transaction.UserTransaction 인터페이스를 사용하여 리소스를 관리한다.</li>
+</ul>
+<ul>
+<li>꼭 Application Seerver가 있어야만 JTA를 사용할 수 있는 건 아니다. JBoss<br />
+Transactions는 오픈소스 독립적인 JTA 프로바이더를 제공한다. 이것을 Tomcat에서 돌리고 있는 하이버네이트<br />
+애플레키에션에 설치할 수 있다.</li>
+</ul>
+<ul>
+<li>JTA로 관리되는 리소스를 사용하는 장점</li>
+</ul>
+<ol>
+<li>트랜잭션 관리 서비스는 모든 리소스를 통합하고 트랜잭션 제어를 단일 표준 API로 관리할 수 있도록 해준다.</li>
+<li>JEE 트랜잭션 관리자는 여러개의 리소스를 하나의 트랜잭션으로 묶어서 관리할 수 있다.</li>
+<li>JTA 구현체의 품질이 간단한 JDBC 커넥션 풀 보다 좋다.</li>
+<li>JTA 프로바이더는 런타인시에 불필요한 오버헤드를 발생시키지 않는다.</li>
+</ol>
+<ul>
+<li>하이버에서 JTA 트랜잭션 사용하기</li>
+</ul>
+<ol>
+<li>애플리케이션 코드는 수정할 필요 없이 그냥 하이번네이트의 Transaction API를 사용한다.</li>
+<li>설정파일에서 hibernate.transaction.factory_class 속성의 값을 org.hibernate.transaction.JTATransactionFactory로 설정한다.</li>
+<li>hibernate.transaction.manager_lookup_class<br />
+속성의 값에 JTA 구현체의 Lookup 클래스를 설정해준다.(ex.<br />
+org.hibernate.transaction.JBossTransaction-ManagerLookup)</li>
+<li>하이버는 더이상 JDBC 커넥션 풀을 관리하지 않는다. 커넥션들을 JNDI를 통해서 JTA 프로바이더로부터 받아온다.</li>
+</ol>
+<ul>
+<li>JTA를 사용할때와 그렇지 않을 때의 차이</p>
+<ul>
+<li>JTA를 사용할 때: DB 커넥션을 Session을 사용하려고 할 때 가져온다.(more aggressive), 같은 트랜잭션 내에서는 항상 같은 커넥션을 가져오도록 Application Server가 보장해준다.</li>
+<li>JTA를 사용하지 않을 때: DB 커넥션을 트랜잭션 시작할 때 가져와서 끝날 때 반환한다.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>JTA 시스템은 전역적인 트랜잭션 타임아웃을 지원한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">UserTransaction utx = (UserTransaction) <span class="code-keyword">new</span> InitialContext()<br />                        .lookup(<span class="code-quote">"java:comp/UserTransaction"</span>);<br />Session session1 = <span class="code-keyword">null</span>;<br />Session session2 = <span class="code-keyword">null</span>;<br /><span class="code-keyword">try</span> {<br />    utx.begin();<br />    session1 = auctionDatabase.openSession();<br />    session2 = billingDatabase.openSession();<br />    concludeAuction(session1);<br />    billAuction(session2);<br />    session1.flush();<br />    session2.flush();<br />    utx.commit();<br />} <span class="code-keyword">catch</span> (RuntimeException ex) {<br />    <span class="code-keyword">try</span> {<br />        utx.rollback();<br />    } <span class="code-keyword">catch</span> (RuntimeException rbEx) {<br />        log.error(<span class="code-quote">"Couldn't roll back transaction"</span>, rbEx);<br />    }<br />    <span class="code-keyword">throw</span> ex;<br />} <span class="code-keyword">finally</span> {<br />    session1.close();<br />    session2.close();<br />}</pre>
+</div>
+</div>
+<ul>
+<li>JTA 인터페이스를 사용하여 구현할 때에 기본 설정은 명시적으로 flush()를 해야하며, session도 명시적으로 닫아줘야 한다.</li>
+</ul>
+<ul>
+<li>hibernate.trans-action.flush_before_completion 속성과 hibernate.transaction.auto_close_session 속성을 설정하면 코드를 줄일 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">UserTransaction utx = (UserTransaction) <span class="code-keyword">new</span> InitialContext()<br />                        .lookup(<span class="code-quote">"java:comp/UserTransaction"</span>);<br />Session session1 = <span class="code-keyword">null</span>;<br />Session session2 = <span class="code-keyword">null</span>;<br /><span class="code-keyword">try</span> {<br />    utx.begin();<br />    session1 = auctionDatabase.openSession();<br />    session2 = billingDatabase.openSession();<br />    concludeAuction(session1);<br />    billAuction(session2);<br />    utx.commit();<br />} <span class="code-keyword">catch</span> (RuntimeException ex) {<br />    <span class="code-keyword">try</span> {<br />        utx.rollback();<br />    } <span class="code-keyword">catch</span> (RuntimeException rbEx) {<br />        log.error(<span class="code-quote">"Couldn't roll back transaction"</span>, rbEx);<br />    }<br />    <span class="code-keyword">throw</span> ex;<br />}</pre>
+</div>
+</div>
+<ul>
+<li>가능하면 JTA를 직접 사용하기를 권하고 있다. 이식성을 애플리케이션 밖으로 끌어내기 위해서..</li>
+</ul>
+<h1>컨테이너가 관리하는 트랜잭션</h1>
+<ul>
+<li>선언적인 트랜잭션 경제는 컨테이너에게 트랜잭션 관리의 책임을 넘기는 것이다.(스프링은 IoC 컨테이너에게 넘긴다. 여기서는 WAS를 얘기하고 있음.)</li>
+</ul>
+<ul>
+<li>CMT는 독입적인 JTA 구현체에서는 제공하지 않는다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Stateless<br /><span class="code-keyword">public</span> class ManageAuctionBean <span class="code-keyword">implements</span> ManageAuction {<br />    @TransactionAttribute(TransactionAttributeType.REQUIRED)<br />    <span class="code-keyword">public</span> void endAuction(Item item) {<br />        Session session1 = auctionDatabase.openSession();<br />        Session session2 = billingDatabase.openSession();<br />        concludeAuction(session1, item);<br />        billAuction(session2, item);<br />    }<br />    ...<br />}</pre>
+</div>
+</div>
+<ul>
+<li>컨테이너가 TransactionAttribute를 읽은 뒤, 그에따라 트랜잭션을 적용한다.</li>
+</ul>
+<ul>
+<li>위에서는 REQUIRED기 때문에 현재 트랜잭션이 있으면 그걸 사용하고 없으면 새로 만들어서 사용한다.</li>
+</ul>
+<ul>
+<li>필요한 설정</p>
+<ul>
+<li>hibernate.transaction.factory_class 속성을 org.hibernate.transaction.CMTTransactionFactory 로 설정.</li>
+<li>hibernate.transaction.manager_lookup_class 속성을 사용하는 application server의 lockup 클래스로 설정.</li>
+</ul>
+</li>
+</ul>

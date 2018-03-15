@@ -1,0 +1,53 @@
+<h1>Quotations을 표현하는 방법</h1>
+<h2>의미의 부재</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;p&gt;"Misquotations are the only quotations that are never<br /><br />misquoted."&lt;/p&gt;<br /><br />&lt;p&gt;&amp;#8212; Hesketh Pearson&lt;/p&gt;</pre>
+</div>
+</div>
+<ul>
+<li>본문의 다른 부분과 확연히 다른 어떤 스타일을 적용할 수가 없다.</li>
+</ul>
+<h2>class 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;div class=<span class="code-quote">"quotation"</span>&gt;<br /><br />  &lt;p&gt;Misquotations are the only quotations that are never<br /><br />misquoted.&lt;/p&gt;<br /><br />  &lt;p&gt;&amp;#8212; Hesketh Pearson &lt;/p&gt;<br /><br />&lt;/div&gt;</pre>
+</div>
+</div>
+<ul>
+<li>&lt;div&gt; 태그로 감싸고 CSS로 스타일을 줄 수 있다.</li>
+</ul>
+<ul>
+<li>하지만 CSS를 지원하지 않는 옛날 브라우저들에게는 안 통한다.</li>
+</ul>
+<ul>
+<li>&lt;div&gt; 태그로 코드가 금방 지져분해질 것이다.</li>
+</ul>
+<h2>&lt;blockquote&gt;가 짱</h2>
+<ul>
+<li>본문에 구조적인 의미를 부여할 수 있다.</li>
+</ul>
+<ul>
+<li>CSS가 안 통해서 들여쓰기 해준다.</li>
+</ul>
+<ul>
+<li>별도의 스타일을 적용할 수 있다.</li>
+</ul>
+<ul>
+<li>단, 들여쓰여진 본문을 표현하기 위한 용도로 이것을 사용하는 것은 안 좋은 습관이다.</li>
+</ul>
+<h1>Extra Credit</h1>
+<h2>cite 속성 추가하기</h2>
+<ul>
+<li>해당하는 부분의 글이 어디에서 참조됐는지 표현할 수 있다.</li>
+</ul>
+<ul>
+<li>하지만, 현재 대부분의 브라우저들은 이 기능을 지원하고 있지 않다.</li>
+</ul>
+<h2>inline quotation</h2>
+<ul>
+<li>&lt;q&gt; &lt;/q&gt;를 사용한다.</li>
+</ul>
+<ul>
+<li>lang 속성을 사용해서 언어에 맞는 quatation을 사용할 수 있다. www.w3.org/TR/html4/struct/dirlang.html#langcodes 찾조</li>
+</ul>

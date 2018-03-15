@@ -1,0 +1,114 @@
+---
+layout: post
+title: "[Java Tool] jstat"
+date: 2011-01-30 09:50:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags: []
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323051533'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;"><a href="http://download.oracle.com/javase/6/docs/technotes/tools/share/jstat.html">http://download.oracle.com/javase/6/docs/technotes/tools/share/jstat.html</a><span style="text-decoration: underline;"><br />
+</span><br />
+JVM 퍼포먼스 통계치를 보여준다. GC 튜닝할 때 사용하는 주요 툴.</p>
+<p style="clear: both;">jstat 제너럴옵션 | 출력옵션 vmid 인터벌 횟수</p>
+<p style="clear: both;"><strong>제너럴옵션</strong></p>
+<ul style="clear: both;">
+<li>help: 잘 나옴.</li>
+<li>version: 이건 잘 안됨.</li>
+<li>options: 출력 옵션 목록 보기.</li>
+</ul>
+<p style="clear: both;"><strong>출력 옵션</strong><br />
+class: 클래스로더 통계</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/Default4.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/Default4-thumb.jpg" alt="" width="380" height="202" /></a></p>
+<ul style="clear: both;">
+<li>Loaded: 로딩한 클래스 수</li>
+<li>Bytes: 로깅한 클래스 용량(Kbytes)</li>
+<li>Unloaded: 언로딩한 클래스 수</li>
+<li>Bytes: 언로딩한 클래스 수</li>
+<li>Times: 로딩/언로딩 수행하는데 걸린 시간(총계일듯)</li>
+</ul>
+<p style="clear: both;">compiler: 핫스팟 JIT 컴파일러 통계</p>
+<p style="clear: both;">gc: 힙 영역 GC 통계</p>
+<p>gccapacity: 전체 메모리 영역 사이즈 통계</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/Default5.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/Default5-thumb.jpg" alt="" width="380" height="91" /></a></p>
+<ul style="clear: both;">
+<li>NGCMN: 뉴 영역 최소 크기</li>
+<li>NGCMX: 뉴 영역 최대 크기</li>
+<li>NGC: 현재 뉴 영역 크기</li>
+<li>S0C: 현재 서바이버 0영역 크기</li>
+<li>S1C: 현재 서바이버 1영역 크기</li>
+<li>EC: 현재 에덴 영역 크기</li>
+<li>OGCMN: 올드 영역 최소 크기</li>
+<li>OGCMX: 올드 영역 최대 크기</li>
+<li>OGC: 현재 올드 영역 크기</li>
+<li>PGCMN: 펌 영역 최소 크기</li>
+<li>PGCMX: 펌 영역 최대 크기</li>
+<li>PGC: 현재 펌 영역 크기</li>
+<li>YGC: 영 GC 발생 수</li>
+<li>FGC: 풀 GC 발생 수</li>
+</ul>
+<p>gcutil: GC 통계</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/Default6.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/Default6-thumb.jpg" alt="" width="380" height="169" /></a></p>
+<ul style="clear: both;">
+<li>S0: 서바이버 0영역 현재 용량 비율(현재 먹고 있는거/전체 * 100 %)</li>
+<li>S1: 서바이버 1영역 현재 용량 비율</li>
+<li>E: 현재 에덴 영역 용량 비율</li>
+<li>O: 현재 올드 영역 용량 비율</li>
+<li>P: 현재 펌 영역 용량 비율</li>
+<li>YGC: 영 영역 GC 발생 수</li>
+<li>YGCT: 영 영역 GC 수행 시간(누적)</li>
+<li>FGC: 풀 GC 발생 수</li>
+<li>FGCT: 풀 GC 수행 시간(누적)</li>
+<li>GCT: 전체 GC 수행 시간(누적)</li>
+</ul>
+<p>gccause: gcutil과 비슷한데 GC cause를 보여준다.</p>
+<p>gcnew 뉴 영역 GC 통계</p>
+<p>gcnewcapacity: 뉴 영역 사이즈 통계</p>
+<p>gcold<br />
+gcoldcapacity<br />
+gcpermcapacity<br />
+printcompilation: 핫스팟 컴파일 메서드 통계</p>
+<p style="clear: both;">
+<p><br class="final-break" style="clear: both;" /></p>

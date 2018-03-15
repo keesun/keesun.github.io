@@ -1,0 +1,69 @@
+---
+layout: post
+title: Web Application Context 작성
+date: 2006-12-25 08:19:00.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- Spring MVC
+- WebApplicationContext
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322979035'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://blog.empas.com/ahnyounghoe/read.html?a=13186543" target="_blank">Spring MVC 어플리케이션 개발 &lt;3&gt; Web Application Context 파일 작성</a></p>
+<p>Spring Reference에 Dispatcher와 WebApplicationContex와의 관계를 나타낸 그림이 있어서 퍼왔습니다.<br /><img src="{{ site.baseurl }}/assets/bk63.gif" class="aligncenter" width="500" height="355" alt="사용자 삽입 이미지" />앞에서 addressBook-servlet.xml로 .do로 끝나느 요청을 넘기기로 했고 지금 이 글에서 작성해야할 addressBook-servlet.xml을 예전에는 hanlderMapping이라고 머릿속으로 단순화 시켜서 인식하고 있었는데 그게 아닌 것 같습니다. addressBook-sevlet.xml은 WebApplicationContext이고 이 안에 Handler Mapping, View Resolver, Controller들을 등록해 둘 수 있는 것 같습니다.</p>
+<p>web/WEB-INF 폴더 안에 addressBook-servlet.xml 이라는 파일을 생성합니다.<br />Spring 2.0에서 XML 기반의 configuration metadata의 기본 포맷은 다음과 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp;&nbsp; xsi:schemaLocation="<br />http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"&gt;<br />&nbsp; &lt;bean id="..." class="..."&gt;<br />&nbsp; &nbsp; &lt;!-- collaborators and configuration for this bean go here --&gt;<br />&nbsp; &lt;/bean&gt;<br />&nbsp; &lt;bean id="..." class="..."&gt;<br />&nbsp; &nbsp; &lt;!-- collaborators and configuration for this bean go here --&gt;<br />&nbsp; &lt;/bean&gt;<br />&lt;/beans&gt;</div>
+<p>이제 여기에 Handler Mapping, View Resolver, Controller들을 넣어 봅시다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Handler Mapping은 요청이 들어온 URL에 따라 어떤 컨트롤러가 사용되어야 하는지 매핑시키는 것으로 이해를 했는데 아무것도 지정해 두지 않으면 bean이름으로 매핑 시킨다고 하는데 흠~ 공부가 필요한 부분입니다.</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">View Resolver는 view를 실제 파일 이름으로 변환해주는 변환기 역할을 한다고 합니다.</p>
+<p>&nbsp;&lt;bean id="viewResolver"<br />&nbsp; class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;<br />&nbsp; &lt;property name="viewClass"<br />&nbsp; &nbsp;value="org.springframework.web.servlet.view.JstlView" /&gt;<br />&nbsp; &lt;property name="prefix" value="/WEB-INF/jsp/" /&gt;<br />&nbsp; &lt;property name="suffix" value=".jsp" /&gt;<br />&nbsp;&lt;/bean&gt;</p>
+<p>위와 같이 등록해 둡니다. view앞에는 /WEB-INF/jsp/ 를 붙이고 뒤에는 .jsp를 붙여서 실제 파일을 찾을 수 있도록 합니다. viewClass 속성은 jsp가 JSTL을 사용할 때 적어주는 것 같습니다.</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Controller차례인데요. 먼저 Handler는 요청을 처리하는 Controller의 메소드 단위 라고 합니다. 역시 이 부분도 공부가 필요할 것 같습니다. 이것을 다음과 같이 설정합시다.</p>
+<p>&lt;bean name="/index.do"<br />&nbsp; class="org.springframework.web.servlet.mvc.ParameterizableViewController"&gt;<br />&nbsp; &lt;property name="viewName" value="index" /&gt;<br />&nbsp;&lt;/bean&gt;</p>
+<p>index.do 요청이 발생하면 ParameterizableViewController로 요청이 넘어가고 이 녀석은 view 이름으로 index를 반환해 줍니다. 그럼 이것이 View Resolver를 타고 /WEB-INF/jsp/index.jsp 를 찾게 됩니다.</p></div>
+<p>이제 addressBook-servlet.xml 파일은 다 만든것 같습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk66.xml" class="aligncenter">bk66.xml</a><br />실제 web/WEB-INF 폴더 밑에 jsp라는 폴더를 만들고 그 안에 index.jsp 파일을 만듭니다. index.jsp파일은 제대로 돌아가는지 확인하기 위해 "오~케이!!!"가 출력 되도록 간단히 만들어 봤습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk65.jsp" class="aligncenter">bk65.jsp</a><br />그리고 서버를 가동 시키면....<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk64.bmp" class="aligncenter" width="500" height="283" alt="사용자 삽입 이미지">bk64.bmp</a>헉... 이렇게 나오네요;; 음~ 각본에 없던 것이 발생했습니다.</p>
+<p>원래대로면 Jstl.jar파일이 없어서 에러가 발생해야 하는데..왜 404가 뜨는지 모르겠군요. 분명히 addressBook-servlet.xml파일은 존재하는데;; 일단은 문제가 발생했으니 여기서 STOP해야겠습니다.</p>
+<p>=&gt; <span style="font-weight: bold;">문제 해결 됨</span>. 서버 에서 실행(Run on Server)를 할 때 <span style="color: rgb(255, 153, 0);">Alt + Shift + x -&gt; R 단축키를 사용하지 말고</span> <span style="color: rgb(255, 0, 0);">프로젝트 이름 우클릭 -&gt; Run as -&gt; Run on Server 클릭</span>하면 됩니다.</p>

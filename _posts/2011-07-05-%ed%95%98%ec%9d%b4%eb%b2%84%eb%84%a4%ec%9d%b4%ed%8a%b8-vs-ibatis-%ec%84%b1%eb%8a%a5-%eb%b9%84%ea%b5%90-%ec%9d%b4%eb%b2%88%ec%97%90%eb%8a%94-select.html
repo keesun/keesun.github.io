@@ -1,0 +1,238 @@
+---
+layout: post
+title: '하이버네이트 VS iBatis 성능 비교: 이번에는 select'
+date: 2011-07-05 09:57:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- hibernate
+- iBATIS
+- 성능 비교
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323173496'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>결과는 비슷하다. 차이 없다.</p>
+<p>어제는 insert 성능 비교했었는데, 단일 insert 문이야 얼마나 차이가 나겠냐. 고작 3~4 밀리세컨 가지고 성능을 논하기는 뭐할 것 같아서, 1000건~5000건을 한꺼번에 insert 시키는 시간을 측정해 봤더니, 이건 뭐 하이버네이트가 한 5~6배는 빠르게 나왔었다. 코드까지 열어봐도 잘 모르겠지만, 배치 업데이트를 하는것처럼 보인다. 그러지 않고서는 저렇게 성능차이가 날 수 없다. 아니면 내가 뭔가 잘못 테스트 했거나….</p>
+<p>코드는 github에 올려두었으니, 해보고 싶으신 분들은 직접 해보시면 됩니다.</p>
+<p><a title="https://github.com/keesun/his" href="https://github.com/keesun/his">https://github.com/keesun/his</a></p>
+<p>어제 저녁에는 select 성능을 측정하다가 퇴근시간이 다되서 나갔는데, 오늘 오전에 마저 해봤더니, 성능이 비슷하게 나왔습니다. 예상했던 결과입니다. 하이버네이트나, iBatis나 결국은 DataSource 빈 통해서 가져오는거고, 그 위에서 맵핑좀 하고, 미리 만들어둔 쿼리 가져다가 쓰는것 뿐이니까요.</p>
+<p>소스 코드에서는 MemberServiceIntegTest 클래스를 실행해보시면 됩니다.</p>
+<p>하이버네이트와 아이바티스 DAO를 사용하는 서비스 구현체를 가지고 테스트했습니다. 처음엔 DAO를 직접 가져다가 테스트 했는데, 그때는 테스트 클래스 위에 붙인 @Transacional 때문에, 트랜잭션 단위가  테스트 메서드로 묶이는데, 그게 성능에 영향을 준건지, Hibernate가 iBatis보다 select 성능이 2배 정도 높게 측정됐었습니다. 조금 차이는건 이해하겠지만, 2배 정도 차이나는건 이해할 수가 없고, 원인도 모르겠더군요. 그러던 중 직장 동료분께서 트랜잭션 범위에 대해서 조언을 주셨고, 결국 서비스를 구현하여, 서비스 구현체에 @Transional을 붙인 상태로 테스트 해보게 됐습니다.</p>
+<p>테스트 코드 찾기 귀찮으신 분들을 위해서…</p>
+<p>[java]<br />
+@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(&quot;/testContext.xml&quot;)<br />
+public class MemberServiceIntegTest {<br />
+   <br />
+    @Autowired MemberServiceHibernateImpl memberServiceHibernate;<br />
+    @Autowired MemberServiceIbatisImpl memberServiceIbatis;</p>
+<p>    @Before<br />
+    public void setUp(){<br />
+        memberServiceHibernate.flushAndClear();<br />
+        memberServiceIbatis.deleteAll();<br />
+    }</p>
+<p>    @Test<br />
+    @Repeat(10)<br />
+    public void hibernate(){<br />
+        //GIVEN<br />
+        List&amp;lt;Member&amp;gt; member5000 = MemberTestUtils.makeMember5000();<br />
+        for(Member newMember : member5000) {<br />
+            memberServiceHibernate.add(newMember);<br />
+        }<br />
+        memberServiceHibernate.flushAndClear();<br />
+        System.out.println(&quot;Hibernate: insert 5000 complete!&quot;);</p>
+<p>        //WHEN<br />
+        StopWatch watch = new StopWatch();<br />
+        watch.start();<br />
+        for(int i = 0 ; i &amp;lt; 100 ; i++) {<br />
+            List&amp;lt;Member&amp;gt; members = memberServiceHibernate.list();<br />
+        }<br />
+        memberServiceHibernate.flushAndClear();<br />
+        watch.stop();</p>
+<p>        //THEN<br />
+        System.out.println(watch.prettyPrint());<br />
+    }</p>
+<p>    @Test<br />
+    @Repeat(10)<br />
+    public void iBatis(){<br />
+        //GIVEN<br />
+        List&amp;lt;Member&amp;gt; member5000 = MemberTestUtils.makeMember5000();<br />
+        for(Member newMember : member5000) {<br />
+            memberServiceIbatis.add(newMember);<br />
+        }<br />
+        System.out.println(&quot;iBatis: insert 5000 complete!&quot;);</p>
+<p>        //WHEN<br />
+        StopWatch watch = new StopWatch();<br />
+        watch.start();<br />
+        for(int i = 0 ; i &amp;lt; 100 ; i++) {<br />
+            List&amp;lt;Member&amp;gt; members = memberServiceIbatis.list();<br />
+        }<br />
+        watch.stop();<br />
+        //THEN<br />
+        System.out.println(watch.prettyPrint());<br />
+    }</p>
+<p>}<br />
+[/java]</p>
+<p>5천 건을 넣고, selecrt를 100번한 시간을 측정하는 겁니다. 그렇게 하이버 10번, iBatis 10번. 해본 결과는 다음과 같습니다.</p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 6428<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+06428  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5399<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+05399  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3758<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03758  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3773<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03773  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3741<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03741  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3735<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03735  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3719<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03719  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4156<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+04156  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3829<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03829  100% </p>
+<p>Hibernate: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3785<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03785  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3753<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03753  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3568<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03568  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3521<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03521  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3558<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03558  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3471<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03471  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3497<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03497  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3667<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03667  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3460<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03460  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3524<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03524  100% </p>
+<p>iBatis: insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3467<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+03467  100%</p>

@@ -1,0 +1,93 @@
+---
+layout: post
+title: "[NullPE] SpEL 때문에 고민 해결"
+date: 2010-02-10 09:47:01.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- NullFE
+- SpEL
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322994713'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>애초에 MVEL.eval() 내부에서 레퍼런스를 타고 갈 때 null 처리를 해줄 수 있는 방법을 찾았다면 Null Object 패턴까지 적용할 생각은 안 들었을테고, 그럼 Null Object 패턴을 어떻게 적용해야 깔끔한가?에 대한 고민도 안했을 텐데.. 그 실마리가 바로 MVEL 대신 SpEL을 사용하는 것이었습니다. 이론... OTL</p>
+<p>SpEL은 스프링 3.0에 새로 추가된 기능인데 이 녀석이 할 수 있는 멋진 일들에 비해 아직 이것을 어떻게 활용해야 할지 제대로 파악이 되지 않은 상태입니다.(제가 파악이 안됐다는 것이지 일반적으로 그렇다는 것이 아니오니 오해 마시기 바랍니다.)</p>
+<p>
+/**<br />
+&nbsp;* Created by IntelliJ IDEA.<br />
+&nbsp;* User: whiteship<br />
+&nbsp;* Date: 2010. 2. 10<br />
+&nbsp;* Time: 오후 6:38:11<br />
+&nbsp;*/<br />
+public class SpELNullTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void SafeNavigation(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ExpressionParser parser = new SpelExpressionParser();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SpringSprout ss = new SpringSprout();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StandardEvaluationContext context = new StandardEvaluationContext(ss);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String myName = parser.parseExpression("whiteship?.name").getValue(context, String.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(myName, is(nullValue()));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; class Whiteship{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String name;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public String getName() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return name;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void setName(String name) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.name = name;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; class SpringSprout{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Whiteship whiteship;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public Whiteship getWhiteship() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return whiteship;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void setWhiteship(Whiteship whiteship) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.whiteship = whiteship;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>흠냐.. 괜찮군요!</p>
+<p>?. 가 아니라 그냥 . 로 연결하면 null 객체에 대고 getName()을 호출하는 격이라 에러가 납니다. ?, 연산식이 SpEL에서 지원하는 Safe Navigation이라는 녀석입니다.</p>
+<p>이것 말고도 삼항 연산식도 제공하며 삼항 연산식에서 반복을 줄일 엘비스 연산식도 제공합니다. 아무튼 스프링은 참.. 멋지네요. +_+</p>
+<p>덕분에 NullPE 고민 해결입니다.</p>

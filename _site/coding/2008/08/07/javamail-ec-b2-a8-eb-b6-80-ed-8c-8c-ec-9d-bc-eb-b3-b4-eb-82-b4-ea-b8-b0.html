@@ -1,0 +1,5 @@
+<p>앞서 살펴본 HTML에 이미지 동봉하기와 비슷합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; messageBodyPart = new MimeBodyPart();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DataSource fds = new FileDataSource("C:\\images\\1.jpg");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; messageBodyPart.setDataHandler(new DataHandler(fds));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; messageBodyPart.setFileName("1.jpg");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // add it<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; multipart.addBodyPart(messageBodyPart);</div>
+<p>이렇게만 하면 되죠. 아까와 차이는 헤더 설정은 하지 않고, 파일 이름 설정을 추가했습니다.</p>
+<p><img src="/assets/ik120000000001.jpg" class="aligncenter" width="600" height="368" alt="사용자 삽입 이미지" /><br />이제 메일 쓰기는 끝났으니... 간단한 텍스트 메일 읽기, HTML 메일 읽기, 첨부 파일 읽기.. ㄱㄱㅆ</p>

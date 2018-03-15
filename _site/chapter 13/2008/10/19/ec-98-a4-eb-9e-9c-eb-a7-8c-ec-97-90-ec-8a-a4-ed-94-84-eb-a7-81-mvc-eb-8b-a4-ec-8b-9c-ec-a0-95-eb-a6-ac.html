@@ -1,0 +1,11 @@
+<p>오늘 오후 네 시에 스터디가 있어서 오랜만에 13장을 다시 정리해봤습니다. 그 중 몇 개만 정리해둡니다.</p>
+<p>MultiActionController 사용 방법은 두 가지<br />- 상속<br />- 위임</p>
+<p>WebApplicationContext가 관리하는 빈<br />- 컨트롤러(controller)<br />- 핸들러 맵핑(handler mappings)<br />- 뷰 리졸버(view resolver)<br />- 로케일 리졸버(locale resolver)<br />- 테마 리졸버(theme resolver)<br />- 멀티파트 파일 리졸버(multipart file resolver)<br />- 예외 처리 리졸버(Handler exception resolver)</p>
+<p>애노테이션 기반 컨트롤러 설정시 필요한 빈(자동 등록해줌)<br />- DefaultAnnotaionHandlerMapping<br />- AnnotationMethodHandlerAdapter</p>
+<p>@RequestMapping 사용 방법<br />- 클래스 레벨<br />- 메소드 레벨(MAC와 비슷한 효과)<br />- 클래스 + 메소드 레벨 혼합(클레스 레벨에 Ant 패턴 사용해서 거르고, 메소드 레벨로 세부적으로.)</p>
+<p>요청 처리 메소드 인자<br />- Servlet API(Session 사용시 Thread-safety 문제가 생기면, AnnotationMethodHandlerAdapter의 synchronizeOnSession 속성을 true로 설정.)<br />- WebRequest, NativeWebRequest<br />- Locale<br />- InputStream/Reader, OutputStream/Writer<br />- @RequestParam<br />- Map, Model, ModelMap<br />- Command/form objects<br />- Errors/BindingResult<br />- SessionStatus</p>
+<p>요청 처리 메소드 반환 타입<br />- ModelAndView<br />- Model (뷰 이름은 CoC 사용)<br />- Map (위와 동일)<br />- View (모델은 커맨드 객체와 @ModelAttribute를 사용한 메소드가 반환하는 객체)<br />- String (위와 동일)<br />- void (응답을 response 객체를 사용해서 직접 처리하거나, CoC 사용)<br />- Other return type (해당 객체를 model attribute로 뷰에서 사용가능)</p>
+<p>@RequestParam<br />- 요청 매개변수 바인딩</p>
+<p>@ModelAttribute<br />- 메서드 매개변수 레벨: 모델 속성을 특정 메서드 매개변수로 맵핑할 때 사용.<br />- 메서드 레벨: 화면에서 사용할 implicite object를 제공할 때 사용.</p>
+<p>@SessionAttributes<br />- @ModelAttribute의 이름 목록을 지니고 있다. 해당 모델 객체들을 세션에 저장하여 여러 요청에서 공통으로 사용.</p>
+<p>@InitBinder<br />- 커스텀 프로퍼티 에디터 등록.</p>

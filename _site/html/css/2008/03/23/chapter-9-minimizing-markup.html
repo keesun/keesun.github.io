@@ -1,0 +1,19 @@
+<h1>태그 최소화 하기</h1>
+<h2>Descendant Selectors</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;div id=<span class="code-quote">"sidebar"</span>&gt;<br /><br />  &lt;h3&gt;About This Site&lt;/h3&gt;<br /><br />  &lt;p&gt;This is my site.&lt;/p&gt;<br /><br />  &lt;h3&gt;My Links&lt;/h3&gt;<br /><br />  &lt;ul&gt;<br /><br />    &lt;li&gt;&lt;a href=<span class="code-quote">"archives.html"</span>&gt;Archives&lt;/a&gt;&lt;/li&gt;<br /><br />    &lt;li&gt;&lt;a href=<span class="code-quote">"about.html"</span>&gt;About Me&lt;/a&gt;&lt;/li&gt;<br /><br />  &lt;/ul&gt;<br /><br />&lt;/div&gt;<br /><br />#sidebar h3 {<br /><br />  font-family: Georgia, serif;<br /><br />  color: #c63;<br /><br />  border-bottom: 1px solid #ccc;<br /><br />  }<br /><br /><br /><br />#sidebar ul {<br /><br />  list-style-type: none;<br /><br />  }<br /><br /><br /><br />#sidebar li {<br /><br />  font-weight: bold;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>하위 태그들의 스타일을 위와 같이 정의하면, 하위 태그들에 굳이 class 속성을 추가하지 않아도 된다.</li>
+</ul>
+<h2>The Unnecessary &lt;div&gt;</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;ul id=<span class="code-quote">"nav"</span>&gt;<br /><br />  &lt;li&gt;&lt;a href=<span class="code-quote">"archives.html"</span>&gt;Archives&lt;/a&gt;&lt;/li&gt;<br /><br />  &lt;li&gt;&lt;a href=<span class="code-quote">"about.html"</span>&gt;About&lt;/a&gt;&lt;/li&gt;<br /><br />&lt;/ul&gt;</pre>
+</div>
+</div>
+<ul>
+<li>block 엘리먼트는 굳이 div로 감싸서 스타일을 적용할 필요가 없다.</li>
+</ul>

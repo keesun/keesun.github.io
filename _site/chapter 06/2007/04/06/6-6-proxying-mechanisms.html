@@ -1,0 +1,27 @@
+<p>Spring AOP는 JDK의 Dynamic Proxy 또는 CGLib을 사용하여 프록시를 만듭니다. 타겟이 되는 객체가 인터페이스를 하나라도 구현했다면 JDK의 Proxy를 사용할 것이고 구현한 인터페이스가 하나도 없을 경우에는 CGLib을 사용하게 됩니다. 원할 때는 명시적으로 CGLib을 사용하도록 할 수도 있지만 다음의 제약사항들이 있습니다.</p>
+<p>1. final 메소드는 어드바이스가 적용되지 않습니다. - 오버라이딩 못하기 때문이죠.<br />2. CGLIB 라이러리가 추가로 필요합니다. - spring이 알려줄 겁니다.<br />3. 생성자가 두 번 호출 됩니다. - 상속해서 만든거니깐 그렇겠죠.</p>
+<p>명시적으로 CGLIB을 사용하고 싶을 땐 다음 처럼 설정해 줍니다.</p>
+<p>@AspectJ 기반<br />&lt;aop:aspectj-autoproxy <span style="color: rgb(255, 0, 0);">proxy-target-class="true"</span>/&gt;</p>
+<p>Schema 기반<br />&lt;aop:config <span style="color: rgb(255, 0, 0);">proxy-target-class="true"</span>&gt; &nbsp;  <br />&lt;/aop:config&gt;</p>
+<p>6.6.1. Understanding AOP proxies</p>
+<p><img src="/assets/cl133.png" class="aligncenter" width="468" height="190" alt="사용자 삽입 이미지" />일반적인 객체에 대한 호출을 그림으로 표현한 것입니다.</p>
+<p><img src="/assets/cl134.png" class="aligncenter" width="500" height="188" alt="사용자 삽입 이미지" />이건 프록시 객체를 호출했을 떄를 그림으로 표현한 것입니다. 프록시에 있는 foo()를 먼저 하고 그 다음에 타겟 객체의 foo()를 호출하고 있습니다.</p>
+<p>이때 self-invocation issue가 발생합니다. 소스 코드로 확인 하는게 좋겠습니다.</p>
+<p>public interface Pojo {<br />&nbsp; &nbsp; public void foo();<br />&nbsp; &nbsp; public void bar();<br />}</p>
+<p>public class SimplePojo implements Pojo {<br />&nbsp; &nbsp; public void foo(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("this is foo and call bar()");<br />&nbsp; &nbsp; &nbsp; &nbsp; bar();<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; public void bar() {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("this is bar");<br />&nbsp; &nbsp; }<br />}</p>
+<p>인터페이스와 타겟이 될 클래스가 있으며 이것을 프록시팩토리를 사용하여 apsect를 만들고 간단한 어드바이스를 추가합니다.</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void name() {<br />&nbsp; &nbsp; &nbsp; &nbsp; ProxyFactory factory = new ProxyFactory(new SimplePojo());<br />&nbsp; &nbsp; &nbsp; &nbsp; factory.addInterface(Pojo.class);<br />&nbsp; &nbsp; &nbsp; &nbsp; factory.addAdvice(new RetryAdvice());</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Pojo pojo = (Pojo) factory.getProxy();<br />&nbsp; &nbsp; &nbsp; &nbsp; pojo.foo();<br />&nbsp; &nbsp; }</p>
+<p>추가한 어드바이스는 다음과 같습니다.</p>
+<p>&nbsp; &nbsp; public void before(Method arg0, Object[] arg1, Object arg2) throws Throwable {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Before Adivce");<br />&nbsp; &nbsp; }</p>
+<p>테스트를 실행하면 결과는 다음과 같습니다.</p>
+<p>Before Adivce<br />this is foo and call bar()<br />this is bar</p>
+<p>원하던 결과는 이게 아니죠. 원래는 다음 처럼 나와야 합니다.</p>
+<p>Before Adivce<br />this is foo and call bar()<br />Before Adivce<br />this is bar</p>
+<p>어드바이스가 타겟에 적용되었고 별다른 포인트컷 표현식을 쓰지 않았기 떄문에 모든 메소드에 적용이 되어야 합니다. foo()를 호출 했고 foo()에서 bar()를 호출 했기 때문에 bar()를 호출 할 때도 적용이 됐어야 하는데 그렇치 않았습니다.</p>
+<p>프록시 객체를 지나서 타겟 객체에 다다른 뒤에 타겟 객체에서 자기 자신의 메소드를 호출 할 때는 프록시를 거치지 않기 때문에 이렇게 됩니다. 이걸 self-invocation issue 라고 합니다.</p>
+<p>이 이슈의 해결 방법은.. 다소 invasive 하지만 어쩔 수 없이 다음 처럼 프록시를 통해서 호출하도록 코드를 수정해야 합니다.</p>
+<p>public class SimplePojo implements Pojo {<br />&nbsp;&nbsp; &nbsp;public void foo(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("this is foo and call bar()");<br />&nbsp;&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp;((Pojo) AopContext.currentProxy()).bar();</span><br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void bar() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("this is bar");<br />&nbsp;&nbsp; &nbsp;}<br />}</p>
+<p>레퍼런스에는 조금 메소드가 다르더군요. 레퍼런스에 오타도 있고 메소드 이름도 잘못 되어 있었지만 이클립스가 도와주고 있기 때문에 쉽게 고쳐 쓸 수 있었습니다.</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void name() {<br />&nbsp; &nbsp; &nbsp; &nbsp; ProxyFactory factory = new ProxyFactory(new SimplePojo());<br />&nbsp; &nbsp; &nbsp; &nbsp; factory.addInterface(Pojo.class);<br />&nbsp; &nbsp; &nbsp; &nbsp; factory.addAdvice(new RetryAdvice());<br />&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; factory.setExposeProxy(true);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; Pojo pojo = (Pojo) factory.getProxy();<br />&nbsp; &nbsp; &nbsp; &nbsp; pojo.foo();<br />&nbsp; &nbsp; }</p>

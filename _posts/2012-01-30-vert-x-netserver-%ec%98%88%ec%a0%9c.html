@@ -1,0 +1,52 @@
+---
+layout: post
+title: "[vert.x] NetServer 예제"
+date: 2012-01-30 22:00:36.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- vert.x
+tags:
+- NetServer
+- vert.x
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>[gist id=1704781]</p>
+<p>Node.js에서 express 쓰는 듯한 기분으로 NetServer라는걸 쓰면 되는데, 2중 익명클래스는 참 난감하긴하다. 코드는 분명히 자바 코드인데, 자바 스크립트 코드처럼 보이네;; 이런 코드 구조가 언어를 막론하고 논블록킹 IO 코딩 스타일이 될지도 모르겠다. 이럴바엔 그냥 그루비로 작성하는게 좋을 것 같다. 자바로는 너무 지져분한듯. 자바 7에서 클로져가 빠진게 정말 아쉽넹;</p>
+<p>vert.x가 지금은 아무런 문서가 없는 상태라서 거의 소스 코드만 가지고 분석해야 하는 상태다.</p>
+<p>먼저, vert.x 애플리케이션은 VertxApp이라는 인터페이스를 구현해서 만든다. 이 인터페스에는 구현해야 할 메서드가 두개뿐이다. start()와 stop();</p>
+<p>start()에서는 NetServer를 생성하고 각종 옵션을 설정하고 이벤트 핸들러를 등록해서 이벤트가 발생했을 때 수행할 작업을 정의한다. 지금은 별다른 옵션은 설정하지 않았다.</p>
+<p>NetServer에 설정할 수 있는 옵션은 다음과 같다.</p>
+<ul>
+<li>setSSL(boolean)</li>
+<li>setKeyStorePath(String)</li>
+<li>setKeyStorePassword(String)</li>
+<li>setSendBuffSize(int)</li>
+<li>setReceiveBuffSize(int)</li>
+<li>...</li>
+</ul>
+<p>NetServer의 클래스 계층 구조는 다음과 같다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/01/NetServer.png"><img class="aligncenter size-full wp-image-13468" title="NetServer" src="{{ site.baseurl }}/assets/NetServer.png" alt="" width="157" height="295" /></a></p>
+<p>흠냐.. 저렇게 코딩한 코드를 컴파일하고 vertx로 다음과 같이 실행할 수 있다.</p>
+<p style="padding-left: 30px;"><em>vertx run -main 실행할 클래스 -cp 클래스패스</em></p>
+<p>메이븐프로젝트 기준으로, 만약에 echo라는 패키지에 EchoServer라는 클래스를 만들고 빌드하면, target/classes 밑에 echo라는 디렉토리가 생기고 그 안에 EchoServer.class파일이 생긴다.</p>
+<p>target 디렉토리로 이동해서 다음과 같이 입력하면된다.</p>
+<p style="padding-left: 30px;"><em>vertx run -main echo.EchoServer -cp classes</em></p>
+<p>vertx를 실행하는 방법이 크게 두가지가 있는데, 그건 나중에 정리하기로하고 지금은 우선 저 방법으로 실행했다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/01/스크린샷-2012-01-31-오전-12.10.16.png"><img class="aligncenter size-full wp-image-13469" title="스크린샷 2012-01-31 오전 12.10.16" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-01-31-&#50724;&#51204;-12.10.16.png" alt="" width="1171" height="835" /></a></p>
+<p>이제 다른 콘솔창에서 telnet으로 접속하여 Vert.x 서버에 접속해볼 수 있다.</p>
+<p style="padding-left: 30px;"><em>telnet localhost 8080</em></p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/01/스크린샷-2012-01-31-오전-12.15.52.png"><img class="aligncenter size-full wp-image-13470" title="스크린샷 2012-01-31 오전 12.15.52" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-01-31-&#50724;&#51204;-12.15.52.png" alt="" width="1171" height="835" /></a></p>
+<p>코딩하는건 매우 쉬워보이는데... 문서가 없다보니 학습하기 어렵고, IDE 지원이 없다보니, 콘솔 작업을 해야되서 좀 불편하다.</p>
+<p>알아서 코어 갯수만큼 인스턴스 딱 띄워주고, 컨커런시 모델도 좋긴한데... 기술이 암만 좋아도, 문서와 툴이 없으면 뜨기 어려울텐데.. 과연 뜰 것인가.. 잘 모르겠다. 이상태로는 어디에 써보자고 권하기도 힘든 상황일쎄.. 20, 30페이지짜리 레퍼런스라도 만들어주면 좋겠구만.. 에효..</p>
+<p>자자.</p>

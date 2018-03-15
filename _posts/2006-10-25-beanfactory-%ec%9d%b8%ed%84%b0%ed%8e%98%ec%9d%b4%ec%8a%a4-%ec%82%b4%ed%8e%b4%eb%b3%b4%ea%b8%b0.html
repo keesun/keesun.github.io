@@ -1,0 +1,157 @@
+---
+layout: post
+title: BeanFactory 인터페이스 살펴보기
+date: 2006-10-25 05:03:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mission
+tags:
+- BeanFactory
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952247'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span lang="EN-US"><o:p></o:p></span>먼저 <span lang="EN-US">org.springframework.beans.factory.BeanFactory</span>가 책임지는 것은 무엇들이 있는지 살펴 보겠습니다<span lang="EN-US">.</span>
+<p class="MsoNormal"><span lang="EN-US"><o:p></o:p><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html">BeanFactoryAPI</a></span>를 살펴보겠습니다<span lang="EN-US">. </span>일반적으로<span lang="EN-US">BeanFactory</span>는<span lang="EN-US"> XML </span>같은<span lang="EN-US">configuration data </span>안에 저장된<span lang="EN-US"> Bean</span>에 대한 정의들을 읽어 들이고<span lang="EN-US">, org.springframwork.beans </span>패키지를 사용하여<span lang="EN-US"> Bean</span>을설정합니다<span lang="EN-US">.</span></p>
+<p class="MsoNormal"><span lang="EN-US"><o:p> </o:p></span></p>
+<p class="MsoNormal"><span lang="EN-US">BeanFactory </span>인터페이스가 가지고 있는 필드 입니다<span lang="EN-US">.</span></p>
+<table class="MsoNormalTable" style="width: 100%" border="1" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr style="">
+<td colspan="2" style="padding: 2.25pt; background: rgb(204, 204, 255) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><strong><span style="font-size: 18pt" lang="EN-US">Field Summary</span></strong><strong><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></strong></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US">static <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a></span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#FACTORY_BEAN_PREFIX"><span style="font-size: 10pt">FACTORY_BEAN_PREFIX</span></a></span></strong></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Used to dereference a FactoryBean and distinguish it from beans <em>created</em>  by the FactoryBean.</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal">
+<span lang="EN-US">BeanFactory </span>인터페이스 안에 들어있는 메소드들은 다음과 같습니다<span lang="EN-US">.</span></p>
+<table class="MsoNormalTable" style="width: 100%" border="1" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr style="">
+<td colspan="2" style="padding: 2.25pt; background: rgb(204, 204, 255) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><strong><span style="font-size: 18pt" lang="EN-US">Method  Summary</span></strong><strong><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></strong></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> boolean</span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#containsBean%28java.lang.String%29"><span style="font-size: 10pt">containsBean</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Does this bean factory contain a bean definition with the given  name?</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a>[]</span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#getAliases%28java.lang.String%29"><span style="font-size: 10pt">getAliases</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Return the aliases for the given bean name, if defined.</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html" title="class or interface in java.lang"><span style="font-size: 10pt">Object</span></a></span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#getBean%28java.lang.String%29"><span style="font-size: 10pt">getBean</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Return an instance, which may be shared or independent, of the  given bean name.</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html" title="class or interface in java.lang"><span style="font-size: 10pt">Object</span></a></span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#getBean%28java.lang.String,%20java.lang.Class%29"><span style="font-size: 10pt">getBean</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name, <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Class.html" title="class or interface in java.lang"><span style="font-size: 10pt">Class</span></a> requiredType)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Return an instance (possibly shared or independent) of the given  bean name.</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Class.html" title="class or interface in java.lang"><span style="font-size: 10pt">Class</span></a></span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#getType%28java.lang.String%29"><span style="font-size: 10pt">getType</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Determine the type of the bean with the given name.</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; width: 1%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial" valign="top" width="1%">
+<p class="MsoNormal" style="text-align: right" align="right"><code><span style="font-size: 12pt" lang="EN-US"> boolean</span></code><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="padding: 2.25pt; background: white none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial">
+<p class="MsoNormal"><code><strong><span style="font-size: 12pt" lang="EN-US"><a href="http://www.springframework.org/docs/api/org/springframework/beans/factory/BeanFactory.html#isSingleton%28java.lang.String%29"><span style="font-size: 10pt">isSingleton</span></a></span></strong></code><code><span style="font-size: 12pt" lang="EN-US">(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang"><span style="font-size: 10pt">String</span></a> name)</span></code><span lang="EN-US"> <br />
+  </span><span style="" lang="EN-US"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span lang="EN-US">Is this bean a singleton?</span><span style="font-size: 12pt; font-family: 굴림" lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+메소드들은 대강 어떤 일을 책임을 지고 있는지 알겠는데 맨 위에 있는 필드 하나가 잘 모르겠네요. </p>
+<table summary="" border="1" cellpadding="3" cellspacing="0">
+<tbody>
+<tr class="TableSubHeadingColor" bgcolor="#eeeeff">
+<th colspan="3" align="left">org.springframework.beans.factory.<a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/BeanFactory.html" title="interface in org.springframework.beans.factory">BeanFactory</a></th>
+</tr>
+<tr class="TableRowColor" bgcolor="white">
+<td align="right"><font size="-1"><code>public static final <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html" title="class or interface in java.lang">String</a></code></font></td>
+<td align="left"><code><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/BeanFactory.html#FACTORY_BEAN_PREFIX">FACTORY_BEAN_PREFIX</a></code></td>
+<td align="right"><code>"&amp;"</code></td>
+</tr>
+</tbody>
+</table>
+<p>
+Used to dereference a FactoryBean and distinguish it from beans <em>created</em> by the FactoryBean. For example, if the bean named <code>myEjb</code> is a FactoryBean, getting <code>&amp;myEjb</code> will return the factory, not the instance returned by the factory.</p>
+<p>dereference라는 단어는 처음보네요 ^^;; reference는 수도없이 봐왔는데. FactoryBean과 FactoryBean에 의해 생성된 bean을 구분하기 위해 사용한다고 하는군요. 예를 든 것을 보면 빈 이름이 myEjb이면 FactoryBean이고 &amp;myEjb는 factory에 의해 반환되는 객체가 아니라 factory를 반환한다.</p>
+<p>지쟈스... 무슨 말인지... Someboby PLZ HELP~</p>

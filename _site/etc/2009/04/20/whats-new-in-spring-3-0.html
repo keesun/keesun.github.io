@@ -1,0 +1,129 @@
+<p>참조: <a title="[http://www.epril.com/resources/spring3/reference/html/ch02.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch02.html">http://www.epril.com/resources/spring3/reference/html/ch02.html</a></p>
+<p>요약 및 편역합니다.</p>
+<p><span style="font-size: 12pt; font-weight: bold;"><span style="font-size: 11pt;">2.1 자바 5</span></span></p>
+<p>전페 프레임워크 코드를 제네릭, 가변인수(varargs) 같은 자바 5 기능을 사용하도록 수정했다. FactoryBean, 스프링 AOP, ApplicationListener 코드에 제네릭을 활용했다. 또한, TrasactionCallback과 HibernateCallback과 같은 콜백 인터페이스들은 제네릭한 결과를 반환하도록 수정했다. 스프링 코어 코드베이스를 전반적으로 자바 5에 최적화 시켰다.</p>
+<p>스프링의 TaskExecutor 추상화 계층을 자바 5의 java.util.concurrent 시설과 밀접하게 통합되도록 수정했다. JSR-236(자바 EE 6 Concurrency Utilies)에 포함되어 있는 Callable, Future, ExecutorService 어댑터, ThreadFactory 연동 등을 지원한다. 또한 (EJB 3.1 @Asynchronous 또는) @Async 애노테이션을 사용하여 비동기 메서드 호출도 지원한다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">2.2. 개선한 문서</span></span></p>
+<p>추가된 기능에 맞게 3.0 문서 작업을 새로 했고, 검증을 했지만 그래도 틀린 부분이 있다면 <a title="[http://jira.springframework.org/]로 이동합니다." target="_blank" href="http://jira.springframework.org/">이슈를 등록해 달라</a>.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">2.3. 새로운 모듈 구조와 빌드 시스템</span></span></p>
+<p>다음과 같은 모듈로 새롭게 개정했고 소스 트리당 모듈.jar로 관리한다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.aop<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.beans<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.context<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.context.support<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.expression<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.instrument<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.jdbc<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.jms<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.orm<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.oxm<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.test<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.transaction<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.web<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.web.portlet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.springframework.web.servlet</p>
+<p>* 더 이상 모든 구성요소를 담고 있던 spring.jar는 제공하지 않는다.</p>
+<p>새로운 스프링 빌드 시스템을 사용한다. 그 시스템은 다음 기능을 제공한다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ivy 기반 "스프링 빌드" 시스템<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일관된 배포 절차<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일관된 의존성 관리<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일관된 OSGi manifest 생성</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">2.4. 새로운 기능 살펴보기</span></span></p>
+<p>다음은 스프링 3.0이 새롭게 제공하는 기능이다. 이 기능들을 자세히 살펴보겠다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Spring Expression Language<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IoC enhancements/Java based bean metadata<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object to XML mapping functionality (OXM) moved from Spring Web Services project<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Comprehensive REST support<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @MVC additions<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Declarative model validation<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Early support for Java EE 6</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.1. 자바 5에 맞게 핵심 API 업데이트</span></span></p>
+<p>BeanFactory 인터페이스가 타입에 맞는 빈을 반환한다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T getBean(Stringname, Class&lt;T&gt; requiredType)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map&lt;String, T&gt; getBeansOfType(Class&lt;T&gt; type)</p>
+<p>스프링의 TaskExecutor 인터페이스가 java.util.concurrent.Executor를 상속 받는다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AsyncTaskExecutor를 확장하여 표준 Callables와 Futures를 지원한다.</p>
+<p>새로운 자바 5 기반의 converter API와 SPI<br />
+&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stateless ConversionService와 Converters<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 표준 JDK PropertyEditor 대체제</p>
+<p>타입을 가지고 있는 ApplicationListener&lt;E&gt;</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.2. 스프링 EL(Expression Language)</span></span></p>
+<p>스프링은 통합 EL과 비슷한 EL을 토입했다. EL은 XML 정의와 애노테이션 기반 빈 설정에서 사용할 수 있다. 이 기능에 대한 자세한 설명은 <a class="link" href="http://www.epril.com/resources/spring3/reference/html/ch07.html" title="7.&nbsp;Spring Expression Language (SpEL)">Spring Expression Language (SpEL).</a>장을 참조하라.</p>
+<p>스프링 EL은 모든 스프링 포트폴리오 제품에서 사용할 수 있는 단일 EL을 제공하기 위해 만들었다.</p>
+<p>다음은 데이터베이스 설정 프로퍼티에 EL을 사용하는 예제다.</p>
+<p>&lt;bean class="mycompany.RewardsTestDatabase"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="databaseName"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="#{systemProperties.databaseName}"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="keyGenerator"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value="#{strategyBean.databaseKeyGenerator}"/&gt;<br />
+&lt;/bean&gt;</p>
+<p>이 기능은 애노테이션에도 사용할 수 있다.</p>
+<p>@Repository <br />
+public class RewardsTestDatabase {</p>
+<p>&nbsp;&nbsp;&nbsp; @Value("#{systemProperties.databaseName}")<br />
+&nbsp;&nbsp;&nbsp; public void setDatabaseName(String dbName) { … }</p>
+<p>&nbsp;&nbsp;&nbsp; @Value("#{strategyBean.databaseKeyGenerator}")<br />
+&nbsp;&nbsp;&nbsp; public voidsetKeyGenerator(KeyGenerator kg) { … }<br />
+}</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.3. IoC 컨테이너</span></span></p>
+<p><span style="font-weight: bold;">2.4.3.1. 자바 기반 빈 메타데이타</span></p>
+<p><a title="[http://www.epril.com/resources/spring3/reference/html/ch02s04.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch02s04.html">JavaConfig 프로젝트</a>의 몇몇 핵심 기능을 스프링 프레임워크로 가져왔다. 즉 다음의 애노테이션을 직접 사용할 수 있다는 뜻이다.<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Configuration<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Primary<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Lazy<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Import<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Value</p>
+<p>다음은 JavaConfig 기능을 사용하는 기본적인 빈 설정 예제다.</p>
+<p>@Configuration<br />
+public class AppConfig{<br />
+&nbsp;&nbsp;&nbsp; private @Value("#{jdbcProperties.url}") String jdbcUrl;<br />
+&nbsp;&nbsp;&nbsp; private @Value("#{jdbcProperties.username}") String username;<br />
+&nbsp;&nbsp;&nbsp; private @Value("#{jdbcProperties.password}") String password;</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp; public FooService fooService() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new FooServiceImpl(fooRepository());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp; public FooRepository fooRepository() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new HibernateFooRepository(sessionFactory());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp; public SessionFactory sessionFactory() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // wire up a session factory using<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // AnnotationSessionFactoryBean<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; asFactoryBean.setDataSource(dataSource());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return (SessionFactory) asFactoryBean.getObject();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp; public DataSource dataSource() { <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new DriverManagerDataSource(jdbcUrl, username, password);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>이 것이 동작하게 하려며 애플리케이션 컨텍스트 XML 설정 파일에 다음과 같이 컴포넌트 스캔을 추가한다.</p>
+<p>&lt;context:component-scan <br />
+&nbsp;&nbsp;&nbsp; base-package="com.myco.config"/&gt;<br />
+&nbsp;<br />
+<span style="font-weight: bold;">2.4.3.2. 애노테이션을 활용한 팩토리 빈 정의</span></p>
+<p>FactoryBean은 스프링 컴포넌트 정의와 표준 컴포넌트-스캔 기술을 사용한 등록 방식으로 정의할 수 있다. 자세한 내용은 <a class="link" href="http://www.epril.com/resources/spring3/reference/html/ch04s12.html#beans-factorybeans-annotations" title="4.12.7&nbsp;Defining FactoryBeans with annotations">Factory Bean Definitions<br />
+        using annotations</a>을 참조하라.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.4. Data 단</span></span></p>
+<p>스프링 웹 서비스 프로젝트에서 객체(Object)를 XML로 맵핑하는 기능(OXM)을 스프링 프레임워크로 가져왔다, 이 기능은 org.springframework.oxm 패키지에 들어있다. OXM의 자세한 사용법은 <a title="[http://www.epril.com/resources/spring3/reference/html/ch15.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch15.html">Marshalling XML using O/X Mappers</a>를 참조하라.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.5. Web 단</span></span></p>
+<p>웹 단에서 가장 흥미로운 새 기능은 RESTful 웹 서비스와 웹 애플리케이션 지원 기능이다. 또한 새로운 애노테이션도 사용할 수 있다.</p>
+<p><span style="font-weight: bold;">2.4.5.1. 방대한 REST 지원</span></p>
+<p>RESTful 애플리케이션을 만드는 서버쪽 지원은 기존의 MVC 웹 프레임워크에서 주도적인 역할을 하는 애노테이션에 대한 확장 기능으로 제공한다. 클라이언트쪽 지원은 RestTemplate 클래스로 제공한다. 이 둘 모두 HttpConverter를 사용하여 객체와 그것에 대한 HTTP 요청과 응답 사이를 변환 해준다. </p>
+<p>MarhsallingHttpMessageConverter는 앞서 언급한 Object to XML 맵핑 기능을 사용한다.</p>
+<p>자세한 내용은 <a title="[http://www.epril.com/resources/spring3/reference/html/ch18.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch18.html">REST support</a>를 참조하라.</p>
+<p><span style="font-weight: bold;">2.4.5.2 @MVC additions</span></p>
+<p>@CookieValue와 @RequestHeaders 애노테이션이 추가됐다. <a title="[http://www.epril.com/resources/spring3/reference/html/ch16s11.html#mvc-ann-cookievalue]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch16s11.html#mvc-ann-cookievalue">Mapping cookie values with the @CookieValue annotation</a>과 <a title="[http://www.epril.com/resources/spring3/reference/html/ch16s11.html#mvc-ann-requestheader]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch16s11.html#mvc-ann-requestheader">Mapping request header attributes with the @RequestHeader annotation</a>을 참조하라.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.6 선언적인 모델 검증</span></span></p>
+<p>하이버네이트 검증기, JSR 303</p>
+<p>작업중... 스프링 3.0 M3 배포에 포함되어 있지 않다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">2.4.7 발빠른 자바 EE 6 지원</span></span></p>
+<p>새로운 애노테이션 @Async (or EJB 3.1's @Asynchronous 애노테이션)을 사용하여 비동기 메서드 호출을 지원한다.</p>
+<p>JSF 2.0, JPA 2.0, 기타 등등</p>
+<p>작업중... 스프링 3.0 M3 배포에 포함되어 있지 않다.</p>
+<p></p>

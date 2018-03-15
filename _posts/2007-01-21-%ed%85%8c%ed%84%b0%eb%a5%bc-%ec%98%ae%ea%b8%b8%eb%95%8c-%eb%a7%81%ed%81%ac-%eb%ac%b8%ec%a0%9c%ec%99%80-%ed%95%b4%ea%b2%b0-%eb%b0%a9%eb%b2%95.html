@@ -1,0 +1,78 @@
+---
+layout: post
+title: 테터를 옮길때 링크 문제와 해결 방법
+date: 2007-01-21 01:59:14.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Blogging
+tags:
+- 테터이전
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322829236'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>테터의 상태 그리고 옮기는 방법에 따라 발생하는 문제가 달라집니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">테터의 상태</span><br />제가 옮겨야 할 테터의 상태는 버젼 1.0.6.1에 차칸 팀블로그 플러그인 0.7이 설치되어 있었습니다. 그리고 도메인이 바뀝니다.</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">옮기는 방법</span><br />1. DB덤프를 떠서 옮기기(<a href="http://whiteship.tistory.com/370" target="_blank">테터 그 상태 그대로 서버만 바꾸기</a>)<br />2. 테터의 관리자 기능에 있는 데이타 백업 -&gt; 복원을 사용하는 것이 있습니다.</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">발생하는 문제</span><br />1번과 2번 방법 둘 다 발생하는 문제로는 <span style="color: rgb(255, 0, 0);">문서간의 링크가 짤린다는 것</span>입니다. 도메인이 아예 바껴버리기 때문에 참 난감한 상황이였습니다.</p>
+<p>2번의 경우에는 여기에 더해서 <span style="color: rgb(255, 0, 0);">모든 글의 작성자가 관리자 이름으로 바뀝니다.</span></div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">문제 해결하기</span>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">2번 방법으로 해결하기</span><br />먼저 2번 방법을 사용했을 때 문서의 링크를 살리는 방법으로는 백업 파일인 xml파일을 문서 편집기로 불러드려서 문서 안에 있는 링크들을 바꾸기 메뉴를 사용해서 바꿔주는 것입니다. 예를 들어 기존 도메인이 http://web.net 이고 새로운 도메인이 http://agile.net 이면 http:web.net 부분을 찾아서 http://agile.net으로 바꿔주는 작업입니다.</p>
+<p>이렇게 바꾸고 나서 복원을 하고 나면 겉으로 보기엔 깔끔하게 링크가 다시 살아난걸로 보이며 실제로 링크들이 제대로 동작합니다. 하지만... 모든 글의 포스팅이 by '관리자 네임'으로 바뀌게 됩니다.</p>
+<p>이것은 테터가 기본적으로 단일 사용자용으로 설치 되어 있었기 때문에 팀블로그 플러긴을 사용하고 있었다 할지라도 한명의 사용자로 테터가 인식했기 때문에 모든 글의 작성자가 한명.. 즉 관리자로 통일이 되어 버립니다. xml을 수정 하지 않고 단순히 백업 -&gt; 복원을 거치기만 해도 이 문제는 발생합니다.</p>
+<p>따라서 2번 방법은 막히게 됩니다.</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">1번 방법으로 해결하기</span><br />그럼 1번 방법에서 어떻게 방법이 없을까 생각해 보다가 '덤프뜬 sql도 xml수정하듯이 수정해버리면 되겠네.'라는 생각이 번뜩였고 바로 작업에 들어갔습니다. 덤프뜬 sql을 윈도우로 받아와서 1. 텍스트 에디터, 2. 워드패드, 3. 이클립스 에서 불러와서 링크를 수정하는 일들을 하고 다시 덤프를 DB에 복원하기 위해 mysql -u 유저 -p DB &lt; 수정된 덤프파일.sql 을 입력하면 1과 2를 사용하여 수정된 파일은 sql 형식이 맞지 않다면서 들어가지 않습니다. 원인은 문서의 형식이 깨져버려서 제대로 들어가지 못합니다. 3번을 사용하여 작업한 파일은 제대로 들어가지만 문서의 인코딩 문제로 글자가 전부 깨져버립니다. 하지만 링크가 전부 산 것을 확인하고 이 방법이 먹히는 것을 알 수 있었습니다.</div>
+</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">문제 해결에는 실패 했지만... 실마리를 찾았습니다.</span><br /><span style="color: rgb(255, 0, 0);">문서 형식을 깨지 않고 인코딩을 깨지 않고 원하는 부분의 텍스트만 수정을 하면 문제는 해결 된다<span style="color: rgb(0, 0, 0);">는 믿음이 생겼습니다.</span></span></div>
+<p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"><span style="font-weight: bold;">다시 도전</span><br />그러다 떠오른 것이 vi 에디터 왜 진작에 서버에서 직접 파일 편집할 생각을 안했을까 싶었습니다. 원인은 vi에 친숙하지 못했고 몸에<br />
+익숙한 윈도우에서 작업하길 원해서 불필요하고 불편함[footnote]서버에서 덤프 다운 받고 -&gt; 윈도우에서 파일 수정하고<br />
+-&gt; 서버로 올리는 불편함.[/footnote]을 vi에서 텍스트 전환하는 명령을 검색하는 노력을 하지 않았기 때문입니다.<br />
+자신도 모르게 저의 내부의 적이 제 안에서 절 조종하고 있더군요.[footnote]적의 화장법[/footnote]</p>
+<p>vi의 : 커맨드 모드에서 %s/찾을패턴/바꿀패턴/g 이렇게 하면 문서 전체에서 바꿀패턴으로 바꿔줍니다.[footnote]url의 경우 / 때문에 난감하실 수 있는데요. /는 \/ 이렇게 표현하면 됩니다.[/footnote]속도도 저 위에서<br />
+사용했던 어떠한 편집기보다 빨랐습니다.[footnote]텍스트 에디터 5분, 워드 패트 5초, 이클립스는 10초, vi 1초[/footnote]</p>
+<p>그리고 vi를 사용하여 수정된 덤프 파일을 DB에 집어 넣은 순간.. 나이스!!!!<br />vi 파이팅!</div>
+<p></p>

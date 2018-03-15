@@ -1,0 +1,63 @@
+---
+layout: post
+title: Stream 인코딩 바꾸기
+date: 2007-02-27 15:19:42.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Java 문자열
+- STREAM
+- 인코딩
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952304'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>제 블로그 RSS URL을 날리면 어떤 HTML이 날아오는지 보고 싶습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">String request - "http://whiteship.tistory.com";<br />URL url = new URL(request);<br />HttpURLConnection connection = (HttpURLConnection)url.openConnection();</div>
+<p>이렇게 커넥션 객체를 생성한 다음에.. 이 커넥션에서 다시 InputStream을 얻어서 다시 아래 처럼 InputStreamReader로 그리고 이걸 다시 버퍼를 사용해서 읽을 수 있도록 BufferedReader에 연결 시킵니다.[footnote]정말 이 부분은 외워 지지가 않네요. 매번 코드를 찾아보게 되는 부분입니다.[/footnote]</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">BufferedReader br = BufferedReader(new InputStreamReader(connection.getInputStream()));</div>
+<p>그리고 이후에는 br.readLine() 으로 한줄씩 읽어서 StringBuilder에 쌓아 뒀다가 출력해보면 됩니다.</p>
+<p>그렇게 해봤습니다.<br />[#M_ more.. | less.. | &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;rss version="2.0"&gt;<br />&nbsp;&nbsp; &nbsp;&lt;channel&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;Whiteship&amp;#039;s Note&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;?뻾蹂듯븳 媛쒕컻?옄媛? ?릺?졄?땲?떎.&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;language&gt;ko&lt;/language&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;pubDate&gt;Tue, 27 Feb 2007 23:16:34 +0900&lt;/pubDate&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;generator&gt;Tistory 1.1&lt;/generator&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;image&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;Whiteship&amp;#039;s Note&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;url&gt;&lt;![CDATA[http://fs.tistory.com/attach/8148/1301078737.gif]]&gt;&lt;/url&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;?뻾蹂듯븳 媛쒕컻?옄媛? ?릺?졄?땲?떎.&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/image&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;item&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;DAUM 留ㅼ돩?뾽 ?썑湲?&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/504&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;?쑕.. ?뾼泥??궃 ?뿰媛뺤쓣 ?뱽怨? ?솕?뜑?땲 ?뵾怨ㅽ븯?꽕?슂. 5?떆 10遺? 遺??꽣 9?떆源뚯?? ?씠?뼱吏? 媛뺤쓽????뒿?땲?떎. ?꽕?씠踰꾩?? DAUM?쓽 ?삤?뵂API ?궗?슜踰뺢낵 ?떎?젣 ?삁?젣 肄붾뱶瑜? 蹂댁뿬 二쇱뀲?뒿?땲?떎. ?궗?떎 ?쟾 硫섑넗媛? ?쁿?뿉 遺숈뼱?꽌 ?떎?뒿?쓣 ?뻽?떎?뒗 吏??궃 25?씪?뿉 李몄뿬瑜? ?븯怨? ?떢?뿀?뒗?뜲 ?뿬?뻾?쓣 媛??빞?븯湲? ?븣臾몄뿉 ?븘?돺寃? 媛뺤쓽留? ?엳?뒗 ?삤?뒛?씠?씪?룄 李몄뿬?빐?꽌 ?떎?쓬 留ㅼ돩?뾽?쓽 遺꾩쐞湲곕?? ?뙆?븙?뻽?떎?뒗 寃껋쑝濡? 留뚯”?빐?빞 寃좎뒿?땲?떎. 媛뺤쓽媛? ?엳?뒗 諛⑹씠 ?쑀由щ줈 ?몮?윭 ?뙎?뿬 ?엳?뼱?꽌 諛뽰씠 蹂댁???뒗?뜲 ?뒭??? ?떆媛꾩뿉?룄 ?뿴?떖?엳 ?씪..&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;&amp;lt;a href=&amp;quot;http://whiteship.tistory.com/504&amp;quot;&amp;gt;湲? ?쟾泥대낫湲?&amp;lt;/a&amp;gt;&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;category&gt;Thinking&lt;/category&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;category&gt;?떎?쓬 留ㅼ돩?뾽&lt;/category&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;author&gt;湲곗꽑&lt;/author&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;guid&gt;http://whiteship.tistory.com/504&lt;/guid&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;comments&gt;http://whiteship.tistory.com/504#entry504comment&lt;/comments&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;pubDate&gt;Tue, 27 Feb 2007 23:14:06 +0900&lt;/pubDate&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/item&gt;<br />...<br />_M#]이상한 글씨들이 콘솔창에 출력됩니다. OTL..</p>
+<p>인코딩 문제인데 구글신에게 물어보니까 InputStreamReader의 생성자를 이용해서 인코딩을 바꿀 수 있다고 합니다. 현재 인코딩을 찍어보니까[footnote]InputStreamReader의 String getEncoding()을 사용하면됩니다.[/footnote] MS949라고 출력됩니다.</p>
+<p>RSS나 기타 오픈API를 사용한 결과물은 UTF-8을 사용한다고 합니다. 그리고 InputStreamReader의 생성자를 보니까 다음과 같이 네개의 생성자가 있었습니다.<br /><img src="{{ site.baseurl }}/assets/ck23.jpg" class="aligncenter" width="500" height="198" alt="사용자 삽입 이미지" /><br />이 중에서 제일 아래 녀석을 사용해서 다음과 같이 수정해 줍니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">br = BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));</div>
+<p>결과물을 확인해 보니 제대로 출력이 되는 걸 볼 수 있었습니다.<br />[#M_ more.. | less.. | &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;rss version="2.0"&gt;<br />&nbsp;&nbsp; &nbsp;&lt;channel&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;Whiteship&amp;#039;s Note&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;행복한 개발자가 되렵니다.&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;language&gt;ko&lt;/language&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;pubDate&gt;Tue, 27 Feb 2007 23:16:34 +0900&lt;/pubDate&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;generator&gt;Tistory 1.1&lt;/generator&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;image&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;Whiteship&amp;#039;s Note&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;url&gt;&lt;![CDATA[http://fs.tistory.com/attach/8148/1301078737.gif]]&gt;&lt;/url&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;행복한 개발자가 되렵니다.&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/image&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;item&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;title&gt;DAUM 매쉬업 후기&lt;/title&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;link&gt;http://whiteship.tistory.com/504&lt;/link&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;description&gt;휴.. 엄청난 연강을 듣고 왔더니 피곤하네요. 5시 10분 부터 9시까지 이어진 강의였습니다. 네이버와 DAUM의 오픈API 사용법과 실제 예제 코드를 보여 주셨습니다. 사실 전 멘토가 옆에 붙어서 실습을 했다는 지난 25일에 참여를 하고 싶었는데 여행을 가야하기 때문에 아쉽게 강의만 있는 오늘이라도 참여해서 다음 매쉬업의 분위기를 파악했다는 것으로 만족해야 겠습니다. 강의가 있는 방이 유리로 둘러 쌓여 있어서 밖이 보였는데 늦은 시간에도 열심히 일..&amp;lt;p&amp;gt;&amp;lt;strong&amp;gt;&amp;lt;a href=&amp;quot;http://whiteship.tistory.com/504&amp;quot;&amp;gt;글 전체보기&amp;lt;/a&amp;gt;&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;&lt;/description&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;category&gt;Thinking&lt;/category&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;category&gt;다음 매쉬업&lt;/category&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;author&gt;기선&lt;/author&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;guid&gt;http://whiteship.tistory.com/504&lt;/guid&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;comments&gt;http://whiteship.tistory.com/504#entry504comment&lt;/comments&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;pubDate&gt;Tue, 27 Feb 2007 23:14:06 +0900&lt;/pubDate&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/item&gt;<br />...<br />_M#]</p>

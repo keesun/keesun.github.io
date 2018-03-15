@@ -1,0 +1,15 @@
+<p>1. SVN 저장소 만들기</p>
+<p>svnadmin create 저장소이름</p>
+<p>그럼 svn루트/repos/저장소이름 으로 폴더 생김.</p>
+<p>2. SVN 저장소 설정</p>
+<p>htpasswd -m svn-auth-file 아이디<br />
+이렇게 사용자 추가</p>
+<p>vi /etc/svn-authoz-file <br />
+들어가서, 권한 설정.</p>
+<p>[저장소이름:/]<br />
+whiteship = wr<br />
+* = r</p>
+<p>이런식..</p>
+<p>3. SVN 클라이언트에서 저장소에 접근하기.</p>
+<p><img src="/assets/ik220000000000.jpg" class="aligncenter" width="525" height="510" alt="사용자 삽입 이미지" /><br />
+끝~</p>

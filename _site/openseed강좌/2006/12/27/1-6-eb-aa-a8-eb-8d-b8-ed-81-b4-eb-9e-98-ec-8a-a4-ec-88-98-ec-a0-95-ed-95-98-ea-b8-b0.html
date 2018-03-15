@@ -1,0 +1,34 @@
+<p>Pizza 클래스에 새로운 필드를 추가해 봅니다.</p>
+<p>toping이라는 멤버를 추가하고 역시 어노테이션을 사용하여 @Column으로 지정해 줍니다. 그리고 getter, setter를 만들어 준뒤 PizzaApp 클래스에 적당한 값들로 세팅해 주고 save를 해봅시다.<br />[#M_ more.. | less.. | //Pizza.java</p>
+<p>...<br />
+private String toping;<br />
+...<br />
+@Column<br />
+ &nbsp;&nbsp; public String getToping() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return toping;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void setToping(String toping) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.toping = toping;<br />
+ &nbsp;&nbsp; }</p>
+<p>//PizzaApp.java</p>
+<p>...<br />
+Pizza pizza = new Pizza();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pizza.setName("seal's pizza");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pizza.setPrice(500);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pizza.setSize("Family");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; pizza.setToping("tuna");</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; s.save(pizza);<br />
+..._M#]<br />그리고 PizzaApp를 실행 시키면 다음과 같이 새로운 필드가 생기고 기존에 있던 data들은 새로운 필드에 null값이 들어간 상태로 바뀝니다.</p>
+<p>Hibernate: select nextval ('Pizza_PizzaId_Seq')<br />Hibernate: insert into O_Pizza (toping, price, name, size, pizzaId) values (?, ?, ?, ?, ?)</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk83.bmp" class="aligncenter" width="491" height="157" alt="사용자 삽입 이미지">bk83.bmp</a><br />여기서 궁금한건..<span style="color: rgb(23, 127, 205);">만약에 새로 만든 필드의 Column 속성에서 nullable을 false로 하면 어떻게 될까요?</span> 해보면 되겠죠?</p>
+<p>pgAdmin에서 table을 전부 날려버리고 Pizza 클래스에 추가했던 toping 멤버를 삭제하고 게터와 세터로 삭제합니다. 그리고 name, size, price만 넣어 줍니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk84.bmp" class="aligncenter" width="444" height="120" alt="사용자 삽입 이미지">bk84.bmp</a><br />이 상태에서 이제 다시 Pizza 클래스에 Toping을 추가하고 이번에는 @Column(nullable=false)로 설정을 해줍니다. 그리고 PizzaApp에서는 새로운 레코드를 추가합니다.<br />[#M_ more.. | less.. | //Pizza.java</p>
+<p>&nbsp; &nbsp; private String toping;</p>
+<p>@Column(nullable = false)<br />&nbsp; &nbsp; public String getToping() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return toping;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setToping(String toping) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.toping = toping;<br />&nbsp; &nbsp; }</p>
+<p>//PizzaApp.java</p>
+<p>Pizza pizza = new Pizza();<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setName("seal's pizza");<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setPrice(200);<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setSize("Family");<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setToping("Chees");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; s.save(pizza);_M#]그리고 실행을 하면 다음과 같은 메시지가 콘솔창에 출력됩니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Hibernate: select nextval ('Pizza_PizzaId_Seq')<br />Hibernate: insert into O_Pizza (toping, price, name, size, pizzaId) values (?, ?, ?, ?, ?)</div>
+<p>엇... DB로 확인해 봤더니 toping이라는 컬럼이 추가 되었고 새로운 레코드도 입력 되었습니다. 하지만 기존에 있던 레코드는 새로 생긴 컬럼이 null로 되어있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk85.bmp" class="aligncenter" width="500" height="142" alt="사용자 삽입 이미지">bk85.bmp</a><br />오호~~~table을 생성하는 쿼리를 살펴봤더니 toping 컬럼을 만들 때 not null을 넣지 않았군요. Hibernate 가 마치 '이정도 쯤이야' 하며 으쓱해 하는 기분이군요. <span style="color: rgb(255, 0, 0);">새로 추가되는 필드는 nullable=false로 하더라도 무시 됩니다.</span> 그리고 그렇게 처리하는 것이 논리적인 것 같습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk86.bmp" class="aligncenter" width="500" height="296" alt="사용자 삽입 이미지">bk86.bmp</a></p>

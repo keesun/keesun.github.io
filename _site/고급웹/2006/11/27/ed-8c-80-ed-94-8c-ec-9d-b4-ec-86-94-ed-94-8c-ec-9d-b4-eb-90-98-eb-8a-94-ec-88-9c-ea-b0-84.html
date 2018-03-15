@@ -1,0 +1,245 @@
+<p>얼마전 맨유의 경기 중에 루니가 준 완전 나이스 패스를 <a href="http://whiteship.tistory.com/193">호날두가 대기권 탈출 슛</a>으로 황당하게 마무리한 적이 있었습니다.</p>
+<p>간단한 웹사이트 하나를 만드는 팀플에서 jsp도 모르고 db도 모른다길래 html만 부탁했더니 아래처럼 해서 저에게 줬습니다. 메인 화면입니다.<br />
+<img src="/assets/1268651082.gif" class="aligncenter" width="600" height="435" alt="" /><br />
+프레임은 자유롭게 움직이고 높낮이도 제대로 안맞아 있습니다. 팀이름을 "세번째 팀" 이라고 지었네요. 제 자신도 띄어쓰기를 잘 지키지 못하기 때문에 뭐라고 그리 꾸짓고 싶진 않지만 "경매물품보기"는 "경매물품등록"은 보기가 싫어지네요. 참고로 그림이나 꾸미기는 왠지 여자가 잘할 것 같아서 여학우에게 부탁했던 부분입니다.<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);"> 여자라고 다 미적이지는 않다는거~</span> "경매물품보기"를 클릭하면 예술입니다.</p>
+<p><img src="/assets/1261492728.gif" class="aligncenter" width="600" height="435" alt="" /><br />
+이게 뭔가... 순간 당황스러워서 한동안 넋을 놓고 보고 있을 수밖에 없었습니다. 내가 무엇을 잘못했길래 이런 시험에 들게 하는 것인가. 분명 나와 대화를 할 땐 잘 알아들은 척 하더니 하나도 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">의사소통</span>이 제대로 안됐다는 것을 여지없이 보여줍니다. 지역별에는 서울 대전 대구 부산 과 같은 주요 도시명만 오면 되고 가격별에는 평당1만~10만, 10~100만 이런식의 단위가 와야 하는데 쌩뚱맞게 주소가 나옵니다. 그리고 화려한 표.. 딱봐도 사람이 할 짓이 아닙니다. 그래서 혹시나 해서 소스코드를 봤습니다.</p>
+<p>※주의 스크롤 압박 소스 보기<br />
+[#M_ more.. | less.. | &lt;html&gt;</p>
+<p>&lt;head&gt;<br />
+&lt;meta http-equiv="content-type" content="text/html; charset=euc-kr"&gt;<br />
+&lt;title&gt;경매물품..ㅋㅋㅋ&lt;/title&gt;<br />
+&lt;meta name="generator" content="Namo WebEditor"&gt;<br />
+&lt;/head&gt;</p>
+<p>&lt;body bgcolor="white" text="black" link="blue" vlink="purple" alink="red"&gt;<br />
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;<br />
+&lt;table border="1" width="100%" height="29%" bordercolor="white"&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="286" height="93" border="1" bgcolor="black" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:24pt;"&gt;&lt;font color="white"&gt;지역&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="413" height="93"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="286" height="93" bgcolor="black" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:24pt;"&gt;&lt;font color="white"&gt;가격&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+&lt;/table&gt;<br />
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;<br />
+&lt;table border="1" width="100%" height="100%" bordercolor="white"&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46" height="20"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="183" rowspan="2" colspan="2" bgcolor="white" height="44" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;span style="font-size:18pt;"&gt;&lt;b&gt;서울&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153" height="20"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94" height="20"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94" height="20"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19" height="20"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="62" rowspan="2" colspan="2" height="44" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:18pt;"&gt;주소&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304" height="20"&gt;&amp;nbsp;&amp;nbsp;인천광역시 남구 주안 5동 태화아파트 1&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&amp;nbsp;동 1405호&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92" bgcolor="white"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85" bgcolor="white"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="183" rowspan="2" colspan="2" bgcolor="#CCCCCC" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:22pt;"&gt;경기도&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="62" rowspan="2" colspan="2" bgcolor="#CCCCCC" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:18pt;"&gt;주소&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="183" rowspan="2" colspan="2" bgcolor="#ABA7A7" height="45" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:22pt;"&gt;충청도&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="62" rowspan="2" colspan="2" bgcolor="#ABA7A7" height="45" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:18pt;"&gt;주소&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304" height="21"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="183" rowspan="2" colspan="2" bgcolor="#777373" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:22pt;"&gt;전라도&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="62" rowspan="2" colspan="2" bgcolor="#777373" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:18pt;"&gt;주소&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85" bgcolor="white"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="183" rowspan="2" colspan="2" bgcolor="#595656" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:22pt;"&gt;경상도&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="62" rowspan="2" colspan="2" bgcolor="#595656" bordercolor="black"&gt;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;p align="center"&gt;&lt;b&gt;&lt;span style="font-size:18pt;"&gt;주소&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+ &nbsp;&nbsp; &lt;tr&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="46"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="92"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="85"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="153"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="94"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="19"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="42"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="14"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; &lt;td width="304"&gt;&amp;nbsp;&lt;/td&gt;<br />
+ &nbsp;&nbsp; &lt;/tr&gt;<br />
+&lt;/table&gt;<br />
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;</p>
+<p>&lt;/body&gt;</p>
+<p>&lt;/html&gt;_M#]<br />
+ 물어봤지요.</p>
+<p>"뭘로 만드신건가요?"</p>
+<p>"나모요."</p>
+<p>"아.. 그렇군요. HTML로 그냥 코딩할 줄 모르시나요?"</p>
+<p>"아니요. 아는데 시간이 오래 걸려서. 뭐가 잘못됐나요?"</p>
+<p>화면을 꾸미려는 코드는 html에서 최소화 시켜야 소스코드 보기가 쉽습니다. 꾸미기는 css로 따로 빼줘야 유지보수도 편하고 역시 코드 보기가 좋은 것 같습니다. 이 말을 해줬지만 css를 모른다. 나는 잘 보인다. 두 마디로<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);"> "왜 내가 한걸 무시해. 나 삐질라그래!"</span>라는 감정을 대신해 주었습니다.</p>
+<p>그래서 꾸미기가 하나도 없이 html로 제가 다시 만들어야했습니다. <span style="padding: 3px 1px 0px; color: rgb(255, 255, 255); background-color: rgb(255, 0, 0);">팀플이 솔플이 되는 순간</span>입니다.</p>

@@ -1,0 +1,86 @@
+---
+layout: post
+title: S1A - OSGi best practive by 코스틴 리우
+date: 2008-12-03 21:53:38.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- S1A
+tags:
+- OSGi
+- S1A
+- SpringSource DM
+- SpringSource DM Server
+- STS
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323115906'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>자바 애플리케이션 모듈화는 어렵다. 하지만 해결책은 있다.</p>
+<p>개요<br />- 모듈성 개요<br />- 클래스 &amp; 리소스 로딩<br />- 서비스 다아나믹스</p>
+<p>모듈화 목적<br />=&gt; 차 사고 났을 때 헤드라이트 나가면 거기만 갈아 낄 수 있도록.<br />=&gt; </p>
+<p>모듈성이 없는 app<br />- web/facade/repository 한 덩어리</p>
+<p>모듈성이 있는 app<br />- ADao, BDao, CService</p>
+<p>OSGi<br />- 1999년부터 사용 가능<br />- JDK 1.2 호환</p>
+<p>모듈화 대안 - JSR277/JAM<br />- JAva Module<br />- "Opaque" 스펙 진행중<br />=&gt; 어떻게 되가고 있는지 모르겠다.<br />- JDK 7.0 호환<br />=&gt; 왜냐면 새로운 키워드를 사용해야 해서...<br />- OSGi 호환</p>
+<p>모듈화 대안 - HK2<br />=&gt; glassfish 팀이 사용하고 있다.<br />- 2007년 말에 밸표됨<br />- 애노테이션 기반 간단 IoC<br />- 정적인 시스템</p>
+<p>OSGi/JSR 277 비교<br />- http://www.osgi.org/blog/<br />- http://underlap.blogspot.com/</p>
+<p>클래스로딩<br />- 모듈은 자기 내부 패키지와 다른 모듈에서 가져온 패키지만 로딩할 수 있다.<br />- 모든 패키지는 버전을 가지고 있다.</p>
+<p>Type Leakage<br />&nbsp; - 공개한 클래스 계층 구조에서 내부 클래스<br />&nbsp; - 공개한 시그너쳐에 있는 내부 클래스<br />=&gt; 이런 일이 발생하면 안 돼. 그럼 어떻게 해야 할까?<br />- 내부 패키지를 공개해(<br />- '연결' 인터페이스를 축출해<br />- Generic public 타입을 사용해<br />- 검증 도구(bnd)를 사용해</p>
+<p>추이적인 의존성<br />- A -&gt; C1, B -&gt;C2 =&gt; 이렇게 여러 버전 배포 가능하다. 이럴 때 X -&gt; A, B 이렇게 되면.. C 패키지는 어떤 버전 사용하게 되는거야?? =&gt; A나 B가 사용하고 X가 직접 사용 안 하면 상관없겠지만 X가 직접 해당 패키지를 사용하게 되면 타입 캐스팅 충돌 발생할꺼다 그래서 바운더리를 만들어줘야 한다. X -&gt; A, B, C1 이런식으로..<br />또는<br />=&gt; A, B, X -&gt; C2 이런식으로 한 버전을 참조하도록 한다. <br />- uses 지시어를 사용해서 둘 사이의 관계를 기술하라.</p>
+<p>AOP<br />- 동적 클래스 확장<br />- 기존 모듈 경계를 깨트린다.<br />=&gt; AOP의 아름다움은 바로 transparent하게 &nbsp;로깅이나 트랜잭션 등을 처리해 준다는 것이다. </p>
+<p>(과거) 컴파일-타임 위빙<br />- Imports를 수정해야 한다.<br />- provisioning 을 통해서 한다.</p>
+<p>로드 타임 위빙<br />=&gt; 이미 리졸브 된 상태에서 추가로 필요한 패키지가 있으면 못 가져온다.<br />- Synthetic 클래스로더 하나가 Proxy Creator Module, Advoce Module, Target Module을 모두 관리해야 한다.</p>
+<p>동적인 로드 타임 위빙<br />=&gt; 위에서 설치한 모듈이 중간에 없어지면 어떡하냐.. 프록시를 없앴다가 다시 만들어야 돼.<br />- 의존하는 모듈을 update 해줘야 돼<br />=&gt; SpringSource DM 서버에서는 알아서 해준다.</p>
+<p>영속화/리모팅<br />- 클래스 로더 사용과 연관이 많다. =&gt; 해결책은 synthetic classloader</p>
+<p>DynamicImport-Package<br />- 이 건 사용을 권장하지 않아.<br />=&gt; 일관성이 없이 매번 실행할 때마다 문제가 있을 수도 있고 없을 수도 있다. 여러 버전을 사용할 수 있을 경우에 완전 운에 달린 게임이다.<br />- 프로토타입에서나 사용하고 제품에선 사용하지 말아라.</p>
+<p>리소스 로딩<br />=&gt; 클래스 로딩과 비슷한데 silent error가 발생한다.<br />- 리소르를 클래스와 동일한 곳에 둔다. 클래스에서 사용할 수 있도록 -&gt; portable cnofig 자동으로 export 된다.</p>
+<p>공유 자원<br />- META-INF/services<br />- 버저닝이 문제가 딜 수 있다.<br />=&gt; 헤결 책은 extender </p>
+<p>Externder 패턴<br />=&gt; 번들 내부 리소스를 OSGi 서비스에서 사용가능하게 해준다.</p>
+<p>웹 애플리케이션</p>
+<p>오너쉽 문제 누가 로딩을 주도하는가?<br />- OSGi 플랫폼이?<br />- 웹 컨테이너가?<br />옵션<br />- HttpService<br />- Servlet Bridge<br />- ClassLoader bridge(스프링 DM 서버)</p>
+<p>웹 애플리케이션에서 클래스 로딩<br />- WAR는 미리 정의되어 있는 클래스패스가 있다.<br />- OSGi에서는 뭔가가 필요하다. =&gt; 번들 처리 도구를 사용하거나, dm 서버가 해준다.</p>
+<p>리소스 로딩<br />=&gt; 스프링DM/dm 서버가 알아서 해준다.</p>
+<p>서비스 Dynamics</p>
+<p>OSGi 서비스<br />- 간적접인 계층<br />- 객체를 서비스 registry에 추가하거나 제거할 수 있다.<br />- 타입 필터링이 자동으로 적용된다.<br />- 서비스는 동적이다.(언제든 사라지고 나타날 수 있다.)<br />- OSGi 서비스는 싱글톤이다.</p>
+<p>OSGi 서비스와 스프링 DM<br />- 그림<br />=&gt; decoupling</p>
+<p>서비스 Dynamics<br />- org.osgi.util.ServiceTracker<br />- Tracking Proxy(Spring DM) =&gt; 참조하던 서비스 없어지면 대체 가능한 다른 걸로 update 해준다.</p>
+<p>다른 이슈<br />- 쓰레드 Context 클래스로더<br />- TCCL을 사용하지 말거나 스프링 DM/dm 서버처럼 관리하라.<br />- 쓰레딩<br />- 번들/애플리케이션 관리</p>
+<p>결론<br />- STS, Spring DM, dm 서버를 사용하라. @.@</p>

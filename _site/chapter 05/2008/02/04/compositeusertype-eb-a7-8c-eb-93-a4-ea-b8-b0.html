@@ -1,0 +1,95 @@
+<h1>클래스 구현하기</h1>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class MonetaryAmountCompositeUserType <span class="code-keyword">implements</span> CompositeUserType {
+
+	<span class="code-keyword">public</span> <span class="code-object">String</span>[] getPropertyNames() {
+		<span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-object">String</span>[] { <span class="code-quote">"amount"</span>, <span class="code-quote">"currency"</span> };
+	}
+
+	<span class="code-keyword">public</span> Type[] getPropertyTypes() {
+		<span class="code-keyword">return</span> <span class="code-keyword">new</span> Type[] { Hibernate.BIG_DECIMAL, Hibernate.CURRENCY };
+	}
+
+	<span class="code-keyword">public</span> <span class="code-object">Object</span> getPropertyValue(<span class="code-object">Object</span> component, <span class="code-object">int</span> property)
+			<span class="code-keyword">throws</span> HibernateException {
+		MonetaryAmount monetaryAmount = (MonetaryAmount) component;
+		<span class="code-keyword">if</span> (property == 0)
+			<span class="code-keyword">return</span> monetaryAmount.getAmount();
+		<span class="code-keyword">else</span>
+			<span class="code-keyword">return</span> monetaryAmount.getCurrency();
+	}
+
+	<span class="code-keyword">public</span> <span class="code-object">Object</span> nullSafeGet(ResultSet resultSet, <span class="code-object">String</span>[] names,
+			SessionImplementor session, <span class="code-object">Object</span> owner)
+			<span class="code-keyword">throws</span> HibernateException, SQLException {
+		BigDecimal value = resultSet.getBigDecimal(names[0]);
+		<span class="code-keyword">if</span> (resultSet.wasNull())
+			<span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+		Currency currency = Currency.getInstance(resultSet.getString(names[1]));
+		<span class="code-keyword">return</span> <span class="code-keyword">new</span> MonetaryAmount(value, currency);
+	}
+
+	<span class="code-keyword">public</span> void nullSafeSet(PreparedStatement statement, <span class="code-object">Object</span> value,
+			<span class="code-object">int</span> index, SessionImplementor arg3) <span class="code-keyword">throws</span> HibernateException,
+			SQLException {
+		<span class="code-keyword">if</span> (value == <span class="code-keyword">null</span>) {
+			statement.setNull(index, Hibernate.BIG_DECIMAL.sqlType());
+			statement.setNull(index + 1, Hibernate.CURRENCY.sqlType());
+		} <span class="code-keyword">else</span> {
+			MonetaryAmount amount = (MonetaryAmount) value;
+			<span class="code-object">String</span> currencyCode = amount.getCurrency().getCurrencyCode();
+			statement.setBigDecimal(index, amount.getAmount());
+			statement.setString(index + 1, currencyCode);
+		}
+	}
+
+	<span class="code-keyword">public</span> void setPropertyValue(<span class="code-object">Object</span> arg0, <span class="code-object">int</span> arg1, <span class="code-object">Object</span> arg2)
+			<span class="code-keyword">throws</span> HibernateException {
+		<span class="code-keyword">throw</span> <span class="code-keyword">new</span> UnsupportedOperationException(<span class="code-quote">"Immutable MonetaryAmount!"</span>);
+	}
+
+}</pre>
+</div>
+</div>
+<ul>
+<li>CompositeUserType 인터페이스를 구현한다. </li>
+</ul>
+<ul>
+<li>nullSafeSet()은 ResultSet에 담겨있는 두 개의 값을 Monetary 객체의 속성값으로 변환하면 된다. </li>
+</ul>
+<ul>
+<li>nullSafeSet()은 객체가 가진 두 개의 값을 DB에 저장하도록 statement를 수정한다. </li>
+</ul>
+<ul>
+<li>getPropertyNames()를 사용해서 Value Type의 속성들을 알려준다. </li>
+</ul>
+<ul>
+<li>getPropertyValue()를 사용해서 Value Type의 각각의 속성이 가진 값을 알려준다. </li>
+</ul>
+<ul>
+<li>setPropertyValue()를 사용해서 Value Type의 속성에 값을 설정한다. </li>
+</ul>
+<h1>맵핑하기</h1>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">@org.hibernate.annotations.Type(
+    type = <span class="code-quote">"persistence.MonetaryAmountUserType"</span>
+)
+@org.hibernate.annotations.Columns(columns = {
+    @Column(name=<span class="code-quote">"INITIAL_PRICE"</span>),
+    @Column(name=<span class="code-quote">"INITIAL_PRICE_CURRENCY"</span>, length = 2)
+})
+<span class="code-keyword">private</span> MonetaryAmount initialPrice;</pre>
+</div>
+</div>
+<ul>
+<li>다음과 같이 쿼리를 작성할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">from Item i
+where i.initialPrice.amount &gt; 100.0
+  and i.initialPrice.currency = 'AUD'</pre>
+</div>
+</div>

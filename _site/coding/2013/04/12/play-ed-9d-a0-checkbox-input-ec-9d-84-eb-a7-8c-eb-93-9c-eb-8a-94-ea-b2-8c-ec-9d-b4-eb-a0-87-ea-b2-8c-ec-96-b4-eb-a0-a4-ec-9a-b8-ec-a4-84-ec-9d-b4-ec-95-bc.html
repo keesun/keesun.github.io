@@ -1,0 +1,28 @@
+<p>&lt;div&gt;<br />
+&lt;label for="notice"&gt;공지&lt;/label&gt;<br />
+@helper.input(form("notice")) { (id, name, value, args) =&gt;<br />
+&lt;input type="checkbox" name="@name" id="@id" @toHtmlArgs(args) /&gt;<br />
+}<br />
+&lt;/div&gt;</p>
+<p>입력받는거야.. 쉽지... 그런데 수정 화면에서는 지금 세팅된 값에 따라서 체크가 된 상태 안된 상태로 달라져야 하니까..</p>
+<p>&lt;div&gt;<br />
+&lt;label for="notice"&gt;공지&lt;/label&gt;<br />
+@helper.input(form("notice")) { (id, name, value, args) =&gt;<br />
+&lt;input type="checkbox" name="@name" id="@id" @toHtmlArgs(args) value="@value" <strong>@(if(value == true) "checked" else "")</strong> /&gt;<br />
+}<br />
+&lt;/div&gt;</p>
+<p>첨엔 이렇게 해봤었지... 근데 아무리 해도 안되는거야... 그래서 구글링을 했지.. 그랬더니 Some(true)같은것도 나오고 boxValue인가 하는값도 나오고..</p>
+<p><a href="http://stackoverflow.com/questions/10206961/is-it-possible-to-override-form-helpers">http://stackoverflow.com/questions/10206961/is-it-possible-to-override-form-helpers</a></p>
+<p>Some()까진 알겠는데 boxValue 뽑아낸건 나랑 무관한거 같더라고... 흠.. 암턴. 그래서 별짓을 다하기 시작했지...</p>
+<p><strong>@(if(value == Some(true)) "checked" else "")</strong></p>
+<p>잘 될거처럼 보였지만 안되지... 실제 값은 true인데도 무조건 false인것처럼 동작하더군..</p>
+<p><strong>@(if(Some(value)) "checked" else "")</strong></p>
+<p>이건 무조건 true인것처럼 동작하고.. 아.. 슬슬 짜증나던차에... 코드를 뭘 잘못만졌는지 플레이 리프레시도 제대로 안먹고 이상한 지점에서 컴파일 안된다고 표시되길래 꺼버리고 다시 clean compile 하는 도중... O.M.G...</p>
+<p>[warn] /workspace/nforge4/app/views/board/editPost.scala.html:35: Option[String] and Boolean are unrelated: they will most likely never compare equal</p>
+<p>[warn]           &lt;input type="checkbox" name="@name" id="@id" @toHtmlArgs(args) value="@value" @(if(value == true) "checked" else "") /&gt;</p>
+<p>이제야 제대로 된 에러를 좀 보는군....</p>
+<p>그니까 value는 Option[String] 타입이고 뒤는 boolean이라 이거지.. 그래서 비교가 안된다고.</p>
+<p><strong>@(if(value.equals(Some("true"))) "checked" else "")</strong></p>
+<p>결국 이렇게 했지만.. 참... 뭔가.. 참.. 그래... 구려....</p>
+<p>그러니까 잘 아시는 분 있으시면 이 코드 어떻게 하면 깔끔하게 고칠 수 있을지 알려주시면 매우매우 감사하겠습니다.</p>
+<p>ps: 이짓으로 날린 시간에 스프링 + JSP + 스프링 폼 태그로 작업을 했었다면... 난 정말 행복했을꺼야. 이러면서 스프링의 소중함을 알아거는거지 뭐... 참으로 사랑스러운 녀석이라는걸 새삼 느껴보는거지..</p>

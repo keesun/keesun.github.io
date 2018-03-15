@@ -1,0 +1,44 @@
+<p>1. 라이브러리 추가.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- Validation --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.hibernate&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.org.hibernate.validator&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;4.0.0.GA&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;javax.xml.bind&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.javax.xml.bind&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.1.7&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>2. 빈 설정.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;bean<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="cacheSeconds" value="0" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="webBindingInitializer"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="validator" ref="validator" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/bean&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/property&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/bean&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/&gt;</p>
+<p>3. 애노테이션 기반 검증 설정</p>
+<p>&nbsp;&nbsp;&nbsp; @Column(length = 100)<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; @NotEmpty(message="제목을 입력하세요!")</span><br />
+&nbsp;&nbsp;&nbsp; private String title;<br />
+&nbsp;&nbsp;&nbsp; @Column(columnDefinition="TEXT")<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; @NotEmpty(message="제목을 입력하세요!")</span><br />
+&nbsp;&nbsp;&nbsp; private String contents;</p>
+<p>4. 컨트롤러 코드 수정.</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping(value = "/notice/update/{id}", method = RequestMethod.POST)<br />
+&nbsp;&nbsp;&nbsp; public String updateForm<span style="font-weight: bold;">(@Valid Notice notice</span>, BindingResult result, SessionStatus status) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (result.hasErrors()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "notice/update";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; noticeService.update(notice);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status.setComplete();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "redirect:/notice/" + notice.getId() + ".do";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>끝~!! 기본 에러 메시지는 애노테이션에서 변경할 수 있습니다.</p>
+<p>이제 JSR 303 애노테이션과 그 확장 애노테이션에 뭣들이 있는지 살펴봐야겠네요.</p>

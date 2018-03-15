@@ -1,0 +1,123 @@
+---
+layout: post
+title: OSAF 2.0 준비중
+date: 2010-06-23 08:05:11.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- OSAF
+tags:
+- OSAF 2.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322869494'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>최근에 계속 포스팅 했던 [회사일]을 하면서 다른 프로젝트에서도 사용할 수 있는 코드들을 별도 패키지에 모아뒀습니다.&nbsp;
+<div id="">
+</div>
+<div><b>Generic 사용 극대화</b></div>
+<div>
+</div>
+<div id="">
+이전과 마찬가지로 Generic 사용을 극대화해서 DAO, Service, Controller를 만들고 PersistentEnum을 활용하는 GenericPEFormatter도 만들어 뒀고, GenericExcelView까지 있습니다.</div>
+<div>
+</div>
+<div>
+<b>REST 스타일 URL 지원</b></div>
+<div>
+</div>
+<div id="">
+스프링 3.0 최신 버전과 하이버네이트를 사용했으며 URL은 REST 스타일로 만들어 놨습니다. 따라서 GenericController만 상속받으면 기본적인 CRUD 기능을 RESTful URL로 제공해줍니다.</div>
+<div id="">
+</div>
+<div id="">
+<b>계층 구조</b></div>
+<div id="">
+</div>
+<div id="">
+기본적인 계층 구조(DAO, Service, Controller) 형태기 때문에 적응하기 쉬울 겁니다. 스프링 Roo 스타일로 만들까 했지만. AsepctJ를 공부헀었는데도 잘 적응이 안되더라구요.ㅋ</div>
+<div id="">
+</div>
+<div id="">
+<b>no-iframe</b></div>
+<div id="">
+</div>
+<div id="">
+참.. 화면이 이전처럼 iframe으로 나눠진게 아니라 통짜 구조입니다. 화면을 나누는건 JQuery layout 플러그인을 사용했구요. &nbsp;iframe보다 편합니다.</div>
+<div id="">
+</div>
+<div id="">
+<b>그리드</b></div>
+<div id="">
+</div>
+<div id="">
+<div id="">그리드도 jqGrid를 사용해서 이전에 쓰던 그리드(뭔지도 기억안남)보다 기능도 많고 더 좋습니다.</div>
+<div>
+</div>
+</div>
+<div id=""><b>상속</b></div>
+<div id="">
+</div>
+<div id="">
+단점은.. Spring Roo 처럼 완전히 비침습적인 프레임워크가 아닌지라.. 상속을 사용해야 합니다. DAO, Service, Controller, Enum 들이 OSAF 코드를 상속 받아야 합니다.</div>
+<div id="">
+</div>
+<div id="">
+<b>코드 생성</b></div>
+<div id="">
+</div>
+<div id="">
+코드 생성 기능은 없습니다. 만들라면 만들겠지만 귀찮기도 하고 손으로 직접 만들면서 사용법을 익히는게 좋을 것 같아서 만들지 않았습니다.</div>
+<div id="">
+</div>
+<div id="">
+<b>바로 시작</b></div>
+<div id="">
+</div>
+<div id="">
+프로젝트를 다운받아서 라이브러리 형태로 넣을 필요없이 프로젝트를 받아서 바로 자신의 웹 프로젝트로 사용할 수 있게끔 배포할 계획입니다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<b>기본 모델 제공</b></div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+바로 실행할 수 있는 프로젝트에 Member, Right, Code, CodeCat 같은 기본 도메인을 제공합니다. 자주 쓰는 도메인 코드를 가진 상태에서 시작하세요. Generic류 코드를 어떻게 쓰는지, OSAF 태그파일을 사용해서 화면 코드를 작성하는 방법을 쉽게 볼 수 있습니다.</div>

@@ -1,0 +1,60 @@
+---
+layout: post
+title: Web Layer
+date: 2006-12-12 12:57:02.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 03장 Spring MVC
+tags:
+- Controller
+- ModelAndView
+- Spring MVC
+- Web Layer
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322702902'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font style="font-weight: bold;" size="4"><span style="color: rgb(153, 204, 102);">Web Layer</span></font><br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;">이 계층에서 다루는 주요 기능 두가지</span><br />- Navigation Logic 담당<br />- Domain model 과 Service Layer의 중계자 역할</p>
+<p><span style="font-weight: bold;">특징</span><br />- servlet 으로 간단하게 구현될 수 있다. 이런 servlet은 request 파라미터를 객체로 바꾸고 service 인터페이스의 메소드를 호출한다.<br />- 유저들을 위해서 비즈니스 exception들을 적당한 에러 메시지로 바꿔야 하는 책임도 있다.</p>
+<p><span style="font-weight: bold;">Spring MVC가 하는 일</span><br />- Spring MVC는 request 파라미터를 비즈니스 로직이 직접 작동할 수 있는 POJO로 맵핑하는 등의 request 파라미터와 비즈니스 로직 계층간의 복잡한 메카니즘을 제공한다.<br />- Spring은 request들을 처리하고 확장이 편하도록 복잡한 업무 흐름을 구현하고 있다.</p>
+<p><span style="font-weight: bold;">종속성</span><br />-Service Layer(web에서 받은 정보를 service layer에 전해 줄 domain 객체로 전환)<br />-Domain Layer<br /><img src="{{ site.baseurl }}/assets/bk18.gif" class="aligncenter" width="247" height="158" alt="사용자 삽입 이미지" /><span style="font-weight: bold;">Spring MVC Web Layer API</span><br />- <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/mvc/Controller.html" target="_blank">org.springframework.web.servlet.mvc.Controller 인터페이스</a><br />- HttpServletRequest와 HttpServletResponse를 받을 때 필요하다.<br />- client에게 정보를 돌려줄 때 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/ModelAndView.html" target="_blank">ModelAndView</a> 객체를 만든다.</p>
+<p></p>

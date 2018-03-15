@@ -1,0 +1,66 @@
+---
+layout: post
+title: 9.2. Motivations
+date: 2007-04-11 01:34:34.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323138256'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>트랜잭션 관리를 할 때 두 가지 선택사항 중 하나를 선택합니다.</p>
+<p>1. Global 트랜잭션 :: 어플리케이션 서버에서 관리하는 트랜잭션 처리 ex. JTA<br />2. Local 트랜잭션 :: 사용하는 자원에 따라 트랜잭션 처리 ex. JDBC connection</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">1번의 경우 여러 트랜잭션 자원을 사용할 수 있지만 JTA를 사용할 때 <a href="http://en.wikipedia.org/wiki/JNDI" target="_blank">JNDI(Java Naming and Directory Interface)</a>와 어플리케이션 서버에 종속성이 생긴다는 단점이 있습니다. </p>
+<p>EJB의 CMT(Container Managed Transaction)를 사용하면 선언적 트랜잭션 관리를 할 수 있습니다. 이것을 사용하면 트랜잭션과 관련된 JNDI lookup 하는 부분을 제거 할 수 있으며 소스 코딩을 줄일 수 있습니다. 하지만 JTA와 어플리케이션 서버에 종속 됩니다.</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">2번의 경우 1번 보다 사용하기는 간단하지만 여러 트랜잭션 자원을 사용하지 못합니다. 예를 들어 JDBC 커넥션을 사용하여 트랜잭션을 관리하면서 JTA를 사용한 트랜잭션 관리는 할 수 없습니다. 또한 소스코드에 트랜잭션 관련된 코드가 침략하게 됩니다.</p>
+<p>Spring은 바로 이 부분을 개선했습니다. 그냥 코드를 작성하면 어떤 트랜잭션 관리든지 일관적으로 적용할 수 있도록 트랜잭션 추상화 계층을 제공합니다. 선언적인 트랜잭션과 프로그래밍적인 트랜잭션 모두 지원하며[footnote]선언적인 방식이 보다 선호하는 방식이며 대부분의 경우 추천하는 방법입니다.[/footnote] Spring API에 종속되지도 않습니다.[footnote]따라서 다른 어떤 API에도 종속되지 않습니다.[/footnote]</div>
+<p>The most important point is that with the Spring Framework <span class="emphasis"><em>you can<br />
+            choose when to scale your application up to a full-blown application<br />
+            server</em></span>. Gone are the days when the only alternative to using<br />
+            EJB CMT or JTA was to write code using local transactions such as those<br />
+            on JDBC connections, and face a hefty rework if you ever needed that code<br />
+            to run within global, container-managed transactions. With the Spring Framework,<br />
+            only configuration needs to change so that your code doesn't have to.
+<p>출처 및 참조 : <a href="http://static.springframework.org/spring/docs/2.0.4/reference/transaction.html" target="_blank">http://static.springframework.org/spring/docs/2.0.4/reference/transaction.html</a></p>
+<p></p>

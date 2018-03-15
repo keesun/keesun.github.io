@@ -1,0 +1,69 @@
+---
+layout: post
+title: TDDBE - xUnit 21장
+date: 2008-09-01 11:19:51.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- xUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323146601'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>ToDO<br />테스트 결과 출력하기</p>
+<p>테스트 중에서도 잘 실행하고 종료된 상황을 테스트 합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class TestCaseTest extends TestCase {</p>
+<p>&nbsp; &nbsp; private WasRun test;</p>
+<p>&nbsp; &nbsp; public TestCaseTest(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testTemplateMethod(){<br />&nbsp; &nbsp; &nbsp; &nbsp; test = new WasRun("testMethod");<br />&nbsp; &nbsp; &nbsp; &nbsp; test.run();<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.log.equals("setUp testMethod tearDown ");<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br /><span style="font-weight: bold; color: rgb(0, 153, 102);">&nbsp; &nbsp; public void testResult(){</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /><span style="font-weight: bold; color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; test = new WasRun("testMethod");</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /><span style="font-weight: bold; color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; TestResult result = test.run();</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /><span style="font-weight: bold; color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; assert result.summary().equals("1 run, 0 failed");</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /><span style="font-weight: bold; color: rgb(0, 153, 102);">&nbsp; &nbsp; }</span><br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; new TestCaseTest("testTemplateMethod").run();<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102); font-weight: bold;"> new TestCaseTest("testResult").run();</span><br />&nbsp; &nbsp; }<br />}</div>
+<p>모든 테스트 케이스 마다 매번 결과를 확인할 수 있도록 설계를 합니다. 그래서 run() 메소드에서 실행 결과를 나타내는 TestResult를 반환 하도록 합니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp;public class TestCase {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; String methodName;</p>
+<p>&nbsp; &nbsp; public TestCase(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.methodName = methodName;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public TestResult run() {<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102); font-weight: bold;"> TestResult result = new TestResult();</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; result.testStarted();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; setUp();<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Method method = this.getClass().getMethod(methodName, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; method.invoke(this, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(e);<br />&nbsp; &nbsp; &nbsp; &nbsp; } <br />&nbsp; &nbsp; &nbsp; &nbsp; tearDown();<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 153, 102); font-weight: bold;">return result;</span><br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; protected void tearDown() {}</p>
+<p>&nbsp; &nbsp; protected void setUp() {}<br />}</div>
+<p>물론 첨부터 저렇게 구현하진 않았습니다. 처음에는 그냥 return new TestResult()를 했다가. TestResult에서 설계가 들어갑니다. 결과값을 testStarted()라는 걸 호출 해서 속에 있는 카운터를 증가시키는 구조로 말이죠.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class TestResult {</p>
+<p>&nbsp; &nbsp; int run;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testStarted(){<br />&nbsp; &nbsp; &nbsp; &nbsp; this.run += 1;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String summary() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return run + " run, 0 failed";<br />&nbsp; &nbsp; }</p>
+<p>}</div>
+<p>얘도 첨엔 이렇게 안 생겼었고, 처음엔 상수를 반환했습니다. 그랬다가 일단 앞에 있는 실행 갯수만을 변수화 했고, 위의 설계 결정에 따라 구현을 변경한 겁니다.</p>
+<p>리팩터링과, 설계, 그리고 TDD의 관계를 생각하게 만드는 챕터였습니다.</p>

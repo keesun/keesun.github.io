@@ -1,0 +1,358 @@
+---
+layout: post
+title: "[회사일] DateRange 추가"
+date: 2010-06-14 05:33:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SLT
+tags:
+- DateRange
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323184598'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile22.uf.125097204C15BCC03F0003.jpg" class="aligncenter" width="600" height="436" alt="" filename="3.jpg" filemime="image/jpeg" /></p>
+<div>오른쪽에 보이는 검색 필드를 MemberSearchingParam에 추가하는데 아무래도 이런 범위 검색 필드는 자주 사용될 것 같더군요.</div>
+<div id="">
+</div>
+<div>
+그래서 별도의 클래스로 분리했습니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class DateRange {</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;@DateTimeFormat(iso= DateTimeFormat.ISO.DATE)</div>
+<div id="">&nbsp;&nbsp; &nbsp;private Date from;</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;@DateTimeFormat(iso= DateTimeFormat.ISO.DATE)</div>
+<div id="">&nbsp;&nbsp; &nbsp;private Date to;</div>
+<div>
+</div>
+<div>
+...</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div>
+</div>
+<div>나머진 요다(?) 조다(?) 라이브러리만 넣어두면 기본 포매터가 동작해서 잘 바인딩 해 줍니다. 아.. 암튼 이번엔 바인딩 얘기가 아니라.. &nbsp;저 클래스 DateRange 얘기입니다.</div>
+<div>
+</div>
+<div>
+MemberSearchParam을 MemberDao코드에 적용합니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+@Repository</div>
+<div id="">public class MemberDaoImpl extends GenericDaoImpl&lt;Member, MemberSearchParam&gt; implements MemberDao {</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;protected void applySearchParam(Criteria c, MemberSearchParam searchParam) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "loginId", searchParam.getLoginId());</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "name", searchParam.getName());</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "email", searchParam.getEmail());</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "phoneNumber", searchParam.getPhoneNumber());</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "jobTiTle", searchParam.getJobTitle());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>CriteriaUtils.addOptionaBetween(c, "birthDay", searchParam.getBirthDayRange());</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이게 DAO 코드 전부입니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+유틸 코드로 가야겠네요.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp; &nbsp;@Test</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void testOptionalBetween() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String dateRangeSearchingFiled = "birthDay";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionaBetween(c, dateRangeSearchingFiled, null);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;verify(c, times(0)).add(any(Criterion.class));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;reset(c);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;DateRange dateRange = new DateRange();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionaBetween(c, dateRangeSearchingFiled, dateRange);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;verify(c, times(0)).add(any(Criterion.class));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;reset(c);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dateRange.setFrom(new Date());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionaBetween(c, dateRangeSearchingFiled, dateRange);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;verify(c, times(1)).add(Restrictions.ge(any(String.class), dateRange.getFrom()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;reset(c);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dateRange.setTo(new Date());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionaBetween(c, dateRangeSearchingFiled, dateRange);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;verify(c, times(1)).add(Restrictions.between(any(String.class), dateRange.getFrom(), dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;reset(c);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dateRange.setFrom(null);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionaBetween(c, dateRangeSearchingFiled, dateRange);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;verify(c, times(1)).add(Restrictions.le(any(String.class), dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">장황해 보이지만 별거 없는 테스트 입니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp;</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+ &nbsp;public static void addOptionaBetween(Criteria c, String fieldName, DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange == null)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.getFrom() != null &amp;&amp; dateRange.getTo() != null){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.between(fieldName, dateRange.getFrom(), dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.getFrom() != null &amp;&amp; dateRange.getTo() == null){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.ge(fieldName, dateRange.getFrom()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.getFrom() == null &amp;&amp; dateRange.getTo() != null){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.le(fieldName, dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이 코드를 테스트하고 있죠. 그런데 코드가 좀;; Don't Tell, Ask가 생각나더군요. 저런 조건 문을 inline 뭐시기 리팩토링으로 분리할 수도 있지만 그보다 일단 if 조건문에 들어있는 내용이 들어있어야 할 위치가... DateRange가 되어야 할 것 같단 생각이 듭니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+머 일단 if안에 있는 조건문 들을 extract method 리팩토링으로 빼냅니다. 이런 리팩토링을 인라인 머시기 리팩토링이라고 했던것 같은데 잊어버렸네요. @_@;;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp; &nbsp;public static void addOptionaBetween(Criteria c, String fieldName, DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange == null)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(hasFromAndTo(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.between(fieldName, dateRange.getFrom(), dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(hasFromOnly(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.ge(fieldName, dateRange.getFrom()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(hasToOnly(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.le(fieldName, dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;private static boolean hasToOnly(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() == null &amp;&amp; dateRange.getTo() != null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;private static boolean hasFromOnly(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() != null &amp;&amp; dateRange.getTo() == null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;private static boolean hasFromAndTo(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() != null &amp;&amp; dateRange.getTo() != null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그럼 이렇게 되는데 여기서 아래 세개의 static 메서드를 DateRange 쪽 멤버 메서드로 옯겨줍니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class DateRange {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@DateTimeFormat(iso= DateTimeFormat.ISO.DATE)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private Date from;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@DateTimeFormat(iso= DateTimeFormat.ISO.DATE)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private Date to;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+...</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public boolean hasToOnly(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() == null &amp;&amp; dateRange.getTo() != null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public boolean hasFromOnly(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() != null &amp;&amp; dateRange.getTo() == null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public boolean hasFromAndTo(DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dateRange.getFrom() != null &amp;&amp; dateRange.getTo() != null;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">그리고 CriteriaUtils 코드를 수정해주면 되죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; </div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;public static void addOptionaBetween(Criteria c, String fieldName, DateRange dateRange) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange == null)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.hasFromAndTo(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.between(fieldName, dateRange.getFrom(), dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.hasFromOnly(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.ge(fieldName, dateRange.getFrom()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(dateRange.hasToOnly(dateRange)){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.le(fieldName, dateRange.getTo()));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">마지막으로 테스트 한번 돌려주면 깔끔하게 끝~</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>

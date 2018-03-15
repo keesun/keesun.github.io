@@ -1,0 +1,42 @@
+<p><a href="http://java.sun.com/docs/books/tutorial/java/IandI/createinterface.html">Java Tutorial에 있는 interface부분</a>을 읽으며 정리했던 내용입니다.<br />
+원래 엠파스 블러그에 정리해 두었었는데 이번 기회에 이것도 이리 옮겨오네요 :)</p>
+<div>Interface는 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">다른 class들로 부터 구현될 행동들의 규약을 정의한 것</span>이다.</div>
+<div>Interface는 구현되어 있진 않은 메소드 정의들의 집합이다.</div>
+<div>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)">
+<div>abstract class와의 차이점</div>
+<div>1. abstract class는 method를 몇개 구현해 놓을 수 있지만 interface는 그렇치 않다.</div>
+<div>2. 하나의 class는 여러 interface들을 구현할 수 있지만 (abstract) class는 하나만 상속 받을 수 있다.</div>
+<div>3. interface는 2번과 같은 이유로 인해 class hierarchy에 속하지 않는다.</div>
+<div>4. 전혀 상관 없는 class들도 같은 interface는 구현할 수 있다.</div>
+</div>
+</div>
+<div><font style="background-color: rgb(255, 204, 0)"><br />
+public</font> <font style="background-color: rgb(255, 204, 0)">interface</font> InterfaceName <font style="background-color: rgb(255, 204, 0)">extends</font> SupreInterfaces {</div>
+<div> &nbsp; &nbsp; &nbsp; &nbsp; ....</div>
+<div>}</div>
+<div>interface앞에 붙을 수 있는 접근 지시자는 public과 default(아무것도 안쓰는것)이다.</div>
+<div>default의 경우 같은 패키지 안에 있는 class에서만 구현 할 수 있다.</div>
+<div>interface는 다중 상속이 가능하다. 물론 interface만 상속 해야한다.</div>
+<div>method들은 head부분만 쓰고 쎄미콜론으로 닫아야 한다.</div>
+<div>자동으로 public abstarc의 키워드가 붙은것으로 간주하기에 안쓰는게 좋다.</div>
+<div>특히 abstract는 </div>
+<div>필드도 넣을 수 있는데 암것도 안쓰면 자동으로 public static final로 간주한다.</div>
+<div>private이나 protected 멤버는 선언할 수 없다.</div>
+<div>그리고 멤버의 head에 transient, volatile, synchronized 키워드를 사용할 수 없다.</div>
+<div><font style="background-color: rgb(255, 204, 0)">public</font> <font style="background-color: rgb(255, 204, 0)">class</font> ImplClass <font style="background-color: rgb(255, 204, 0)">extends</font> JFrame <font style="background-color: rgb(255, 204, 0)">implements</font> SuperInterface1, SuperInterface2 {</div>
+<div> &nbsp; &nbsp; &nbsp; ...</div>
+<div>}</div>
+<div>interface를 구현하는 class에서는 여러 interface를 implements 할 수 있다.</div>
+<div>이 것은 interface와의 이종의 계약이다. interface에 들어있는 모든 method를 구현하겠다는..</div>
+<div>만약 이 약속을 지키지 않을 시 이 class는 abstract class가 되어야 한다.</div>
+<div><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">
+<div><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">interface type의 객체는 만들 수 없지만 변수는 만들 수 있다.</span></div>
+<p></span>이 변수로 해당 interface를 구현한 class들의 객체를 참조 할 수 있다.</div>
+<div>끝으로</div>
+<div>이미 interface가 있고 그리고 그 interface를 구현한 class들이 있느 상태에서</div>
+<div><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">
+<div><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">interface에 새로운 메소드를 추가하는 가능하면 하지 말아야 한다</span>.</div>
+<p></span>그 interface를 구현한 모든 class들에서 에러가 발생할 것이다.</div>
+<div>모든 calss들을 들려서 추가한 method를 구현해 주거나 class들을 abstract class로 만들어야 한다.</div>
+<div>이럴바엔 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">차라리 새로운 interface는 만들어서 필요한 class들이 추가로 implement 하게 수정하는게 좋다.</span></div>

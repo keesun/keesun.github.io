@@ -1,0 +1,62 @@
+<p>참조 : <a href="http://www.ibm.com/developerworks/library/j-jsf1/" target="_blank">JSF for nonbelievers: Clearing the FUD about JSF</a></p>
+<p>기본 아키텍처</p>
+<p><img src="/assets/hk38.png" class="aligncenter" width="588" height="381" alt="사용자 삽입 이미지" /><br />JSF 예제</p>
+<p><font size="3"><span style="font-weight: bold;">1. web.xml 과 faces-config.xml 설정하기</span></font></p>
+<p><span style="font-weight: bold;">1-1. web.xml</p>
+<p></span>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;!-- Faces Servlet --&gt;<br />&lt;servlet&gt;<br />&nbsp; &nbsp; &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;<br />&nbsp; &nbsp; &lt;load-on-startup&gt; 1 &lt;/load-on-startup&gt;<br />&lt;/servlet&gt;</p>
+<p>&lt;!-- Faces Servlet Mapping --&gt;<br />&lt;servlet-mapping&gt;<br />&nbsp; &nbsp; &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &lt;url-pattern&gt;/calc/*&lt;/url-pattern&gt;<br />&lt;/servlet-mapping&gt;</div>
+<p>이건 뭐 별 설명이 필요 없을 것 같네요. 스프링의 DispatcherServlet하고 비슷한 일을 할 듯 합니다. 중요 클래스니까 언제 한 번 열어봐야겠네요.</p>
+<p><span style="font-weight: bold;">1-2. faces-config.xml</span></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;faces-config&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;managed-bean&gt;<br />&nbsp; &nbsp; &lt;description&gt;<br />&nbsp; &nbsp; &nbsp; The "backing file" bean that backs up the calculator webapp<br />&nbsp; &nbsp; &lt;/description&gt;<br />&nbsp; &nbsp; &lt;managed-bean-name&gt;CalcBean&lt;/managed-bean-name&gt;<br />&nbsp; &nbsp; &lt;managed-bean-class&gt;com.arcmind.jsfquickstart.controller.CalculatorController&lt;/managed-bean-class&gt;<br />&nbsp; &nbsp; &lt;managed-bean-scope&gt;session&lt;/managed-bean-scope&gt;<br />&nbsp; &lt;/managed-bean&gt;</p>
+<p>&lt;navigation-rule&gt;<br />&nbsp; &lt;from-view-id&gt;/calculator.jsp&lt;/from-view-id&gt;<br />&nbsp; &lt;navigation-case&gt;<br />&nbsp; &nbsp; &lt;from-outcome&gt;success&lt;/from-outcome&gt;<br />&nbsp; &nbsp; &lt;to-view-id&gt;/results.jsp&lt;/to-view-id&gt;<br />&nbsp; &lt;/navigation-case&gt;<br />&lt;/navigation-rule&gt;</p>
+<p>&lt;/faces-config&gt;</div>
+<p>흠.. JSF에서 사용할 컨트롤러 빈의 이름과 스코프를 등록하고, 네비게이션을 등록해두네요. 네비게이션을 등록해둔 걸 보면, 서브밋 할 때 action="result.jsp" 같은 코드를 사용하지 않아도 알아서 가주겠죠?</p>
+<p><font size="3"><span style="font-weight: bold;">2. 모델 객체 만들기</span></font></p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package com.arcmind.jsfquickstart.model;</p>
+<p>/**<br />&nbsp;* Calculator<br />&nbsp;*<br />&nbsp;* @author Rick Hightower<br />&nbsp;* @version 0.1<br />&nbsp;*/<br />public class Calculator {<br />&nbsp; &nbsp; //~ Methods ----------------------------------------------------------------</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * add numbers.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @param a first number<br />&nbsp; &nbsp;&nbsp; * @param b second number<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return result<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public int add(int a, int b) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return a + b;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * multiply numbers.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @param a first number<br />&nbsp; &nbsp;&nbsp; * @param b second number<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return result<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public int multiply(int a, int b) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return a * b;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />}</div>
+<p><font size="3"><span style="font-weight: bold;">3. 컨트롤러 만들기(완전 POJO)</span></font></p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package com.arcmind.jsfquickstart.controller;</p>
+<p>import com.arcmind.jsfquickstart.model.Calculator;</p>
+<p>/**<br />&nbsp;* Calculator Controller<br />&nbsp;*<br />&nbsp;* @author $author$<br />&nbsp;* @version $Revision$<br />&nbsp;*/<br />public class CalculatorController {<br />&nbsp; &nbsp; //~ Instance fields --------------------------------------------------------</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Represent the model object.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; private Calculator calculator = new Calculator();</p>
+<p>&nbsp; &nbsp; /** First number used in operation. */<br />&nbsp; &nbsp; private int firstNumber = 0;</p>
+<p>&nbsp; &nbsp; /** Result of operation on first number and second number. */<br />&nbsp; &nbsp; private int result = 0;</p>
+<p>&nbsp; &nbsp; /** Second number used in operation. */<br />&nbsp; &nbsp; private int secondNumber = 0;</p>
+<p>&nbsp; &nbsp; //~ Constructors -----------------------------------------------------------</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Creates a new CalculatorController object.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public CalculatorController() {<br />&nbsp; &nbsp; &nbsp; &nbsp; super();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; //~ Methods ----------------------------------------------------------------</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Calculator, this class represent the model.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @param aCalculator The calculator to set.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public void setCalculator(Calculator aCalculator) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.calculator = aCalculator;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * First Number property<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @param aFirstNumber first number<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public void setFirstNumber(int aFirstNumber) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.firstNumber = aFirstNumber;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * First number property<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return First number.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public int getFirstNumber() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return firstNumber;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Result of the operation on the first two numbers.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return Second Number.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public int getResult() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return result;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Second number property<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @param aSecondNumber Second number.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public void setSecondNumber(int aSecondNumber) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.secondNumber = aSecondNumber;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Get second number.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return Second number.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public int getSecondNumber() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return secondNumber;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Adds the first number and second number together.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return next logical outcome.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public String add() {<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; result = calculator.add(firstNumber, secondNumber);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; return "success";<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp;&nbsp; * Multiplies the first number and second number together.<br />&nbsp; &nbsp;&nbsp; *<br />&nbsp; &nbsp;&nbsp; * @return next logical outcome.<br />&nbsp; &nbsp;&nbsp; */<br />&nbsp; &nbsp; public String multiply() {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; result = calculator.multiply(firstNumber, secondNumber);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; return "success";<br />&nbsp; &nbsp; }<br />}</div>
+<p>흠.. 이 코드를 보고서 좀 놀랐습니다. 스프링 2.5로 컨틀롤러를 만들어도, 가능하긴 한데, 수많은 애노테이션들이 붙고, 그 애노테이션들을 정말 잘 알고 있어야 했는데.. 결국 그 애노테이션들 없이는 스프링의 컨트롤러는 의미도 없고 재사용할 수도 없기 떄문에 엄밀히 따지면 POJO라고 하긴 좀 뭐했습니다. 그런데 JSF의 저 컨트롤러는 뭐.. 틈잡을것이 하나도 없습니다.</p>
+<p><font size="3"><span style="font-weight: bold;">4. 뷰 만들기</span></font></p>
+<p><span style="font-weight: bold;">4-1. index.jsp</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;jsp:forward page="/calc/calculator.jsp" /&gt;</div>
+<p>흠.. 얘는 네비게이션에 등록하지도 않았고, JSF Servlet이 담당할 URL로 들어오지 않을테고.. 저기서 JSF&nbsp; Servlet이 담당할 URL로 포워딩시키는 군요.</p>
+<p><span style="font-weight: bold;">4-2. calculator.jsp</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %&gt;<br />&lt;%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %&gt;</p>
+<p>&lt;f:view&gt;<br />&nbsp; &lt;h:form id="calcForm"&gt;<br />&nbsp; &nbsp;&nbsp; &lt;h:panelGrid columns="3"&gt; <br />&nbsp; &nbsp; &lt;h:outputLabel value="First Number" for="firstNumber" /&gt;<br />&nbsp; &nbsp; &lt;h:inputText id="firstNumber" value="#{CalcBean.firstNumber}" required="true" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;h:message for="firstNumber" /&gt; &nbsp;&nbsp; </p>
+<p>&nbsp; &nbsp; &lt;h:outputLabel value="Second Number" for="secondNumber" /&gt;<br />&nbsp; &nbsp; &lt;h:inputText id="secondNumber" value="#{CalcBean.secondNumber}" required="true" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;h:message for="secondNumber" /&gt;<br />&nbsp; &nbsp; &lt;/h:panelGrid&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &lt;h:panelGroup&gt;<br />&nbsp; &nbsp; &lt;h:commandButton id="submitAdd" action="#{CalcBean.add}"&nbsp; value="Add" /&gt;<br />&nbsp; &nbsp; &lt;h:commandButton id="submitMultiply" action="#{CalcBean.multiply}" value="Multiply" /&gt;<br />&lt;/h:panelGroup&gt;<br />&nbsp; &lt;/h:form&gt;<br />&lt;/f:view&gt;</div>
+<p>흠~ 이제 좀 재밌는 코드가 나왔습니다.</p>
+<p>맨위에 첫 줄은, 폼을 비록한 HTML 관련 태그들이 담겨있고, 두 번째 줄은 JSF가 사용할 로직, 벨리데이션, 컨트롤러등을 위한 태그들이 담겨있다고 합니다.</p>
+<p>&lt;f:view&gt; 안에 들어가야 JSF 컴포넌트 트리를 만든다고 합니다. JSF 를 사용할 땐 저 안에 모든 JSF 컴포넌트를 넣어야 겠군요.</p>
+<p>&lt;h:form&gt; 은, html 폼을 나타내는 JSF 컴포넌트인가 봅니다. 속성중에&nbsp; column=3은 한 줄에 세칸이라는 뜻이고, 따라서 저 안에 있는 컴포넌트들은 세줄씩 마침 코드에서도 한 줄 띄어쓰기로 구분해주고 있네요.</p>
+<p>&lt;h:message&gt;는 에러 메시지 보여줄 때 사용할 것 같은데, 뭘 참조하라는게 없군요. 자동으로 메시지 생성해서 넣어줄 것 같은데... 내가 원하는 메시지를 보여주고 싶을 땐 어떻게 해야되지??</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">의문 1. 내가 원하는 메시지를 보여주고 싶을 땐 &lt;h:message&gt;를 어떻게 설정해야 하나?</div>
+<p>JSP의 EL 처럼 JSF에도 EL 이 있는데, 그건 바로 #{}. CalcBean은 아까 faces-config.xml이였나.. 거기에 등록했던 컨트롤러이고, value 속성은 해당 컨트롤러의 필드값을 참조하고, action은 메소드를 호출하고 그 결과를 가져오나 보군요.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">의문 2. 인자가 있는 메소드도 지원할까? 지원한다면, 어떻게 써야 하나?</div>
+<p>예상했던 것처럼 역시나 저 폼을 서브밋하면 어디로 갈지를 폼에다가 적지 않았습니다. 아까 저 페이지? URL?에 대한 네비게이션을 정의해두었죠.</p>
+<p><span style="font-weight: bold;">4-3. result.jsp</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %&gt;<br />&lt;%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %&gt;<br />...<br />&lt;f:view&gt;<br />&nbsp; First Number: &lt;h:outputText id="firstNumber" value="#{CalcBean.firstNumber}"/&gt; <br />&nbsp; &lt;br /&gt;<br />&nbsp; Second Number: &lt;h:outputText id="secondNumber" value="#{CalcBean.secondNumber}"/&gt;<br />&nbsp; &lt;br /&gt;<br />&nbsp; Result: &lt;h:outputText id="result" value="#{CalcBean.result}"/&gt; <br />&nbsp; &lt;br /&gt;<br />&lt;/f:view&gt;</div>
+<p>흠.. 이번에도 역시 &lt;f:view&gt;를 써서 JSF 컴포넌트 트리로 감싸고, &lt;h:outputText&gt; 라는 컴포넌트를 쓰고 있군요. value를 사용해서 필드값들만 참조합니다. 간단하군요.</p>
+<p>돌리는 건 내일해야 겠습니다. 11시 반도 안 됐는데 졸리네요;</p>

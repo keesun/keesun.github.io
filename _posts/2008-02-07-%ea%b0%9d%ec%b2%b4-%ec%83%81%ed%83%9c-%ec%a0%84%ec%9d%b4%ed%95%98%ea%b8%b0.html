@@ -1,0 +1,123 @@
+---
+layout: post
+title: 객체 상태 전이하기
+date: 2008-02-07 13:22:43.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- Cascade
+- Orphan Deletion
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323099089'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>Parent와 Child</h1>
+<ul>
+<li>Parent Entity와 Child Entity 사이의 관계를 다루는 세 가지 방법</p>
+<ol>
+<li>각각을 별도의 객체로 다룬다: Bid 객체를 매번 save(), delete() 해준다. 물론 객체쪽 콜렉션에서도 이것을 다루기 위한 add()와 remove() 같은 메소드가 필요하다.</li>
+<li>Child<br />
+를 Value Type으로 만든다: Bid를 @Embeddable로 만들고 Parent의 라이프사이클을 따르도록 한다. 그러나<br />
+Bid는 분명 Entity다. Item만 Bid을 가지는게 아니라, User도 똑같은 Bid를 가질 수 있고, Item과 연관을<br />
+맺는 successfulIBid의 경우를 봐도, Bid는 분명히 공유되는 것이기 때문에, Entity가 되어야 한다.</li>
+<li>Transitive Persistence 기능을 사용한다: 하이버네이트가 연관된 Entity 객체의 라이프사이클을 자동으로 관리하도록 설정하여, 코드 수를 줄일 수 있다.</li>
+</ol>
+</li>
+</ul>
+<h1>Transitive Persistence</h1>
+<ul>
+<li>Item을 저장하거나 수정할 때 그와 연관된 Bid 객체를 같이 Persistent 상태로 전이할 수 있다.</li>
+</ul>
+<ul>
+<li>cascade 속성을 사용하여 설정한다. 두 방향 중 한 방향에만 설정할 수 있다. 그런데 Bid는 나중에 생성되는 객체니까, 거기에 설정해봤자 별 의미가 없다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">	@OneToMany(mappedBy = <span class="code-quote">"item"</span>)<br />	@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)<br />	<span class="code-keyword">private</span> Set&lt;Bid&gt; bids = <span class="code-keyword">new</span> HashSet&lt;Bid&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>JPA 애노테이션을 사용해서 cascade 설정하면, Hibernate session에서는 안 먹힌다.</li>
+</ul>
+<h1>삭제 전이</h1>
+<ul>
+<li>Parent를 삭제할 때 그것과 연관된 모든 Child를 삭제하도록 설정할 수 있다. 이것도 역시 코딩을 줄여준다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">	@OneToMany(mappedBy = <span class="code-quote">"item"</span>)<br />	@Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE,<br />			org.hibernate.annotations.CascadeType.DELETE })<br />	<span class="code-keyword">private</span> Set&lt;Bid&gt; bids = <span class="code-keyword">new</span> HashSet&lt;Bid&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>for 루프를 돌리면서 Item이 가지고 있는 모든 Bid를 삭제한 뒤에, Item을 지우는 것과 같은 결과가 된다. 역시 코딩을 줄여준다.</li>
+</ul>
+<ul>
+<li>문제는 만약에 User가 삭제될 Bid를 가지고 있다면, 그 Bid는 메모리 상에서는 삭제 되지 않을 것이다. 그런데 DB에서는 삭제 된다. 불일치가 생긴다.</li>
+</ul>
+<ul>
+<li>그래서 메모리 상에서도 지워주기 위해서, 삭제될 Item이 가지고 있는 Bid를 가지고 있는 User를 찾아서 그 User가 가지고 있는 Bid 목록에서 삭제할 Bid를 remove 해야한다. 다량의 어지러운 코딩이 필요하다.</li>
+</ul>
+<h1>Orphan 삭제 전이</h1>
+<ul>
+<li>Value Type의 콜렉션에 들어있는 객체 하나를 메모리 상에서 삭제하면, 하이버네이트는 그걸 바로 DB에<br />
+반영해서 해당 Row를 지워준다. 왜? Value Type이니까 Parent에 종속적인 라이프사이클을 가지고 있고, 공유되지도<br />
+않을테니까.</li>
+</ul>
+<ul>
+<li>Entity Type의 콜렉션에 들어있는 객체 하나를 지우려면, 별도의 라이프사이클을 가지고 있기 때문에,<br />
+Parent의 콜렉션에서 지워주는 일은 당연히 해야 되고, session.delelte()를 호출해 주어야 한다. 모든<br />
+Parent를 찾아서 지워주는 일도 보통 일이 아니고, 잘못하면 외례키 제약을 깨트릴 수도 있다.</li>
+</ul>
+<ul>
+<li>Orpahn Delete Cascade 속성은 컬렉션에서 해당 객체를 지울 때, 이제 그 객체를 참조하는 다른 Entity들이 없으니까, 이만 DB에서 지워도 된다는 설정이다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">	@OneToMany(mappedBy = <span class="code-quote">"item"</span>)<br />	@Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE,<br />			org.hibernate.annotations.CascadeType.DELETE,<br />			org.hibernate.annotations.CascadeType.DELETE_ORPHAN})<br />	<span class="code-keyword">private</span> Set&lt;Bid&gt; bids = <span class="code-keyword">new</span> HashSet&lt;Bid&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>이렇게 설정해 두면, 원래는 anItem.getBids().remove(aBid);<br />
+session.delete(aBid); 이렇게 해야 했는데, anItem.getBids().remove(aBid); 이렇게만<br />
+호출해도 DB에서 삭제해 준다.</li>
+</ul>

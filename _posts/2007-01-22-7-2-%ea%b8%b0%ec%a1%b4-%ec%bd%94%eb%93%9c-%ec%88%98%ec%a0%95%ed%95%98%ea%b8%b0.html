@@ -1,0 +1,59 @@
+---
+layout: post
+title: 7.2. 기존 코드 수정하기.
+date: 2007-01-22 06:27:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323120830'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. Messenger 클래스의 m_type 변수의 타입을 MessengerType으로 수정하기.</p>
+<p>&nbsp;KMessengerType m_type;</p>
+<p>2. Getter, Setter코드 부분을 다음과 같이 수정합니다.</p>
+<p>&nbsp;public KMessengerType getM_type() {<br />&nbsp; return m_type;<br />&nbsp;}</p>
+<p>&nbsp;public void setM_type(KMessengerType m_type) {<br />&nbsp; this.m_type = m_type;<br />&nbsp;}</p>
+<p>3. Test 코드에서 발생하는 에러도 수정합니다.</p>
+<p>//KMessengerDaoTest.java<br />KMessenger m = KMessengerFixture.getAMessenger("keesun", KMessengerType.Skype);</p>
+<p>//KMessengerFixture.java<br />public static KMessenger getAMessenger(String m_id, KMessengerType m_type)</p>
+<p>이렇게 수정을 하는데에는 몇분이 채 소요되지 않으며 이클립스의 도움이 큽니다. 에러가 나는 부분에는 전부 빨간 불이 들어오고 Ctrl + 1로 제안을 볼 수 있어서 매우 편했습니다.</p>

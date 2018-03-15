@@ -1,0 +1,87 @@
+---
+layout: post
+title: "[스프링 3.0] 스프링 bean과 일반 자바 객체가 호출하는 @Bean 메서드의 차이"
+date: 2009-12-11 11:51:32.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.0'
+tags:
+- "@Configuration"
+- bean
+- 스프링 3.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322711597'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>public class JavaConfigTest {</p>
+<p>&nbsp;&nbsp;&nbsp; AnnotationConfigApplicationContext ac;</p>
+<p>&nbsp;&nbsp;&nbsp; @Before<br />
+&nbsp;&nbsp;&nbsp; public void setUp(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ac = new AnnotationConfigApplicationContext(AppConfig.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(ac, is(notNullValue()));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void getBean(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SampleBean bean1 = ac.getBean("sampleBean", SampleBean.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SampleBean bean2 = ac.getBean("sampleBean", SampleBean.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(bean1, is(notNullValue()));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(bean2, is(notNullValue()));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(bean1, is(bean2));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AppConfig config1 = new AppConfig();<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SampleBean bean3 = config1.sampleBean();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(bean3, is(not(bean2)));</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AppConfig config2 = ac.getBean("appConfig", AppConfig.class);<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SampleBean bean4 = config2.sampleBean();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(bean4, is(bean2));</span><br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>스프링 3.0 애노테이션 기반 설정을 익히기 위해서 처음 만들어본 테스트입니다. 이 테스트에서 알 수 있는 건 바로 이 글의 제목에서처럼 @Bean이 붙어있는 메서드를 어떤 객체를 이용해서 호출하느냐에 따라 그 결과가 다를 수 있다는 겁니다.</p>
+<p>@Configuration<br />
+public class AppConfig {</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean<br />
+&nbsp;&nbsp;&nbsp; public SampleBean sampleBean(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new SampleBean();<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>이건 설정한 빈이고 SampleBean은 뭐 암거나;; @_@;</p>
+<p>결론은 new 로 만든 AppConfig와 스프링에서 가져온 AppConfig의 @Bean이 붙은 메서드가 반환해주는 값이다르다는 겁니다. 전자는 일반적인 Java 문맥대로 sampleBean()에서 new SampleBean()으로 새로운 객체를 만들어서 받은 것이고, 후자는 sampleBean() 메서드 호출을 가로채서 기존의 bean을 반환해준 겁니다.</p>
+<p>이 경우는 매우 간단한 경우에 속합니다. 하나는 스프링이 관리하는 빈이었고, 하나는 일반 자바 객체였으니까요. 그런데 만약에 둘 다 스프링의 빈이라면? 그 중에 하나는 @Configuration, 다른 하나는 @Component라면?</p>
+<p>@Component로 설정한 빈 내부에 위와 똑같은 설정이 들어있다면? 반환하는 객체의 값이 조금 다르나면?? </p>
+<p>빈 스캔은 어찌하나?</p>
+<p>정말 복잡하군요;; 하나씩 차근 차근 해보겠습니다.</p>

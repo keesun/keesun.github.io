@@ -1,0 +1,10 @@
+<p>참조: <a href="http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Using%20Spring%20Security%202;talk=19267601" target="_blank">http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Using%20Spring%20Security%202;talk=19267601</a></p>
+<p>귿. 발표자 말투도 느린편이고, 억양도 알아들을만 합니다. 어제 들은 아리드안 코일러의 AOP 발표에 비하면 훨씬 알아 듣기 쉬운것 같네요.</p>
+<p>데모 코드는 스크린캐스팅에 잡히지 않아서 참조할 수 없었지만, 대충 말해주면서 코딩하기 때문에 어떻게 코딩하는지 눈치챌 수 있습니다. 물론 Spring Security 2에 새로 도입한 스키마들을 알고 계셔야게죠.</p>
+<p>몇 가지 정리해둡니다.</p>
+<p>1. URL 권한 확인으로는 충분하지 않다.<br />- 리소스랑 URL이랑 1:1로 맵핑되는게 아닌 경우.<br />/listCustomers.html 과 /print.view?page=listCustomers 이 두 개의 URL이 같은 리소스를 나타낼 경우 권한처리를 어떻게 할 것인가<br />- URL이 없을 수도 있다.<br />Web Application이 아닌 경우 권한 처리는?<br />- 여러 Ajax 요청을 처리하는 하나의 URL<br />헤더 정보만 조금씩 다른데, 그 정보에 따라 권한 처리해야 할테네 어떻게 할텐가?</p>
+<p>=&gt; Method Authonrization!!</p>
+<p>2. 메소드 권한처리<br />- AspectJ 포인트컷 표현식 사용 가능<br />- @Secured 애노테이션 사용 가능<br />- JSR 250의 @RoleAllowed 사용 가능</p>
+<p>3. 베스트 프랙티스<br />- URL 체크로 개괄적인(corse grained) 권한 처리를 한다.<br />- 메소드 체크로 세밀한(fine grained) 권한 처리를 한다.<br />- Role 사용하지 말고, Right를 사용하라. User &lt;--&gt; Role &lt;--&gt; Riht<br />@Secured("PERM_DELETE_USER)<br />public oid deleteUser(User user)</p>
+<p>마지막 문구</p>
+<blockquote><p>Spring Security is more powerful than Acegi was<br />... and now it is also easy ;-)</p></blockquote>

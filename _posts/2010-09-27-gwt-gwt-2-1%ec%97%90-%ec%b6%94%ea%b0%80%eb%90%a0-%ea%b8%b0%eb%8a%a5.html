@@ -1,0 +1,62 @@
+---
+layout: post
+title: "[GWT] GWT 2.1에 추가될 기능"
+date: 2010-09-27 09:47:02.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323085442'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a href="http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/ReleaseNotes.html">http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/ReleaseNotes.html</a></p>
+<p>GWT 2.1 M3에 다음 기능을 추가했다.</p>
+<p><strong>Data Presenration 위젯</strong></p>
+<p>방대한 데이터 집합을 다룰 때 굉장히 효율적인 뷰를 만들 수 있다. 이 위젯은 두 가지 설계상 장점을 지니고 있다. 하나는 데이터셋의 일부를 렌더링 할 수 있다. 따라서 사용자 입장에서는 뷰 초기화가 더 빨라진다. 다른 하나는 위젯이 ‘flyweight’ 패턴을 사용해서 다른 위젯의 컨테이너가 되는게 아니라 DOM에 추가될 HTML 덩어리를 만든다. 이렇게 해서 이벤트 처리 오버헤드를 줄일 수 있다.</p>
+<p><img src="{{ site.baseurl }}/assets/data_presentation_widgets.png" alt="" /></p>
+<p><strong>MVP 프레임워크</strong></p>
+<p>MVP 프레임워크는 뒷단 데이터를 Data Presentation 위젯에 쉽게 연결해주는 애플리케이션 프레임워크다. 이 프레임워크를 사용해서 개발자는 데이터를 보여주는데만 집중하고, Acitivities와 ActivityManager가 “presenter” 역할을 맡아 자체 액션을 처리하고, RequestFactories가 모델 변경을 인식하고 전파할거다.</p>
+<p>이런 스타일 앱을 쉽게 만들수 있도록 스프링 Roo 1.1 M1에서는 앱 컴포넌트와 GWT의 MVP 프레임워크와 연결할 때 필요한 반복적인 코드를 생성해 준다.</p>
+<p><strong>서버쪽 시간 추적</strong></p>
+<p>Speed Tracer는 성능 문제를 감지하고 고칠 수 있는 툴이라고 언급했었다. 지금까지 이런 문제 해결을 클라이언트 쪽 코드로만 제한됐었다.</p>
+<p>Speed Tracer 1.0 M1에서는 이제 GAE와 TC 서버 DE에서 동작하는 앱의 서버쪽 타이밍 데이터를 참조할 수 있다. 이 툴을 사용해서 데이터베이스 호출과 메모리 캐시 히트, 리소스 가져오기 등에 걸리는 시간을 참조할 수 있을 뿐 아니라 서버쪽 서비스 호출에 소요되는 시간도 볼 수 있다.</p>
+<p><img src="{{ site.baseurl }}/assets/st_server_trace.png" alt="" /></p>

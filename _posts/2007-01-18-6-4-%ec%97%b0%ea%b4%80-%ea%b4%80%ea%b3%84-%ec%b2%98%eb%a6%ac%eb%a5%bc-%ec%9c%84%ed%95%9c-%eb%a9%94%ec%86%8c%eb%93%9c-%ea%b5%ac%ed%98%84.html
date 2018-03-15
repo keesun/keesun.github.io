@@ -1,0 +1,59 @@
+---
+layout: post
+title: 6.4. 연관 관계 처리를 위한 메소드 구현.
+date: 2007-01-18 08:55:42.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323003893'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Member와 Messenger의 연관 관계에서 만약에 어떤 Member 객체가 새로운 메신저 정보를 추가했다면 Member에 있는 messengers에 새로운 Messenger 객체가 추가 되어야 하고, 추가되는 Messenger 객체에 있는 member라는 멤버 변수는 자기 자신으로 세팅되어야 합니다.</p>
+<p>즉 다음과 같은 두 줄의 코드가 필요합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">getMessengers().add(messenger);<br />messenger.setMember(this);</div>
+<p>이 두줄의 코드는 항상 붙어있어야 하기 때문에 하나의 메소드로 묶어 둡니다.</p>
+<p>삭제도 마찬자기로 다음의 두 줄의 코드가 묶여 있어야 합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">getMessengers().remove(messenger);<br />messenger.setMember(null);</div>
+<p>위 코드들을 Member 클래스의 messenger의 게터 세터 아래에 구현해 둡니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @OneToMany(mappedBy="member")<br />&nbsp; &nbsp; public Set&lt;KMessenger&gt; getMessengers() {<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">if(messengers == null) messengers = new HashSet&lt;KMessenger&gt;();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; return messengers;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; public void setMessengers(Set&lt;KMessenger&gt; messengers) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.messengers = messengers;<br />&nbsp; &nbsp; }<br /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; public void addMessenger(KMessenger messenger){</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; getMessengers().add(messenger);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; messenger.setMember(this);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; }</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; public void deleteMessenger(KMessenger messenger){</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; getMessengers().remove(messenger);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; messenger.setMember(null);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; }</span></div>
+<p>게터에 보시면 빨간 줄로 한줄의 코드가 삽입 되었는데요. 이 것은 처음으로 새로운 Messenger 정보를 추가하려고 할 때 getMessengers()를 출력하는데 이 때 Set 객체가 없기 때문에 null pointer exception이 발생하기 때문입니다.</p>

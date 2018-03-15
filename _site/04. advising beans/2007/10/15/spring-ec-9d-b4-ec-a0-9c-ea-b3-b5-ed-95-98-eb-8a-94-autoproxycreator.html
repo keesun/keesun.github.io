@@ -1,0 +1,18 @@
+<p>classic Spring Aspect를 사용할 때 Target 하나 마다 일일히 ProxyFactoryBean을 만들어 주는 일은 완전 노가다 입니다. 이 노가다를 줄여주기 위해 Spring에서 제공하는 녀석들이 바로 AutoProxyCreator 입니다.</p>
+<p>Spring이 제공하고 있는 AutoProxyCreator들을 살펴보겠습니다.<br /><img src="/assets/co406.jpg" class="aligncenter" width="600" height="331" alt="사용자 삽입 이미지" />위와 같은 상속 구조를 가지고 있습니다.
+<ul>
+<li>&nbsp;<a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/framework/autoproxy/BeanNameAutoProxyCreator.html" target="_blank">BeanNameAutoProxyCreator</a></li>
+</ul>
+<p>interceptorNames 속성에 Proxy를 생성할 Target이 되는 bean의 이름들을 설정하여 여러 Proxy를 만들 수 있도록 하는 클래스입니다.<br /><a href="../../651">BeanNameAutoProxyCreator 사용 예</a>
+<ul>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/aspectj/annotation/AnnotationAwareAspectJAutoProxyCreator.html" target="_blank">AnnotationAwareAspectJAutoProxyCreator</a></li>
+</ul>
+<p>@Aspect 애노테이션이 붙어있는 클래스에 정의되어 있는 Adivce가 적용될 Pointcut을 가지고 있는 클래스들의 Proxy를 생성하는 클래스입니다. 이 클래스를 bean으로 등록해둬도 되지만 aop 네임스페이스를 사용하고 있다면 &lt;aop:aspectj-autoproxy /&gt;만 추가하면 됩니다.
+<ul>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/framework/autoproxy/DefaultAdvisorAutoProxyCreator.html" target="_blank">DefaultAdvisorAutoProxyCreator</a></li>
+</ul>
+<p>현재 BeanFactory에 등록되어 있는 Advisor들을 사용하여 그들의 대상이 되는 Target 들을 파악하여 Proxy를 만들어줍니다. 이 녀석 역시 그냥 bean으로 등록해두기만 하면 됩니다.
+<ul>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/framework/autoproxy/InfrastructureAdvisorAutoProxyCreator.html" target="_blank">InfrastructureAdvisorAutoProxyCreator</a></li>
+</ul>
+<p>Auto-proxy creator that considers infrastructure Advisor beans only, ignoring any application-defined Advisors. 라고 써있는데.. 흠 Infra Advisor는 Spring에서 제공하는 인터셉터(DebugInterceptor, PerformanceMonitorInterceptor)를 말하는 것 같습니다. 이 녀석들이 적용될 Target의 Proxy만 만들는 것 같습니다. 흠.. 아마도 디버깅이나 테스트 용도로 사용하겠군요.</p>

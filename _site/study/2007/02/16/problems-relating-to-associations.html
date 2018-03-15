@@ -1,0 +1,18 @@
+<p>참조 : Java Persistence With Hibernate</p>
+<p><span style="color: rgb(0, 153, 102);">객체에서는 객체들의 관계를 reference를 사용해서 나타내지만 관계형 DB에서는 외례키로 나타내기 때문에</span>[footnote]이밖에 데이타 무결성을 위해서도 사용된다.[/foonote] <span style="color: rgb(0, 153, 102);">발생하는 문제</span>입니다.</p>
+<p><span style="font-weight: bold;">방향성에 대한 차이</span>
+<ul>
+<li>Object Reference는 고유의 방향성이 있다. 참조 하는 쪽과 참조 되는 쪽이 있다는 말인듯 합니다. 따라서 양방향성을 설정 하려면 두 번 설정해 줘야 합니다.</li>
+</ul>
+<div style="margin-left: 40px;">public class Member{<br />&nbsp; &nbsp; private Set&lt;Messenger&gt; messengers;<br />}</p>
+<p>public class Messenger{<br />&nbsp; &nbsp; private Member member;<br />}</div>
+<ul>
+<li>Foreign key를 사용한 관계는 정해진 방향성이 없다. 임의로 join이나 projection을 사용해서 연관을 맺을 수 있기 때문에 Navigation이 관계형 데이타 모델에 의미가 없다.</li>
+</ul>
+<p><span style="font-weight: bold;">관계에 있어서 차이</span>
+<ul>
+<li>Java에서는 다 : 다 관계를 표현할 수 있다. Java class를 보고 어떤 관계인지 알 수가 없다.</li>
+</ul>
+<ul>
+<li>DB에서는 항상 1 : 다 또는 1 : 1 관계다. 외례키 정의한 부분을 보면 어떤 관계인지 알 수 있다.</li>
+</ul>

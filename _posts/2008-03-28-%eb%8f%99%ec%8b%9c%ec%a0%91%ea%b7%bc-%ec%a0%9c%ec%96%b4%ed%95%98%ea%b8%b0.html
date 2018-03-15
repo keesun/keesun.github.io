@@ -1,0 +1,76 @@
+---
+layout: post
+title: 동시접근 제어하기
+date: 2008-03-28 01:19:28.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 10
+tags:
+- Isolation
+- locking
+- MVCC
+- 동시접근 제어
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322771251'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<ul>
+<li>transaction isolation: 각각의 트랜잭션 입장에서 보면 현재 진행중인 트랜잭션이 자기 밖에 없는 것으로 보이는 것.</li>
+</ul>
+<ul>
+<li>예전에는 이것을 locking으로 보장했었다. 트랜잭션들이 특정 데이터에 대한 lock을 가지고 다녔디.</li>
+</ul>
+<ul>
+<li>multiversion concurrency control(MVCC): 몇몇 오라클이나 PostreSQL와 같은 DB는 transaction isolation을 이걸 사용해서 구현했다.</li>
+</ul>
+<ul>
+<li>DB가 동시 접근 제어를 어떻게 구현했는지는 하이버네이트나 Java Persistence 애플리케이션을 사용할 때 가장 중요한 사항이다.</li>
+</ul>
+<ul>
+<li><a href="http://whiteship.tistory.com/1554" target="_blank">DB 수준에서 동시접근 이해하기</a></li>
+</ul>
+<ul>
+<li>낙천적인 동시접근 제어</li>
+</ul>
+<ul>
+<li>Isolation 단계 더 높이기</li>
+</ul>

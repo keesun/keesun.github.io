@@ -1,0 +1,87 @@
+---
+layout: post
+title: Spring Masters. 첫 번째 스터디 주제는. Spring AOP
+date: 2008-08-25 03:17:02.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Planning
+tags:
+- Spring AOP 스터디
+- Spring Masters
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323141258'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 AOP는 스프링 프레임워크의 IoC와 더불어 핵심 기능 중에 하나 입니다. 스프링 트랜잭션이 바로 이 스프링 AOP를 기반으로 구현되어 있죠. Cross-Cutting Concern이라고 들어보셨나요? 로깅, 보안, 트랜잭션 등등 사방에 흩어져있는 코드를 하나의 Aspect로 모아서 좀 더 OO스러운 개발을 가능케 한다는 것이 핵심 개념입니다.</p>
+<p>하지만.. 왜 잘 사용을 안하죠? 이유는 여러 가지가 있지만, Aspect를 작성하는게 프레임워크 관점이니 프레임워크 만드는 사람 아니면 일반 개발자들은 몰라도 된다?.. 이런건 사실 이유로 꼽기 싫습니다. 학습자의 입장에서 나는 일반 개발자고, 너는 프레임워크 만들거고. 이런 구분이 필요한가요? 잘 안 사용하는 핵심적인 이유는 AOP를 잘 모르기 때문입니다. 간단한 AOP도 어떻게 만들지를 모르니까. 응용은 당연히 못 하는거죠. 스케이트보드로 따지면, 알리도 못하는데 팝샤빗을 할 수 있겠습니까?(혹시 알리 하실 줄 아시는 분 있으면 저 개인지도좀 부탁드리곘습니다. (__)/ 알리하게 되면 맛난거 사드릴께요.)</p>
+<p>그럼 정말 그렇게 유용한가요? 네. 당연히 유용하죠. JDBC랑 Hibernate를 둘 다 쓰는 애플리케이션을 생각해볼까요? 하이버네이트를 제대로 사용하고 있다면 JDBC 쿼리를 날리기 전에 DB와 SessionContext를 동기화해줘야 한다는 사실을 알고 있을 겁니다. 저런 코드를 모든 DAO에 하드코딩하면 코드가 얼마나 지져분해질지 상상이 되나요? 저런걸 바로 AOP로 깔끔하게 처리할 수 있습니다. 이런걸 스프링 AOP 레퍼런스 읽으면서 상상이나 해보셨나요? 전 못했었습니다. 또 있습니다. 하이버네이트의 예외를 잡아서 DataAccessException으로 바꿔주는 Aspect를 만들어 두면, 굳이 스프링이 제공하는 HbiernateTemplate 같은 클래스를 사용하지 않아도 됩니다. 좀 더 non-invasive하게 스프링을 사용할 수 있는거죠.순수하게 하이버네이트로만 DAO를 구현할 수 있는 겁니다. 코드가 더 깔끔해지더군요. 이렇게 활용할 수 있는 방법은 정말 당야합니다. 다만, 잘 몰라서 활용하지 못하는 거죠.</p>
+<p>그럼 본격적으로 Spring AOP 스터디에 대해 구상한 것을 정리해보겠습니다.</p>
+<p>Spring AOP 스터디 만의 참가 자격은 다음과 같습니다.
+<ul>
+<li>스프링 마스터즈 기본 참가 조건을 지킬 수 있어야 합니다.</li>
+<li>스프링 기초는 갖추고 있어야 합니다.</li>
+<li>Spring tx를 사용해 본 경험이 있어야 합니다.</li>
+</ul>
+<p>Spring AOP 스터디에서 할 일
+<ul>
+<li>Spring AOP 학습 - 레퍼런스(필수), 빨간책 마지막판(필수), 기타 참고자료(옵션)</li>
+<li>Spring AOP 레퍼런스 Implementation. - 레퍼런스에 있는 모든 경우의 수를 직접 테스트 코드로 구현합니다.</li>
+<li>Spring AOP 직접 구현해보기 - Spring AOP 2.0 이전 버전과 비슷한 녀석들을 직접 구현해 봅니다.</li>
+</ul>
+<p>Spring AOP 스터디 방식
+<ul>
+<li>스터디 참가 신청을 받습니다.</li>
+<li>사전 심의를 합니다. 스터디 참가 신청을 하신 분들에게 시험지를 나눠드릴 것이고, 그 시험을 통과해야 스터디에 참여하실 수 있습니다.</li>
+<li>Spring AOP 학습은 나눠서 발표합니다. 분량을 나눠서 하루에 끝냅니다. AOP만 공부하는거라 얼마 안 됩니다. 영어책으로 학습을 못하는 분들은 참여하시면 안 됩니다.</li>
+<li>Reference Implementation - 각자가 레퍼런스의 모든 예제를 구현합니다. 세 번으로 나눠서 할 생각입니다. 레퍼런스 기준으로 7장 먼저 하고, 그 다음에 6장. 마지막은 최종 점검.</li>
+<li>Spring AOP 직접 구현은 한 번으로 끝냅니다. 세부 과제 목록을 만들어서 역시 각자 구현을 하고, 최대한 많은 과제를 수행한 사람이 스프링 AOP 스터디 1인자가 됩니다.</li>
+<li>모든 스터디의 결과물은 온라인으로 공개합니다. 저작권은 그때가서 생각해 봐야겠습니다.</li>
+<li>회비는 한 방에 10만원 씩 걷습니다. 한 번 걷은 회비는 절대로 안 돌려줍니다. 오히려 빠져나갈 때 벌금을 물을까도 생각 중입니다. 남는 돈은 회비로 탕진 합니다. 물론 회비 지출내역은 투명하게 관리합니다.</li>
+</ul>
+<p>Spring AOP 스터디 일정
+<ul>
+<li>1차(시작) : Spring AOP 학습. 발표.</li>
+<li>2차(1차 시점 2주후) : Spring Reference 7장 Implementation.(Spring AOP Classic)</li>
+<li>3차(2차 시점 2주후) : Spring Reference 6장 Implementation.(Spring @AOP)</li>
+<li>4차(3차 시점 1주후) : Spring Reference Implementation 최종.</li>
+<li>5차(4차 시점 1주후) : Spring AOP 직접 구현하기. 수행 과제 증명 및 발표.</li>
+</ul>
+<p>대충의 계획은 위와 같습니다. 하실 분들은 댓글이나 의견을 주시기 바랍니다.</p>

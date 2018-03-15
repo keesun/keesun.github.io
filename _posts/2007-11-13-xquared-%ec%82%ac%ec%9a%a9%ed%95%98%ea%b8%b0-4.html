@@ -1,0 +1,65 @@
+---
+layout: post
+title: XQuared 사용하기 4
+date: 2007-11-13 15:14:06.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Editor.js
+- Xquared
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323125387'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 XQuared API를 조금 살펴봤습니다. API 문서화를 매우 잘 해두었기 때문에, API만 보는 것으로도 많은 도움을 받을 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">var xed;</p>
+<p>&nbsp; &nbsp; window.onload = function() {<br />&nbsp; &nbsp; &nbsp; &nbsp; xed = new xq.Editor($("xqEditor"));<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.setEditMode('wysiwyg');<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.loadStylesheet("css/xq_contents.css");<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.focus();<br />&nbsp; &nbsp; }</div>
+<p>위의 코드가 XQuared 11월 8일 배포판에 포함되어 있던 코드 입니다.</p>
+<p>가장 중점적으로 살펴보아야 할 API는 Editor.js입니다. 이 곳에 위에서 사용한 모든 메소드들이 들어있습니다.</p>
+<p><span style="font-weight: bold;">xed = new xq.Editor($("xqEditor"));</span></p>
+<p>생성자를 사용했네요. 인자로 넘겨준 값은 다음과 같이 설명되어 있습니다.</p>
+<p>							HTML element(TEXTAREA or normal block element such as DIV) to be replaced with editable area.</p>
+<p>Textarea 엘리먼트나 div와 같은 블럭 엘리먼트의 이름을 넘겨준다고 친절하게 설명되어 있습니다.</p>
+<p>실제 위의 예제는 TextArea에서 다음과 같이 정의하고 있습니다.<br />&lt;textarea name="contents" id="xqEditor"&gt;&lt;/textarea&gt;</p>
+<p>이렇게 하면 이 TextArea는 XQuared 에디터가 자리잡게 됩니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">xed.setEditMode('wysiwyg');</span></p>
+<p>에디트모드는 세 종류가 있습니다. HTML 소스, 편집모드, 참조모드.<br />HTML 소스편집 모드로 보려면 인자로 source.<br />편집모드는 위와 같이 wysisyg.<br />참조모드는 readonly. 입니다.</p>
+<p>나머지 두 줄은 별다른 설명이 필요 없을 것 같습니다.<br />메소드 작명도 잘 해두신 것 같습니다.</p>

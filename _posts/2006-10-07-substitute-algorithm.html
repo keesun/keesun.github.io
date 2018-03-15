@@ -1,0 +1,69 @@
+---
+layout: post
+title: Substitute Algorithm
+date: 2006-10-07 01:47:18.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 5~ 12장 Catalogue
+tags:
+- Refactoring
+- Substitute Algorithm
+- 리팩토링
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322880676'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<blockquote>알고리즘을 보다 명환한 것으로 바꾸고 싶을 때는, 메소드의 몸체를 새로운 알고리즘으로 바꾼다.</p></blockquote>
+<p><img src="{{ site.baseurl }}/assets/1220696067.jpg" class="aligncenter" width="373" height="252" alt="" /><br />
+위 코드를 보시면 people이라는 문자열 배열안에 Don, John, Kent라는 이름이 있는지 확인하고 만약에 있다면 해당하는 이름을 반환하는 메소드 입니다. 이것을 좀더 명확하게 표현하자면 아래와 같이 변경할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1110256861.jpg" class="aligncenter" width="442" height="210" alt="" /><br />
+<font size="4"><span style="color: rgb(212, 26, 1)">동기</span></font></p>
+<p>어떤 것을 할 때 여러가지 방법이 있다면 그 중에 쉬운 것이 있다면 그것을 선택할 것입니다. 알고리즘도 마찬가지로 여러가지 방법 중에 좀더 명확한 방법을 선택하여야 합니다. 이 작업을 할 때는 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">가능한 많이 메소드를 분해</span>해 두어야 합니다. 크고 복잡한 알고리즘을 바꾸는 것은 어렵기 때문이죠. </p>
+<p><font size="4"><span style="color: rgb(212, 26, 1)">절차</span></font></p>
+<ol>
+<li>대체 알고리즘을 준비한다. 적용하여 컴파일한다.</li>
+<li>알고리즘을 테스트한다. 만약 결과가 같다면 작업은 끝난 것이다.</li>
+<li>만약 결과가 같지 않다면, 테스트에서 비교하기 위해 예전의 알고리즘을 사용하여 디버깅한다.</li>
+<ul>
+<li>예전 알고리즘과 새 알고리즘에 대해 각각의 테스트 케이스를 실행시키고 두 결과를 본다. 이것은 어떤 테스트 케이스가 어떻게 문제를 일으키는지 찾는 데에 도움을 줄 것이다.</li>
+</ul>
+</ol>
+<p></p>

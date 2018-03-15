@@ -1,0 +1,107 @@
+<p>1. 우편번호 DB 다운받기</p>
+<p><a href="http://www.zipfinder.co.kr/zipcode/index.html">http://www.zipfinder.co.kr/zipcode/index.html</a></p>
+<p>우정국에서 제공하는 zipcode 데이터를 받습니다.<br />
+여러가지 형태가 있는데 저는 가장 컬럼 갯수가 적은 걸 받았습니다.</p>
+<p>2. 도메인 만들기</p>
+<p>@Entity<br />
+@DomainInfo("우편번호")<br />
+public class Zipcode {</p>
+<p>&nbsp;&nbsp;&nbsp; @Id<br />
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy= GenerationType.AUTO)<br />
+&nbsp;&nbsp;&nbsp; int id;<br />
+&nbsp;&nbsp;&nbsp; @Column(length=7)<br />
+&nbsp;&nbsp;&nbsp; @DomainInfo("zipcode")<br />
+&nbsp;&nbsp;&nbsp; String zipcode;<br />
+&nbsp;&nbsp;&nbsp; @Column(length=4)<br />
+&nbsp;&nbsp;&nbsp; String sido;<br />
+&nbsp;&nbsp;&nbsp; @Column(length=15)<br />
+&nbsp;&nbsp;&nbsp; String gugun;<br />
+&nbsp;&nbsp;&nbsp; @Column(length=52)<br />
+&nbsp;&nbsp;&nbsp; String dong;<br />
+&nbsp;&nbsp;&nbsp; @Column(length=17)<br />
+&nbsp;&nbsp;&nbsp; String bunji;</p>
+<p>위에서 받은 필드에 맞게 정의해줍니다.<br />
+hbm2ddl을 auto 모드로 놓고 개발중이라 하이버네이트가 돌다가 테이블이 없어서 만들어 줍니다.<br />
+제품 단계에서 hbm2ddl을 auto로 설정해두는 것은 매우 위험하오니 꼭 개발중에만 사용하시길..(저는 배포 중에도 쓰지만 ㅋㅋㅋ)</p>
+<p>3. zipcode 데이터 넣기</p>
+<p>1번에서 받은 데이터를 엑셀로 변환하고 만개 단위로 나눠서 저장했습니다. DBUnit으로 넣었는데 5만개가 넘는걸 한 방에 넣으려고 했더니 POI 쪽에서 에러가 나더군요. 스크롤 기능이 있는지 찾아보려다 귀찮아서 그냥 만개 단위로 잘라서 넣었습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.insertXlsData("zipcode1.xls");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.insertXlsData("zipcode2.xls");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.insertXlsData("zipcode3.xls");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.insertXlsData("zipcode4.xls");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.insertXlsData("zipcode5.xls");</p>
+<p>대충 요런식으로..</p>
+<p>4. 사용자 추가 화면에 우편번호 자동완성 필드 추가</p>
+<p>&lt;k:fzipcode /&gt;</p>
+<p>이 태그 파일을 만들고 저거 한줄을 사용자를 추가하는 jsp에 추가해줍니다. 저 태그 파일은 대충..</p>
+<p>...<br />
+&lt;c:set var="pathNS" value="${path != null ? path : 'zipcode'}" /&gt;<br />
+&lt;c:set var="labelNS" value="${label != null ? label : '우편번호'}" /&gt;<br />
+&lt;c:set var="popupUrlNS" value="${popupUrl != null ? popupUrl : '/system/zipcode/popupsearch.do'}" /&gt;</p>
+<p>&lt;o:fSearchPopup label="${labelNS}" url="/ajax/zipcode/dong.do" path="${pathNS}"<br />
+&nbsp;&nbsp;&nbsp; model="zipcodes" size="20"&nbsp; maxlength="20" /&gt;</p>
+<p>&lt;script type="text/javascript"&gt;<br />
+function formatItem(row, i, total){<br />
+&nbsp;&nbsp;&nbsp; return row[1] + " " + row[2] + " " + row[3] + " " + row[4] + " " + row[5];<br />
+}<br />
+function formatResult(row){<br />
+&nbsp;&nbsp;&nbsp; return row[1];<br />
+}<br />
+function result(event, row, formatted){<br />
+&nbsp;&nbsp;&nbsp; if (row){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; $("#addr").attr("value", row[2] + " " + row[3] + " " + row[4]);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}<br />
+$("#${pathNS}row img").click(function(e) {<br />
+&nbsp;&nbsp;&nbsp; popup("&lt;c:url value='${popupUrlNS}'/&gt;", "itemPopup", 900, 900, "yes", "yes");<br />
+});<br />
+&lt;/script&gt;<br />
+...</p>
+<p>이런식으로 생겼습니다. 여기서 또 다른 태그 파일을 사용하고 있는데 그녀석이 예전에 만들어둔 Ajax 자동완성 태그 파일입니다. </p>
+<p>5. Ajax 요청처리를 구현합니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping("/ajax/zipcode/dong.do")<br />
+&nbsp;&nbsp;&nbsp; public ModelAndView zipcodes(ModelMap map, AjaxParams ajaxParams) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; map.addAttribute("zipcodes", zipcodeService.findZipcodesByDong(ajaxParams));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return new ModelAndView("jsonView", map);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>Ajax 요청이 왔을 때 우편번호에 필요한 것들을 가져다 주도록 Service -&gt; DAO로 전달 전달. DAO가 가져와서 Service -&gt; Controller 전달 전달.. 뷰까지 ㄱㄱㄱ</p>
+<p>6. 검색 버튼 구현</p>
+<p>자동완성 오른쪽에는 항상 수동으로 검색할 수 있도록 검색 버튼이 달려있습니다. 팝업이 떠서 검색하고 팝업이 닫힐 때 사용자 추가 화면에 자동으로 값을 넣어 주도록 만드는게 관건.</p>
+<p>버튼 눌렀을 때 요청할 URL은 4번 단계에서 태그 파일에 설정해 두었으니 이제 해당 요청을 처리할 컨트롤러와 뷰 만들고 서비스 구현하면 끝.</p>
+<p>&lt;o:searchpage title="우편번호 검색"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;o:buttons&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:searchbtn /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/o:buttons&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;o:searchform action="selectgrid.do"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;o:searchrow&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;o:text label="읍, 면, 동, 리, 건물명" id="dong" size="30" maxlength="30" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/o:searchrow&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/o:searchform&gt;<br />
+&lt;/o:searchpage&gt;<br />
+&lt;%@ include file="/include/searchfooter.jsp" %&gt;</p>
+<p>이게 검색화면 끝.</p>
+<p>&lt;o:gridpage&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;o:zipcodeselectgrid list="${list}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;o:col header="id" path="id" hidden="true" type="integer" pattern="#########"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:col header="우편번호" path="zipcode" width="80"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:col header="시, 도" path="sido" width="50"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:col header="구, 군" path="gugun" width="160" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:col header="동, 면, 건물" path="dong" width="250" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;o:col header="번지" path="bunji" width="180" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/o:zipcodeselectgrid&gt;<br />
+&lt;/o:gridpage&gt;</p>
+<p>이게 그리드 화면 끝.</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping<br />
+&nbsp;&nbsp;&nbsp; public void popupsearch() {<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping<br />
+&nbsp;&nbsp;&nbsp; public ModelAndView selectgrid(HttpServletRequest req, HttpServletResponse res,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ModelMap model, ZipcodeParams params, OrderPage orderPage, String view) throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ModelAndView mav = super.grid(req, res, model, params, orderPage, view);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mav.setViewName("system/zipcode/selectgird");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return mav;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이게 요청 처리 및 서비스 구현 끝.</p>
+<p>7. 완성</p>
+<p><img src="/assets/cfile25.uf.1647581B4B8E0F3B37DA01.jpg" class="aligncenter" width="400" /><img src="/assets/cfile22.uf.20485C1B4B8E0F3B0F6EA7.jpg" class="aligncenter" width="400" /></p>
+<p>팝업으로 검색해서 선택하면 우편번호와 주소에 팍팍 입력되고 팝업 닫히는 것도 되지만 스샷은 생략~</p>

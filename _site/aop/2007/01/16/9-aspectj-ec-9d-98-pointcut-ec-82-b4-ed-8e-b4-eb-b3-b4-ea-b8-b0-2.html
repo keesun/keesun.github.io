@@ -1,0 +1,29 @@
+<p>참조 : <a href="http://www.eclipse.org/aspectj/doc/released/progguide/semantics-pointcuts.html" target="_blank">http://www.eclipse.org/aspectj/doc/released/progguide/semantics-pointcuts.html</a></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold; text-align: left;">this(Type)</div>
+<ul>
+<li>this 키워드에 바인딩 되는 현재 실행 중인 객체의 타입이 Type인 경우에 모든 메소드 execution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">target(Type)</div>
+<ul>
+<li>메소드가 호출되거나 필드가 접근 되는 객체의 타입이 Type인 경우에 그 객체의 모든 메소드 execution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">args( Type or ".." or * )</div>
+<ul>
+<li>메소드의 아규먼트가 () 안에 정의한 갯수나 타입에 매칭 되는 모든 메소드 exexution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">@targer(Type)</div>
+<ul>
+<li>타켓 객체(메소드가 호출되거나 필드가 접근 되는 객체)에 @Type 어노테이션이 붙어있을 때 그 객체의 모든 메소드 execution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">@within(Type)</div>
+<ul>
+<li>선언된 타입에 @Type 어노테이션이 붙어있을 때 그 객체의 모든 execution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">@annotation(Type)</div>
+<ul>
+<li>실행되는 메소드에 @Type 어노테이션이 붙어있을 때 그 메소드의 execution Join point를 나타냅니다.</li>
+</ul>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); font-weight: bold;">@args(Type)</div>
+<ul>
+<li>실행시 아규먼트로 넘겨지는 것에 @Type 어노테이션이 붙어있을 때 그 메소드의 execution Join point를 나타냅니다.</li>
+</ul>

@@ -1,0 +1,76 @@
+---
+layout: post
+title: Autoboxing의 오묘함
+date: 2007-09-09 12:07:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Autoboxing
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323098255'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>오늘 AJN에서 Agile Java 스터디를 하던 중 예전에 작성했던 <a href="../../141"> Auto (un)boxing은 -128~127 <span class="cnt">(4)</span></a> 이 글을 살펴보게 되었습니다.</p>
+<p>저 글을 작성할 당시 저 내용을 저도 제대로 이해하고 있지 않았었는데 이번에는 좀 더 이해가 되면서 오히려 의문스러운 점이 발생했습니다.(말이 좀 이상하지만;;)</p>
+<p>간략하게 요약하면 다음과 같습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerSame(127, 127); // same</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerSame(128, 128); // Not same</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerEquals(128, 128); // equals</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerSame(-128, -128); // same</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerSame(-129, -129); // Not same</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; checkIntegerEquals(-129, -129); // equals</p></div>
+<p>위와 같은 호출이 있을 때 다음과 같은 결과가 나옵니다.
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">ii = 127, jj = 127 ==&gt; jj is same ii.<br />ii = 128, jj = 128 ==&gt; jj is NOT same ii!!<br />ii = 128, jj = 128 ==&gt; jj is equals ii.<br />ii = -128, jj = -128 ==&gt; jj is same ii.<br />ii = -129, jj = -129 ==&gt; jj is NOT same ii!!<br />ii = -129, jj = -129 ==&gt; jj is equals ii.</div>
+<p>checkIntegerSame 메소드와 checkIntegerEquals 메소드는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; private static void checkIntegerSame(Integer ii, Integer jj) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (ii == jj) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is same ii.");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; else {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is NOT same ii!!");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; private static void checkIntegerEquals(Integer ii, Integer jj) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (ii.equals(jj)) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is equals ii.");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; else {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is NOT equals ii!!");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</div>
+<p>이상하지 않으신가요..</p>
+<p>맨 위에서 호출한 메소드들에 넘겨준 값들은 모두 primitive 타입 입니다. 그 값들이 checkIntegerSame 이 메소드의 인자로 넘어갈 때 Autobixing이 일어납니다.(Java 5 이상에서) 그래서 각각의 메소드에서 == 비교를 하는데... </p>
+<p>이상한 부분은 제일 첫 번째 메소드 호출 checkIntegerSame(127, 127); 의 결과가 ii = 127, jj = 127 ==&gt; jj is same ii. 이렇게 나왔다는 것입니다. 어떻게 같게 나올 수 가 있을까요?</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; if(new Integer(127) == new Integer(127)){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("오.. 말도 안돼...");<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>위의 코드를 실행해서 "오.. 말도 안돼.."가 출력되는 거랑 같은 상황인 겁니다.(물론 위의 코드는 false가 되기 때문에 아무것도 출력하지 않습니다. 테스트 해 봤습니다.)</p>
+<p>그렇다면 내릴 수 있는 가설은 하나....(지금 제 머릿속에서는 이것 밖에 생각이 나지 않습니다.)</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">Autoboxing을 할 때 -128~127의 정수 값들은 Immutable한 Integer 객체로 다뤄지고 그 범위를 벗어나는 객체들은 매번 새로운 객체로 만들어 진다.</div>
+<p>무슨 말인고 하니.. 예를 들어, String s1 = "hi"; String s2 = "hi"; 이 때 다음과 같이 비교를 하면</p>
+<p>if(s1 == s2) {<br />&nbsp;sysout("당연하지");<br />}</p>
+<p>"당연하지"를 출력합니다. String 객체를 ""를 사용하여 만들 때 Immutable하게 만들기 때문입니다. 그러나 new 키워드를 사용하면 그렇치 않고 매번 객체를 생성하게 되죠. 이것과 마찬가지의 일이 Autoboxing에서도 일어나고 있다고 가설을 내려 봅니다.</p>
+<p></p>

@@ -1,0 +1,91 @@
+---
+layout: post
+title: "[자바 클래스 릴로딩 101] 객체, 클래스, 클래스로더"
+date: 2010-09-29 16:45:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323141819'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a href="http://www.zeroturnaround.com/blog/reloading-objects-classes-classloaders/">http://www.zeroturnaround.com/blog/reloading-objects-classes-classloaders/</a></p>
+<p><strong>멀리서 보자면..</strong></p>
+<p>자바 코드 릴로딩을 이해하려면 우선 클래스와 객체 관계를 알아야 한다. 모든 자바 코드는 클래스에 들어있는 메소드와 관련있다. 간간하게 클래스를 메소드 집합으로 볼 있으며 각 메서드는 첫번째 인자로 ‘this’를 받고 있다고 생각하면 된다. 클래스는 메모리에 올라가고 유일한 식별자를 할당받는다. 자바 API에서 이 식별자는 java.lang.Class의 인스턴스로 표현되며 MyObject.class 형식으로 접근할 수 있다.</p>
+<p>(흠.. 번역하려던게 아닌데;; 요약만 해야지)</p>
+<p>MyObject 타입의 mo객체를 가지고 mo.method()를 호출하면 mo.getClass().getDeclaredMethod(“method”).invoke(mo) 같은 일이 벌어지는 것이다. </p>
+<p><img alt="object" src="{{ site.baseurl }}/assets/object.png" width="205" height="194" /></p>
+<p>모든 Class 객체는 클래스로더와 관계를 맺고 있다.(MyObject.class.getClassLoader()) 클래스로더의 주요 역할은 클래스 스코프를 정하는 것이다. 클래스의 스코프 라는 것은 해당 클래스를 어디서는 참조할 수 있고 어디서는 참조할 수 없는지에 대한 것이다. 이런 스코프를 사용해서 같은 이름의 클래스가 여러 클래스로더에 존재할 수 있다. 이를 이용해서 다른 클래스로더로 새 버전의 클래스를 로딩할 수 있다.</p>
+<p><img alt="reloading-object" src="{{ site.baseurl }}/assets/reloading-object.png" /></p>
+<p>자바에서 코드를 릴로딩할 때 주요 문제는 새버전의 클래스를 로딩할 수는 있어도 그 클래스가 완전히 다른 식별자를 가지게 되고 기존의 객체는 계속해서 이전에 존재하던 클래스를 참조하게 된다는 것이다.</p>
+<p>MyObject 클래스의 새버전을 로딩한다고 가정해보자. 예전 버전을 MyObject_1라 하고 새 버전을 MyObject_2라 해보자. MyObject_1은 MyObject.method()가 “1”을 반환하고 MyObject_2는 MyObject.method()가 “2”를 반환한다고 가정하고 mo2가 MyObject_2라고 했을 때 다음과 같은 일이 벌어진다.</p>
+<ul>
+<li>mo.getClass() != mo2.getClass()</li>
+<li>mo.getClass().getDeclaredMethod(“method”).invoke(mo) != mo2.getClass().getDeclaredMethod(“method”).invoke(mo2)</li>
+<li>mo.getClass().getDeclaredMethod(“method”).invoke(mo2)는 ClassCastException을 발생시킨다. mo와 mo2의 Class 식별자가 다르기 때문이다.</li>
+</ul>
+<p>즉 이 문제를 해결하려면 mo2 인스턴스를 만든 다음에 mo의 값을 전부 복사하고 mo를 참조하고 있던 레퍼런스를 모두 mo2로 바꿔야 한다. 이 작업은 마치 전화번호를 변경했을 때 발생하는 일과 비슷하다. (정말 멋진 비유입니다. 캬..)</p>
+<p><strong>코딩좀 해볼까..</strong></p>
+<p>public interface IExample {   <br />&#160;&#160;&#160; String message(); </p>
+<p>&#160;&#160;&#160; int plusPlus(); </p>
+<p>&#160;&#160;&#160; int counter(); </p>
+<p>&#160;&#160;&#160; IExample copy(IExample example);   <br />}</p>
+<p>이런 인터페이스가 있고 이 구현체는 다음과 같습니다.</p>
+<p>public class Example implements IExample {   <br />&#160;&#160;&#160; private int counter; </p>
+<p>&#160;&#160;&#160; public String message() {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; return &quot;Version 2&quot;;    <br />&#160;&#160;&#160; } </p>
+<p>&#160;&#160;&#160; public int plusPlus() {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; return counter++;    <br />&#160;&#160;&#160; } </p>
+<p>&#160;&#160;&#160; public int counter() {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; return counter;    <br />&#160;&#160;&#160; } </p>
+<p>&#160;&#160;&#160; public IExample copy(IExample example) {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; if (example != null)    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; counter = example.counter();    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; return this;    <br />&#160;&#160;&#160; }    <br />}</p>
+<p>그리고 런타임시에 클래스로더를 만들어서 Example 객체를 만들어 주는 팩토리는 다음과 같습니다.</p>
+<p>public class ExampleFactory {   <br />&#160;&#160;&#160; public static IExample newInstance() {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; URLClassLoader tmp = new URLClassLoader(new URL[]{getClassPath()}) {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; @Override    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; public synchronized Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; if (&quot;sandbox.classloader.rjc01.Example&quot;.equals(name))    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; return findClass(name);    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; return super.loadClass(name);    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; }    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; }; </p>
+<p>&#160;&#160;&#160;&#160;&#160;&#160;&#160; try {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; return (IExample) tmp.loadClass(&quot;sandbox.classloader.rjc01.Example&quot;).newInstance();    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; } catch (InstantiationException e) {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; throw new RuntimeException(e.getCause());    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; } catch (IllegalAccessException e) {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; throw new RuntimeException(e);    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; } catch (ClassNotFoundException e) {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; throw new RuntimeException(e);    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; }    <br />&#160;&#160;&#160; } </p>
+<p>&#160;&#160;&#160; private static URL getClassPath() {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; String resName =    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ExampleFactory.class.getName().replace('.', '/') + &quot;.class&quot;;    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; String loc =    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ExampleFactory.class.getClassLoader().getResource(resName)    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; .toExternalForm();    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; URL cp;    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; try {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; cp = new URL(loc.substring(0, loc.length() - resName.length()));    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; } catch (MalformedURLException e) {    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; throw new RuntimeException(e);    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; }    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; return cp;    <br />&#160;&#160;&#160; }    <br />}</p>
+<p>이제 이것들을 가지고 테스트를 할 메서드는..</p>
+<p>public class Main {   <br />&#160;&#160;&#160; private static IExample example1;    <br />&#160;&#160;&#160; private static IExample example2; </p>
+<p>&#160;&#160;&#160; public static void main(String[] args) throws InterruptedException {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; example1 = ExampleFactory.newInstance(); </p>
+<p>&#160;&#160;&#160;&#160;&#160;&#160;&#160; while (true) {   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; example2 = ExampleFactory.newInstance().<strong>copy(example2)</strong>; </p>
+<p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; System.out.println(&quot;1) &quot; +   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; example1.message() + &quot; = &quot; + example1.plusPlus());    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; System.out.println(&quot;2) &quot; +    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; example2.message() + &quot; = &quot; + example2.plusPlus());    <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; System.out.println(); </p>
+<p>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Thread.currentThread().sleep(3000);   <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; }    <br />&#160;&#160;&#160; }    <br />}</p>
+<p>이렇게 생겼습니다. 즉 맨처음에 로딩한 example1과 3초마다 새로 로딩해오는 example2의 message()와 plusPlus() 메서드 리턴값을 계속 출력하는 겁니다.</p>
+<p>이때 위에 굵은 코드인 copy()를 호출하지 않으면 plusPlus()값이 초기화 되는 것을 볼 수 있고 위와 같이 copy()를 해줘서 기존 객체의 값을 복사해주면 똑같은 값을 찍을 수 있겠죠.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/1.png"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="1" border="0" alt="1" src="{{ site.baseurl }}/assets/1_thumb.png" width="214" height="350" /></a> </p>
+<p>일단 실행하면 둘다 1)과 2) 둘다 Version 1이 찍히는데… 애플리케이션이 돌아가는 와중에 Example 소스 코드를 고쳐서 message() 메서드에서 반환하는 값을 Version 2라고 바꿔서 저장한 다음에 컴파일 해주면… 중간에 보이는 것처럼 Version 2로 바뀌게 됩니다.</p>

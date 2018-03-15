@@ -1,0 +1,60 @@
+---
+layout: post
+title: Maven을 사용하세요. 코딩이 편해집니다.
+date: 2008-05-19 14:14:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- 메이븐
+- 메이븐 eclipse 플러그인
+- 토비 사부님
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323150612'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true</p>
+<p>eclipse:eclipse는 단순하게 메이븐 프로젝트를 이클립스 프로젝트로 변화해주는 것 뿐만이 아니라 이런 사랑스럽기까지한 일도 해줍니다.</p>
+<p>대부분 자바 프로젝트에서 수 많은 라이브러리들을 사용하고 계실 줄로 압니다. 그 중에서 오픈소스도 여럿 되고 그러다 보면 소스 코드도 볼 수 있는데, 이클립스에서 "Alt + 왼쪽 클릭"으로 링크를 타고 들어가듯이 소스를 네비게이션 하는 하루 일과 중에서도 꽤 큰 비중을 차지할 것입니다.</p>
+<p>그런데 그렇게 하다보면 좀 답답하시죠? 소스 코드는 안 나타나고 벽에 부딪힌거 마냥 .class 파일이 나타나서 길을 가로막습니다. 그래도 뭐 방법은 있습니다. attach 머시기 메뉴를 사용해서 소스 코드가 있는 위치를 알려주면 됩니다. 귀찮죠.</p>
+<p>그래서 위의 명령어가 멋진겁니다. 한 번 사용하시면 해당 프로젝트가 참조하는 라이브러리의 소스 파일과 javaDoc을 다운로드 해옵니다. 멋지죠. 저 명령어 한 번 사용하고 이클립스에서 F5키로 프로젝트 다시 로딩 해주고(이게 꼭 필요한 과정인지는 모르겠습니다. 전 습관처럼 콘솔창에서 프로젝트가지고 장난치면 이클립스에서 매번 F5키를 눌러줍니다.) 소스 네비게이션을 하다보면 감탄하게 될 겁니다.</p>
+<p>아예 플러그인 기본값으로 파라미터 설정해서 mvn eclipse:eclipse만 실행해도 소스코드랑 JavaDoc을 받아오게 설정할 수 도 있습니다. <a href="http://joshdevins.blogspot.com/2008/05/maven-eclipse-goodies.html" target="_blank">참조</a>&nbsp;</p>

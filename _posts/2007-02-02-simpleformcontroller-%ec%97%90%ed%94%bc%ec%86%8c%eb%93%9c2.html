@@ -1,0 +1,86 @@
+---
+layout: post
+title: SimpleFormController 에피소드2
+date: 2007-02-02 07:40:52.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- SQL
+- web.xml
+- 인코딩
+- 죄없는 SimpleFormController
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323150851'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>아래 발생한 문제는 SimpleFormController와는 전혀 관계가 없는 내용일 수도 있다는 것을 미리 알려드리고 시작해야겠습니다. 이유는 결론을 보시면 알게 되실듯.</p>
+<p><img src="{{ site.baseurl }}/assets/bm255.jpg" class="aligncenter" width="463" height="270" alt="사용자 삽입 이미지" />위와 같은 리스트가 있습니다. 오호 분명히 "기선"이라는 사람이 매우 많이 있습니다. 왼쪽에 있는 search로 이동해서 "기선"을 찾아 봅시다.</p>
+<p><img src="{{ site.baseurl }}/assets/bm256.jpg" class="aligncenter" width="500" height="196" alt="사용자 삽입 이미지" />이렇게 기선을 입력하고 enter 또는 search 버튼을 클릭했더니 다음과 같은 화면이 출력 됐습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/bm257.jpg" class="aligncenter" width="461" height="151" alt="사용자 삽입 이미지" />헐...출력할 것이 없다니.. 도대체 어디서 문제가 생긴거야???</p>
+<p>1. 소스코드를 점검하기 시작합니다. JSP와 Controller를 점검하기 시작했습니다.<br />[#M_ more.. | less.. |
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">&nbsp;컨트롤러</span></p>
+<p>public class SearchMemberController extends SimpleFormController {</p>
+<p>&nbsp; &nbsp; private MemberRepository memberRepository;</p>
+<p>&nbsp; &nbsp; public SearchMemberController() {<br />&nbsp; &nbsp; &nbsp; &nbsp; setCommandName("memberCommand");<br />&nbsp; &nbsp; &nbsp; &nbsp; setCommandClass(MemberCommand.class);<br />&nbsp; &nbsp; &nbsp; &nbsp; setFormView("search"); // 생략가능.<br />&nbsp; &nbsp; &nbsp; &nbsp; setSuccessView("searchResult");<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setMemberRepository(MemberRepository memberRepository) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.memberRepository = memberRepository;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected ModelAndView onSubmit(Object command) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; MemberCommand searchingMember = (MemberCommand) command;<br />// &nbsp;&nbsp; &nbsp; &nbsp; System.out.println("message 출력: " + search.getName());<br />&nbsp; &nbsp; &nbsp; &nbsp; ModelAndView mav = new ModelAndView(getSuccessView())<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .addObject("resultMember", memberRepository.findByName(searchingMember.getName()))<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .addObject("memberCommand", searchingMember);<br />&nbsp; &nbsp; &nbsp; &nbsp; return mav;<br />&nbsp; &nbsp; }<br />}</div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">search.jsp</span></p>
+<p>&lt;jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"<br />&nbsp; &nbsp; xmlns:display="urn:jsptld:http://displaytag.sf.net"<br />&nbsp; &nbsp; xmlns:form="http://www.springframework.org/tags/form"&gt;<br />&nbsp; &nbsp; &lt;jsp:directive.page contentType="text/html; charset=UTF-8" /&gt;<br />&nbsp; &nbsp; &lt;jsp:include page="inc/header.jsp" flush="true" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;html&gt;<br />&nbsp; &nbsp; &lt;head&gt;<br />&nbsp; &nbsp; &lt;title&gt;Search For Members&lt;/title&gt;<br />&nbsp; &nbsp; &lt;/head&gt;<br />&nbsp; &nbsp; &lt;body&gt;<br />&nbsp; &nbsp; &lt;h2&gt;Search For Members&lt;/h2&gt;<br />&nbsp; &nbsp; &lt;form:form commandName="memberCommand" method="post"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;table&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tr&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td&gt;Name:&lt;/td&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td&gt;&lt;form:input path="name" /&gt;&lt;/td&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tr&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tr&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;td colspan="2"&gt;&lt;input type="submit" value="Search" /&gt;&lt;/td&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tr&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/table&gt;<br />&nbsp; &nbsp; &lt;/form:form&gt;<br />&nbsp; &nbsp; &lt;/body&gt;<br />&nbsp; &nbsp; &lt;/html&gt;</p>
+<p>&nbsp; &nbsp; &lt;jsp:include page="inc/footer.jsp" flush="true" /&gt;</p>
+<p>&lt;/jsp:root&gt;</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">searchResult.jsp</span></p>
+<p>&lt;jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"<br />&nbsp; &nbsp; xmlns:display="urn:jsptld:http://displaytag.sf.net"<br />&nbsp; &nbsp; xmlns:c="http://java.sun.com/jstl/core_rt"&gt;<br />&nbsp; &nbsp; &lt;jsp:directive.page contentType="text/html; charset=UTF-8" /&gt;<br />&nbsp; &nbsp; &lt;jsp:include page="inc/header.jsp" flush="true" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;jsp:scriptlet&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; java.util.List members = (java.util.List)request.getAttribute("resultMember");<br />&nbsp; &nbsp; &nbsp; &nbsp; request.setAttribute("test", members);<br />&nbsp; &nbsp; &lt;/jsp:scriptlet&gt;</p>
+<p>&nbsp; &nbsp; &lt;h2&gt;Search Results&lt;/h2&gt;</p>
+<p>&nbsp; &nbsp; &lt;display:table name="test" export="true"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="name" title="이름"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="email" autolink="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="phone" title="연락처"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="blogAddress" title="Blog" autolink="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="messengerId" title="MSN"/&gt;<br />&nbsp; &nbsp; &lt;/display:table&gt;</p>
+<p>&nbsp; &nbsp; &lt;jsp:include page="inc/footer.jsp" flush="true" /&gt;</p>
+<p>&lt;/jsp:root&gt;</p></div>
+<p>_M#]<br />처음에는 command 객체에 값이 들어가지 않는 것 같다는 생각이 들었습니다. 중간에 출력문을 한번 넣어보면 될 것을[footnote]소스코드에 주석처리 된 부분입니다.[/footnote] 아직까지도 SimpleFormController가 어떻게 동작하는 것인지 제대로 모르기 때문에 그 떈 더욱 더 Command 객체에 값이 언제 들어가는 것인지 알 수가 없었습니다.</p>
+<p>그리고 두번째는 지난 글에서 의문이 들었던 command 객체를 도메인 객체로 써야 하는건가? 싶어서 Member로 바꿔서도 해봤습니다. 결과는... 여전했습니다.</p>
+<p>2. 조금더 공부하다가 Command 객체에 값이 들어갔는지 확인해봤습니다. 세상에 값이 들어가 있었습니다. 값이 들어가 있긴 한데... 한글이 깨져있더군요.</p>
+<p>message 출력: ?¸°???</p>
+<p>-_-;; 난감했습니다. 이전에 DB 인코딩 문제로 한참을 해맸었는데 또다시 인코딩문제인가.. ㄷㄷㄷ 거리고 있었는데 다행히 한수형이 알려주셔서 web.xml에 다음과 같이 코드를 넣어줬더니 한글이 제대로 보였습니다.<br />[#M_ more.. | less.. | &nbsp; &nbsp; &lt;filter&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;filter-class&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;org.springframework.web.filter.CharacterEncodingFilter<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/filter-class&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;init-param&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;param-name&gt;encoding&lt;/param-name&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;param-value&gt;UTF-8&lt;/param-value&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/init-param&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;init-param&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;param-name&gt;forceEncoding&lt;/param-name&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;param-value&gt;true&lt;/param-value&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/init-param&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/filter&gt;</p>
+<p>&nbsp;&nbsp; &nbsp;&lt;filter-mapping&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/filter-mapping&gt;_M#]<br />3. 좋았습니다. 이제 콘솔에 찍어보니 한글도 제대로 보이고 검색을 날렸는데... 여전히!! 못찾는겁니다. 왜?? 도대체 왜!! 못찾는거야.. 하면서 iBATIS에 SQL을 확인하러 갔습니다... 세상에...ㅠ.ㅠ<br />[#M_ more.. | less.. | &nbsp; &nbsp; &lt;!-- find --&gt;<br />&nbsp;&nbsp; &nbsp;&lt;select id="find" resultMap="memberMap"&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;SELECT id, name, messengerId, email, blogAddress, phone<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;FROM Member<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;WHERE<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;isNotNull property="phone"&gt;phone = #phone#&lt;/isNotNull&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;isNotNull property="blogAddress"&gt;blogAddress = #blogAddress#&lt;/isNotNull&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;isNotNull property="email"&gt;email = #email#&lt;/isNotNull&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;isNotNull property="messengerId"&gt;messengerId = #messengerId#&lt;/isNotNull&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;isNotNull property="name"&gt;name = #name#&lt;/isNotNull&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/select&gt;_M#]like로 바꿔야 겠어요. 흐흐흐흐흐흐흐</p>
+<p></p>

@@ -1,0 +1,64 @@
+---
+layout: post
+title: Eclipse에서 Rename Method 리팩토링
+date: 2006-12-04 03:32:01.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- Alt+Shift+R
+- Eclipse
+- Rename Method
+- 리팩토링
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323017823'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1288767890.bmp" class="aligncenter" width="429" height="154" alt="">1288767890.bmp</a><br />
+getNumberOfMembers() 메소드 이름을 count()로 바꾸는 것이 좋겠다는 의견을 받았습니다. 생각해보니 주소록 어플리케이션에서 숫자를 셀 것이 몇명이나 등록되어 있는지 밖에 없는데 굳이 "몇 명이 있는지 세어라" 라고 할 필요 없이 "몇이냐" 라고 물어보는게 타당하다는 생각이 듭니다.</p>
+<p>문제는 getNumberOfMembers() 메소드를 사방에서 사용하고 있다는 것입니다. memberDao 인터페이스에 만들어둔 이 메소드를 count()로 변경하게 되면 여러 클래스에서 에러가 발생하게 되고 각 클래스들을 돌아가니며 수정을 해도 되겠지만...Eclipse가 그 모습을 본다면 매우 안타까워 할 것 같습니다.</p>
+<p>Alt + Shift + R 을 클릭합니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1046755591.bmp" class="aligncenter" width="408" height="245" alt="">1046755591.bmp</a>변경하고 싶은 이름을 입력한 뒤 Preview를 눌러 확인 해 볼 수 도 있습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1404238966.bmp" class="aligncenter" width="600" height="527" alt="">1404238966.bmp</a>어디서(class) 어떤 부분이 바뀌게 될지 확인 할 수 있습니다.</p>
+<p>OK를 눌러주면 리팩토링 끝입니다. :)</p>
+<p>참고 : <br />
+Rename Method -&gt; <a href="http://www.refactoring.com/catalog/renameMethod.html">http://www.refactoring.com/catalog/renameMethod.html</a></p>
+<p></p>

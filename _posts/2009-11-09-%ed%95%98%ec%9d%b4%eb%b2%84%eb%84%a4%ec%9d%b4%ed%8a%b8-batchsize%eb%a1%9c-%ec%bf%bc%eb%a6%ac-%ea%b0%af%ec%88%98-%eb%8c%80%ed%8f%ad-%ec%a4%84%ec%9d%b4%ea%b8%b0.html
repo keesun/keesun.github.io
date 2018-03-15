@@ -1,0 +1,127 @@
+---
+layout: post
+title: "[하이버네이트] @BatchSize로 쿼리 갯수 대폭 줄이기"
+date: 2009-11-09 16:04:12.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- "@BatchSize"
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323138267'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <br />
+- <a title="[http://docs.jboss.org/hibernate/core/3.3/reference/en/html/performance.html]로 이동합니다." target="_blank" href="http://docs.jboss.org/hibernate/core/3.3/reference/en/html/performance.html">http://docs.jboss.org/hibernate/core/3.3/reference/en/html/performance.html</a><br />
+- <a title="[http://docs.jboss.org/hibernate/stable/annotations/api/org/hibernate/annotations/BatchSize.html]로 이동합니다." target="_blank" href="http://docs.jboss.org/hibernate/stable/annotations/api/org/hibernate/annotations/BatchSize.html">http://docs.jboss.org/hibernate/stable/annotations/api/org/hibernate/annotations/BatchSize.html</a></p>
+<p>스터디의 회원은 각각 Collection&lt;Study, Integer&gt; 타입의 목록을 가지고 있습니다. 스터디당 참여율이나 신뢰도가 들어있는 콜렉션입니다. 그리고 스터디를 보여줄 때 각 회원들의 참여율과 신뢰도를 보여주도록 되어 있는데, 문제는 쿼리입니다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id=?<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id=?</div>
+<p>이런 쿼리가 회원 수*2 만큼 생성됩니다. 한 회원당 attendanceRate와 trustRate를 가지고 있기 떄문이죠. 바로 이런 경우 @BatchSize를 사용하면 쿼리를 대폭 줄일 수 있습니다. 설정은 간단하죠;</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; @CollectionOfElements(targetElement = Integer.class)<br />
+&nbsp;&nbsp;&nbsp; @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)<br />
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">@BatchSize(size=30)</span><br />
+&nbsp;&nbsp;&nbsp; private Map&lt;Study, Integer&gt; studyAttendanceRates;</p>
+<p>&nbsp;&nbsp;&nbsp; @CollectionOfElements(targetElement = Integer.class)<br />
+&nbsp;&nbsp;&nbsp; @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)<br />
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">@BatchSize(size=30)</span><br />
+&nbsp;&nbsp;&nbsp; private Map&lt;Study, Integer&gt; studyTrustRates;</div>
+<p>설정을 한 뒤 쿼리 갯수는 대폭 줄어들게 됩니다. 물론 그만큼 빨라지죠.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)<br />
+Hibernate: select studytrust0_.Member_id as Member1_0_, studytrust0_.element as element0_, studytrust0_.mapkey_id as mapkey3_0_ from Member_studyTrustRates studytrust0_ where studytrust0_.Member_id in (?, ?)<br />
+Hibernate: select studyatten0_.Member_id as Member1_0_, studyatten0_.element as element0_, studyatten0_.mapkey_id as mapkey3_0_ from Member_studyAttendanceRates studyatten0_ where studyatten0_.Member_id in (?, ?)
+</div>
+<p></p>

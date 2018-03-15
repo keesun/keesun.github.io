@@ -1,0 +1,61 @@
+---
+layout: post
+title: Managed dependency는 무슨 뜻인가요?
+date: 2008-04-14 12:43:59.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- Import Managed dependency
+- maven
+- Maven 2.0.9
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323126842'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 DM을 읽다가도 managed destroy라는 단어를 보고.. 이게 무슨 말인가 곰곰히 생각을 한 적이 있었는데요. 오늘도 저 단어를 만나서 고생을 했습니다. <a href="http://maven.apache.org/release-notes.html" target="_blank">Maven 2.0.9</a>에 새로 추가된 import managed dependency를 적용해보려고 했는데, 한바탕 Maven 지옥에 들락거리다 지쳐서 오늘은 실패를 기록하고 이만 집에 들어가려고 합니다.</p>
+<p>Managed Dependency 넌 대체 무엇이니?
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">As an example, consider the following projects:</p>
+<p>&nbsp;&nbsp; 1. ThirdParty 1.0 - contains declarations of third party jars.<br />&nbsp;&nbsp; 2. Project A 1.0 - A project that uses declarations in ThirdParty and produces some number of versioned artifacts.<br />&nbsp;&nbsp; 3. Project B 1.0 - A project unrelated to Project A. It also uses declarations in ThirdParty and produces some number of versioned artifacts.<br />&nbsp;&nbsp; 4. Project C 1.0 - Has dependencies on ThirdParty, Project A, and Project B.</p>
+<p>In Maven 2 it is not possible for Project C to use the <font size="3"><span style="font-weight: bold; color: rgb(0, 153, 102);">managed dependencies</span></font> from both A and B since neither has any direct relationship to the other.</div>
+<p>참조: <a href="http://docs.codehaus.org/display/MAVEN/Importing+Managed+Dependencies" target="_blank">http://docs.codehaus.org/display/MAVEN/Importing+Managed+Dependencies</a></p>
+<p>이게 무슨 이야기인지 이해가 안 되고 있습니다.</p>
+<p>C가 A랑 B를 dependency에 추가하면, A와 B가 사용하는 dependency들도 C에 추가되어서 C프로젝트에서도 사용할 수 있는데, 대체 MD가 뭐길래.. C에서 사용하는게 불가능한 걸까요.</p>

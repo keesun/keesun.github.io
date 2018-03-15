@@ -1,0 +1,77 @@
+---
+layout: post
+title: JSF 기초 2
+date: 2008-07-26 13:02:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- JSF
+- 라이프사이클
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322954058'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.ibm.com/developerworks/library/j-jsf2/" target="_blank">JSF for nonbelievers: The JSF application lifecycle</a></p>
+<p>JSF 라이프사이클</p>
+<p><img src="{{ site.baseurl }}/assets/ik39.png" class="aligncenter" width="597" height="434" alt="사용자 삽입 이미지" />1. Restore view</p>
+<p>요청이 FacesSevlet으로 전달되면, 컨트롤러는 요청을 분석해서 뷰 ID를 뽑아낸다. (JSP 페이지 이름을 바탕으로)</p>
+<p>JSF 프레임워크 컨트롤러는 뷰 ID를 사용해서 현재 뷰에서 사용할 컴포넌트들을 가져온다. 뷰가 없으면, 새로 만들어서 사용한다. 만약에 뷰가 이미 있으면, 그것을 사용한다. 뷰에는 모든 GUI 컴포넌트들이 있다.</p>
+<p>이 단계에서는 세 가지 경우가 있는데 각각 new view, initial view, postback 이다.</p>
+<p>new view: 이 경우에 JSF는 Faces 페이지 뷰를 만들고 이벤트 핸들러와 벨리데이터를 컴포넌트에 연결시킨다. 그렇게 만들어진 뷰는 FacesServlet 객체에 저장된다.</p>
+<p>initial view: 이 경우에는 비어있는 뷰를 만든다. 비어있는 뷰는 사용자가 이벤트를 발생시켰을 때 만들어지고, 이 다음 단계는 render response로 넘어간다.</p>
+<p>postback: 이미 만들어둔 페이지를 다시 보여줄 때가 postback이다. 이 경우에 JSF는 기존에 존재하던 뷰의 상태 정보를 유지한채 보여준다. 이 다음 단계는 apply request values가 된다.(원래 그 단계인데, 뭘 새삼 언급해주는거지;;)</p>
+<p>2. Apply request values</p>
+<p>이 단계의 목적은 각각이 컴포넌트들이 현재 상태를 가져오는 것이다. 컴포넌트들은 반드시 그 값들을 사용해서 FacesContext 객체에서 가져오거나 새로 만들어진다. 컴포넌트 값들은 보통 요청 파라메터에서 가져오는데, 쿠키나 헤더에서 가져올 수도 있다.</p>
+<p>컴포넌트의 immediate event handling 속성이 true 가 아닐 경우: 값의 타입을 객체의 속성 타입으로 변환하는 작업을 한다. 이 때 만약 캐스팅 시에 에러가 나면, response render 단계에서 validation error랑 같이 보여준다.</p>
+<p>컴포넌트의 immediate event handling 속성이 true 일 경우: 타입 변환 + 검증작업까지 한다. 그리고 변환된 값을 컴포넌트에 저장한다. 만약 값 변환이나 값 검증이 실패하면, 에러 메시지를 생성해서 FacesContext에 있는 큐에 넣는다. 그럼 다른 검증 에러들과 함께 response render 단계에서 보여준다.</p>
+<p>3. Process Validation</p>
+<p>사용자가 입력한 값이 검증 룰에 비교해봤을 때 적당한지를 살펴본다. 적절치 않을 때는 FacesContext에 에러 메시지를 추가하고 컴포넌트를 invalid 상태로 표시한다.</p>
+<p>만약 컴포넌트가 invalid로 표시되어 있다면: JSF는 바로 render response 단계로 넘어간다.</p>
+<p>만약 invalid 컴포넌트가 아니면: update model values 단계로 간다.</p>
+<p>4. Update model values</p>
+<p>서버쪽에 있는 모델이 가진 속성 값들을 수정한다. 이 단계는 항상 validation 단계 다음에 오기 때문에 빈 속성값의 유효함을 보장받는다.(물론 폼 필드 수준일 뿐, 비즈니스 룰 수준에서는 유효하지 않을 수도 있다.)</p>
+<p>5. Invoke application</p>
+<p>JSF 컨트롤러는 폼 처리를 할 애플리케이션을 호출한다. 컴포넌트 값이 그에 따라 바뀔 것이고, 검증될 것이고(여기선 비즈니스 룰 수준의 검증을 말하는 거겠죠), 모델 객체에 반영이 될 것이다. 즉 비즈니스 로직을 수행한다.</p>
+<p>이 단계에서, 다음에 보여줄 논리적인 뷰를 명시할 수 있다. 간단하게 폼 처리의 성공 여부를 반환하면 된다. 네비게이션 룰은 faces-config.xml에 정의한다. 네비게이션이 이루어지면, 최종 단계로 이동한다.</p>
+<p>6.&nbsp; Render response</p>
+<p>모든 컴포넌트의 현재 상태를 화면에 보여준다. 그림2는 객체 상태 다이어그램으로 JSF 라이프사이클 6 단계를 보여주고 있다.</p>
+<p><img src="{{ site.baseurl }}/assets/jk35.png" class="aligncenter" width="584" height="266" alt="사용자 삽입 이미지" /></p>

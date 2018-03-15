@@ -1,0 +1,276 @@
+---
+layout: post
+title: 내장된 맵핑 타입
+date: 2008-02-03 15:17:03.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- 맵핑 타입
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323136610'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>ORM은 자바의 타입과 SQL 데이터타입을 중개해 주는 역할을 해야한다.</li>
+</ul>
+<ul>
+<li>하이버는 보통 자바 타입 이름을 따르고 있다. 하지만 자바 타입 하나에 여러 하이버네이트 타입이 있을 수 있다.</li>
+</ul>
+<ul>
+<li>Custom Value Type을 정의할 수 있다.</li>
+</ul>
+<h1>자바 기본 타입 맵핑</h1>
+<ul>
+<li>벤더가 ANSI 표준을 따르지 않을 수도 있다. 그래도 JDBC 드라이버는 추상화 계층을 제공해 주니까 이걸 하이버네이트가 읽어 들여서 벤더에 적당한 타입으로 변환해준다.</li>
+</ul>
+<ul>
+<li>즉, 사용자는 타입 걱정하지 않아도 된다.</li>
+</ul>
+<ul>
+<li>문자열의 길이 제한 설정(length 속성 값)에 따라서 하이버가 적당한 타입으로 결정한다.</li>
+</ul>
+<ul>
+<li>이런 전략 자체도 사용자 맘대로 변경할 수 있다.</li>
+</ul>
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Java Type </th>
+<th class="confluenceTh"> Hibernate Mapping Type </th>
+<th class="confluenceTh"> SQL Type </th>
+</tr>
+<tr>
+<td class="confluenceTd"> int, Integer </td>
+<td class="confluenceTd"> integer </td>
+<td class="confluenceTd"> INTEGER </td>
+</tr>
+<tr>
+<td class="confluenceTd"> long, Long </td>
+<td class="confluenceTd"> long </td>
+<td class="confluenceTd"> BIGINT </td>
+</tr>
+<tr>
+<td class="confluenceTd"> short, Short </td>
+<td class="confluenceTd"> short </td>
+<td class="confluenceTd"> SMALLINT </td>
+</tr>
+<tr>
+<td class="confluenceTd"> float, FLOAT </td>
+<td class="confluenceTd"> float </td>
+<td class="confluenceTd"> FLOAT </td>
+</tr>
+<tr>
+<td class="confluenceTd"> double, Double </td>
+<td class="confluenceTd"> double </td>
+<td class="confluenceTd"> DOUBLE </td>
+</tr>
+<tr>
+<td class="confluenceTd"> BigDecimal </td>
+<td class="confluenceTd"> big_decimal </td>
+<td class="confluenceTd"> NUMERIC </td>
+</tr>
+<tr>
+<td class="confluenceTd"> String </td>
+<td class="confluenceTd"> character </td>
+<td class="confluenceTd"> CHAR(1) </td>
+</tr>
+<tr>
+<td class="confluenceTd"> String </td>
+<td class="confluenceTd"> string </td>
+<td class="confluenceTd"> VARCHAR </td>
+</tr>
+<tr>
+<td class="confluenceTd"> byte, Byte </td>
+<td class="confluenceTd"> byte </td>
+<td class="confluenceTd"> TINYINT </td>
+</tr>
+<tr>
+<td class="confluenceTd"> boolean, Boolean </td>
+<td class="confluenceTd"> boolean </td>
+<td class="confluenceTd"> BIT </td>
+</tr>
+<tr>
+<td class="confluenceTd"> boolean, Boolean </td>
+<td class="confluenceTd"> yes_no </td>
+<td class="confluenceTd"> CHAR(1) ('Y' or 'N') </td>
+</tr>
+<tr>
+<td class="confluenceTd"> boolean, Boolean </td>
+<td class="confluenceTd"> true_false </td>
+<td class="confluenceTd"> CHAR(1) ('T' or 'F') </td>
+</tr>
+</tbody>
+</table>
+<h1>날짜와 시간 맵핑</h1>
+<ul>
+<li>java.util.Date 타입을 timestamp로 맵핑할 경우 DB에서 나노초까지 값을 가져온다.</li>
+</ul>
+<ul>
+<li>책을 쓸 시점에서는 나노초를 짤라주지 않아서, equlas() 메소드로 비교할 경우 Date.getTime() 으로 비교하거나 Custom Mapping Type을 만들어서 사용해야 한다.</li>
+</ul>
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Java Type </th>
+<th class="confluenceTh"> Hibernate Mapping Type </th>
+<th class="confluenceTh"> SQL Type </th>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Data, java.sql.Date </td>
+<td class="confluenceTd"> date </td>
+<td class="confluenceTd"> DATE </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Date, Java.sql.Time </td>
+<td class="confluenceTd"> time </td>
+<td class="confluenceTd"> TIME </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Date, java.sql.Timestamp </td>
+<td class="confluenceTd"> timetamp </td>
+<td class="confluenceTd"> TIMESTAMP </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Calendar </td>
+<td class="confluenceTd"> calendar </td>
+<td class="confluenceTd"> TIMESTAMP </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Calendar </td>
+<td class="confluenceTd"> calendar_date </td>
+<td class="confluenceTd"> DATE </td>
+</tr>
+</tbody>
+</table>
+<h1>바이너리와 큰 값 맵핑</h1>
+<ul>
+<li>binary 맵핑 타입만 식별자 속성으로 사용할 수 있다.</li>
+</ul>
+<ul>
+<li>byte[]일 경우에는 VARBINARY로 맵핑하고, String일 경우에는 CLOB로 맵핑할 수 있다.</li>
+</ul>
+<ul>
+<li>이 두 경우에 Entity 객체가 속성 값을 읽어들일 때, 초기화를 하려고 할텐데, 너무 큰 값이라서 Lazy loading 하고 싶을 수 있다.</li>
+</ul>
+<ul>
+<li>특정 속성을 lazy loading 하는 두 가지 방법이 있다.</p>
+<ul>
+<li>13.1.6에서 다루는 Lazy loading with interception</li>
+<li>java.sql.Clob 나 java.sql.Blob 타입을 사용한다.(로딩하는 시점에 Entity는 Persistent 상태여야 한다.)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>JPA를 사용할 때 String 타입은 기본으로 VARCHAR로 맵핑 된다. Clob 타입으로 맵핑하려면 @Lob 애노테이션을 사용한다.</li>
+</ul>
+<ul>
+<li>Serializable 타입은 변수의 값을 바이트 스트림으로 바꿔서 VARBINARY 타입 컬럼에 저장한다. 로딩할 때는 역직렬화한다.</li>
+</ul>
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Java Type </th>
+<th class="confluenceTh"> Hibernate Mapping Type </th>
+<th class="confluenceTh"> SQL Type </th>
+</tr>
+<tr>
+<td class="confluenceTd"> byte[] </td>
+<td class="confluenceTd"> binary </td>
+<td class="confluenceTd"> VARBINARY </td>
+</tr>
+<tr>
+<td class="confluenceTd"> String </td>
+<td class="confluenceTd"> text </td>
+<td class="confluenceTd"> CLOB </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.sql.Clob </td>
+<td class="confluenceTd"> clob </td>
+<td class="confluenceTd"> CLOB </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.sql.Blob </td>
+<td class="confluenceTd"> blob </td>
+<td class="confluenceTd"> BLOB </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.io.Serializable </td>
+<td class="confluenceTd"> serializable </td>
+<td class="confluenceTd"> VARBINARY </td>
+</tr>
+</tbody>
+</table>
+<h1>JDK 맵핑 타입</h1>
+<ul>
+<li>&lt;property&gt;만 type 속성을 가진 것은 아니다.</li>
+</ul>
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Java Type </th>
+<th class="confluenceTh"> Hibernate Mapping Type </th>
+<th class="confluenceTh"> SQL Type </th>
+</tr>
+<tr>
+<td class="confluenceTd"> java.lang.Class </td>
+<td class="confluenceTd"> class </td>
+<td class="confluenceTd"> VARCHAR </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Locale </td>
+<td class="confluenceTd"> locale </td>
+<td class="confluenceTd"> VARCHAR </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.TimeZone </td>
+<td class="confluenceTd"> timezone </td>
+<td class="confluenceTd"> VARCHAR </td>
+</tr>
+<tr>
+<td class="confluenceTd"> java.util.Currency </td>
+<td class="confluenceTd"> currency </td>
+<td class="confluenceTd"> VARCHAR</td>
+</tr>
+</tbody>
+</table>

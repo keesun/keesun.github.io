@@ -1,0 +1,40 @@
+---
+layout: post
+title: "[Groovy] INDY(InvokeDynamic) 버전 사용하기"
+date: 2013-05-28 19:30:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Grails
+tags:
+- Grails
+- invokedynamic
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>InvokeDynamic 자체가 좀 어렵다.</p>
+<p><a href="http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic">http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html#invokedynamic</a></p>
+<p>골자는 자바7에 이 기능이 추가됐고 이걸 잘 사용하면 JVM 기반의 동적 언어 시스템에 필요한 컴파일러와 런타임 구현체를 개선할 수 있다는데... 그냥 쓰면 좋다. 정도로 넘어가야겠다.</p>
+<p>기존 JDK instruction 중에 invokevirtual에 상반되는 invokedynamic이라는 걸 추가했고 그걸로 동적 언어 구현체를 만들 수 있는 기능인가보다. 이걸 사용해서 구현하면 JVM 기반 동적 언어 컴파일러나 런타임 구현이 좀 더 간편하고 성능도 개선할 수 있고.</p>
+<p>좀 더 깊게파려면 dynamic call site, bootstrap 등이 뭔 말인지 이해해야겠지만 뭔 말인지 모르겠다.</p>
+<blockquote><p>A <strong>dynamic call site</strong> is originally in an unlinked state, which means that there is no method specified for the call site to invoke</p></blockquote>
+<p>정의를 봐도 모르니 이해할 방법이 없다. 패쓰.</p>
+<p><a href="http://groovy.codehaus.org/InvokeDynamic+support">http://groovy.codehaus.org/InvokeDynamic+support</a></p>
+<p>여기 잘 설명이 되어이는데 대충 이런 내용이다. 그루비 2.0 부터는 JVM의 invokedynamic 이라는 instruction을 지원하는 기능을 추가했단다. 그런데 이 instruction은 Java 7부터 지원되는 거라서 당근 JDK 1.7 이후부터 사용할 수 있다.</p>
+<p>그렇다고 자바 7 쓰고 있으면 기본으로 쓰는건 아니고 groovy-x-y-x-indy.jar 처럼 맨 뒤에 indy가 붙은 jar 파일들을 사용해야지 invokedynamic으로 구현된 라이브러리를 사용할 수 있다.</p>
+<p>indy 파일들은 그루비가 설치된 디렉토리/indy라는 곳에 들어있다. 그루비쉘 등에서 기본으로 사용하는 라이브러리는 그루비 홈/lib에 들어있는데 여기 들어있는건 당근.. 뭘까? indy가 아니라 normal이다.</p>
+<p>그래서 이걸 굳이 indy 버전으로 쓰고 싶은 나같은 JDK 7 이상 버전 사용자들은 다음과 같은 쉘을 "그루비 홈"에서 실행해주면 한방에 lib 디렉토리에 들어있는 jar 들을 indy로 바꿔준다.</p>
+<p>for f in `ls lib/groovy*.jar | cut -d/ -f2`;do k=`basename $f .jar`; mv lib/$k.jar lib/$k.jar.old; cp indy/$k-indy.jar lib/$k.jar ; done</p>
+<p>파일이 한두개가 아니라서 수작업으로 indy에 있는걸 옮기지말고 그냥 위에 스크립트 복사해서 실행하는게 좋다.</p>
+<p>그리고 사용자가 작성한 그루비 스크립트도 컴파일 할 대 invokedynamic을 사용하도록 컴파일 하려면 indy 옵션을 줘야 한다는데 옵션을 어떻게 줘야 하는지 예제가 없네.</p>
+<p><a href="http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.compile.GroovyCompileOptions.html#N1BA24">http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.compile.GroovyCompileOptions.html#N1BA24</a></p>
+<p>그래들로 그루비 컴파일 옵션 주는 방법은 여기있는데.. 보통 IDE에 세팅해놓고 쓰는게 좋을텐데 흠.. 어디없나. 모르겠다 패쓰!</p>

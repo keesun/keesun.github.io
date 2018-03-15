@@ -1,0 +1,55 @@
+---
+layout: post
+title: Confluence에서 PDF로 빼낼 때 한글 깨짐 문제 해결
+date: 2007-02-13 03:16:04.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Wiki
+tags:
+- Confluence
+- font
+- PDF 한글 깨짐
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323090900'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>PDF 버튼을 클릭하면 해당 페이지를 PDF 파일로 빼줍니다. 그런데 빼낸 파일을 열어보니 한글이 전부 ### ## #### 이런식으로 깨져있었습니다. 또는 font가 없다면서 Null Pointer Exception을 발생시키기도 합니다.</p>
+<p>그래서 Font를 추가해 주면 문제가 해결될 것 같습니다. Font는 administration메뉴 중에 PDF language support에서 불러와주면 됩니다. window에 font들은 c:\windows\fonts 안에 있습니다.<br /><img src="{{ site.baseurl }}/assets/bm292.jpg" class="aligncenter" width="273" height="248" alt="사용자 삽입 이미지" />그런데 이 폴더를 찾아가서 import하려니까 먹히지를 않습니다. 신기하게도 여기서 파일을 선택하고 Ctrl+C 다른 곳에서 Ctrl+V를 하면 ttc나 ttf 확장자로 파일이 생깁니다. 뭔가 특이한 파일인것 같네요. 암튼 추가하고 싶은 폰트를 찾아서 바탕화면에 모아 둡니다.<br /><img src="{{ site.baseurl }}/assets/bm293.jpg" class="aligncenter" width="250" height="239" alt="사용자 삽입 이미지" />Confluence에 font를 추가할 수 있는 파일의 형식은 ttc 나 ttf만 된다는 군요. 선택하고 install 버튼을 클릭합니다.<br /><img src="{{ site.baseurl }}/assets/bm294.jpg" class="aligncenter" width="500" height="283" alt="사용자 삽입 이미지" />에러가 발생합니다.<br /><img src="{{ site.baseurl }}/assets/bm295.jpg" class="aligncenter" width="500" height="175" alt="사용자 삽입 이미지" />10메가가 넘어서 에러가 발생한답니다. general setting에서 한 번에 올릴 수 있는 파일의 크기를 설정하는 부분이 생각났습니다. 그 부분에 10메가라고 써있었는데 그 부분을 바꿔 줍니다.<br /><img src="{{ site.baseurl }}/assets/bm296.jpg" class="aligncenter" width="500" height="164" alt="사용자 삽입 이미지" />맨앞에 1을 2로 바꿔줬습니다. 그리고 다시 파일을 선택하고 install을 하면 설치가 제대로 됐습니다.<br /><img src="{{ site.baseurl }}/assets/bm297.jpg" class="aligncenter" width="500" height="69" alt="사용자 삽입 이미지" /><img src="{{ site.baseurl }}/assets/bm291.jpg" class="aligncenter" width="500" height="71" alt="사용자 삽입 이미지" />PDF로 빼내 봤습니다.<br /><img src="{{ site.baseurl }}/assets/bm298.jpg" class="aligncenter" width="500" height="378" alt="사용자 삽입 이미지" /><br />흠.. 잘 되는군요. :)</p>

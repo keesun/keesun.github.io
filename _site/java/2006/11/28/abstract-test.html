@@ -1,0 +1,115 @@
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1016038887.bmp" class="alignleft" width="252" height="224" alt="">1016038887.bmp</a>테스트 클래스와 구현 클래스 간의 갯수가 일치 하지 않습니다. 이유는 인터페이스인 MemberDao 클래스에 대한 테스트 클래스를 만들지 않았기 때문입니다.</p>
+<p>이 상황을 <a href="http://placebosoft.com/abstract-test.html">Abstract Test라는 아티클</a>을 보면서 개선시켜 보겠습니다.</p>
+<p>먼저 인터페이스에 대한 추상 테스트 클래스를 작성합니다. 추상 테스트 클래스는 몇가지 특성이 있는데 기본적으로 다음과 같은 코드가 기본 형태 입니다.<br />
+[#M_ more.. | less.. | <br />
+<b><code>  import junit.framework.*;</p>
+<p>  public abstract class AbstractTest extends TestCase<br />
+  {<br />
+  &nbsp; private TestableInterface testableInterface;</p>
+<p>  &nbsp; public AbstractTest(String name) { super(name); }</p>
+<p>  &nbsp; public void setUp()<br />
+  &nbsp; throws Exception<br />
+  &nbsp; {<br />
+  &nbsp; &nbsp; &nbsp;//Create the object to be tested.<br />
+  &nbsp; &nbsp; &nbsp;testableInterface = createTestableInterface()<br />
+  &nbsp; &nbsp; &nbsp;//assert that result is non-null<br />
+  &nbsp; &nbsp; &nbsp;assertNotNull(testableInterface);<br />
+  &nbsp; }</p>
+<p>  &nbsp; public abstract TestableInterface createTestableInterface()<br />
+  &nbsp; throws Exception;</p>
+<p>  &nbsp; public final void testSomething()<br />
+  &nbsp; {}</p>
+<p>  &nbsp; public final void testSomethingElse()<br />
+  &nbsp; {}<br />
+  }</code></b><br />
+_M#]</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169)">일단 여기서 의문이 드는 것으로</p>
+<p>1. 생성자에 String 매개변수가 있다는 점.<br />
+2. 팩토리 메소드인 createFoo()에서 Exception을 던지고 있는 모습.<br />
+3. 메소드 몇개가 final 이라는 점.</div>
+<p>
+이 중에서 위에 두개는 아직 이해가되지 않지만 세번째 final은 오버라이딩으로 인해 sub class의 의도가 오염될 수 있는 것을 방지 하는 것 같습니다. Liskov 원칙과 관련이 있는 것 같습니다.</p>
+<p>위를 따라서 MemberDaoTest 클래스를 작성합니다.<br />
+[#M_ more.. | less.. | <br />
+import net.webapp2.member.domain.Member;<br />
+import junit.framework.TestCase;</p>
+<p>public abstract class MemberDaoTest extends TestCase {</p>
+<p> &nbsp; &nbsp;private MemberDao memberDao;</p>
+<p> &nbsp; &nbsp;public MemberDaoTest(String name){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;super(name);<br />
+ &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;@Override<br />
+ &nbsp; &nbsp;public void setUp() throws Exception {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;memberDao = createMemberDao();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertNotNull(memberDao);<br />
+ &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;public abstract MemberDao createMemberDao() throws Exception;</p>
+<p>
+ &nbsp; &nbsp;public final void testAdd(){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;Member member = createMember();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;memberDao.add(member);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(1, memberDao.getNumberOfMembers());</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;memberDao.add(member);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(2, memberDao.getNumberOfMembers());<br />
+ &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;private Member createMember() {</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;Member member = new Member();</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;String name = "백기선";<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;String phone = "016-9889-6911";<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;String email = "whiteship2000@gmail.com";<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;String messengerId = "whiteship2000@hotmail.com";<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;String blugAddress = "http://whiteship.tistory.com";</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;member.setName(name);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;member.setPhone(phone);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;member.setEmail(email);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;member.setMessengerId(messengerId);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;member.setBlugAddress(blugAddress);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;return member;<br />
+ &nbsp; &nbsp;}<br />
+}_M#]<br />
+이제 이 추상 테스트 클래스를 상속 받아서 추상 메소드를 구현할 클래스를 만들어야 합니다. 이 클래스의 팩토리 메소드에서 특정 구현 클래스의 객체를 리턴해둬야 할 것 같습니다. 역시 이 클래스에 대한 탬플릿도 있습니다.<br />
+[#M_ more.. | less.. | <br />
+<b>    public class ConcreteTest<br />
+    extends<br />
+    &nbsp; AbstractTest<br />
+    {<br />
+    &nbsp; public TestableInterface createTestableInterface()<br />
+    &nbsp; throws Exception<br />
+    &nbsp; {<br />
+    &nbsp; &nbsp; &nbsp;//Create and return the implementation of TestableInterface<br />
+    &nbsp; }</p>
+<p>    &nbsp; //optionally add a main method to run the test.<br />
+    }</b><br />
+_M#]<br />
+위 클래스를 따라서 구상 클래스를 작성합니다.<br />
+[#M_ more.. | less.. | <br />
+import junit.framework.TestSuite;</p>
+<p>public class MembeDaoImplTest extends MemberDaoTest {</p>
+<p> &nbsp;&nbsp; public MembeDaoImplTest(String name) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; super(name);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; @Override<br />
+ &nbsp;&nbsp; public MemberDao createMemberDao() throws Exception {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return new SqlmapMemberDao();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public static void main(String [] args)<br />
+ &nbsp;&nbsp; {<br />
+ &nbsp; &nbsp;&nbsp; TestSuite suite = new TestSuite();<br />
+ &nbsp; &nbsp;&nbsp; suite.addTestSuite(MembeDaoImplTest.class);<br />
+ &nbsp; &nbsp;&nbsp; junit.textui.TestRunner.run(suite);<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+이렇게 따라 할 수 있었습니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">간단하게 Abstract Test를 만드는 순서를 정리하자면</p>
+<p>1. 모든 인터페이스(or 추상 클래스)에 대한 추상 테스트 클래스를 작성하라.<br />
+2. 인터페이스에 대해서 구체적인 테스트들을 작성하라.(final 메소드들을 가리키는 듯)<br />
+3. 추상 테스트 클래스를 구현한 테스트를 작성하여 테스트 하라.
+</div>
+<p>
+하지만 아직까지 의문점 1, 2는 풀리지 않네요. 차근 차근 봐야겠습니다. </p>
+<p>에피소드<br />
+[#M_ more.. | less.. | <br />
+위의 예제는 적당하지 않다는 문제가 있네요. 기존에 있던 SqlmapMemberDaoTest 클래스는Spring에서 제공하는 AbstractTransactionalDataSourceSpringContextTests 이 클래스를상속 받았기 때문에 SqlMapClient 같은 멤버 변수가 세팅되었던 것인데... 지금까지 따라해본 방식으로 하다보면 자바에선다중 상속이 안되기 때문에 결국 둘 중 하나를 선택해야 하는데 이미 Spring에 있는 클래스를 선택하는게 좋을 것 같습니다.</p>
+<p>지금에서야 깨닫게 되는 것이지만 Spring에서 이미 Abstract Test를 제공해주고 있는 것 같습니다. 오.. 놀라워라... 왜 몰랐을까요. ㅠ.ㅠ 아 바보...<br />
+_M#]</p>

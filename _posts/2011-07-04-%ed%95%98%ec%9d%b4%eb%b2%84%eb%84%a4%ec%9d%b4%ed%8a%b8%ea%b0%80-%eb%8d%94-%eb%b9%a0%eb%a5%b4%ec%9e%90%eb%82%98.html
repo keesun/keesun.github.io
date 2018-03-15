@@ -1,0 +1,1251 @@
+---
+layout: post
+title: 하이버네이트가 더 빠르자나!?
+date: 2011-07-04 14:35:25.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323188105'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>지난주 토요일에 하이버네이트 도입 관련된 질문을 받고 “성능”에 대해서 왈가왈부 했지만, 사실 전 한번도 하이버네이트와 iBatis의 성능비교를 해본 적이 없습니다. 마침 관련된 회사일도 있고해서 성능 테스트를 만들어 봤습니다. iBatis에 유리한 테스트 코드라고 생각하고 작성한 코드인데… 무언가 문제가 있는지 하이버네이트가 더 빠르게 나왔습니다. @_@;;</p>
+<p>사용한 DB는 HSQL입니다. 프로젝트는 맨 아래 다운로드 할 수 있도록 해두겠습니다.</p>
+<p>iBatis는…</p>
+<p>[xml]<br />
+&lt;dependency&gt;<br />
+    &lt;groupId&gt;org.apache.ibatis&lt;/groupId&gt;<br />
+    &lt;artifactId&gt;com.springsource.com.ibatis&lt;/artifactId&gt;<br />
+    &lt;version&gt;2.3.4.726&lt;/version&gt;<br />
+&lt;/dependency&gt;<br />
+[/xml]</p>
+<p>Hibernate는…</p>
+<p>[xml]<br />
+&lt;dependency&gt;<br />
+    &lt;groupId&gt;org.hibernate&lt;/groupId&gt;<br />
+    &lt;artifactId&gt;com.springsource.org.hibernate&lt;/artifactId&gt;<br />
+    &lt;version&gt;3.3.2.GA&lt;/version&gt;<br />
+&lt;/dependency&gt;<br />
+[/xml]</p>
+<p>빈 설정은…</p>
+<p>[xml]<br />
+   &lt;jdbc:embedded-database id=&quot;dataSource&quot; type=&quot;HSQL&quot;&gt;<br />
+        &lt;jdbc:script location=&quot;classpath:sqlScript/schema.sql&quot;/&gt;<br />
+    &lt;/jdbc:embedded-database&gt; </p>
+<p>    &lt;bean id=&quot;sqlMapClient&quot; class=&quot;org.springframework.orm.ibatis.SqlMapClientFactoryBean&quot;&gt;<br />
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;<br />
+        &lt;property name=&quot;configLocation&quot; value=&quot;SqlMapConfig.xml&quot; /&gt;<br />
+    &lt;/bean&gt; </p>
+<p>    &lt;bean id=&quot;sqlMapClientTemplate&quot; class=&quot;org.springframework.orm.ibatis.SqlMapClientTemplate&quot;&gt;<br />
+        &lt;constructor-arg name=&quot;sqlMapClient&quot; ref=&quot;sqlMapClient&quot;/&gt;<br />
+    &lt;/bean&gt;</p>
+<p>&lt;bean id=&quot;transactionManager&quot;<br />
+      class=&quot;org.springframework.orm.hibernate3.HibernateTransactionManager&quot;<br />
+      p:sessionFactory-ref=&quot;sessionFactory&quot;/&gt;</p>
+<p>&lt;bean id=&quot;sessionFactory&quot;<br />
+      class=&quot;org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean&quot;&gt;<br />
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;<br />
+    &lt;property name=&quot;packagesToScan&quot; value=&quot;sample.domain&quot; /&gt;<br />
+    &lt;property name=&quot;hibernateProperties&quot;&gt;<br />
+        &lt;props&gt;<br />
+            &lt;prop key=&quot;hibernate.dialect&quot;&gt;${hibernate.dialect}&lt;/prop&gt;<br />
+            &lt;prop key=&quot;hibernate.hbm2ddl.auto&quot;&gt;update&lt;/prop&gt;<br />
+            &lt;prop key=&quot;hibernate.show_sql&quot;&gt;false&lt;/prop&gt;<br />
+        &lt;/props&gt;<br />
+    &lt;/property&gt;<br />
+&lt;/bean&gt;<br />
+[/xml]<br />
+평범합니다.</p>
+<p>iBatis DAO 구현체는? 너무 평범해서 패스;; 그냥 소스코드를 보셔도 됩니다. github에 올려놔야겠네;</p>
+<p>암튼 그래서.. 테스트 코드는…</p>
+<p>[java]<br />
+@Test<br />
+@Repeat(50)<br />
+public void add5000(){<br />
+    //GIVEN<br />
+    List&amp;lt;Member&amp;gt; member5000 = MemberTestUtils.makeMember5000();<br />
+   <br />
+    //WHEN<br />
+    StopWatch watch = new StopWatch();<br />
+    watch.start();<br />
+    for(Member newMember : member5000) {<br />
+        memberDao.add(newMember);<br />
+    }<br />
+    memberDao.flush();<br />
+    watch.stop();<br />
+    System.out.println(watch.prettyPrint());<br />
+   <br />
+    //THEN<br />
+    assertThat(memberDao.list().size(), is(1000));<br />
+}</p>
+<p>@Test<br />
+@Repeat(50)<br />
+public void select5000(){<br />
+    //GIVEN<br />
+    List&amp;lt;Member&amp;gt; member5000 = MemberTestUtils.makeMember5000();<br />
+    for(Member newMember : member5000) {<br />
+        memberDao.add(newMember);<br />
+    }<br />
+    memberDao.flush();<br />
+    System.out.println(&quot;insert 5000 complete!&quot;);<br />
+   <br />
+    //WHEN<br />
+    StopWatch watch = new StopWatch();<br />
+    watch.start();<br />
+    List&amp;lt;Member&amp;gt; members = memberDao.list();<br />
+    memberDao.flush();<br />
+    watch.stop();<br />
+    System.out.println(watch.prettyPrint());<br />
+   <br />
+    //THEN<br />
+    assertThat(members.size(), is(1000));<br />
+}<br />
+[/java]<br />
+이 테스트 코드는 하이버네이트를 테스트 할 때 사용한 코드라서 중간 중간 flush()가 들어가 있는데, iBatis를 테스트 할 때도 같은 코드를 사용했고, 대신 flush()만 빠져있다.</p>
+<p>결과를 보자.</p>
+<p><strong><span style="font-size: small;">1. iBatis: insert 5000</span></strong></p>
+<p>StopWatch '': running time (millis) = 361<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00361  100% </p>
+<p>StopWatch '': running time (millis) = 255<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00255  100% </p>
+<p>StopWatch '': running time (millis) = 195<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00195  100% </p>
+<p>StopWatch '': running time (millis) = 146<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00146  100% </p>
+<p>StopWatch '': running time (millis) = 127<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00127  100% </p>
+<p>StopWatch '': running time (millis) = 106<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00106  100% </p>
+<p>StopWatch '': running time (millis) = 95<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00095  100% </p>
+<p>StopWatch '': running time (millis) = 94<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00094  100% </p>
+<p>StopWatch '': running time (millis) = 93<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00093  100% </p>
+<p>StopWatch '': running time (millis) = 100<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00100  100% </p>
+<p>StopWatch '': running time (millis) = 89<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00089  100% </p>
+<p>StopWatch '': running time (millis) = 85<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00085  100% </p>
+<p>StopWatch '': running time (millis) = 72<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00072  100% </p>
+<p>StopWatch '': running time (millis) = 62<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00062  100% </p>
+<p>StopWatch '': running time (millis) = 56<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00056  100% </p>
+<p>StopWatch '': running time (millis) = 51<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00051  100% </p>
+<p>StopWatch '': running time (millis) = 40<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00040  100% </p>
+<p>StopWatch '': running time (millis) = 38<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00038  100% </p>
+<p>StopWatch '': running time (millis) = 31<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00031  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 36<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00036  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 65<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00065  100% </p>
+<p>StopWatch '': running time (millis) = 29<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00029  100% </p>
+<p>StopWatch '': running time (millis) = 32<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00032  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 70<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00070  100% </p>
+<p>StopWatch '': running time (millis) = 31<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00031  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 29<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00029  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 29<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00029  100% </p>
+<p>StopWatch '': running time (millis) = 53<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00053  100% </p>
+<p>StopWatch '': running time (millis) = 32<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00032  100% </p>
+<p>StopWatch '': running time (millis) = 32<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00032  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 168<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00168  100% </p>
+<p>StopWatch '': running time (millis) = 30<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00030  100% </p>
+<p>StopWatch '': running time (millis) = 37<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00037  100% </p>
+<p>StopWatch '': running time (millis) = 33<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00033  100% </p>
+<p>StopWatch '': running time (millis) = 33<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00033  100% </p>
+<p>StopWatch '': running time (millis) = 29<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00029  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p><span style="font-size: small;"><strong>2. iBatis: select 5000</strong></span></p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 105<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00105  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 64<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00064  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 42<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00042  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 27<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00027  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 28<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00028  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 13<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00013  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 14<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00014  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 15<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00015  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 15<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00015  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 16<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00016  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 17<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00017  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 18<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00018  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 20<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00020  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 19<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00019  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 16<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00016  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 17<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00017  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 10<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00010  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 8<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00008  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 8<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00008  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 96<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00096  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p><strong><span style="font-size: small;">3. Hibernate: insert 5000</span></strong></p>
+<p>StopWatch '': running time (millis) = 135<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00135  100% </p>
+<p>StopWatch '': running time (millis) = 98<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00098  100% </p>
+<p>StopWatch '': running time (millis) = 82<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00082  100% </p>
+<p>StopWatch '': running time (millis) = 74<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00074  100% </p>
+<p>StopWatch '': running time (millis) = 67<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00067  100% </p>
+<p>StopWatch '': running time (millis) = 84<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00084  100% </p>
+<p>StopWatch '': running time (millis) = 52<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00052  100% </p>
+<p>StopWatch '': running time (millis) = 50<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00050  100% </p>
+<p>StopWatch '': running time (millis) = 32<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00032  100% </p>
+<p>StopWatch '': running time (millis) = 35<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00035  100% </p>
+<p>StopWatch '': running time (millis) = 29<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00029  100% </p>
+<p>StopWatch '': running time (millis) = 26<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00026  100% </p>
+<p>StopWatch '': running time (millis) = 23<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00023  100% </p>
+<p>StopWatch '': running time (millis) = 21<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00021  100% </p>
+<p>StopWatch '': running time (millis) = 13<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00013  100% </p>
+<p>StopWatch '': running time (millis) = 9<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00009  100% </p>
+<p>StopWatch '': running time (millis) = 9<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00009  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>StopWatch '': running time (millis) = 7<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00007  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p><strong><span style="font-size: small;">4. Hibernate: select 5000</span></strong></p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 60<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00060  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 37<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00037  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 22<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00022  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 19<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00019  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 17<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00017  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 12<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00012  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 10<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00010  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 10<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00010  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 10<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00010  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 11<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00011  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 12<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00012  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 12<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00012  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 5<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00005  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 6<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00006  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 3<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00003  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>insert 5000 complete!<br />
+StopWatch '': running time (millis) = 4<br />
+-----------------------------------------<br />
+ms     %     Task name<br />
+-----------------------------------------<br />
+00004  100% </p>
+<p>흠… 신기할세……………….. select는 둘 다 비슷한데, insert는 Hibernate가 iBatis보다 6배 정도 빠르게 나왔다. 예상했던 결과는 “비슷하다” 혹은 “아이바티스가 아주 조금 빠르다.” 정도였는데… 이건 뭐 예상과는 정 반대네.. 흠.. 왜 이러지; @_@;</p>

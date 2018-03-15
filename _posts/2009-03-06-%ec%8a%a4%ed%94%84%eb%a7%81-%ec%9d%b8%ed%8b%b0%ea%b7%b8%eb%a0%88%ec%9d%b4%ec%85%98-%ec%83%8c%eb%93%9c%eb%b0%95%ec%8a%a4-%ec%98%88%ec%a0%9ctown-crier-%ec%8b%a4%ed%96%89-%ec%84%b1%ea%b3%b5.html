@@ -1,0 +1,95 @@
+---
+layout: post
+title: 스프링 인티그레이션 샌드박스 예제(town crier) 실행 성공~!
+date: 2009-03-06 10:37:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Spring Integration
+tags:
+- 스프링 인티그레이션 예제
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323004912'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : h<a href="ttp://blog.springsource.com/2009/02/27/spring-integration-on-dm-server/" target="_blank">ttp://blog.springsource.com/2009/02/27/spring-integration-on-dm-server/</a></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+<ol>
+<li>Download and install the <a href="http://www.springsource.com/products/suite/sts" onclick="javascript:urchinTracker('/outbound/www.springsource.com');">SpringSource Tool Suite</a> and <a href="http://www.springsource.com/products/suite/dmserver" onclick="javascript:urchinTracker('/outbound/www.springsource.com');">dm Server</a> (this is as easy as unzipping the files). You can also use Eclipse with the dm Server tools and Spring IDE if you prefer.
+</li>
+<li> Configure a dm Server under the default name and start it
+<ol>
+<li>open the Server view, right click in it and select new</li>
+<li>type Spring in the search window and select SpringSource dm Server 1.0</li>
+<li>point to the unzipped dm Server directory</li>
+</ol>
+</li>
+<li>Update your bundle repository and install Spring Integration Core 1.0.1 and Commons Logging 1.1.1
+<ol>
+<li>double click the newly created server a server management console opens</li>
+<li>select the repository tab and click 'Update local bundle and library repository index'</li>
+<li>search for Spring Integration and download the core bundle</li>
+<li>start the server
+</li>
+</ol>
+</li>
+<li> Import the projects from the <a href="https://src.springframework.org/svn/spring-integration/sandbox/si-osgi">Spring Integration sandbox</a>
+<ol>
+<li>check out the projects to a local working directory</li>
+<li>From STS select File-&gt;Import-&gt;Existing projects into workspace and point to the working directory</li>
+</ol>
+</li>
+</ol>
+</div>
+<p>본문에서 윗 부분을 보고 그대로 따라했더니 됐습니다. 흠.. 간략히 요약하자면</p>
+<p>1. STS는 어제 2.0 소식을 접하고 한 번 설치해본터라 쉽게 했고 dm Server는 최신 버전 1.0.2를 새로 받아서 설치했습니다.</p>
+<p>2. dm Server를 서버 창에 추가해줍니다.</p>
+<p>3. dm Server를 더블클릭하고 Repository 탭에서 spring integration로 검색한 다음 spring integration core 1.0.1 번들을 다운로드 합니다.</p>
+<p>4. 서버를 실행합니다.</p>
+<p>5. 스프링 인티그레이션 sandbox 예제 소스를 받아옵니다.</p>
+<p>svn co https://src.springframework.org/svn/spring-integration/sandbox/si-osgi</p>
+<p>6. 위에서 받아온 예제를 이클립스에서 import 합니다. <br />- 이 때 scribe 프로젝트의 MANIFEST.MF에서 에러가 발생할 수 있는데 스프링 2.5.6 라이브러리가 필요해서 그렇습니다. 그 떄는 에러가 발생한 지점을 클릭하고 퀵픽스를 이용해서 필요한 라이브러리를 다운받으면 됩니다.</p>
+<p>7. com.springsource.samples.integration.osgi 프로젝트를 드래그 앤 드랍으로 dm server에 추가해줍니다.</p>
+<p>8. 서버 콘솔에서 ss로 설치된 번들을 확인합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/49b0fa73b3454DN.png" class="aligncenter" width="600" height="479" alt="사용자 삽입 이미지" /><br />자 이렇게 번들이 잘 설치됐는지 확인합니다. 끝났습니다. 이제 스프링 인티그레이션 예제가 잘 돌고 있나 확인해봐야겠죠?? 참고로 이 예제 애플리케이션은 콘솔에 뭔가 출력하는게 없고 전부 로깅을 하기 때문에 콘솔로는 이 애플리케이션이 제대로 돌고 있는지 확인하기 어렵습니다.</p>
+<p>town crier가 주기적으로 소리를 지르면 scribe는 그때 그때 메시지를 받아가고 goverment는 주기적으로 메시지를 가져갑니다. 자세한 건 소스 코드를 참조해 보시구요. 이렇게 동작하는지 일단 눈으로 보고 싶다면 dm server를 설치한 곳으로 이동하여 trace.log 파일을 열어봐야 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/49b0fc06cd883DB.png" class="aligncenter" width="600" height="450" alt="사용자 삽입 이미지" /><br />저 위치의 파일을 열어 보면 다음과 같이 주요 메시지가 정기적으로 출력되는 걸 볼 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/49b0fc31477d1BJ.png" class="aligncenter" width="600" height="479" alt="사용자 삽입 이미지" /><br />자~~ 이제 가지고 놀 장난감이 준비 됐네요. 이 녀석하고 놀면서 스프링 인티그레이션, 스프링 dm 서버, 스프링 dm + OSGi 등과 친해져야겠네요. +_+</p>
+<p>차후에 프로젝트도 좀 더 분석해서 스크린캐스팅을 제공하겠습니다. 캬캬</p>

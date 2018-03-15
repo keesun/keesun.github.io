@@ -1,0 +1,9 @@
+<p>캡슐화는 보통 Encapsulation이라는 단어를 한글로 대체 할 때 사용을 하고 있습니다. 객체의 데이터들을 숨긴다는 것을 뜻합니다. 하지만 좀더 추상적인 의미로 추상화라는 단어를 생각해 보면 다른 모습들을 생각해 볼 수 있습니다.</p>
+<p style="text-align: center;"><img src="/assets/concepts-object.gif" alt="A circle with an inner circle filled with items, surrounded by gray wedges representing methods that allow access to the inner circle." align="bottom" height="210" width="345" /></p>
+<p style="text-align: left;">출처 : <a href="http://java.sun.com/docs/books/tutorial/java/concepts/object.html" target="_blank">http://java.sun.com/docs/books/tutorial/java/concepts/object.html</a></p>
+<p>위 그림은 데이터를 캡슐화 한 것이며 가장 일반적으로 생각하는 캡슐화의 모습입니다.</p>
+<p>이렇게 데이터만 캡슐화 하는 것이 아니라 메소드의 일부분을 캡슐화 할 수도 있습니다. 자주 변화하는 부분만을 다른 클래스로 따로 빼내는 것이 바로 그런 캡슐화가 아닌가 생각해봅니다. 그리고 아마도 그림으로 표현하면 다음과 같을 것입니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk11.bmp" class="aligncenter" width="500" height="357" alt="사용자 삽입 이미지">bk11.bmp</a><br />자주 변하는 부분을 다른 클래스로 빼냄으로 해서 기존의 클래스는 변화에 닫힐 가능성이 높아지고 그럼으로 해서 OCP원칙에 한발작 다가서게 됩니다. 그리고 조금더 캡슐화를 추상화 시키면 Inner Class가 떠오릅니다. Class안에서 특정 Class를 캡슐화 하고 있는 모습이 바로 Inner Class와 잘 매칭 된다고 생각합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">[#M_관련 시험 문제 보기|닫기|문제 : 캡슐화의 기본 아이디어가 뭔가? 디자인 패턴에서 캡슐화를 사용한 예들을 열거해보라. 이를 통해서 우리는 무엇을 지불하고 무었을 얻었는가? 각각 예를 들어 설명하라.</p>
+<p>기선 : 기본 아이디어는 위와 같으며 디자인 패턴에서 캡슐화를 사용한 예를 몇가지 살펴보면 먼저 Strategy 패턴에서 자주 변화하는 method를 인터페이스로 빼낸 것을 추상화 라고 할 수 있습니다. 그리고 Factory 패턴의 예제로 살펴 보았던 여러가지 Pizza 중에 하나를 선택하게 되는 부분도 역시 따로 빼내었습니다. 이 때의 비용은 클래스 갯수가 늘어나게 된다는 것입니다. 하지만 그렇게 함으로 써 전체 어플리케이션의 유연함을 증대 시킬 수 있습니다. 확장에 유리하고 변화게 닫힌 OCP 원칙에 가까워 지게 됩니다. 이 부분에 대한 예를 하나 살펴 보면 State 패턴을 생각할 수 있습니다. 여러가지 상태를 클래스로 빼내어 각각을 구현 해 둠으로 써 클래스가 여러개 늘어났지만 대신 확장성은 매우 높아졌고 따라서 유지보수에 용이한 구조가 되었습니다.<br />_M#]</div>
+<p>ps : 그림이 너무 허접하네요.. ㅠ.ㅠ 방학때 포토샵도 살짝 공부할 예정이오니 아마 차후에는 그림 실력이 조금 나아질 것 같습니다. ㅎㅎ</p>

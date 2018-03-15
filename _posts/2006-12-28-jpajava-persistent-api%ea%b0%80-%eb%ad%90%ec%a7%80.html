@@ -1,0 +1,63 @@
+---
+layout: post
+title: JPA(Java Persistent API)가 뭐지..
+date: 2006-12-28 08:48:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- JPA
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323159257'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>지난 스터디 때 처음 들어본 단어 JPA[footnote]물론 처음 들어본 단어는 이 밖에도 많았지요.[/footnote]를 공부해야 한다는 말씀을 듣었습니다. 설명도 살짝 들었습니다.</p>
+<p>EJB와 관련지어 설명해 주셨는데 EJB를 공부해본 적도 없고 경험이 없기 때문에 이해하지 못하고 외울 수 밖에 없었습니다. EJB의 Entity bean과 연관지어 설명해 주신 것이 기억이 나서 찾아 보았습니다. </p>
+<p>위키피디아에 있는 Entitry Bean의 정의입니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">An Entity Bean is a type of Enterprise JavaBean, a server-side Java EE component, that <span style="color: rgb(0, 153, 102);">represents persistent data maintained in a database.</span> An entity bean can manage its own persistence (Bean managed persistence) or can delegate this function to its EJB Container (Container managed persistence). <span style="color: rgb(0, 153, 102);">An entity bean is identified by a primary key.</span> If the container in which an entity bean is hosted crashes, the entity bean, its primary key, and any remote references survive the crash.</p>
+<p>In <span style="color: rgb(255, 0, 0);">EJB 3.0, entity beans were superseded by the Java Persistence API.</span></div>
+<p>Entity Bean은 database에서 관리되는 persistent data를 java 프로그램에서 표현하기 위해 사용되는 하나의 타입인 것 같습니다. 이 빈들은 주키로 관리가 되는데...EJB 3.0에서는 JPA에 의해 대체 됐다고 하는군요.</p>
+<p>위키피디아에서 JPA를 찾아봤습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">The Java Persistence API, sometimes referred to as JPA, is a Java programming language framework that <span style="color: rgb(255, 0, 0);">allows developers to manage relational data in Java Platform</span>, Standard Edition and Java Platform, Enterprise Edition applications.</div>
+<p>
+Java 플렛폼 기반으로 관계형 Data를 프로그램에서 다룰 때 사용하는 프레임웍이라는 짧은 설명입니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">세가지 구성요소를 들고 있는데 다음과 같습니다.(Persistence consists of three areas:)<br />&nbsp; &nbsp; * the API, defined in the javax.persistence package<br />&nbsp; &nbsp; * the Java Persistence Query Language<br />&nbsp; &nbsp; * object/relational metadata</div>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">좀더 자세한 내용을 찾고 싶어 sun에서 찾아 보았습니다.<br /><a href="http://java.sun.com/developer/technicalArticles/J2EE/jpa/index.html" target="_blank">http://java.sun.com/developer/technicalArticles/J2EE/jpa/index.html</a><br /><a href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html" target="_blank">J2EE tutorial</a>에서 <a href="http://java.sun.com/javaee/5/docs/tutorial/doc/Overview9.html#wp88342" target="_blank">JPA 부분</a><br /><a href="http://java.sun.com/javaee/5/docs/api/" target="_blank">J2EE API</a>에서 <a href="http://java.sun.com/javaee/5/docs/api/javax/persistence/package-frame.html" target="_blank">JPA부분</a><br /><a href="http://java.sun.com/javaee/5/docs/tutorial/doc/Overview9.html#wp88342" target="_blank"> </a></div>

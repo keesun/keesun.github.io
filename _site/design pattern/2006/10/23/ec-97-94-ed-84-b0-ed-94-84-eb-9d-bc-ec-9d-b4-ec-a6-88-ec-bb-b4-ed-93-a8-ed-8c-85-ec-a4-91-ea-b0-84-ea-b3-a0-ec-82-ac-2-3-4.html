@@ -1,0 +1,77 @@
+<p>&nbsp;
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">2) [20점] 시스템을 확장/변경 할 때 class의 수가 급격하게 늘어나는 경우가 생긴다. 이를 방치하면 관리가 어려워진다. 이 문제를 해결하기 위해 사용한 방법들을 보이고 어떻게 했는지를 설명하라. 우리가 지금까지 배운 것 중에서 예를 보여라.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p>[#M_답 보기|닫기| </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">변하는 부분과 변하지 않는 부분을 잘 구분하여 두면 클래스의 수를 줄일 수 있습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">3장 118, 119쪽을 보면 클래스가 무지막지하게 늘어나는 것을 볼 수 있습니다. 첨가물이 추가되는 커피에 대한 클래스들이 기존클래스를 상속하는 방법으로 상당히 늘어나고 있습니다. 이것을 해결한 방법으로 클래스 안에 플래그 역할을 하는 메소드를 작성하여클래스를 줄이고 있습니다.</span> </p>
+<p>
+_M#]</p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">3) [30점] 우리가 원하는 것은 flexible 하고 extendable 해서, 장기적으로 적은 비용으로 효율적인 시스템을 만드는 일이다. 이것을 위해 몇 가지 원칙들을 사용해 왔다. 아래에 열거한 것들이 그 대표적인 것들이다. 이들이 지금까지 우리가 배운 디자인 패턴에서 어떻게 사용되고, 어떻게 우리가 원하는 것을 충족시켜왔는지를 설명하라.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp;</span>1.[10점] 바뀌는 부분을 캡슐화 한다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p>[#M_답 보기|닫기| </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">특정 클래스 타입의 객체를 선택하여 만들어야 할 때 그 부분을 팩토리 메소드로 빼내었습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">스트레티지 패턴을 배우는 1장에서 Duck 클래스마다 fly() 메소드와 quack() 메소드가 바뀌는데 이것을 다른 메소드들과 같은 클래스에 두지 않고 인터페이스로 따로 때어냈습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">Observer 패턴을 다룰 때는 각각의 display들 마다 화면에 출력하는 방식이 다르기 때문에 display() 메소드 역시 각각의 클래스로 따로 빼내었습니다.</span> </p>
+<p>
+_M#]</p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp;</span></span><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">2.[10점] 서로 상호작용을 하는 객체 사이에서는 가능하면 느슨하게 결합하는 </span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp;</span> &nbsp; 디자인을 사용해야 한다.</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p>[#M_답 보기|닫기| </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">느슨한 결합에 필수 요소는 인터페이스입니다. 스트레티지 패턴에서 Behavior Interface를 사용하여 여러 알고리즘을 추가하여도 원래 있던 클래스들에는 영향을 끼치지 않았습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">옵저버 패턴에서도 인터페이스를 사용하여 구독자와 주제 간의 관계를 느슨하게 했습니다. 새로운 구독자가 생기더라도 주제 객체가 구독자 인터페이스를 </span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">팩토리 패턴에서 각 지점의 재료 공장들이 재료의 인터페이스를 사용하여 재료를 다루고 있는데 이것 또한 느슨한 결합으로써 새로운 재료를 추가하더라도 공장의 코드가 변경되지 않아도 된다는 장점이 있습니다.</span> </p>
+<p>
+_M#]</p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp;</span></span><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">3.[10점] 클래스는 확장에 대해서는 열려있고 변경에 대해서는 닫혀있어야 한다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p>[#M_답 보기|닫기| </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">OCP는 데코레이터 패턴을 배운 3장의 예에서 확인 할 수 있습니다. OCP의 핵심도 역시 인터페이스입니다. 모든 하위 클래스들이특정 인터페이스를 가지고 작업을 한다면 확장을 할 때는 그 인터페이스만 구현하면 되기 때문에 유용합니다. 또 인터페이스라는제약을 지켜야 하기 때문에 변경에 닫혀있다고 할 수 있겠습니다. </span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">책에서는 상속을 사용하여 OCP를 사용하였습니다. 이 책에서는 새로운 음료나 첨가물이 추가 되더라도 기존의 클래스에 영향을 주지않으며 새로 추가 되는 첨가물들은 상위 클래스를 상속 받도록 되어 있으므로 변경에 닫혀 있습니다.(인터페이스를 사용했다면 더욱제약이 강했겠지만 상속을 함으로써 기존의 기능에 새로운 기능을 추가할 수 있다는 장점이 대신 생겼네요.)</span> </p>
+<p>
+_M#]</p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-weight: bold; font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">4) [10점] 옵져버 패턴에서는 푸시방식과 풀 방식이 있다고 했다. 2장에서는 푸시 방식만 보였다. 이번에는 풀 방식을 보여라.</span> </p>
+<p>
+[#M_ more.. | less.. | </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><img src="/assets/1007395894.gif" class="aligncenter" width="392" height="185" alt="" /></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><img src="/assets/UNI00000418623a.gif" alt="" border="0" height="185" width="392" /></span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">위는 제가 작성한 Observer Pattern 예제 소스 코드의 일부입니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">update()메소드에서 주제 객체의 특정 멤버 변수가 아닌 자기 자신 즉 주제 객체 자체(여기서는 Auctionner가 되겠습니다.)를인자로 넘기도록 해 두었습니다. 이제 풀 방식이 가능합니다. 풀 방식은 다음과 같이 사용할 수 있습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><img src="/assets/UNI00000418623c.gif" alt="" border="0" height="164" width="567" /></span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">Bidder interface를 구현한 ConcreteBidder class의 일부를 보겠습니다.</span> </p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify"><img src="/assets/1194621573.gif" class="aligncenter" width="567" height="164" alt="" /><br />
+</span></p>
+<p style="margin: 0px; font-size: 10pt; color: rgb(0, 0, 0); text-indent: 0px; line-height: 160%; font-family: '바탕'; text-align: justify"><span style="font-size: 10pt; color: rgb(0, 0, 0); line-height: 21px; font-family: '바탕'; letter-spacing: 0px; text-align: justify">위와 같이 Auctioneer type의 객체를 받아왔기 때문에 getter를 사용하여 원하는 멤버의 값을 가져갈 수 있습니다.</span> </p>
+<p>
+_M#]</p>

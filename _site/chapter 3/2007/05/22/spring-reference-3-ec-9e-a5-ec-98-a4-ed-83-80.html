@@ -1,0 +1,11 @@
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#context-functionality-messagesource" target="_blank">3.8.1</a> 에 다음과 같은 예제 코드가 있습니다. (2.0.5 버전)</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"># in 'exceptions.properties'<br />argument.required=The '{0}' argument is required.</div>
+<p>여기에 잘 못된 부분이 하나 있습니다. <span style="color: rgb(255, 255, 255);">{0}을 따옴표로 감싸면 안 됩니다. 출력 될 때 인자로 값을 받기 위한 것이 맞다면 홑 따옴표를 없애야 합니다.</span></p>
+<p>좀더 아래에 있는 다음의 예제코드인</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;beans&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- this MessageSource is being used in a web application --&gt;<br />&nbsp; &nbsp; &lt;bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="baseName" value="WEB-INF/test-messages"/&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &lt;!-- let's inject the above MessageSource into this POJO --&gt;<br />&nbsp; &nbsp; &lt;bean id="example" class="com.foo.Example"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="messages" ref="messageSource"/&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&lt;/beans&gt;</p></div>
+<p>여기에도 잘 못된 부분이 하나 있습니다. <span style="color: rgb(255, 255, 255);">beanName 이라고 하면 안되고 beanname 이렇게 소문자로 바꿔줘야 합니다. setBeanname() 메소드를 사용하기 때문이죠.</span></p>
+<p>오타가 자주 등장하지만 그렇다고 코딩에 지대한 영향을 끼치지는 않습니다. 물론 대부분 에러가 발생하고 로그 메시지 보면 고칠 수 있고 정말 단순한건 이클립스에 코드만 붙여넣어 봐도 오타를 찾을 수 있습니다.ㅋㅋ</p>
+<p>오타를 어떻게 수정해야 하는지는 위에 적어뒀습니다. 찾아보세열~</p>
+<p></p>

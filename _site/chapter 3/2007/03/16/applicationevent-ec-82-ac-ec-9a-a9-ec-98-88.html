@@ -1,0 +1,29 @@
+<p>ApplicationContext를 중개자 삼아서 Event를 발생시키거나 처리 할 수 있습니다. Event는&nbsp; <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/ApplicationEvent.html" target="_blank">ApplicationEvent 클래스</a>를 상속하여 만들 수 있으며 Event를 처리 할 클래스는 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/ApplicationListener.html" target="_blank">ApplicaionListener 인터페이스</a>를 구현하면 됩니다.</p>
+<p>Reference에 나와있는 예제는 email을 보낼 때 Black List에 있는 email 주소로는 email을 보내지 않고 BlackListEvent를 발생시키고 이 이벤트가 발생하면 담당자에게 알리도록 하는 핸들러가 작동하게 됩니다.</p>
+<p>먼저 ApplicationEvent를 상속하여 BlackListEvent를 만들겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">import org.springframework.context.ApplicationEvent;</p>
+<p>public class BlackListEvent extends <span style="color: rgb(255, 0, 0);">ApplicationEvent</span> {</p>
+<p>&nbsp; &nbsp; private String message;</p>
+<p>&nbsp; &nbsp; public BlackListEvent(Object souce, String message) {<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">super(souce);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; this.message = message;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String getMessage() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return message;<br />&nbsp; &nbsp; }<br />}</div>
+<p>이 때 ApplicationContext의 생성자가 주의해야 합니다. 인자가 하나인 생성자 하나밖에 없기 때문에 super()를 사용해서 명시적으로 호출해 줘야 합니다.</p>
+<p>다음은 ApplicationListener를 구현하는&nbsp; BlackListEvent를 처리할 BlackListNotifier를 만들겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">import org.springframework.context.ApplicationEvent;<br />import org.springframework.context.ApplicationListener;</p>
+<p>public class BlackListNotifier implements <span style="color: rgb(255, 0, 0);">ApplicationListener</span> {</p>
+<p>&nbsp; &nbsp; public void <span style="color: rgb(255, 0, 0);">onApplicationEvent</span>(ApplicationEvent event) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if(event instanceof BlackListEvent)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("메일 보내지마~");<br />&nbsp; &nbsp; }<br />}</div>
+<p>구현해야 할 메소드는 onApplicationEvent 하나 입니다.</p>
+<p>그럼 이제 위에서 만든 BlackListEvent를 특정 상황에서 발생시켜야 하는데요. <span style="color: rgb(0, 102, 153);">ApplicationContext의 publishEvent() 메소드를 이용하면 됩니다.</span> 그럼 이벤트를 발생 시킬 클래스에서 ApplicationContext를 알고 있어야 하니까 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/ApplicationContextAware.html" target="_blank">ApplicationContextAware 인터페이스</a>를 구현해야겠습니다.<br />ApplicationContextAware 인터페이스를 구현한 EmailBean을 만듭니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">import java.util.List;</p>
+<p>import org.springframework.context.ApplicationContext;<br />import org.springframework.context.ApplicationContextAware;</p>
+<p>public class EmailBean implements ApplicationContextAware {</p>
+<p>&nbsp; &nbsp; private List blackList;</p>
+<p>&nbsp; &nbsp; private ApplicationContext ctx;</p>
+<p>&nbsp; &nbsp; public void setBlackList(List blackList) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.blackList = blackList;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setApplicationContext(ApplicationContext ctx) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.ctx = ctx;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void sendEmail(String address, String text) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (blackList.contains(address)) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BlackListEvent evt = new BlackListEvent(address, text);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.publishEvent(evt);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; // send email...<br />&nbsp; &nbsp; }<br />}</div>
+<p>이제 BlackListEvent를 실제 발생 시키고 화면에 메시지가 출력 되는지 확인해 봐야 합니다. 그럼 먼저 EmailBean을 context에 등록하고 EmailBean의 blackList에 이벤트를 발생시킬 이메일 주소를 넣어줍니다. 그리고 Event를 핸들링할 bean을 설정해 줍니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &nbsp; &lt;bean id="emailBean" class="event.EmailBean" &gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="blackList"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;monster@email.com&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="blackListListener" class="event.BlackListNotifier" /&gt;</p></div>
+<p>그리고 이벤트가 발생하는지 확인하기 위해서 monster@email.com으로 간단한 메시지를 날려봅니다. 그럼 화면에는 "메일 보내지마~"라고 출력이 될 것입니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; &nbsp; &nbsp; EmailBean emailBean = (EmailBean) bf.getBean("emailBean");<br />&nbsp; &nbsp; &nbsp; &nbsp; emailBean.sendEmail("monster@email.com", "I'm gonna kill u");</div>
+<p></p>

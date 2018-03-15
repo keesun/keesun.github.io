@@ -1,0 +1,138 @@
+<h1>특징</h1>
+<ul>
+<li>모든 게 다 잘 될거라고 가정을 하는 접근법이다.</li>
+</ul>
+<ul>
+<li>unit of work의 마지막에 데이터를 쓰려고 할 때 에러를 발생시킨다.</li>
+</ul>
+<h1>낙천적인 전략 이해하기</h1>
+<p><img src="/assets/ek150000000002.png" class="aligncenter" width="421" height="214" alt="사용자 삽입 이미지" /></p>
+<ul>
+<li>두 트랜잭션 모두 read commited는 기본이니까 dirty read는 허용하지 않는다.</li>
+</ul>
+<ul>
+<li>하지만 non repeatable read는 가능하다. 그리고 둘 중 하나의 update가 분실 될 수도 있다.</li>
+</ul>
+<ul>
+<li>lost updat를 처리할 수 있는 세 가지 방법</p>
+<ol>
+<li>Last commit wins - 마지막에 커밋하는 녀석이 앞선 변경 사항을 덮어쓴다. 에러 메시지 없다.</li>
+<li>First commit wins - 두 번째로 같은 데이터에 커밋하는 녀석이 있을 때 예외를 던진다. 사용자는 새로운 컨버세이션을 시작여 새로운 데이터를 가져와서 다시 작업해야 한다.</li>
+<li>충돌하는 업데이트 병합하기 - 두 번째로 같은 데이터에 커밋하려는 녀석이 있을 때 예외를 던지고 사용자가 선택적으로 무조건 덮어 쓸 수 도 있고 다시 시작할 수도 있도록 한다.</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li>optimistic concurrency control이 없거나 기본값인 상태에서는 무조건 last commit wins 전략으로 동작한다. 비추다.</li>
+</ul>
+<ul>
+<li>하이버네이트와 JP는 automatic optimistic locking을 사용하여 first commit wins 전략을 사용하게 해준다.</li>
+</ul>
+<ul>
+<li>Merge conflicting changes가 가장 사용자 입장에서 좋은데, 이런 창을 띄우고 메시지를 출력하는 것은 개발자의 몫이다.</li>
+</ul>
+<h1>하이버네이트에서 Versioning 하기</h1>
+<ul>
+<li>각각의 Entity들은 version을 가지고 있고 숫자나 타입스탬프로 표현할 수 있다.</li>
+</ul>
+<ul>
+<li>하이버네이트는 이 version을 Entity가 수정될 때마다 버전을 증가 시키고 만약 충돌이 발견되면 예외를 던진다.</li>
+</ul>
+<ul>
+<li>이 version 속성을 Entity에 추가해준다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Item {<br />    ...<br />    <span class="code-keyword">private</span> <span class="code-object">int</span> version;<br />    ...<br />}</pre>
+</div>
+</div>
+<ul>
+<li>XML에서 설정할 때 이 속성에 대한 맵핑은 반드시 id 속성 설정 바로 다음에 위치해야 한다.</li>
+</ul>
+<ul>
+<li>세터를 사용하지 말고 필드에 직접 쓰도록 설정하고 세터를 만들어 두지 않는게 좋다. 하이버만 쓸 수 있도록...</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Item {<br />    ...<br />    <span class="code-keyword">private</span> Date lastUpdated;<br />    ...<br />}</pre>
+</div>
+</div>
+<ul>
+<li>Timestamp를 사용할 수도 있는데 이건 약간 덜 안전하다. 비추한다.</li>
+</ul>
+<div class="panelMacro">
+<table class="infoMacro">
+<colgroup>
+<col width="24" />
+<col /></colgroup>
+<tbody>
+<tr>
+<td valign="top"></td>
+<td><b>비추하는 이유</b></p>
+<p>Clustered 환경에서 JVM으로부터 현재 시간을 가져오는 건 위험하다. jvm이 두 개니까 둘이 같을 수도 있겠지.<br />
+한 개에서 가져오면 같을 일이.. 없겠지만, 어쨋든 그래서 타입스탬프를 DB에서 가져오도록 설정할 수 있다.<br />
+source="db"라고 &lt;timestamp&gt; 맵핑에 추가하면 된다. 그런데 이것도 DB를 매번 다녀오니까 추가비용이<br />
+발생하고 하이버네이트의 모든 SQL Dialect가 이걸 지원하는 것도 아니다.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1>자동 버전 관리</h1>
+<div class="panelMacro">
+<table class="infoMacro">
+<colgroup>
+<col width="24" />
+<col /></colgroup>
+<tbody>
+<tr>
+<td valign="top"></td>
+<td><b>자동 버전 관리 동작 원리</b></p>
+<p>두 개의 트랜잭션이 같은 데이터에 가져온다. 이때 버전 넘버를 확인한다. 1이라고 하자. 그뒤에 Update문이 실행 될<br />
+때 다시 버전 넘버를 가져와서 확인한다. 맨 처음에 가져온 넘버와 같으면 커밋하고 버전 넘버를 증가시킨다. 버전 넘버가 다르면<br />
+누군가 데이터를 변경한 것이기 때문에 현재 트랜잭션은 예전 데이터를 가지고 작업하고 있는 것이다. 그러면 Update문을 날리지<br />
+않는다. 그럼 SQL의 결과 수정된 레코드의 수가 0이다. 이 숫자가 0이면 하이버는<br />
+StaleObjectStateException을 던진다. 이 예외를 잡아서 화면에 에러 메시지 보여주고 사용자가 컨버세이션을<br />
+다시 시작하도록 할 수 있다.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>언제 Entity의 버전을 올리는가? Entity 객체가 가지고 있는 속성들이 dirty 할 때에만 올린다.</li>
+</ul>
+<h1>버전 넘버나 Timestamp 없이 버전 관리하기</h1>
+<ul>
+<li>레거시 DB나 기존의 자바 클래스를 사용하고 있어서 버전 컬럼을 추가할 수 없어도, 하이버네이트는 자동 버전 관리를 할 수 있다.</li>
+</ul>
+<ul>
+<li>단, 객체를 가져오고 수정하는 Persistent Context(Session)가 같아야 한다. 따라서<br />
+Detached 객체를 가지고 Conversation을 구현할 때에는 자동 버전 관리가 불가능하다. 그 때는 버전 넘버나<br />
+Timestamp가 필요하다.</li>
+</ul>
+<ul>
+<li>버전 컬럼 대신에 모든 컬럼을 비교한다. optimistic-lock="dirty" 라고 설정하면 dirty<br />
+상태의 속성만 비교한다. 이때에는 update문을 dirty한 컬럼으로만 생성해야 하니까 dynamicUpdate를 true로<br />
+설정해야 한다.</li>
+</ul>
+<h1>Java Persistent 사용하여 버전 관리하기</h1>
+<ul>
+<li>Java Persistent는 동시 접근을 Versioning을 사용하여 낙천적으로 관리한다고 가정한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br /><span class="code-keyword">public</span> class Item {<br />    ...<br />    @Version<br />    @Column(name = <span class="code-quote">"OBJ_VERSION"</span>)<br />    <span class="code-keyword">private</span> <span class="code-object">int</span> version;<br />    ...<br />}</pre>
+</div>
+</div>
+<ul>
+<li>JPA는 버전 속성 없이 optimistic versioning을 못하니까 하이버 애노테이션을 사용해야 한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@org.hibernate.annotations.Entity(<br />  optimisticLock = org.hibernate.annotations.OptimisticLockType.ALL<br />)<br /><span class="code-keyword">public</span> class Item {<br />    ...<br />}</pre>
+</div>
+</div>
+<ul>
+<li>락을 OptimisticLockType.DIRTY로 설정할 수 있다. 그럴 때는 dynamicUpdate 속성의 값도 true로 설정해야 줘야 한다.</li>
+</ul>

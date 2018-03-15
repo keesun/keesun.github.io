@@ -1,0 +1,19 @@
+<h1>맵핑 전략</h1>
+<ul>
+<li>다형적인 관계나 쿼리가 필요하지 ㅇ낳다면, Table Per Concrete Class를 사용하라. 즉, 상위 타입으로 객체들을 가져다 쓰지 않을거라면...</li>
+</ul>
+<ul>
+<li>다형적인 관계나 쿼리가 필요하고, 하위 클래스들의 속성이 몇 개 되지 않는 다면, Table Per Class Hierarchy를 사용하라.</li>
+</ul>
+<ul>
+<li>다형적인 관계나 쿼리가 필요하고, 하위 클래스들에 속성들이 많다면 Table Per SubClass를 사용하라.</li>
+</ul>
+<h1>특징</h1>
+<ul>
+<li>간단한 경우에는 Table Per Class Hierarchy를 사용하라. 그 다음에 좀 더 복잡한 경우에<br />
+Table Per Subclass를 고려하라. 하지만 그렇게 하기 전에 상속구조를 Deligation으로 대체할 수 없을지<br />
+고민해 봐라.</li>
+</ul>
+<ul>
+<li>하이버네이트가 도메인과 관계형 모델의 버퍼 역할을 해주긴 하지만, 그렇다고 해서 Persistence Concern을 몰라도 된다는 뜻은 아니다.</li>
+</ul>

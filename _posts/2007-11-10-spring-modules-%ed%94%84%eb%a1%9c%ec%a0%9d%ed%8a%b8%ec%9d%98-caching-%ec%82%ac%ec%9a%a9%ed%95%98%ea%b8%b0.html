@@ -1,0 +1,82 @@
+---
+layout: post
+title: Spring Modules 프로젝트의 Caching 사용하기
+date: 2007-11-10 16:10:16.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 05. Hitting the database
+tags:
+- Spring Modules 프로젝트
+- 캐시
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323025896'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>XML과 애노테이션을 사용하여 간단하게 캐시를 사용할 수 있습니다.</p>
+<p>물론 나름대로 캐시기능을 구현하셔도 좋겠지만, 이미 다양한 캐시 관련 프레임워크들이 존재하고, 그 것들을 편하게 사용할 수 있도록 스프링에서 제공해주는 기능들을 사용하는 쪽이 더 빠르고, 쉽게 캐시를 접할 수 있는 방법이라 생각됩니다. 그 후에, 직접 캐시 기능을 커스터마이징 한다던가, 스프링 소스 코드를 통해 어떻게 캐시 프레임워크를 쉽게 사용하게 만들어 줬는지 살펴보는 것도 좋은 공부가 될 수 있으리라 생각합니다.</p>
+<p>1. 캐시 적용할 대상 물색<br />2. 캐시 프레임워크 선택<br />3. XML 또는 애노테이션으로 캐시 설정.</p>
+<p>순서는 크게 상관이 없지만, 저는 위의 순서대로 작업을 하겠습니다.</p>
+<p><span style="font-weight: bold;">1. 캐시 적용할 대상 물색</span><br /><img src="{{ site.baseurl }}/assets/ck180000000000.png" class="aligncenter" width="260" height="98" alt="사용자 삽입 이미지" />위와 같은 클래스가 있을 때 getAll()과 같은 메소드가 캐시를 사용할 유력한 후보가 될 수 있습니다. 모든 회원들에 대한 정보를 가져올 때 마다 DB를 다녀와야만 하는 번거로움이 있지만, 이 정보는 자주 바뀌는 정보도 아니기 때문에 캐시 적용에 매우 유력한 후보가 됩니다.</p>
+<p>그리고 캐시를 비워야 하는 시점도 역시 생각을 해야하는데, 위에서 save와 같이 캐시 해둔 정보에 변경이 가해질 때 캐시를 비우도록 하면, 다음에 캐시에 들어있는 정보를 가져가는 녀석이 새로운 정보를 가져갈 수 있도록 할 수 있기 때문에, 이 역시 캐시를 비우기에 적절한 메소드로 보여집니다.</p>
+<p><span style="font-weight: bold;">2. 캐시 프레임워크 선택</span></p>
+<p>저는 캐시를 써본적이 거의 없기 때문에 어떠한 프레임워크가 좋은지 모르겠습니다. 다만 Acegi 발표를 할 때 잠깐 보적이 있었던, EHCache를 사용하도록 하겠습니다. 이 밖에도, GigaSpaces, JBoss Cache, JCS, OpenSymphony’s OSCache, Tangosol’s Coherence 과 같이 처음 들어보는 캐시 프레임워크들이 존재합니다.</p>
+<p><span style="font-weight: bold;">3. 캐시 네임스페이스 등록(XML/애노테이션 공통)</span></p>
+<p>XML을 사용하던, 애노테이션을 사용하던 어차피 최소한의 XML 코드를 필요로 합니다. 그 XML은 다름이 아니라, 위에서 선택한 캐시에 대한 설정을 담고 있는 별도의 XML을 나타내기 위한 &lt;XXX:config&gt; 엘리먼트를 등록하기 위함입니다.</p>
+<p>위에서 EHCache를 선택했기때문에, 저는 다음과 같은 코드를 스프링 설정 파일 선언부에 추가해주었습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">xmlns:ehcache="http://www.springmodules.org/schema/ehcache"</p>
+<p>http://www.springmodules.org/schema/ehcache http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd</p></div>
+<p><span style="font-weight: bold;">4. 캐시 설정파일 작성 및 알려주기.</span></p>
+<p>캐시 자체에 대한 설정 파일을 작성하고, 그 위치를 스프링 설정파일에서 설정해줍니다. 이 때 바로 위에서 등록한 네임스페이스를 사용합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;ehcache&gt;<br />&nbsp; &nbsp; &lt;defaultCache maxElementsInMemory="500" eternal="true"<br />&nbsp; &nbsp; &nbsp; &nbsp; overflowToDisk="false" memoryStoreEvictionPolicy="LFU" /&gt;<br />&nbsp; &nbsp; &lt;cache name="memberCache" maxElementsInMemory="500" eternal="true"<br />&nbsp; &nbsp; &nbsp; &nbsp; overflowToDisk="false" memoryStoreEvictionPolicy="LFU" /&gt;<br />&lt;/ehcache&gt;</div>
+<p>이 것은 캐시 자체에 대한 설정 파일입니다. <br />maxElementsInMemory는 필수속성으로써, 캐시 안에 저장할 수 있는 최대 엘리먼트의 갯수를 나타냅니다.<br />eternal은 해당 엘리먼트에 영속성을 부여할까 말까 설정합니다.<br />overflowToDisk는 만약에 저장해야할 엘리먼트의 갯수가 최대 갯수를 넘었을 때 저장 공간을 더 늘릴지 말지 설정합니다.<br />memoryStoreEvictionPolicy는 엘리먼트의 갯수가 저장할 수 있는 최대 갯수에 도달했을 때 어떤 것을 먼저 빼버릴 것인지 선정하는 방법을 설정합니다. 기본 값은 LRU(least resently used)로 사용한지 가장 오래 된 것 부터 뺴는 방법이있고, FIFO로 먼저 들어왔던 것 부터 빼는 방법 그리고 마지막으로 LFU(less frequently<br />used)제일 자주 안 사용하는 엘리먼트부터 빼는 방법이 있습니다.(캐시에 있는 엘리먼트마다 타임스탬프를 관리하는 것인가. 하는 생각이 듭니다.)</p>
+<p>이렇게 작성한 캐시 설정 파일을ehcache.xml로 저장을 해두었다고 했을 때, 이 파일을 스프링에서 참조할 수 있도록 다음과 같이 스프링 설정 파일에서 설정합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;ehcache:config<br />&nbsp; &nbsp; &nbsp; &nbsp; configLocation="classpath:chapter5/dao/hibernate/ehcache.xml" /&gt;</div>
+<p><span style="font-weight: bold;">5. 본격적인 캐시 설정하기.</span><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">5-1. XML로 설정하기</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;ehcache:proxy id="memberDao" refId="memberDaoHibernateDaoSupport"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ehcache:caching methodName="getAll" cacheName="memberCache" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ehcache:flushing methodName="save" cacheNames="memberCache" /&gt;<br />&nbsp; &nbsp; &lt;/ehcache:proxy&gt;</div>
+<p>설정이 매우 직관적이기 때문에 쉽게 이해하실 수 있을 것입니다. 먼저 캐시가 AOP를 사용하기 때문에, 프록시객체를 설정하고 있는 모습을 볼 수 있습니다. 문제는 이 프록시 객체의 이름인데, 이 이름을 캐시를 적용할 대상의 이름으로 변경해 주고, 원래 대상의 이름을 target이라고 접미어를 붙여주어야 한다는 것입니다. 이러한 불편함은 Classic Spring AOP에서 프록시 팩토리 빈으로 Aspect 역할을 할 빈을 설정할 때 발생하던 문제점과 동일한 문제 입니다.</p>
+<p><span style="font-weight: bold;">5-2. 애노테이션으로 설정하기</span><br style="font-weight: bold;" /><br />먼저, 캐시를 사용할 메소드위에 다음과 같은 애노테이션을 붙여줍니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Cacheable(modelId="memberCacheModel")</div>
+<p>캐시를 날려버릴 메소드 위에는 다음과 같은 애노테이션을 붙여줍니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@CacheFlush(modelId="memberFlushModel")</div>
+<p>그리고 XML에서 다음과 같이 설정해줍니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;ehcache:annotations&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ehcache:caching id="memberCacheModel" cacheName="memberCache" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ehcache:flushing id="memberFlushMode" cacheNames="memberCache" /&gt;<br />&nbsp; &nbsp; &lt;/ehcache:annotations&gt;</div>
+<p>XML 코드량이 거의 줄지 않았는데, 왜 굳이 이걸 써야 하는가? 하는 의문이 바로 드시죠? 그렇습니다. 저도 처음엔 그런 생각이 들었습니다. 오히려 모델ID라는 것 때문에 설정이 조금 더 햇갈리기까지 하니까요. 그렇지만, 이 녀석은 이름을 신경쓰지 않아도 된다는 장점이 있습니다.</p>
+<p>그리고 이제와서 말씀드리지만, 애노테이션 말고 Jakarta Commons Attributes로 설정하실 수도 있다고 합니다. 이 방법은 저도 안해봐서 포스팅에 포함하진 못하겠네요. 따라서 Java 5 미만의 환경에서 이 기능을 사용하고 싶으신 분들도 말성이실 이유가 없습니다.</p>

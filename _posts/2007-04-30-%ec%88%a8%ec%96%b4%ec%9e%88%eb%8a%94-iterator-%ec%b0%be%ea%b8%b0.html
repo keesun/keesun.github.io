@@ -1,0 +1,71 @@
+---
+layout: post
+title: 숨어있는 Iterator 찾기
+date: 2007-04-30 15:56:40.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Hidden Iterator
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952335'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>다음의 코드 중에 iterator가 숨어있는 곳을 찾아 주세요~</p>
+<p class="MsoNormal" style="text-align: left;" align="left">
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">class</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> HiddenIterator {</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">private</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">final</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> Set&lt;Integer&gt; </span><span style="font-family: &quot;Courier New&quot;; color: rgb(0, 0, 192);" lang="EN-US">set</span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> = </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">new</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> HashSet&lt;Integer&gt;();</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p>&nbsp;</o:p></span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style=""> &nbsp; &nbsp;&nbsp; </span></span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">public</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">synchronized</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">void</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> add(Integer i) {</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="font-family: &quot;Courier New&quot;; color: rgb(0, 0, 192);" lang="EN-US">set</span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US">.add(i);</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p>&nbsp;</o:p></span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style=""> &nbsp; &nbsp;&nbsp; </span></span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">public</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">synchronized</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">void</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> remove(Integer i) {</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="font-family: &quot;Courier New&quot;; color: rgb(0, 0, 192);" lang="EN-US">set</span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US">.remove(i);</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p>&nbsp;</o:p></span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style=""> &nbsp; &nbsp;&nbsp; </span></span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">public</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">void</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> addTenThings() {</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>Random r = </span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">new</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> Random();</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">for</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> (</span><b><span style="font-family: &quot;Courier New&quot;; color: rgb(127, 0, 85);" lang="EN-US">int</span></b><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> i = 0; i &lt; 10; i++)</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span>add(r.nextInt());</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>System.</span><i><span style="font-family: &quot;Courier New&quot;; color: rgb(0, 0, 192);" lang="EN-US">out</span></i><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US">.println(</span><span style="font-family: &quot;Courier New&quot;; color: rgb(42, 0, 255);" lang="EN-US">"DEBUG: added ten elements to "</span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"> + </span><span style="font-family: &quot;Courier New&quot;; color: rgb(0, 0, 192);" lang="EN-US">set</span><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US">);</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: &quot;Courier New&quot;;" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal"><span style="font-family: &quot;Courier New&quot;; color: black;" lang="EN-US">}</span></p>
+</div>
+<p>정답 및 해설은 이번 주 일요일 AJN 정모에서...</p>

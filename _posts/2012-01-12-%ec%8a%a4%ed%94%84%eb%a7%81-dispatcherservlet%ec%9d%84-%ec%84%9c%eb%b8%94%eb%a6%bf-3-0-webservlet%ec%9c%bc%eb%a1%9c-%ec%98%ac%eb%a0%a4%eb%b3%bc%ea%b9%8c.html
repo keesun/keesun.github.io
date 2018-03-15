@@ -1,0 +1,38 @@
+---
+layout: post
+title: "[Servlet 3.0 @WebServlet]스프링 DispatcherServlet을 서블릿 3.0 @WebServlet으로 올려볼까?"
+date: 2012-01-12 18:58:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- "@WebServlet"
+- Java
+- Servlet 3.0
+- Spring
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="text-align: left;">서블릿 3.0에 web.xml없이 애노테이션만 추가하면 서블릿으로 자동 등록되는 기능이 생겼다.</p>
+<p style="text-align: left;"><a href="http://www.servletworld.com/servlet-tutorials/servlet3/webservlet-annotation-example.html">http://www.servletworld.com/servlet-tutorials/servlet3/webservlet-annotation-example.html</a></p>
+<p style="text-align: left;">자세한 내용은 여기 있고..</p>
+<p style="text-align: left;">우선, pom.xml에 의존성을 추가해야한다.</p>
+<p style="text-align: left;">[gist id=1603885]</p>
+<p style="text-align: left;">이렇게 두개가 필요하고, 이런류의 의존성은 보통 provided 스코프로 사용하게 좋은 습관이다. 왜그런지는 생략;</p>
+<p style="text-align: left;">[gist id=1603893]</p>
+<p style="text-align: left;">이렇게 간단하게 자바 코드만 추가하고, web.xml을 전혀 만들지 않아도, 브라우저에서 /test를 요청하면 Hello를 볼 수 있다.</p>
+<p style="text-align: left;">난 사실 처음에 스프링 3.1에서 서블릿 3.0을 지원한다길래 이런 모습을 상상했었다.</p>
+<p style="text-align: left;">[gist id=1603897]</p>
+<p style="text-align: left;">서블릿 3.0부터는 web.xml을 사용할 필요가 없고, DisaptcherServlet도 HttpServlet을 (매우 깊게) 상속해서 만든 클래스니까 이런식으로 등록할 수 있지 않을까? 싶었다.</p>
+<p style="text-align: left;">해보니까 잘 된다.</p>
+<p style="text-align: left;">그래도 저렇게 쓰진 않겠지;;; ㅋ</p>

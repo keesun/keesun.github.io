@@ -1,0 +1,56 @@
+<p>하이버네이트 완벽 가이드(Java Persistence With Hibernate) 13장 2절 5단에 보시면 하이버네이트 패칭 전략을 사용한 성능 최적화 가이드가 나와있습니다. 읽어본지가 하두 오래되서 기억을 되새기며 짧게 요약합니다.</p>
+<p>기본적으로 하이버네이트는 요청하지 않은 데이터는 가져오지 않는다. </p>
+<p>=&gt; 책에는 이렇게 적혀있지만, 그 당시와는 달리 요즘은 기본적으로 x2Many는 모두 lazy 패칭이고, x2One은 모두 eager 패칭</p>
+<p>그러다보니 n+1 select 문제라는게 발생할 수 있다.</p>
+<p>=&gt; 그래서 eager 패칭, 배치 패칭, 서브 셀렉트 등을 사용해서 n+1 select에 대한 여러 해결책을 제공한다.</p>
+<p>그렇다고, join을 사용해서 쿼리 수를 줄이면 다 해결 되느냐? 아니, 또 다른 문제가 생긴다. 바로, 카테시안 곱. 쿼리 수는 줄이겠지만, 가져오는 데이터가 너무 많다.</p>
+<p>=&gt; 그래서 균형을 잘 잡아야 돼. 글로벌 패칭 전략이 무엇인지 알아야 하고, 특정 쿼리에 적용되는 패칭 전략은 무엇인지 알아야 돼.</p>
+<h2>N+1 Select 문제</h2>
+<p>&#160;</p>
+<p>Item &lt;-&gt; Bid를 가지고 살펴보자.</p>
+<blockquote><p>List&lt;Item&gt; allItems = session.createQuery(&quot;from Item&quot;).list();     <br />// List&lt;Item&gt; allItems = session.createCriteria(Item.class).list();      <br />Map&lt;Item, Bid&gt; highestBids = new HashMap&lt;Item, Bid&gt;();      <br />for (Item item : allItems) {      <br />&#160;&#160;&#160; Bid highestBid = null;      <br />&#160;&#160;&#160; for (Bid bid : item.getBids() ) { // Initialize the collection      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; if (highestBid == null)      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; highestBid = bid;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; if (bid.getAmount() &gt; highestBid.getAmount())      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; highestBid = bid;      <br />&#160;&#160;&#160; }      <br />&#160;&#160;&#160; highestBids.put(item, highestBid);      <br />}</p>
+</blockquote>
+<p>Criteria API를 사용하던, HQL을 사용하던 똑같이, Item 목록만 가져온다. 첫번째 줄에서 Item을 N개 가져오는 쿼리가 하나 날아갔다. 그 다음, 반복문 안에서 해당 Item과 연관 관계에 있는 Bid 목록을 가져오느라도 N개 만큼 쿼리가 날아간다. 그래서 N+1 select 문제라고 한다.</p>
+<h3>해결책1. 배치 패칭</h3>
+<blockquote><p>&lt;set name=&quot;bids&quot;     <br />&#160;&#160;&#160;&#160; inverse=&quot;true&quot;      <br />&#160;&#160;&#160;&#160; <strong>batch-size=&quot;10&quot;</strong>&gt;      <br />&#160;&#160;&#160; &lt;key column=&quot;ITEM_ID&quot;/&gt;      <br />&#160;&#160;&#160; &lt;one-to-many class=&quot;Bid&quot;/&gt;      <br />&lt;/set&gt;</p>
+</blockquote>
+<p>이렇게 배치 패칭을 사용하면, n+1 select에서 n+1/10 select로 쿼리 수를 줄일 수 있다. 이 방법은 Bid를 필요할 때 가져오는 방법을 계속 고수할 수 있으면서(Lazy Fetching)도, Bid 컬렉션을 하나 가져올 때 다른 Item의 Bid 컬렉션도 같이 몇 건 더 가져오는 방식으로 select 쿼리 수를 줄인다.</p>
+<h3>해결책2. Subselect 기반 선 패칭</h3>
+<blockquote><p>&lt;set name=&quot;bids&quot;     <br />&#160;&#160;&#160;&#160; inverse=&quot;true&quot;      <br />&#160;&#160;&#160;&#160; <strong>fetch=&quot;subselect&quot;</strong>&gt;      <br />&#160;&#160;&#160; &lt;key column=&quot;ITEM_ID&quot;/&gt;      <br />&#160;&#160;&#160; &lt;one-to-many class=&quot;Bid&quot;/&gt;      <br />&lt;/set&gt;</p>
+</blockquote>
+<p>이 방법은 select 쿼리 수를 n+1에서 2개로 줄이는 방법이다. 이 방법도 Bid를 필요할 때 가져오는 방법을 고수할 수 있으지만, 배치 패칭과의 차이가 있는데, 바로 첫번째 Bid 컬렉션을 가져올 때 나머지 모든 Item의 Bid 컬렉션도 다 같이 가져온다는 것이다.</p>
+<h3>해결책3. Eager 패칭 설정</h3>
+<blockquote><p>&lt;set name=&quot;bids&quot;     <br />&#160;&#160;&#160;&#160; inverse=&quot;true&quot;      <br />&#160;&#160;&#160;&#160; <strong>fetch=&quot;join&quot;</strong>&gt;      <br />&#160;&#160;&#160; &lt;key column=&quot;ITEM_ID&quot;/&gt;      <br />&#160;&#160;&#160; &lt;one-to-many class=&quot;Bid&quot;/&gt;      <br />&lt;/set&gt;</p>
+</blockquote>
+<p>이 방법은 select 수를 1번으로 줄이는 방법이다. <strong>Item 목록을 가져올 때 해당 Item의 Bid 목록도 반드시 필요한 경우라면</strong> 패칭 전략을 Eager 모드로 설정할 수 있다. 하지만 그런 경우가 드물 뿐더러, Cartesian product 문제가 발생하고, 메모리 소비가 크다는 문제가 있다.</p>
+<h3>해결책4. 필요한 쿼리만 Eager 패칭</h3>
+<blockquote><p>List&lt;Item&gt; allItems =     <br />&#160;&#160;&#160; session.createQuery(&quot;from Item i left join fetch i.bids&quot;)      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; .list();      <br />List&lt;Item&gt; allItems =      <br />&#160;&#160;&#160; session.createCriteria(Item.class)      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; .setFetchMode(&quot;bids&quot;, FetchMode.JOIN)      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; .list();      <br />// Iterate through the collections...</p>
+</blockquote>
+<p>이 방법은 특정 쿼리에만 Eager 패칭을 적용한다. 사실 내용은 해결책3번과 같지만, 중요한 차이가 있는데, 해당 쿼리에만 적용된다는 것이다.</p>
+<h2>Cartesian product 문제</h2>
+<p>이 문제는 Eager 패치, 즉 FetchMode=Join, 즉 위에서 살펴봤던 해결책3과 4를 두 개 이상의 컬렉션에 적용했을 때 생기는 문제다.</p>
+<p>Item &lt;-&gt; Bid와 Item &lt;-&gt; Image 이렇게 Item에 두 개의 컬렉션이 있다고 가정하고, 이 두 컬렉션에 모두 해결책3을 적용하면 이렇게 된다.</p>
+<blockquote><p>&lt;class name=&quot;Item&quot;&gt;     <br />&#160;&#160;&#160; ...      <br />&#160;&#160;&#160; &lt;set name=&quot;bids&quot;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; inverse=&quot;true&quot;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; fetch=&quot;join&quot;&gt;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; &lt;key column=&quot;ITEM_ID&quot;/&gt;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; &lt;one-to-many class=&quot;Bid&quot;/&gt;      <br />&#160;&#160;&#160; &lt;/set&gt;      <br />&#160;&#160;&#160; &lt;set name=&quot;images&quot;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; fetch=&quot;join&quot;&gt;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; &lt;key column=&quot;ITEM_ID&quot;/&gt;      <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160; &lt;composite-element class=&quot;Image&quot;&gt;...      <br />&#160;&#160;&#160; &lt;/set&gt;      <br />&lt;/class&gt;</p>
+</blockquote>
+<p>이 상태에서 Item 목록을 가져오면 하이버네이트는 다음과 같은 쿼리를 보낸다.</p>
+<p>select item.*, bid.*, image.*   <br />&#160; from ITEM item    <br />&#160;&#160;&#160; left outer join BID bid on item.ITEM_ID = bid.ITEM_ID    <br />&#160;&#160;&#160; left outer join ITEM_IMAGE image on item.ITEM_ID = image.ITEM_ID</p>
+<p>만약에 Item이 3개 있고, 1번 Item에 Bid가 3개 Iamger가 2개, 2번 Item에는 Bid와 Image가 각각 1개식, 3번 Item에는 아무런 Bid나 Image가 없다고 가정했을 때 쿼리 결과 데이터수는 다음과 같다.</p>
+<p>1 * 3 * 2</p>
+<p>+ 1 * 1 * 1</p>
+<p>+ 1 * 1 * 1</p>
+<p>= 8</p>
+<p>자, 그럼 숫자를 조금 더 키워서 Item이 1,000개, 각 Item에 Bid가 20개 그리고 Imager가 5개씩 있다면 어떻게 될까? 100,000건이 된다.</p>
+<p>이게 문제다. 너무 크고, 결과 Result에 중복 데이터가 엄청 많다.</p>
+<h3>해결책. Subseleclt</h3>
+<p>커다른 쿼리 하나 보다는 오히려 작은 쿼리 셋으로 쪼개는 게 속도나 메모리 면에서 더 좋다. N+1 문제 해결책으로 살펴봤던, 해결책 2번과 같은 방식으로 풀 수 있다. 그러면 쿼리 수는 세번으로 늘어나지만, 데이터를 중복해서 읽어오지 않기 때문에 메모리를 덜 사용할 수 있고, 속도도 더 빠를 것이다.</p>
+<h2>최적화 스탭 바이 스탭</h2>
+<p>&#160;</p>
+<ol>
+<li>하이버네이트 쿼리를 로깅한다. hibernate.format_sql 과 hibernate.use_sql_comments를 사용해서 SQL문을 로깅하고 가독성을 높인다.</li>
+<li>유즈케이스 별도 얼마나 많이 어떤 쿼리가 실행되는지 확인한다.</li>
+<li>패치 모드를 변경 해본다.</li>
+<ol>
+<li>join을 사용한 SQL이 너무 복잡하고 느린 경우: join해서 가져오는 컬렉션이나 엔티티를 두번째 select(subselect)로 대체할 수는 없는지 고민해본다. hibernate.max_fetch_depth 설정을 1~5 사이로 유지한다.</li>
+<li>너무 많은 select 쿼리: 특이한 상황에서 확실시 된다면, fetch=”join”을 사용해도 좋치만, 두 개 이상의 컬렉션에 적용하는 것은 Cartesian Product 문제가 있다는 걸 염두하자. 배치 패칭을 사용할 수도 있는데, 그 크기는 3~15 사이를 사용하자.</li>
+</ol>
+</ol>

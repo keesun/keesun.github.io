@@ -1,0 +1,61 @@
+<p><a href="http://tomcat.apache.org/tomcat-6.0-doc/class-loader-howto.html">http://tomcat.apache.org/tomcat-6.0-doc/class-loader-howto.html</a>
+<div>
+</div>
+<div>BootStrap&nbsp;CL: JVM 코어, 확장 라이브러리용 클래스 로더</div>
+<div id="">
+</div>
+<div id="">
+System&nbsp;CL:&nbsp;$CATALINA_HOME/bin/bootstrap.jar와&nbsp;CATALINA_HOME/bin/tomcat-juli.jar를 가지고 시스템 클래스 로더를 생성함.&nbsp;일반적인 애플리케이션의 시스템 클래스 로더와는 동작 방식이 다름. 일반적인 애들은 시스템 클래스로더에서 CLASSPATH에 있는 것들을 로딩하지만, 톰캣의 스크립트(($CATALINA_HOME/bin/catalina.sh 또는 %CATALINA_HOME%\bin\catalina.bat)가 이를 무시해버림.</div>
+<div id="">
+</div>
+<div id="">
+Common CL: $CATALINA_HOME/lib에 위치한 톰캣 내부 클래스와 웹 애플리케이션이 공통으로 참조할 라이브러리를 로딩한다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+웹 애플리케이션 CL: &nbsp;각각의 웹 애플리케이션당 해당 애플리케이션의 /WEB-INF/classes와&nbsp;/WEB-INF/lib 디렉토리에 있는 클래스와 리소스를 로딩한다.&nbsp;</div>
+<div id="">
+<div id="">
+</div>
+<blockquote><div id="">
+SRV.9.7.2 Web Application Classloader</div>
+<div id="">
+</div>
+<div id="">
+The classloader that a container uses to load a servlet in a WAR must allow the</div>
+<div id="">developer to load any resources contained in library JARs within the WAR</div>
+<div id="">following normal J2SE semantics using getResource. It must not allow theWAR to</div>
+<div id="">override J2SE or Java servlet API classes. It is further recommended that the loader</div>
+<div id="">not allow servlets in theWAR access to the web container’s implementation classes.</div>
+<div id=""><b id="">It is recommended also that the application class loader be implemented so&nbsp;<span class="Apple-style-span" style="font-weight: normal; "><b>that classes and resources packaged within the WAR are loaded in preference to&nbsp;<span class="Apple-style-span" style="font-weight: normal; "><b>classes and resources residing in container-wide library JARs.</b></span></b></span></b></div>
+</blockquote>
+<div id="">
+</div>
+<div id="">
+위와 같은 서블릿 2.3 스펙에 따라 웹 애플리케이션 CL은 다음의 순서로 클래스를 로딩한다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">1. Bootstrap classes of your JVM</div>
+<div id="">2. System class loader classes (described above)</div>
+<div id=""><b>3. /WEB-INF/classes of your web application</b></div>
+<div id=""><b>4. /WEB-INF/lib/*.jar of your web application</b></div>
+<div id="">5. $CATALINA_HOME/lib</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">6. $CATALINA_HOME/lib/*.jar</div>
+<div id="">
+</div>
+<div id="">
+1번은 웹 애플리케이션 CL의 최상위 CL인 BootStrap CL에 의해 로딩될 것이고, 거기서 못찾는다면</div>
+<div id="">2번 System CL에 의해서 로딩 된다. 거기서도 못찾는거라면 일단 자바의 코어 라이브러리나 확장 라이브러리도 아니며 톰캣의 내부 클래스(톰캣 서버를 실행하는 클래스와 톰캣의 Commons logging API와 java.util.logging LogManager를 찾는게 아닐것이다. 그런 경우.</div>
+<div id="">3번과 4번에서 웹 애플리케이션 CL 자신의 클래스패스에 있는 라이브러리를 찾아보고.. 거기에 없는 경우</div>
+<div id="">5, 6번 Commons CL의 클래스패스에서 찾아본다.</div>
+<div id="">
+</div>
+<div id="">
+클래스 로더의 동작 방식이 웹 애플리케이션이 아닌 경우가 웹 애플리케이션인 경우가 다르며, 이것 마저도 웹 서버 마다 다를 수 있으니 자신이 사용하는 컨테이너의 클래스로더 동작 방식을 알고 있어야겠다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+흠.. 스프링의 TC 서버는 어떨지 궁금하다. 그것도 톰캣을 확장한 거니까 이것과 비슷하지 않을까. DM 서버는 왠지 완전히 다를 것 같다.</div>
+</div>
+</div>

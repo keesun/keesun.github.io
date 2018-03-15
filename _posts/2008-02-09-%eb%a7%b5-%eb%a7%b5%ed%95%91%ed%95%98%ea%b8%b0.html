@@ -1,0 +1,98 @@
+---
+layout: post
+title: 맵 맵핑하기
+date: 2008-02-09 01:24:08.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- ManyToMany 맵핑
+- ternary association
+- 맵을 사용한 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879541'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>Entity를 참조하는 값</h1>
+<h2>특징</h2>
+<ul>
+<li>Map&lt;Long, BId&gt; 처럼, Bid의 주키값을 맵의 키값으로 가지는 콜렉션으로 맵핑할 수 있다.</li>
+</ul>
+<ul>
+<li>애플리케이션에서만 다를 뿐, 테이블은 변한 거 없다. Bid에 ITEM_ID 외례키 컬럼이 생긴다.</li>
+</ul>
+<h2>맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Item.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@MapKey(name = <span class="code-quote">"id"</span>)<br />@OneToMany(mappedBy=<span class="code-quote">"item"</span>)<br /><span class="code-keyword">private</span> Map&lt;<span class="code-object">Long</span>, Bid&gt; bids = <span class="code-keyword">new</span> HashMap&lt;<span class="code-object">Long</span>, Bid&gt;();</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Bid.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToOne<br /><span class="code-keyword">private</span> Item item;</pre>
+</div>
+</div>
+<h1>ternary association</h1>
+<h2>특징</h2>
+<ul>
+<li>3항 연관을 맵을 사용해서 표현할 수 있다.</li>
+</ul>
+<ul>
+<li>Category, Item, User의 관계에서 Category가 Item을 키, User을 값으로 가지는<br />
+콜렉션을 가지도록 설정할 수 있다. 왜? Category에 속하는 Item은 유일하고, User는 여러 개의 Item을 추가할<br />
+수 있으니까.</li>
+</ul>
+<h2>맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToMany<br />@MapKeyManyToMany(joinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br />@JoinTable(name = <span class="code-quote">"CATEGORY_ITEM"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>), inverseJoinColumns = @JoinColumn(name = <span class="code-quote">"USER_ID"</span>))<br /><span class="code-keyword">private</span> Map&lt;Item, User&gt; itemsAndUser = <span class="code-keyword">new</span> HashMap&lt;Item, User&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>CATEGORY_ITEM 테이블을 만들고, 이 테이블의 주키를 CATEGORY_ID로 설정한다.</li>
+</ul>
+<ul>
+<li>맵의 키는 ITEM_ID, 값은 USER_ID로 맵핑된다.</li>
+</ul>

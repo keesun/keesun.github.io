@@ -1,0 +1,274 @@
+---
+layout: post
+title: "[하이버네이트] OneToOne 연관 관계 Lazy Fetching이 안 먹어!?"
+date: 2011-10-04 17:12:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- Lazy Loading
+- OneToOne 맵핑
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323140855'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>OneToOne 관계를 맵핑 했을 때, Lazy Fetching이 제대로 적용되는 경우가 있고, 그렇지 않은 경우가 있다. 우선 제대로 동작하는 경우부터 볼까나…</p>
+<p>Product 1 –&gt; 1 ProductDetails</p>
+<p>Product 1 –&gt; 1 ProductInfo</p>
+<p>이렇게 OneToOne 관계가 두 개 있다고 가정하고, 다음과 같이 맵핑했다.</p>
+<p>[java]<br />
+@Entity<br />
+public class Product {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private BigDecimal price;</p>
+<p>private String name;</p>
+<p>@OneToOne(fetch = FetchType.LAZY)<br />
+private ProductDetails productDetails;</p>
+<p>@OneToOne(fetch = FetchType.LAZY)<br />
+private ProductInfo productInfo;</p>
+<p>//나머지 생략</p>
+<p>}</p>
+<p>@Entity<br />
+public class ProductDetails {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private String details;</p>
+<p>}</p>
+<p>@Entity<br />
+public class ProductInfo {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private String info;</p>
+<p>}<br />
+[/java]</p>
+<p>각 엔티티에 선언한 속성이 의미가 있는건 아니니까 주의깊게 살펴보지 마시고, 연관 관계를 유심히 살펴보는게 좋겠다. <strong>단방향 관계다. 그리고 FetchMode.LAZY다.</strong></p>
+<p>Repository는 Spring-Data-JPA 1.0.1.RELEASE를 사용해서 만들었고, 테스트 코드는 다음과 같다.</p>
+<p>[java]<br />
+DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);</p>
+<p>//Test<br />
+Product product = productRepository.findOne(1l);<br />
+assertThat(product, is(notNullValue()));<br />
+assertThat(product.getName(), is(&quot;keesun&quot;));</p>
+<p>System.out.println(&quot;========LAZY LOADING...=========&quot;);<br />
+product.getProductDetails().getDetails();<br />
+[/java]</p>
+<p>이보다 더 많은 테스트 코드가 있지만, 나머지는 DBUnit으로 데이터를 넣는 부분과 스프링 TestContext 설정이라서 생략했다. 테스트 데이터를 DBUnit으로 넣지 않고, JDBC로 넣어도 된다. JPA만 아니면 된다. 왜 그래야 하냐면… 흠… 갑자기 설명하기가 귀찮네;; 퀴즈로 남기자. 왜 그래야 할까요?</p>
+<p>아무튼, 다시 돌아가서… 저 테스트를 실행했을 때 콘솔을 살펴보자.</p>
+<blockquote><p>Hibernate:<br />
+select<br />
+product0_.id as id0_0_,<br />
+product0_.name as name0_0_,<br />
+product0_.price as price0_0_,<br />
+product0_.productDetails_id as productD4_0_0_,<br />
+product0_.productInfo_id as productI5_0_0_<br />
+from<br />
+Product product0_<br />
+where<br />
+product0_.id=?<br />
+18:24:53.609 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)<br />
+18:24:53.609 [main] DEBUG org.hibernate.loader.Loader - result row: EntityKey[usecase.snapshot.domain.Product#1]<br />
+18:24:53.615 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)<br />
+18:24:53.616 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)<br />
+18:24:53.618 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - resolving associations for [usecase.snapshot.domain.Product#1]<br />
+18:24:53.621 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - done materializing entity [usecase.snapshot.domain.Product#1]<br />
+18:24:53.622 [main] DEBUG o.h.e.StatefulPersistenceContext - initializing non-lazy collections<br />
+18:24:53.623 [main] DEBUG org.hibernate.loader.Loader - done entity load<br />
+========LAZY LOADING...=========<br />
+18:24:53.623 [main] DEBUG org.hibernate.impl.SessionImpl - initializing proxy: [usecase.snapshot.domain.ProductDetails#1]<br />
+18:24:53.624 [main] DEBUG org.hibernate.loader.Loader - loading entity: [usecase.snapshot.domain.ProductDetails#1]<br />
+18:24:53.624 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open PreparedStatement (open PreparedStatements: 0, globally: 0)<br />
+18:24:53.625 [main] DEBUG org.hibernate.SQL -<br />
+select<br />
+productdet0_.id as id1_0_,<br />
+productdet0_.details as details1_0_<br />
+from<br />
+ProductDetails productdet0_<br />
+where<br />
+productdet0_.id=?</p></blockquote>
+<p>됐다. Lazy Loading이 되었다!! 그럼 이걸 이제 양방향 관계로 바꿔보면 어떻게 될까?</p>
+<p>우선 맵핑을 다음과 같이 변경하자.</p>
+<p>[java]<br />
+@Entity<br />
+public class Product {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private BigDecimal price;</p>
+<p>private String name;</p>
+<p>@OneToOne(fetch = FetchType.LAZY, &lt;strong&gt;mappedBy = &quot;product&quot;&lt;/strong&gt;)<br />
+private ProductDetails productDetails;</p>
+<p>@OneToOne(fetch = FetchType.LAZY, &lt;strong&gt;mappedBy = &quot;product&quot;&lt;/strong&gt;)<br />
+private ProductInfo productInfo;</p>
+<p>}</p>
+<p>@Entity<br />
+public class ProductDetails {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private String details;</p>
+<p>&lt;strong&gt;    @OneToOne(fetch = FetchType.LAZY)<br />
+private Product product;&lt;/strong&gt;</p>
+<p>}</p>
+<p>@Entity<br />
+public class ProductInfo {</p>
+<p>@Id<br />
+@GeneratedValue(strategy = GenerationType.IDENTITY)<br />
+private Long id;</p>
+<p>private String info;</p>
+<p>&lt;strong&gt;@OneToOne(fetch = FetchType.LAZY)<br />
+private Product product;&lt;/strong&gt;</p>
+<p>}<br />
+[/java]</p>
+<p>나는 사실 이 부분이 조금 의문이다. 왜 양방향이어야 할까… ProductInfo와 ProductDetails를 개별적으로 사용하게 될 일이 있을까? 그러다가 ProductInfo –&gt; Product 방향으로 참조할 일이 있을까? 이런 의문을 가지기 시작하면 ProductInfo와 ProductDetails에 id가 있는 것도 의문이 간다. 이거 엔티티가 맞는건가? Value Object는 아닌가? 뭐 내가 모델링한것도 아니고 도메인 전문가도 아니기 때문에 그렇다치고 넘어가자.</p>
+<p>이제 다시 테스트 해보자.</p>
+<blockquote><p>18:35:37.430 [main] DEBUG org.hibernate.SQL -<br />
+select<br />
+product0_.id as id0_0_,<br />
+product0_.name as name0_0_,<br />
+product0_.price as price0_0_<br />
+from<br />
+Product product0_<br />
+where<br />
+product0_.id=?<br />
+Hibernate:<br />
+select<br />
+product0_.id as id0_0_,<br />
+product0_.name as name0_0_,<br />
+product0_.price as price0_0_<br />
+from<br />
+Product product0_<br />
+where<br />
+product0_.id=?<br />
+18:35:37.433 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)<br />
+18:35:37.435 [main] DEBUG org.hibernate.loader.Loader - result row: EntityKey[usecase.snapshot.domain.Product#1]<br />
+18:35:37.441 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)<br />
+18:35:37.441 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)<br />
+18:35:37.443 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - resolving associations for [usecase.snapshot.domain.Product#1]<br />
+18:35:37.445 [main] DEBUG org.hibernate.loader.Loader - loading entity: [usecase.snapshot.domain.ProductDetails#1]<br />
+18:35:37.446 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open PreparedStatement (open PreparedStatements: 0, globally: 0)<br />
+18:35:37.446 [main] DEBUG org.hibernate.SQL -<br />
+select<br />
+productdet0_.id as id1_0_,<br />
+productdet0_.details as details1_0_,<br />
+productdet0_.product_id as product3_1_0_<br />
+from<br />
+ProductDetails productdet0_<br />
+where<br />
+productdet0_.product_id=?<br />
+Hibernate:<br />
+select<br />
+productdet0_.id as id1_0_,<br />
+productdet0_.details as details1_0_,<br />
+productdet0_.product_id as product3_1_0_<br />
+from<br />
+ProductDetails productdet0_<br />
+where<br />
+productdet0_.product_id=?<br />
+18:35:37.449 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)<br />
+18:35:37.450 [main] DEBUG org.hibernate.loader.Loader - result row: EntityKey[usecase.snapshot.domain.ProductDetails#1]<br />
+18:35:37.451 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)<br />
+18:35:37.451 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)<br />
+18:35:37.451 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - resolving associations for [usecase.snapshot.domain.ProductDetails#1]<br />
+18:35:37.453 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - done materializing entity [usecase.snapshot.domain.ProductDetails#1]<br />
+18:35:37.454 [main] DEBUG org.hibernate.loader.Loader - done entity load<br />
+18:35:37.455 [main] DEBUG org.hibernate.loader.Loader - loading entity: [usecase.snapshot.domain.ProductInfo#1]<br />
+18:35:37.455 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open PreparedStatement (open PreparedStatements: 0, globally: 0)<br />
+18:35:37.455 [main] DEBUG org.hibernate.SQL -<br />
+select<br />
+productinf0_.id as id2_0_,<br />
+productinf0_.info as info2_0_,<br />
+productinf0_.product_id as product3_2_0_<br />
+from<br />
+ProductInfo productinf0_<br />
+where<br />
+productinf0_.product_id=?<br />
+Hibernate:<br />
+select<br />
+productinf0_.id as id2_0_,<br />
+productinf0_.info as info2_0_,<br />
+productinf0_.product_id as product3_2_0_<br />
+from<br />
+ProductInfo productinf0_<br />
+where<br />
+productinf0_.product_id=?<br />
+18:35:37.460 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to open ResultSet (open ResultSets: 0, globally: 0)<br />
+18:35:37.460 [main] DEBUG org.hibernate.loader.Loader - result row: EntityKey[usecase.snapshot.domain.ProductInfo#1]<br />
+18:35:37.461 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close ResultSet (open ResultSets: 1, globally: 1)<br />
+18:35:37.461 [main] DEBUG org.hibernate.jdbc.AbstractBatcher - about to close PreparedStatement (open PreparedStatements: 1, globally: 1)<br />
+18:35:37.462 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - resolving associations for [usecase.snapshot.domain.ProductInfo#1]<br />
+18:35:37.462 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - done materializing entity [usecase.snapshot.domain.ProductInfo#1]<br />
+18:35:37.462 [main] DEBUG org.hibernate.loader.Loader - done entity load<br />
+18:35:37.462 [main] DEBUG org.hibernate.engine.TwoPhaseLoad - done materializing entity [usecase.snapshot.domain.Product#1]<br />
+18:35:37.463 [main] DEBUG o.h.e.StatefulPersistenceContext - initializing non-lazy collections<br />
+18:35:37.463 [main] DEBUG org.hibernate.loader.Loader - done entity load<br />
+========LAZY LOADING...=========<br />
+18:35:37.464 [main] DEBUG o.s.t.c.t.TransactionalTestExecutionListener - No method-level @Rollback override: using default rollback [true] for test context [[TestContext@2c84d9 testClass = SnapshotTest, testInstance = usecase.snapshot.SnapshotTest@c5c3ac, testMethod = di@SnapshotTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@1b16e52 testClass = SnapshotTest, locations = '{classpath:/applicationContext.xml}', classes = '{}', activeProfiles = '{}', contextLoader = org.springframework.test.context.support.GenericXmlContextLoader@1c1ea29]]]<br />
+18:35:37.466 [main] DEBUG o.s.orm.jpa.JpaTransactionManager - Initiating transaction rollback<br />
+18:35:37.466 [main] DEBUG o.s.orm.jpa.JpaTransactionManager - Rolling back JPA transaction on EntityManager [org.hibernate.ejb.EntityManagerImpl@514f7f]</p></blockquote>
+<p>&nbsp;</p>
+<p>이게 뭐시얏. Lazy Fetching이 안 된다. 사실, 나도 왜 단방향일 때는 되고, 양방향일 때는 안 되는지 모르겠다.</p>
+<p><a href="http://community.jboss.org/wiki/SomeExplanationsOnLazyLoadingone-to-one">http://community.jboss.org/wiki/SomeExplanationsOnLazyLoadingone-to-one</a></p>
+<p>실마리가 될만한 글은 찾았지만… 단방향 일때와 양방향 일때의 생기는 테이블 스키마가 다른것과 뭔가 연관이 있지 않을까 싶다.</p>
+<p>흠;; 생각해볼까? 단방향 일때는 프록시를 사용할 수 있다. 이때의 스키마는 Product 테이블에 ProductDetail_Id와 ProductInfo_Id 컬럼이 생긴다. 그리고 Product만 읽어올 때는 ProductDetail_Id와 ProductInfo_Id 컬럼의 값으로 Product.getProductDetail()과 Product.getProductInfo()의 프록시 객체로 채울 수 있겠다. 위 글에서는 optional 여부와 관계지어 설명하지만 optional 여부와는 관계 없다.</p>
+<p>양방향일 때는 스키마가 좀 다르다. Product에 있던 연관 관계 컬럼은 사라지고, ProductDetail 테이블과 ProductInfo 테이블에 각각 product_id 컬럼이 생긴다. 이때 Product를 읽어올 때 productDetail과 productInfo 객체에 필요한 정보를 각각 DB에서 읽어온다. 첫번째 쿼리를 보면 이렇다.</p>
+<p>select<br />
+product0_.id as id3_0_,<br />
+product0_.name as name3_0_,<br />
+product0_.price as price3_0_<br />
+from<br />
+Product product0_<br />
+where<br />
+product0_.id=?</p>
+<p>&nbsp;</p>
+<p>이것만 날아간다는 것은… productInfo와 productDetail이 null인지 아닌지 Product 테이블만 보고서는 알 수 없다는게 된다. 그럼 결국 Product가 참조할 ProductInfo와 ProductDetail의 프록시 객체를 만들어야되는가 아닌가가 고민되게 된다. 실제로는 null일수도 있는데 무조건 프록시 객체를 만들어 넣어버리면 null이 안되니깐;; 그렇다고 optional 속성을 false로 해서 NOT NULL로 하면 Proxy 객체를 만들 수 있지 않을까? 확인해 봤지만.. optional 속성의 값은 결과에 아무런 영향을 주지 않았다;</p>
+<p>어찌됐든… 이 문제를 우회하는 방법은 세가지 정도 된다.</p>
+<ol>
+<li><a href="http://docs.jboss.org/hibernate/core/3.5/reference/en/html/performance.html#performance-fetching-lazyproperties">빌드 타임 인스트루먼트</a></li>
+<li><a href="http://justonjava.blogspot.com/2010/09/lazy-one-to-one-and-one-to-many.html">FieldHandler</a></li>
+<li>@OneToMany로 변경</li>
+</ol>
+<p>각각은 다음에 살펴보겠다.</p>

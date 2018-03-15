@@ -1,0 +1,37 @@
+<div>신문을 구독하는 방법과 동일 합니다.</div>
+<div>책에는</div>
+<div><strong><font style="background-color: rgb(204, 255, 255)">출판사 + 구독자 = 옵저버 패턴</font></strong></div>
+<div>이라고 큼지막하게 쓰여있네요.</div>
+<div>출판사는 주제(subject)로 부르고 구독자는 옵저버(observer)라고 부르도록 하겠습니다.</div>
+<div>앞에서 본 예제에 적용하면 weatherData 객체가 subject 그리고 각종 display장치들이 옵져버에 해당합니다.</div>
+<div>위 기본 설정을 중간에 잊어버리시면 앞으로 진행되는 설명을 이해하는데 막대한 지장이 있을 것입니다.</div>
+<div>주제와 옵저버가 어떤 식으로 상호 작용하는지 살펴보겠습니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26059113_485x359.jpg');" src="/assets/26059113_485x359.jpg" alt="" border="0" /> </div>
+<div>기본적으로 subject를 구독하기로 등록한 observer들 에게 소식을 전해줍니다.</div>
+<div>( 나중에 가면 subject의 정보가 변할 때 마다 subject가 주는 push방법과 observer들이 원하는 정보만 가져 갈 수 있는 pull방법이 나옵니다. )</div>
+<div>Observer가 아닌 객체는 observer가 되려면 다음과 같이 subject에 자기도 등록 해달라고 요청하면 됩니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26059580_338x260.jpg');" src="/assets/26059580_338x260.jpg" alt="" border="0" /> </div>
+<div>그럼 이제 요청한 객체 역시 다른 observer들과 마찬가지로 subject의 정보가 바뀔 때 마다 새로운 정보를 받을 수 있게 됩니다.</div>
+<div>그러다 더이상 subejct의 정보를 구독하길 원치 않는다면 즉 탈퇴하고 싶다면 아래와 같이 탈퇴하고 싶다고 subject에 요청하면 됩니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26059581_463x290.jpg');" src="/assets/26059581_463x290.jpg" alt="" border="0" /> </div>
+<div>이러면 이제 subject에서는 더이상 그 객체에게 자신의 정보를 보내지 않습니다.</div>
+<div>옵저버 패턴의 정의는 다음과 같습니다.</div>
+<div><font style="background-color: rgb(255, 255, 153)"><br />
+<blockquote><font style="background-color: rgb(255, 255, 153)">옵저버 패턴에서는 한 객체의 상태가 바뀌면 그 객체에 의존하는 다른 객체들한테 연락이 가고 자동으로 내용이 갱신되는 방식으로 일대다(ont-to-many)의존성을 정의합니다.</font></p></blockquote>
+<p></font></div>
+<div>subject가 일 옵저버들이 다 그리고 당연히 옵져버들이 subject에 의존하고 있는 위의 그림들을 보면 쉽게 이해할 수 있습니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26059582_428x301.jpg');" src="/assets/26059582_428x301.jpg" alt="" border="0" /> </div>
+<div>subject에 있는 세개의 메소드 중에서 첫 번째 보이는 notifyObserves 메소드에서는 자신의 정보를 모든 옵저버들에게 알려주기 위해서 옵저버들이 가지고 있는 update 메소드를 호출하여 알려 줄 것입니다.</div>
+<div>subject와 옵저버는 서로 결합된 관계지만 subject는 사실 누가(어떤 옵져버)가 자신의 정보를 원하는지 확실히 모르고 있습니다. 누군가 갑자기 등록하기도 하고 더 이상 관심없다며 탈퇴하기 때문이지요. 또한 그러한 일들로 인해서 subject에 있는 코드가 바뀔일도 없습니다. 이렇게 유연한 관계의 결함을 <font style="background-color: rgb(255, 204, 153)">느슨한 결합(Loose coupling)</font>이라고 합니다.</div>
+<div>여기서 새로운 디자인 원칙 하나가 추가됩니다.</div>
+<div><font style="background-color: rgb(255, 255, 153)"><br />
+<blockquote>
+<div><font style="background-color: rgb(255, 255, 153)">디자인 원칙4</font></div>
+<div><font style="background-color: rgb(255, 255, 153)">서로 상호작용을 하는 객체 사이에서는 가능하면 느슨하게 결합하는 디자인을 사용해야 한다.</font></div>
+</blockquote>
+<p></font></div>
+<div>자 그럼 위에서 살펴본 observer 패턴을 다시 기상 스테이션 설계에 적용해 봅시다.</div>

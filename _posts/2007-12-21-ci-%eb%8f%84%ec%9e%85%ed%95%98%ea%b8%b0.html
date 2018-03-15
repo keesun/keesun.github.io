@@ -1,0 +1,121 @@
+---
+layout: post
+title: CI 도입하기
+date: 2007-12-21 05:57:38.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 2
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322804829'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>CI의 가치
+<ul>
+<li>Risk를 줄여줌.</li>
+<li>손수 처리해야 하는 반복작업 줄여줌.</li>
+<li>언제 어디서나 배포가능한 소프트웨어 만들어줌.</li>
+<li>프로젝트 가시성을 높여줌.</li>
+<li>프로젝트 팀원들의 소프트웨어 제품에 대한 자신감 상승.</li>
+</ul>
+<p>CI를 사용하는데 방해가 되는 요인
+<ul>
+<li>CI 시스템 관리 때문에 부가된 오버헤드.</li>
+<ul>
+<li>할 일이 많아보이지만, 사실 빌드, SCM, Test 들은 CI와 상관없이 존재해야만 하는 것들이다.</li>
+</ul>
+<li>너무 많은 변화를 요구함.</li>
+<ul>
+<li>점진적으로 도입하는 방법 선택가능.</li>
+</ul>
+<li>맨날 빌드 실패해.</li>
+<ul>
+<li>개발자가 private build를 실행해보지도 않았거나, 테스트 하지 않은 소스를 올려서 그렇다.</li>
+</ul>
+<li>하드웨어/소프트웨어 비용</li>
+<ul>
+<li>CI에 필요한 별도의 서버나 소프트웨어 비용이 나중에 버그 발견하고 고치는 비용에 비하면 싼거다.</li>
+</ul>
+<li>개발자에게 추가 작업이 요구된다.</li>
+<ul>
+<li>인정. 그래도 자동화 도구가 있으니까..</li>
+</ul>
+</ul>
+<p>지속적으로Continuous 통합하려면 어떻게 해야하나? <span style="font-weight: bold;">I B</span>uild <span style="font-weight: bold;">S</span>o <span style="font-weight: bold;">C</span>onsistently (IBSC 외우기 좋으라고 만든 말)
+<ul>
+<li><span style="font-weight: bold;">I</span>ndentify</li>
+<li><span style="font-weight: bold;">B</span>uild</li>
+<li><span style="font-weight: bold;">S</span>hare</li>
+<li><span style="font-weight: bold;">C</span>ontinuous</li>
+</ul>
+<p>CI를 언제 어떻게 도입해야 하는가?
+<ul>
+<li>프로젝트 초기에하는게 좋다.</li>
+<li>프로젝트 후반에 도입한다면 점진적으로 해야한다. 변화를 싫어하기 때문에..</li>
+</ul>
+<p>Integration의 진화
+<ul>
+<li>역사는 지겨워서 pass</li>
+</ul>
+<p>CI가 다른 개발 방법들과 어떤 충분관계를 가지는가?
+<ul>
+<li>개발자 테스트</li>
+<li>코딩 표준 정착</li>
+<li>리팩터링</li>
+<li>작은 배포</li>
+<li>Collective Ownership</li>
+</ul>
+<p>CI를 설치하는데 걸리는 시간은?
+<ul>
+<li>프로젝트 시작할 때 하면 몇 시간이면 되지만, 프로젝트 도중에 하려면 몇 일이 걸릴 수도 있다.</li>
+</ul>
+<p>CI와 당신
+<ul>
+<li>자주 커밋하라.</li>
+<li>깨진 코드는 커밋하지 말아라.</li>
+<li>깨진 빌드는 그 즉시 고쳐라.</li>
+<li>자동화된 개발자 테스트를 작성하라.</li>
+<li>모든 테스트와 조사Inspection를 통과해야 한다.</li>
+<li>개인 빌드를 실행하라.</li>
+<li>깨진 코드는 받지 말아라.</li>
+</ul>
+<p>참조 : <a href="http://www.amazon.com/Continuous-Integration-Improving-Addison-Wesley-Signature/dp/0321336380/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1198216584&amp;sr=8-1" target="_blank">Continuouse Integration</a></p>
+<p>마침 프로젝트 초기니까.. 도입해야겠군요.</p>

@@ -1,0 +1,71 @@
+---
+layout: post
+title: Roo 설치하기
+date: 2009-04-30 06:56:58.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- Spring Roo
+- 스프링 루
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323135004'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile5.uf.2044010B49F94AC52353CA.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile21.uf.15444D0B49F94AC5250B80.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile5.uf.1644620B49F94AC612F07B.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile21.uf.19440C0B49F94AC64E5D51.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile25.uf.1244720B49F94AC73444DE.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile2.uf.1443050B49F94AC812EBC0.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile21.uf.18446A0B49F94AC817A61E.png" class="aligncenter" width="400" /></p>
+<p>1. 메이븐 버전확인</p>
+<p>mvn -v</p>
+<p>2.0.9 이상이어야 함.</p>
+<p>2. 자바 버전 확인</p>
+<p>java -version</p>
+<p>자바 5 이상이어야 함.</p>
+<p>3. roo 압축파일 풀기</p>
+<p>4. ROO_HOME을 환경 변수에 추가하기</p>
+<p>5. ROO_HOME/bin을 PATH에 추가하기</p>
+<p>6. STS 2.0.1 준비하기</p>
+<p>7. ROO 이클립스 플러그인을 STS/dropins 디렉터리에 추가하기</p>
+<p>다음 STS 배포 부터는 이 플러긴도 포함되서 배포할 예정.</p>
+<p>8. 메이븐 로컬 저장소에 Roo 추가하기</p>
+<p>리눅스/맥: mvn install:install-file -DgroupId=org.springframework.roo -DartifactId=roo-annotations -Dversion=1.0.0.A1 -Dpackaging=jar -Dfile=$ROO_HOME/dist/roo-annotations-1.0.0.A1.jar</p>
+<p>윈도: mvn install:install-file -DgroupId=org.springframework.roo -DartifactId=roo-annotations -Dversion=1.0.0.A1 -Dpackaging=jar -Dfile=%ROO_HOME%/dist/roo-annotations-1.0.0.A1.jar</p>
+<p>9. 콘솔에서 roo 입력해보기</p>
+<p>10. hint 입력해보기</p>
+<p>11. q 입력해서 종료하기</p>

@@ -1,0 +1,10 @@
+<p>테스트를 할 때 종종 같은 설정 파일을 필요로 하는 경우가 있습니다. 이럴 때 Abstract 클래스로 중복되는 설정파일을 읽어들이는 코드를 상위로 올리면 테스트 클래스를 작성할 때 매우 간결해 집니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">public abstract class AbstractDaoTest extends AbstractTransactionalDataSourceSpringContextTests {</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected String[] getConfigLocations() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new String[] { "file:web/WEB-INF/spring/hibernateContext.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "file:web/WEB-INF/spring/dataSourceContext.xml", "file:web/WEB-INF/spring/daoContext.xml", };<br />&nbsp; &nbsp; }<br />}</div>
+<p>이제 위 상위 클래스를 상속받아서 테스트 클래스를 작성하면 됩니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class MemberDaoTest extends AbstractDaoTest{</p>
+<p>&nbsp; &nbsp; private MemberDao memberDao;</p>
+<p>&nbsp; &nbsp; public void setMemberDao(MemberDao memberDao) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.memberDao = memberDao;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testAdd() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.add(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.flush();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(1, memberDao.getAll().size());<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(member.getMemberId());<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>이것이 바로 <a href="http://www.javaworld.com/javaworld/jw-08-2003/jw-0801-toolbox.html" target="_blank">말도 많고 탈도 많은 상속</a>의 묘미가 아닐런지 생각해 봅니다.</p>

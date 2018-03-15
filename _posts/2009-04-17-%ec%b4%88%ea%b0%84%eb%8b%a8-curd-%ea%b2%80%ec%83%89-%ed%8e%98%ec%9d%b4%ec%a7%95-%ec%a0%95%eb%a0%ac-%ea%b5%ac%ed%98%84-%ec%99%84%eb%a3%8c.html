@@ -1,0 +1,258 @@
+---
+layout: post
+title: 초간단 CURD, 검색, 페이징, 정렬 구현 완료
+date: 2009-04-17 02:58:28.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323149050'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Opensprout Nexus에서 제공하는 스프링 최신 버전(3.0 기반)을 사용했고 스프링 번들 저장소에 있는 하이버네이트 라이브러리를 사용했습니다. 그밖에는 뭐 서블릿 API, JSP, JSTL, taglib 등을 사용했고 로깅은 slf4j-log4j를 사용했습니다. DB는 별도의 설치가 필요없게 derby를 사용했고 c3po 풀링 라이브러리를 사용했습니다.</p>
+<p>빌드는 메이븐으로 했고 War 배포 방식은 inplace로 했으며 라이브러리를 가져올 저장소는 모두 pom.xml에 등록해 두었습니다.(war 플러긴을 못 가져오는 버그가 발생하고 있다는데 조만간 해결되리라 생각합니다.)</p>
+<p>도메인은 Member 하나이고, 하이버네이트 애노테이션이 추가되서 POJO라고 보기는 좀 힘들겠습니다. 하이버네이트 설정을 XML로 바꿀까 생각중입니다. 아니면 스프링처럼 JavaConfig 같은 스타일을 사용할 수는 없을지 궁금하네요. 지원해준다면 기꺼이 그렇게 바꾸고 싶습니다. 도메인 클래스는 POJO로 유지하고 하이버네이트 설정은 밖으로 분리할 수 있으니까요. 대신 그 설정 파일이 자바 파일이라면 이름 변경과 같은 리팩터링에도 유기적으로 반응할테니 JavaConfig와 유사한 장점을 지닐 수 있지 않을까 싶습니다.</p>
+<p>Controller는 스프링 3.0의 URI 템플릿 기능을 사용해봤습니다. 재밌더군요. list와 add를 제외한 view, updat, delete에 적용해봤습니다. 기본 CRUD만 구현했을 때에는 컨트롤러가 썰렁했는데, 검색, 페이징, 정렬 기능이 추가될 때 마다 코드가 조금씩 늘어나기 시작해서 지금은 이런 모습이 되었습니다.</p>
+<p>package whiteship.member;</p>
+<p>import org.springframework.beans.factory.annotation.Autowired;<br />
+import org.springframework.stereotype.Controller;<br />
+import org.springframework.ui.Model;<br />
+import org.springframework.ui.ModelMap;<br />
+import org.springframework.validation.BindingResult;<br />
+import org.springframework.web.bind.annotation.PathVariable;<br />
+import org.springframework.web.bind.annotation.RequestMapping;<br />
+import org.springframework.web.bind.annotation.RequestMethod;<br />
+import org.springframework.web.bind.annotation.SessionAttributes;<br />
+import org.springframework.web.bind.support.SessionStatus;</p>
+<p>import whiteship.domain.Member;<br />
+import whiteship.member.support.OrderParam;<br />
+import whiteship.member.support.SearchParam;<br />
+import whiteship.paging.PageParam;</p>
+<p>@Controller<br />
+@SessionAttributes("member")<br />
+public class MemberController {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; MemberService service;</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; MemberValidator validator;</p>
+<p>&nbsp;&nbsp;&nbsp; // Create<br />
+&nbsp;&nbsp;&nbsp; @RequestMapping(value = "/member/add", method = RequestMethod.GET)<br />
+&nbsp;&nbsp;&nbsp; public String addForm(Model model) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Member member = new Member();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(member);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "member/add";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping(value = "/member/add", method = RequestMethod.POST)<br />
+&nbsp;&nbsp;&nbsp; public String addForm(Member member, BindingResult result,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SessionStatus status) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; validator.validate(member, result);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (result.hasErrors()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "member/add";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; service.add(member);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status.isComplete();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "redirect:/member/list.do";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; // Read<br />
+&nbsp;&nbsp;&nbsp; @RequestMapping("/member/list")<br />
+&nbsp;&nbsp;&nbsp; public ModelMap list(PageParam pageParam, SearchParam searchParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; OrderParam orderParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ModelMap modelMap = new ModelMap();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.addAttribute(service<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .getMemberListByPageAndSearchAndOrderParam(pageParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; searchParam, orderParam));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.addAttribute(pageParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.addAttribute(searchParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.addAttribute(orderParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return modelMap;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping("/member/{id}")<br />
+&nbsp;&nbsp;&nbsp; public String view(@PathVariable int id, Model model, PageParam pageParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SearchParam searchParam, OrderParam orderParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(service.getMemberById(id));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(pageParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(searchParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(orderParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "member/view";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; // Update<br />
+&nbsp;&nbsp;&nbsp; @RequestMapping(value = "/member/update/{id}", method = RequestMethod.GET)<br />
+&nbsp;&nbsp;&nbsp; public String updateForm(@PathVariable int id, Model model,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; PageParam pageParam, SearchParam searchParam, OrderParam orderParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(service.getMemberById(id));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(pageParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(searchParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; model.addAttribute(orderParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "member/update";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping(value = "/member/update/{id}", method = RequestMethod.POST)<br />
+&nbsp;&nbsp;&nbsp; public String updateForm(PageParam pageParam, SearchParam searchParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; OrderParam orderParam, Member member, BindingResult result,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SessionStatus status) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; validator.validate(member, result);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (result.hasErrors()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "member/update";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; service.update(member);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status.isComplete();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return redirectURLWithPageAndSearchAndOrderParam(pageParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; searchParam, orderParam);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; // Delete<br />
+&nbsp;&nbsp;&nbsp; @RequestMapping("/member/delete/{id}")<br />
+&nbsp;&nbsp;&nbsp; public String delete(@PathVariable int id, PageParam pageParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SearchParam searchParam, OrderParam orderParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; service.deleteById(id);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return redirectURLWithPageAndSearchAndOrderParam(pageParam, searchParam, orderParam);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private String redirectURLWithPageAndSearchAndOrderParam(<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; PageParam pageParam, SearchParam searchParam, OrderParam orderParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return redirectURLWithPageAndSearchParam(pageParam, searchParam)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + "&amp;field=" + orderParam.getField() + "&amp;direction="<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + orderParam.getDirection();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private String redirectURLWithPageAndSearchParam(PageParam pageParam,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SearchParam searchParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return pagedListURL(pageParam) + "&amp;name=" + searchParam.getName()<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + "&amp;email=" + searchParam.getEmail();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private String pagedListURL(PageParam pageParam) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "redirect:/member/list.do?size=" + pageParam.getSize()<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + "&amp;page=" + pageParam.getPage();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>List에서 페이징, 검색, 정렬 정보를 가지고 View로 간 다음 Update와 Delete 또는 뒤로가기(List) 기능에 그 정보들을 사용하거나 넘겨 줍니다. Update와 Delete에서는 해당 정보들을 이요하고, 처리를 끝 낸다음 페이징, 검색, 정렬 정보를 유지한채 List로 다시 넘어갑니다. 따라서 삭제 하기 전에 했던 페이징, 검색, 정렬 정보를 그대로 유지한 화면으로 돌아가게 됩니다.</p>
+<p>이게 핵심이었습니다. 이 것 때문에 복잡해진 겁니다. 매개변수를 계속 물고 다녀야 하고, URL은 계속 복잡해지고, 페이징, 검색, 정렬 기능이 추가될 때마다 혹은 검색 변수가 추가될 때 마다 URL이 바뀌게 되는데 URL이 사방에 있기 때문에 수정 작업을 할 곳이 한 두곳이 아닙니다.</p>
+<p>1. 일단 컨트롤러에서 URL 만드는 부분을 수정해야 합니다.<br />
+2. list.jsp<br />
+3. view.jsp<br />
+4. update.jsp</p>
+<p>총 네 개의 파일을 수정해야 하고, 특히 페이징이 들어있는 list.jsp 파일의 경우 10~12줄 가량의 코드를 손봐야 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile2.uf.1171601449E7F0206F152E.png" class="aligncenter" width="600" height="331" alt="" filename="1.png" filemime="image/png" /><br />
+&lt;%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%&gt;<br />
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%&gt;<br />
+&lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%&gt;<br />
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;<br />
+&lt;html&gt;</p>
+<p>&lt;head&gt;<br />
+&lt;meta http-equiv="Content-Type" content="text/html; charset=EUC-KR"&gt;<br />
+&lt;title&gt;Whiteboard2&lt;/title&gt;<br />
+&lt;/head&gt;</p>
+<p>&lt;body&gt;<br />
+&lt;div&gt;<br />
+&lt;a href="/member/add.do"&gt;회원 추가&lt;/a&gt;<br />
+&lt;/div&gt;</p>
+<p>&lt;div&gt;<br />
+&lt;c:if test="${empty memberList}"&gt;<br />
+회원 목록이 없습니다.<br />
+&lt;/c:if&gt;</p>
+<p>&lt;c:if test="${! empty memberList}"&gt;<br />
+&lt;form:form method="GET" commandName="searchParam"&gt;<br />
+&nbsp;&nbsp;&nbsp; 이름: &lt;form:input path="name" /&gt;<br />
+&nbsp;&nbsp;&nbsp; 이메일: &lt;form:input path="email" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;input type="submit" value="검색" /&gt;<br />
+&lt;/form:form&gt;</p>
+<p>
+페이지 사이즈: ${pageParam.size}&lt;br/&gt;<br />
+현재 페이지: ${pageParam.page}&lt;br/&gt;<br />
+총 갯수: ${pageParam.totalRowsCount}&lt;br/&gt;<br />
+현재 페이지 첫 번째 목록 인덱스: ${pageParam.firstRowNumber}&lt;br/&gt;</p>
+<p>&lt;c:if test="${pageParam.totalRowsCount &gt; pageParam.size}"&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;처음&lt;/a&gt; |</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;c:if test="${pageParam.beginPage - 10 &gt; 0}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;이전&lt;/a&gt; |<br />
+&nbsp;&nbsp;&nbsp; &lt;/c:if&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;c:forEach begin="${pageParam.beginPage}" end="${pageParam.endPage}" varStatus="current"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:when test="${current.count == pageParam.page}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=${current.count}&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;&lt;strong&gt;${current.count}&lt;/strong&gt;&lt;/a&gt; |<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:when&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=${current.count}&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;${current.count}&lt;/a&gt; |<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/c:forEach&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;c:if test="${pageParam.beginPage + 10 &lt; pageParam.totalPage}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=${current.count + 10}&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;다음&lt;/a&gt; |<br />
+&nbsp;&nbsp;&nbsp; &lt;/c:if&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=${pageParam.totalPage}&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;마지막&lt;/a&gt;</p>
+<p>&lt;/c:if&gt;</p>
+<p>&lt;table&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;tr&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;th&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:when test="${orderParam.field == 'email' &amp;&amp; orderParam.direction == 'asc'}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=email&amp;direction=desc"&gt;이메일V&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:when&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=email&amp;direction=asc"&gt;이메일^&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/th&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;th&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:when test="${orderParam.field == 'name' &amp;&amp; orderParam.direction == 'asc'}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=name&amp;direction=desc"&gt;이름V&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:when&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;a href="/member/list.do?page=1&amp;size=${pageParam.size}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=name&amp;direction=asc"&gt;이름^&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:otherwise&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/c:choose&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/th&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/tr&gt;<br />
+&lt;c:forEach var="member" items="${memberList}"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;tr&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;td&gt;&lt;a href="/member/${member.id}.do?size=${pageParam.size}&amp;page=${pageParam.page}&amp;name=${searchParam.name}&amp;email=${searchParam.email}&amp;field=${orderParam.field}&amp;direction=${orderParam.direction}"&gt;${member.email}&lt;/a&gt;&lt;/td&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;td&gt;${member.name}&lt;/td&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/tr&gt;<br />
+&lt;/c:forEach&gt;<br />
+&lt;/table&gt;<br />
+&lt;/c:if&gt;<br />
+&lt;/div&gt;<br />
+&lt;/body&gt;</p>
+<p>&lt;/html&gt;</p>
+<p>이게 현재 list.jsp 파일입니다. 이클립스에서 보면 96줄에 해당합니다. </p>
+<p>자 이제는 이것을 어떻게 하면 깔끔하고 편리하게 다듬을지 고민할 시간입니다. 좋은 의견 있으신 분들은 댓글 주시면 감사하겠습니다~ ^^</p>
+<p>ps: 티스토리에서 아직도 코드 하이라이팅 플러긴 같은거 안 나왔죠?? 티스토리 서비스 한지가 몇 년 짼데 아직도 안 나와~~~ ㅠ.ㅠ</p>
+<p></p>

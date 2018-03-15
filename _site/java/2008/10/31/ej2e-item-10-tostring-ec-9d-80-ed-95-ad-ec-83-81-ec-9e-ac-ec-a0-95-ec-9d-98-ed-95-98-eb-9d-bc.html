@@ -1,0 +1,6 @@
+<p>참조:&nbsp; Effective Java 2nd Edition Item 10. Always override toString</p>
+<p>JavaSE6 스펙에서 정의한 toString 제약 사항.</p>
+<blockquote><p>“a concise but informative representation that is <span style="font-weight: bold;">easy for a person</span> to read”</p></blockquote>
+<p>toString은 println이나 printf를 호출할 때 자동으로 호출된다. </p>
+<p>toString을 구현할 때 결정 해야 하는 중요한 것 하나는 문서에서 반환 값 형식에 대해 서술할지 여부다. value class에서는 이렇게 형식을 기술해 주는게 좋은데, 모호하지 않으며, 가독성이 좋기 때문이다. 자바의 BigInteger, BigDecimal 같은 API가 이런 방법을 취하고 있다.</p>
+<p>형식을 기술하던 말던, 어쨋거나 문서에 여러분의 의도를 분명하게 해야한다.</p>

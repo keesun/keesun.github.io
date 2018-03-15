@@ -1,0 +1,27 @@
+<p><font size="5"><span style="color: rgb(0, 153, 102); font-family: verdana,arial,helvetica,sans-serif">Layers of Abstractions</span></font></p>
+<p>Spring MVC 에플리케이션들은 여러 계층으로 나누어져있다. layer is a discrete, othogonal area of concern within an application. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">여러 계층들은 에플리케이션의 추상화에 해당하며 인터페이스는 계층들간 상호작용의 규약을 제공한다.</span> 어떤 계층들은 몇몇 다른 Layer들과 상호작용을 하지만 매우 중요한 계층은 모든 계층과 상호작용을 한다.<br />
+계층은 개념적인 경계선이고 물리적으로 떨어져 있을 필요는 없다. </p>
+<blockquote><p>A Layer is a logical abstraction within an application. A tier is best thought of as a physical deployment of the layers.</p></blockquote>
+<p>계층 구조로 생각하는 것이 에플리케이션의 전체 흐름을 개념화하는데 도움이 된다. 에플리케이션 계층들을 케잌처럼 쌓아 놓은 모습으로 보는 것이 가장 흔하고 편리한 방법이다. <br />
+Spring MVC 에플리케이션은 최소 다섯 개의 추상화된 계층을 가지고 있으며 각각은 다음과 같다.</p>
+<ul>
+<li>user interface</li>
+<li>web</li>
+<li>service</li>
+<li>domain object model</li>
+<li>persistence</li>
+</ul>
+<p><img src="/assets/1003725714.jpg" class="aligncenter" width="242" height="157" alt="" /><br />
+위 그림을 보면 Domain Model이 왼쪽에 세로로 서있는 것을 볼 수 있습니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">이것은 다른 모든 계층들이 Domain Model 계층에 종속하기 때문입니다.</span><br />
+매우 중요한 계층인듯 합니다. 저런 경우에 AOP를 사용한다고 본 것 같은데 지금 저 계층들에 없는 tracjaction management, security같은 것은 AOP를 사용하여 뺏다고 하는데 Domain Model은 그럴만한 성격이 아닌가 보네요.<br />
+<font style="color: rgb(153, 204, 102)" size="4"><br />
+<span style="font-family: verdana,arial,helvetica,sans-serif">Layer Isolation</span></font></p>
+<p>계층을 분리시키는 것은 에플리케이션을 보다 유연하고 테스트가 용이하도록 만듭니다. 이러한 분리는 계층 사이의 종속성을 최소화 함으로써 달성할 수 있습니다. 종속성 남발을 피할 수 있는 최소한 두가지 방법이 있습니다. 만약에 어떤 계층이 다른 여러 계층들에 종속하기 시작하면 다른 계층간의 상호작용을 추상화하는 새로운 계층을 만드는 것을 고려해 봅니다. 또 하나의 계층이 여러 계층들에서 사용된다면 Spring의 AOP를 사용하는 것을 어떨지 생각해 봅니다. <br />
+여기서 기억하야 할 것은 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">에플리케이션을 여러 계층으로 나누는 것은 decouple 된 설계를 만들어 낸다는 것</span>입니다. 그렇게 함으로써 여러분의 에플리케이션이 보다 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">유연하고(확장이나 변동이 쉽고), 테스트가하기 편해</span>집니다.<br />
+<font style="font-family: verdana,arial,helvetica,sans-serif" size="4"><br style="color: rgb(153, 204, 102);" /><span style="color: rgb(153, 204, 102)">Java Interface As Layer Contract</span></font></p>
+<p>에플리케이션의 계층을 나누는데 Java 인터페이스가 중요한 역할을 합니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">인터페이스는 계층간의 규약이며 그들의 구현과 세부사항을 숨긴 채 계층 간의 작동이 유지될 수 있도록 합니다.</span> 인터페이스에 의해 제공되는 low coupling의 이점에 대해서는 잘 알 고있을 것입니다. 그러나 여태까지 그러한 장점은 여태까지 인터페이스가 아닌 실제 구현된 클래스를 사용할 수 밖에 없는 상황이였기 때문에 잘 살리지 못했습니다. 하지만 Spring과 다른 DI 프레임웤을 사용한다면 가능합니다. Spring이 직접 에플리케이션의 코드 대신 객체의 생성에 대한 일을 해주기 때문입니다. <br />
+계층간의 규약을 인터페이스로 정의해두면 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">개발 시간을 단축시킵니다.</span> 개발자들이 인터페이스에 맞춰 개발을 하기 때문에 그것을 구현한 코드가 작성되고 바뀌고 테스트되더라도 개발이 가능하기 떄문입니다. <br />
+계층간의 상호작용을 인터페이스로 정의해 두면 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">단위 테스트가 간편합니다.</span> EasyMock과 같은 프레임웤을 사용하여 쉽게 인터페이스의 구현체를 만들어서 테스트할 수 있기 때문입니다.<br />
+인터페이스를 사용하여 계층에 접근하는 것은<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)"> 컴파일 시간을 단축시키고 보다 모듈화된 개발을 가능케 합니다.</span> Client code가 이미 사용하고 있는 것들을 재컴파일하지 않아도 새로운 클래스를 추가하거나 변경이 가능하기 때문입니다.<br />
+인터페이스를 사용하면 또한 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">시스템이 매우 유연해 집니다.</span> 시스템이 시작할 때 또는 이미 실행 중일 때도 특정 구현체로 변동이 가능합니다. Client code가 인터페이스에 맞춰 컴파일 되었기 때문에 실행중에도 구현된 클래스를 바꿀수가 있습니다. 매우 동적인 시스템을 만들수가 있습니다.</p>
+<p>여기까지 매우 간단하게 요약하자면 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">인터페이스를 사용하여 각 계층간의 규약을 정의한다.</span> 인터페이스는 계층의 추상화를 제공하고 계층을 구현한 것이 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">다른 계층에 영향을 주지 않고 쉽게 변할 수 있도록 허용한다.</span></p>

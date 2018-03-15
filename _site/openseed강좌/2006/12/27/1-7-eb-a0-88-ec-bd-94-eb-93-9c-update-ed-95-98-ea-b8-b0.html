@@ -1,0 +1,15 @@
+<p>PizzaApp의 내용을 다음과 같이 수정합니다.
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">Pizza pizza = new Pizza();<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setName("yuonghoe's pizza");<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102);"> pizza.setPrice(10000);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setSize("Large");<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setToping("Pepperoni");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; s.save(pizza);</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color: rgb(153, 204, 102);">&nbsp;<span style="color: rgb(0, 153, 102);"> pizza.setPrice(15000);</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; s.update(pizza);</span></div>
+<p>처음에 가격을 만원으로 했다가 너무 낮아서 만오천원으로 올리고 s.update(pizza); 메소드를 사용하여 update를 합니다.</p>
+<p>실행시키면 콘솔 창에 다음과 같이 출력됩니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Hibernate: select nextval ('Pizza_PizzaId_Seq')<br />Hibernate: insert into O_Pizza (toping, price, name, size, pizzaId) values (?, ?, ?, ?, ?)<br />Hibernate: update O_Pizza set toping=?, price=?, name=?, size=? where pizzaId=?</div>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk87.bmp" class="aligncenter" width="496" height="155" alt="사용자 삽입 이미지">bk87.bmp</a><br />DB를 확인해 본 결과 15000원으로 update된 것을 확인 할 수 있습니다.</p>
+<p>PizzaApp에서 작성한 코드에서 s.update(pizza);를 삭제하고 다음과 같이 입력해 보겠습니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; &nbsp; &nbsp; Pizza pizza = new Pizza();<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setName("chanwook's pizza");<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setPrice(10000);<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setSize("Large");<br />&nbsp; &nbsp; &nbsp; &nbsp; pizza.setToping("Kimchi");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; s.save(pizza);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; pizza.setPrice(15000);</p></div>
+<p>s.update(pizza); 가 빠진것을 제외하면 다른 부분은 거의 동일합니다. 이 것을 실행시키면 콘솔창에 다음과 같이 출력이 되고 DB에서 확인을 해도 역시 update 된 것을 확인할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Hibernate: select nextval ('Pizza_PizzaId_Seq')<br />Hibernate: insert into O_Pizza (toping, price, name, size, pizzaId) values (?, ?, ?, ?, ?)<br />Hibernate: update O_Pizza set toping=?, price=?, name=?, size=? where pizzaId=?</div>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bk88.bmp" class="aligncenter" width="500" height="178" alt="사용자 삽입 이미지">bk88.bmp</a><br />왜 이럴지는 HIA 4장에 나오는 그림을 보며 생각해 보겠습니다.</p>

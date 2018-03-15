@@ -1,0 +1,67 @@
+---
+layout: post
+title: The problem of identity
+date: 2007-02-16 03:27:21.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- Equality
+- Identity
+- OR dismatch
+- surrogate key
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322998492'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : Java Persistence With Hibernate</p>
+<p>Java에는 두 가지의 동일성에 대한 표현[footnote]Equality를 나타내는 equals()와 Object identity를 나타내는 == 이 있습니다.[/footnote]이 있고 DB에서의 row에 대한 identity는 주키로 나타내기 때문에 발생하는 문제 입니다.[footnote]단순히 동일성 표현 방법의 갯수가 차이 나서 그런 것은 아닙니다.[/footnote]</p>
+<p>9.2.2에 보시면 equals()와 hashCode()를 구현할 때 주의할 것들이 나옵니다. 
+<ul>
+<li>equals()와 hashCode()를 테이블의 주키 값의 동일성으로 구현을 하면 transient 객체의 동일성 비교를 할 때 아직 id가 없는 상태이기 때문에 문제가 발생하며..</li>
+<li>equlas()와 hashCode()를 테이블의 주키를 제외한 다른 모든 속성들의 값으로 구현을 하면 같은 row인데 속성하나가 바꼈다고 다른 row로 인식하거나.. 다른 row인데 값이 같다고 해서 같은 객체로 인식하는 문제가 발생합니다.</li>
+<li>그래서 business key를 사용하라는 내용이 있었습니다. 주키는 surrogate key를 사용하는데 둘다 유일한 값을 가지며 차이가 있다면 business key는 어떤 의미가 있는 값(ex. 학번, 주민번호)이 지만 surrogate key는 아무런 의미가 없이 DB에서 식별자 역할 만 한다는 겁니다.</li>
+</ul>
+<p>주키를 정할 때 surrogate key로 정하는데 DB를에 row 식별을 위해 만든 속성을 domain model에 표현을 해야하는 건지..? 라는 질문을 던지고 있습니다. 여기에 대해서는 p162쪽 4.2.2에 보시면 Hibernate는 db identity를 application에서 두 가지 방법으로 표현할 수 있다고 합니다.
+<ul>
+<li>persistence 객체의 식별자 속성의 값으로</li>
+<li>Session.getIdentifier(Object entity)의 리턴값으로</li>
+</ul>

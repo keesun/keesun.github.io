@@ -1,0 +1,53 @@
+<p>1.&nbsp; HTML 형태로 논의한 표준 화면 구성에 맞도록 전체 UI를 다시 재작성. (예외 케이스에 대처)</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">
+<ul>
+<li>화면의 유형</li>
+<ul>
+<li>메인 화면 : 타이틀 + 검색조건 + 버튼 + 그리드</li>
+</ul>
+<ul>
+<li>팝업 화면(입력/수정 화면) : 타이틀 + 입력폼 + 버튼</li>
+</ul>
+</ul>
+<ul>
+<li>검색 결과 화면에서 고려할 것</li>
+<ul>
+<li>검색 조건이 남아 있고, 북마크 했을 때 검색 결과 화면 보일 수 있도록 GET 방식의 Request 사용하기.</li>
+<li>검색의 결과 부분만 새로 고침 = 그리드 영역을 iframe으로 분리하기.</li>
+<li>기본 화면은 전체 데이터 뿌려주기.</li>
+<li>검색 조건이 늘어 날 수 있으므로 검색 버튼 추가.</li>
+</ul>
+</ul>
+<ul>
+<li>그리드에 필요한 기능</li>
+<ul>
+<li>컬럼 별로 정렬 기능</li>
+<li>페이징 처리</li>
+<li>체크 박스(다중 선택 가능)</li>
+<li>링크 달기</li>
+</ul>
+</ul>
+<ul>
+<li>Messenger 정보 입력 방법</li>
+<ul>
+<li>한 화면에서 처리 하기 위해 입력할 수 있는 Messenger의 정보의 갯수를 세개로 제한.</li>
+</ul>
+</ul>
+<ul>
+<li>Member - MemberGroup - Group 에서의 비즈니스 룰</li>
+<ul>
+<li>각 그룹의 등급은 세 가지. "대표 운영자", "운영 요원", "일반 회원"</li>
+</ul>
+<ul>
+<li>Group을 만드는 사람이 "대표 운영자"가 됨. = Only one</li>
+<li>Member는 Group에 기본으로 "일반 회원"으로 등록이 됨.</li>
+<li>"대표 운영자"는 그룹에 있는 Member 들의 등급을 조정할 수 있슴.</li>
+<li>"운영 요원"은 뭐하지??</li>
+<li>특정 그룹에 가입 or 탈퇴의 주체는 멤버쪽에서 결정 합니다.</li>
+<li>그렇다면 "너는 누구냐?"가 필요하네요. 로그인이 필요해짐. -&gt; 멤버에 ID 는 email로 하고 비번은 새로운 필드가 필요함.</li>
+</ul>
+</ul>
+</div>
+<p>2. DisplayTag (김종대씨 사이트 참고)를 다운받아서 예제를 돌려볼 것.<br /><a href="http://displaytag.sourceforge.net/11/" target="_blank">http://displaytag.sourceforge.net/11/</a><br /><a href="http://blog.naver.com/jdkim528?Redirect=Log&amp;logNo=140011759837" target="_blank">http://blog.naver.com/jdkim528?Redirect=Log&amp;logNo=140011759837</a></p>
+<p>3. Spring2.0의 Form 태그 레퍼런스 메뉴얼 읽어볼 것.<br /><a href="http://static.springframework.org/spring/docs/2.0.x/reference/mvc.html#mvc-formtaglib" target="_blank">http://static.springframework.org/spring/docs/2.0.x/reference/mvc.html#mvc-formtaglib</a></p>
+<p>4. JSP 2.0에 추가된. TagFile 개발 사용법을 알아 둘 것.<br /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">5. 1~4에 너무 힘을 빼진 말고 Hibernate를 꾸준히 공부할 것.</span></p>

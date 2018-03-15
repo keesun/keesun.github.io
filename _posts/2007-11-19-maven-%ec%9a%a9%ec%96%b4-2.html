@@ -1,0 +1,62 @@
+---
+layout: post
+title: Maven 용어 2
+date: 2007-11-19 01:32:50.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- POM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322775113'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 POM에 대해 살펴보겠습니다.<br />POM은 Project Object Model의 약어로 해당 프로젝트에 대한 여러 정보(자신의 버전, 프로젝트 형태, 종속성, 그룹 이름, 프로젝트 이름)를 담고 있는 XML 파일입니다.</p>
+<p>프로젝트 루트 폴더에 보면, pom.xml 파일이 생성되어 있는 것을 볼 수 있습니다. Maven archetype:create로 프로젝트를 생성할 때 이 파일이 생성됩니다.</p>
+<p>이클립스에서 프로젝트를 생성할 때 다음과 같은 메뉴를 볼 수 있었습니다.<br /><img src="{{ site.baseurl }}/assets/ck060000000000.png" class="aligncenter" width="427" height="627" alt="사용자 삽입 이미지" /><br />그리고 다음 화면에서는 프로젝트에 포함시킬 Jar를 선택하는 화면이 나옵니다. 여기서는 JUnit을 포함시켰습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ck060000000001.png" class="aligncenter" width="546" height="559" alt="사용자 삽입 이미지" /><br />이렇게 프로젝트를 생성한 결과 다음과 같은 POM 파일이 작성되었습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;project&gt;<br />&nbsp; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br /><span style="font-weight: bold;">&nbsp; &lt;groupId&gt;whiteship&lt;/groupId&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &lt;artifactId&gt;FirstMavenSample&lt;/artifactId&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; </span>&lt;description&gt;&lt;/description&gt;<br />&nbsp; &lt;dependencies&gt;<br />&nbsp; &nbsp; &lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &lt;groupId&gt;junit&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &lt;artifactId&gt;junit&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &lt;version&gt;4.4&lt;/version&gt;<br />&nbsp; &nbsp; &lt;/dependency&gt;<br />&nbsp; &lt;/dependencies&gt;<br />&lt;/project&gt;</div>
+<p>위 정보가 이 프로젝트를 유일하게 식별할 수 있도록 만들어 주는 정보 입니다. 그룹 아이디는 팀명이나 메타 프로젝트 명을 주시면 될 것 같으며, 아티팩트 아이디가 프로젝트 명입니다. 그리고 버전은 해당 프로젝트 배포 버전입니다. 이 정보를 가지고 프로젝트 좌표(coordinate)를 만들 수 있습니다. 위의 프로젝트는 다음과 같은 좌표를 가지게 됩니다.</p>
+<p>whiteship:FirstMavenSample:jar:0.0.1-SNAPSHOT</p>
+<p>중간에 끼어든 jar는 package 타입 선택할 때 선택한 값이 들어가며, 기본값이 jar입니다.(그래서 그런지 pom 파일에서는 생략되어 있는 모습니다.) 이 값에 따라서 빌드 라이프사이클이 달라집니다.</p>
+<p>이 좌표를 사용해서 Maven Space에서 특정 프로젝트를 참조하게 됩니다. 즉 이러한 좌표를 가지고 있어야 Maven Space 내의 다른 프로젝트에서 이 프로젝트를 참조할 수 있게 되는 것입니다. 현재 제가 만든 위의 프로젝트는 JUnit 프로젝트를 참조하고 있는데, 바로 이 좌표를 사용하여 참조하고 있는 것입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk080000000000.png" class="aligncenter" width="528" height="265" alt="사용자 삽입 이미지" />마지막으로 Repository만 살펴보면, 기본 용어들은 마무리가 될 듯 합니다. 밥 먹고 나서 이어집니다.</p>

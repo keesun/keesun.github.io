@@ -1,0 +1,112 @@
+---
+layout: post
+title: 스프링 3.0의 설정 간편화
+date: 2009-12-23 02:15:31.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 스프링소스 블로그
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322865441'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문: <a title="[http://blog.springsource.com/2009/12/22/configuration-simplifications-in-spring-3-0/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2009/12/22/configuration-simplifications-in-spring-3-0/">http://blog.springsource.com/2009/12/22/configuration-simplifications-in-spring-3-0/</a></p>
+<p>케이스가 시작한 "스프링 3 간편화" 시리즈 두번째로 스프링의 새로운 @Configuration 애노테이션 및 그와 관련된 지원 기능을 매우 간략하게 소개하고자 한다.</p>
+<p>스프링 JavaConfig 프로젝트에 관심을 가지고 있던 사람들이라면 @Configuration 애노테이션 클래스가 스프링 XML 파일과 매우 비슷한 역할을 한다는 것을 알 것이다. 메서드와 애노테이션을 사용하여 스프링 빈을 정의를 선언하는 코드-중심적인 방법을 제공한다. 이러한 것을 POC(Plain Old Configruation)이라고 부를 수도 있겠다. :) XML이 하나도 필요없는 간단한 상활을 일컷는 말이다.</p>
+<p>시작해보자. @Configuration 기능을 설명하려고 새로운 스프링 샘플 SVN 저장소에 매우 간단한 프로젝트를 만들어두었다. 그것을 받아서 바로 빌드하고 싶을것이다. 서브버전 클라이언트와 최신 버전 메이븐이 필요하다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+svn co https://src.springframework.org/svn/spring-samples/configuration-basic/trunk configuration-basic<br />
+cd configuration-basic<br />
+mvn clean test<br />
+[...]<br />
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</p>
+<p>[INFO] ————————————————————————<br />
+[INFO] BUILD SUCCESSFUL<br />
+[INFO] ————————————————————————</div>
+<p>
+이클립스 .classpath와 .project 메타데이터도 체크아웃에 포함되어 있기 때문에 프로젝트를 SpringSprout Tool Suite 또는 m2eclipse 플러그인을 설치한 최신버전 이클립스에서 import 할 수 있을 것이다. 두 경우 모두 File -&gt; Import -&gt; Existing Projects into Workspace를 하면 된다.</p>
+<p>AppConfig.java 클래스부터 살펴보자. @Configuration 애노테이션을 추가한 클래스는 XML 설정 기반 스프링 애플리케이션의 app-config.xml과 같은 역할을 한다. 실행시점에 어떻게 객체 인스턴스들이 연관되어 있으며 관리되는지에 대한 "청사진"을 제공하기 때문에 프로젝트를 살펴보기 좋은 시작점이 된다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+@Configuration<br />
+public class AppConfig {</p>
+<p>&nbsp;&nbsp;&nbsp; public @Bean TransferService transferService() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new TransferServiceImpl(accountRepository());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public @Bean AccountRepository accountRepository() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new InMemoryAccountRepository();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}
+</div>
+<p>
+Granted, 이 예제는 진짜 JDBC Datasource를 사용하지도 않는 매우 간단한 애플리케이션이다. 하지만 이 글의 목적은 기본 개념을 제공하는 것이기 때문에 괜찮다. @Bean을 선언한 메서드는 실행 시점에 스프링 컨테이너에의해 호출되며 반환되는 객체를 스프링 컨테이너가 다른 빈들처럼 관리한다. 다른 빈과의 의존성은 간단하게 다른 빈 메서드를 호출하는 것으로 표현할 수 있다. TransferServiceImpl은 AccountRepository를 생성자 인자로 필요로 하기 때문에 간단하게 accountRepository() 메서드를 호출했다.</p>
+<p>경험많은 스프링 사용자라면 이 예제를 보고 "빈 스코프는 어떻게 되는가?"라고 질문할 것이다. 좋은 질문이다. 아시다시피 모든 스프링 빈은 스코프를 가지고 있다. 기본으로 빈의 스코프는 '싱글톤'이며 이것은 스프링 컨테이너 당 하나의 빈 인스턴스만 사용된다는 것을 의미한다. 위의 코드를 보면 accountRepository()를 여러번 호출할 때마다 여러 인스턴스를 만들것 처럼 보이지만 실제로 그렇지는 않다! @Configuration 클래스가 실행 시점에 처리되면 동적으로 (CGLIB을 사용하여) 그 하위 클래스를 만들고, 그 하위 클래스의 @Bean 메서드들은 스코프 개념을 보장하도록 코드를 조작한다.</p>
+<p>보시다시피, @Bean 메서드를 정의하는 것은 매우 간단하다. 이제 컨테이너를 동작시키고 저 객체들을 사용해보자.</p>
+<p>TransferServiceTest JUnit 시스템 테스트와 transfer100Dollars() @Test 메서드를 보자. 가장 먼저 눈에띄는 것은 AnnotationConfigApplicationContext 사용일 것이다. 이것은 새로운 ApplicationContext 구현체로 @Configuration 클래스를 직접 사용하여 스프링 컨테이너 생성을 지원하도록 스프링 3에 추가되었다. 이 컨텍스트는 AppConfig.class를 생성자 매개변수로 사용하며, 그런다음 TransferService와 AccountRepository 타입의 빈을 getBaen(Class) 메서드를 이용하여 가져온다. 메서드의 남은 부분은 일반적인 JUnit 검증 과정으로 TransferService와 AccountRepository API를 확인하고 예상한대로 잘 동작하는지 확인한다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public class TransferServiceTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void transfer100Dollars() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // create the spring container using the AppConfig @Configuration class<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // retrieve the beans we'll use during testing<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AccountRepository accountRepository = ctx.getBean(AccountRepository.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TransferService transferService = ctx.getBean(TransferService.class);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // create accounts to test against<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; accountRepository.add(new Account("A123", 1000.00));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; accountRepository.add(new Account("C456", 0.00));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check account balances before transfer<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(accountRepository.findById("A123").getBalance(), equalTo(1000.00));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(accountRepository.findById("C456").getBalance(), equalTo(0.00));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // perform transfer<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; transferService.transfer(100.00, "A123", "C456");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // check account balances after transfer<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(accountRepository.findById("A123").getBalance(), equalTo(900.00));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(accountRepository.findById("C456").getBalance(), equalTo(100.00));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}
+</div>
+<p>
+바로 이거다! 간단하고, 순수한 자바이고(사실 저는 개인적으로 이부분에 대해서는 약간의 이견을 가지고 있지만;;), 타입-안정적인 설정이다. 이것이 스프링의 핵심 의존성 주입 기능의 편리하고 강력한 추가기능임을 알았으면 좋겠다.</p>
+<p>물론, 오늘 여기서는 매우 간략하게 살펴봤다. @Configuration 클래스로 더 많은 것을 할 수 있으며 자세한 기능은 다음 글에서 설명하도록 하겠다. 하지만 날 기다리지말고 스스로 스프링 3 레퍼런스 문서의 @Configuration 부분을 읽어보길 바란다. 이 예제 프로젝트를 시작점으로 빠르게 새로운 기능의 나머지 부분을 확읺보기 바란다.</p>
+<p>피드백을 기대한다. @Configuration과 모든 새로운 스프링 3 기능을 즐기기 바란다. 즐거운 연휴 되시길!</p>
+<p>* Thanks to Erich Eichinger for (half-jokingly) coining the phrase 'Plain Old Configuration'. You can take a look at the work he and the Spring.NET team are doing with their similar 'CodeConfig' project here.</p>
+<p>ps: 이번글에도 링크가 굉장히 많은데;; 귀찮아서 생략했습니다. 언젠가 안 귀찮을 때 수정하겠습니다.</p>

@@ -1,0 +1,59 @@
+---
+layout: post
+title: "[Sprng 3.1] 다음 코드가 왜 문제인지…"
+date: 2011-11-24 11:21:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.1'
+tags:
+- Spring MVC 3.1
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323143570'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>[gist id=1390672]</p>
+<p>이 설정은 스프링 3.1을 사용해서 web.xml 없이 Servlet 3.0 기반 자바 웹 애플리케이션을 배포하는데 필요한 스프링 설정이다.</p>
+<p>여기서 중간에 있는 servletContext.addListner()를 사용하는 코드에 무슨 문제(버그는 아니고..)가 있는지 알려면 Servlet 3.0 API 중에 두 개를 알아야 이해할 수 있다.</p>
+<p><a title="http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/HandlesTypes.html" href="http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/HandlesTypes.html">http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/HandlesTypes.html</a></p>
+<p><a title="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContainerInitializer.html" href="http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContainerInitializer.html">http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContainerInitializer.html</a></p>
+<p>자세하고 친절한 설명은 토스3 개정판을 기대하시라…</p>

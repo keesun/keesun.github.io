@@ -1,0 +1,106 @@
+---
+layout: post
+title: 결국 그냥 만들어버린 JPA 문서 자동화 툴
+date: 2009-07-02 02:42:28.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- JPA 문서화
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323153526'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>지난 번에 살펴본 hbm2doc로는 사부님이 원하는 문서를 만들기가 버거워서, 예전에 물개선생님이 만드셨다는 코드를 참조해서 비슷하게 만들었습니다.</p>
+<p>@Entity<br />
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = { "loginid" }))<br />
+@SequenceGenerator(name="user_sq", sequenceName="user_sq")<br />
+public class User {</p>
+<p>&nbsp;&nbsp;&nbsp; @Id<br />
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy = GenerationType.AUTO)<br />
+&nbsp;&nbsp;&nbsp; Integer id;<br />
+&nbsp;&nbsp;&nbsp; @Version<br />
+&nbsp;&nbsp;&nbsp; Integer version;<br />
+&nbsp;&nbsp;&nbsp; @ColumnInfo(value = "아이디", description="중복 되는 값은 사용할 수 없음")<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50, unique = true)<br />
+&nbsp;&nbsp;&nbsp; String loginid; // identity</p>
+<p>&nbsp;&nbsp;&nbsp; @ColumnInfo("이름")<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String name;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String pwd;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; @Index(name="email_idx")<br />
+&nbsp;&nbsp;&nbsp; String email;<br />
+&nbsp;&nbsp;&nbsp; @Column<br />
+&nbsp;&nbsp;&nbsp; int usertype;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String title;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String dept;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String tel;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String mobile;<br />
+&nbsp;&nbsp;&nbsp; @Column(length = 50)<br />
+&nbsp;&nbsp;&nbsp; String addr;<br />
+&nbsp;&nbsp;&nbsp; @Column<br />
+&nbsp;&nbsp;&nbsp; @Temporal(TemporalType.DATE)<br />
+&nbsp;&nbsp;&nbsp; Date birthday;</p>
+<p>&nbsp;&nbsp;&nbsp; @ManyToMany<br />
+&nbsp;&nbsp;&nbsp; Set&lt;Role&gt; roles;</p>
+<p>&nbsp;&nbsp;&nbsp; @OneToMany(cascade = { CascadeType.ALL})<br />
+&nbsp;&nbsp;&nbsp; Set&lt;Familly&gt; famillies;</p>
+<p>이렇게 애노테이션이 난무 하는 도메인 클래스에 대한 정보 + 새로 추가한 애노테이션 @ColumnInfo를 사용하여 화면에서 해당 필드를 보여주는 이름(또는 도메인 전문가가 사용하는 용어)과 설명을 추가할 수 있습니다.</p>
+<p>어제 하루 종일 만들고 오늘 아침에 조금 다듬은 결과물은 다음과 같습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile21.uf.176A93174A4C1B1B1239D3.png" class="aligncenter" width="600" height="381" alt="" filename="1.png" filemime="image/png" /><br />
+코딩은 TDD로 시작했는데, 저 위에 보이는 HTML 만드는 코드는 참조하던 코드를 짜집기해서 만들었습니다.</p>
+<p>클래스 구조는 대충.</p>
+<p>DocGenerator ---&gt; DocWriter ---&gt; EntityInfo</p>
+<p>이렇습니다. DocGenerator에 엔티티 클래스 목록을 주면, DocWriter로 문서를 생성해 내는데, 이 때 new EntityInfo(엔티티 클래스) 생성자를 사용하여 애노테이션에서 정보를 축출하여 담고 있는 Info 클래스를 만들어 사용합니다.</p>
+<p>DocGenerator는 기초 정보(Dialect, 엔티티 클래스, 타겟 폴더, ...) 수집 및 퍼사드 역할을 하고, DocWriter는 실제로 문서 생성을 책임지는데, 인터페이스를 둬서 여러 형태의 문서 작성기를 사용할 수 있도록 했습니다. 현재는 HTMLDocWriter만 구현되어 있습니다. EntityInfo는 리플렉션을 사용하여 주어진 클래스와 그 클래스에 붙어있는 애노테이션을 활용하여 화면 출력에 필요한 정보들을 수집해 두는 역할을 합니다. 일종의 DTO라고 봐야하나..</p>
+<p>실행은 DocGeneratorRunner의 main 메서드를 약간 수정해서 실행하면 되겠습니다. </p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/cfile2.uf.1866DF174A4C1D14258F02.zip" class="aligncenter" filename="docgen.zip" filemime="application/zip">cfile2.uf.1866DF174A4C1D14258F02.zip</a><br />
+의존성, 프로젝트 이런거 없이 그냥 소스 코드만 묶었습니다. 아마.. 하이버네이트 애노테이션.jar, persistence.jar, 그리고 HTML을 처리할 때 사용한 hq-1.jar라는 라이브러리가 필요할 겁니다.</p>
+<p>코드에 보시면 Writer 쪽에 심각한 중복 코드가 있는데.. 아직 해결하진 않았습니다. 캬캬캬<br />
+Info 쪽 코드도 전혀 깔끔하지 않습니다. 애노테이션에서 정보를 축출하여 초기화 하는 부분(생성자)을 일관성 있게 수정하고 싶은데.. 하진 않았습니다.<br />
+HTML에 어떤 DB 스키마에 해당하는 컬럼 타입인지 알려주기 위해 Dialect도 출력할까 했지만.. 역시 아직 하지 않았습니다. 이건 뭐 간단할 것 같으니 금새 추가할 수 있을지도 모르겠네요.</p>

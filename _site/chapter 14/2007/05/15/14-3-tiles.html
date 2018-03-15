@@ -1,0 +1,15 @@
+<p><span style="font-weight: bold;">14.3.1. Dependencies</span></p>
+<p>Tiles를 사용하려면 다음의 jar파일들이 필요합니다.<br />- Struts version 1.1 or highe<br />- Commons BeanUtils<br />- Commons Digester<br />- Commons Lang<br />- Commons Logging<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">14.3.2. How to integrate Tiles</span></p>
+<p>Tile를 사용할 때 필요한 definition 파일들을 서술해 줍니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles.TilesConfigurer"&gt;<br />&nbsp; &lt;property name="factoryClass" value="org.apache.struts.tiles.xmlDefinition.I18nFactorySet"/&gt;<br />&nbsp; &lt;property name="definitions"&gt;<br />&nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &lt;value&gt;/WEB-INF/defs/general.xml&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &lt;value&gt;/WEB-INF/defs/widgets.xml&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &lt;value&gt;/WEB-INF/defs/administrator.xml&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &lt;value&gt;/WEB-INF/defs/customer.xml&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &lt;value&gt;/WEB-INF/defs/templates.xml&lt;/value&gt;<br />&nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
+<p>위 설정에서 다섯개의 definition들을 세팅했습니다. 저 파일들이 각각 하나의 tile인건가요? 흠;; 안써봐서 모르겠군요;</p>
+<p>Anyway, Tiles도 사용하려면 역시 ViewResolver를 등록해야 하는데 역시 두 가지 Resolver를 사용할 수 있습니다.</p>
+<p>- InternalResourceViewResolver</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.<span style="color: rgb(255, 0, 0);">InternalResourceViewResolver</span>"&gt;<br />&nbsp; &lt;property name="requestContextAttribute" value="requestContext"/&gt;<br />&nbsp; &lt;property name="viewClass" value="<span style="color: rgb(23, 127, 205);">org.springframework.web.servlet.view.tiles.TilesView</span>"/&gt;<br />&lt;/bean&gt;</div>
+<p>- ResourceBundleViewResolver</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.<span style="color: rgb(255, 0, 0);">ResourceBundleViewResolver</span>"&gt;<br />&nbsp; &lt;property name="basename" value="views"/&gt;<br />&lt;/bean&gt;</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">...<br />welcomeView.class=<span style="color: rgb(23, 127, 205);">org.springframework.web.servlet.view.tiles.TilesView</span><br />welcomeView.url=welcome (&amp;lt;b&amp;gt;this is the name of a definition&amp;lt;/b&amp;gt;)</p>
+<p>vetsView.class=<span style="color: rgb(23, 127, 205);">org.springframework.web.servlet.view.tiles.TilesView</span><br />vetsView.url=vetsView (again, this is the name of a definition)</p>
+<p>findOwnersForm.class=<span style="color: rgb(0, 153, 102);">org.springframework.web.servlet.view.JstlView</span><br />findOwnersForm.url=/WEB-INF/jsp/findOwners.jsp<br />...</div>
+<p>여기서 볼 수 있듯이 ResourceBundleViewResolver 를 사용하면 여러 view 기술을 혼용할 수 있습니다.</p>

@@ -1,0 +1,159 @@
+---
+layout: post
+title: "@Transactional 속성들"
+date: 2007-04-14 23:43:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- "@Transactional"
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323167966'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cl149.jpg" class="aligncenter" width="222" height="282" alt="사용자 삽입 이미지" />아직 name 속성은 없습니다. name 속성을 사용해서 로깅이나 트랜잭션 모니터링을 할 때 트랜잭션 이름을 원하는 이름으로 출력할 수 있을 겁니다. 하지만 지금은 "패키지 경로가 붙은 클래스 이름.해당 메소드"가 기본 이름이 됩니다.</p>
+<table class="MsoTableLightGridAccent1" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border-style: solid; border-color: rgb(79, 129, 189); border-width: 1pt 1pt 2.25pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: center;" align="center"><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Property<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: solid solid solid none; border-color: rgb(79, 129, 189) rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: 1pt 1pt 2.25pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: center;" align="center"><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Type<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: solid solid solid none; border-color: rgb(79, 129, 189) rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: 1pt 1pt 2.25pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: center;" align="center"><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Description<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">propagation</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">enum: </span><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">Propagation</span><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">optional propagation setting<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">isolation</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">enum: </span><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">Isolation</span><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">optional isolation level<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">readOnly</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">boolean<o:p></o:p></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">read/write vs. read-only<br />
+  transaction<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">timeout</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">int (</span><span style="font-size: 12pt; font-family: 굴림;">초 단위<span lang="EN-US">)<o:p></o:p></span></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">the transaction timeout<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">rollbackFor</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Throwable </span><span style="font-size: 12pt; font-family: 굴림;">타입의 <span lang="EN-US">Class </span>객체의 배열<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;">발생했을 때 반드시 롤백 해야 하는 예외 클래스들<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">rollbackForClassname</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Throwable </span><span style="font-size: 12pt; font-family: 굴림;">타입의 <span lang="EN-US">Class </span>이름의 배열<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;">발생했을 때 반드시 롤백 해야 하는 예외 클래스들의 이름<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">noRollbackFor</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Throwable </span><span style="font-size: 12pt; font-family: 굴림;">타입의 <span lang="EN-US">Class </span>객체의 배열<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;">발생했을 때 롤백 하지 않아도 되는 예외 클래스들<span lang="EN-US">.<o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189); border-width: medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><b><span style="font-size: 12pt; font-family: 굴림체;" lang="EN-US">noRollbackForClassname</span></b><b><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US"><o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;" lang="EN-US">Throwable </span><span style="font-size: 12pt; font-family: 굴림;">타입의 <span lang="EN-US">Class </span>이름의 배열<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(79, 129, 189) rgb(79, 129, 189) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style="text-align: left;" align="left"><span style="font-size: 12pt; font-family: 굴림;">발생했을 때 롤백 하지 않아도 되는 예외 클래스들의 이름<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>

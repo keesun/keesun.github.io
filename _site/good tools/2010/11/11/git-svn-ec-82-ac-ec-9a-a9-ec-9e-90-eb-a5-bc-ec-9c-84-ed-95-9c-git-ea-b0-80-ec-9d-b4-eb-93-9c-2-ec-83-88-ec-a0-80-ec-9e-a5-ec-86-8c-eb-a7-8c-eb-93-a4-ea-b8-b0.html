@@ -1,0 +1,28 @@
+<p style="clear: both"><a href="https://git.wiki.kernel.org/index.php/GitSvnCrashCourse">https://git.wiki.kernel.org/index.php/GitSvnCrashCourse</a></p>
+<p style="clear: both">새 프로젝트를 만들고 Git에 업데이트하기</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>svnadmin create myproejct_repo -> mkdir myproject; cd myporject;</li>
+<li>svn checkout file://myproejct_repo myproject -> git init</li>
+</ul>
+<p style="clear: both">기본의 이미 만들어져이는 프로젝트를 Git에 추가하기</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>svnadmin create myproject_repo -> git init</li>
+<li>svn import . myproject_repo -> git add .; git commit</li>
+</ul>
+<p style="clear: both">git init은 저장소를 초기화하고 git add .는 현제 디렉토리에 있는 모든 파일을 추가하고 git commit으로 첫번째 업데이트를 한다.</p>
+<p style="clear: both">기억할 것 - 기트는 작업 복사본과 저장소를 위해 별도의 장소를 사용하지 않는다. 작업 복사본은 항상 저장소와 같은 곳인 프로젝트의 .git 하위 디렉토리에 들어있다. 작업 복사본과 관계없이 별도의 저장소를 사용할 수도 있는데 그런 저장소를 bare 저장소(날 저장소?)라고 한다.</p>
+<p style="clear: both">다른이의 Git 프로젝트를 받으려면</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>git clone url myproject</li>
+</ul>
+<p style="clear: both">SVN 프로젝트를 기트로 받으려면</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>git svn clone --stdlayout url myproject</li>
+</ul>
+<p style="clear: both">git clone과 git svn clone은 원격 저장소에서 내용을 다운받아서 로컬에 복사본을 만들어 둔다. --stdlayout은 기트가 SVN 표준 디렉토리인 trunk/tags/branches 디렉토리에서 브랜치를 찾아보도록 한다.</p>
+<p style="clear: both">얼마나 많은 하위디렉토리를 만들던 모든 버전 관리 정보는 .git 디렉토리에만 들어있다.</p>
+<p><br class="final-break" style="clear: both" /></p>

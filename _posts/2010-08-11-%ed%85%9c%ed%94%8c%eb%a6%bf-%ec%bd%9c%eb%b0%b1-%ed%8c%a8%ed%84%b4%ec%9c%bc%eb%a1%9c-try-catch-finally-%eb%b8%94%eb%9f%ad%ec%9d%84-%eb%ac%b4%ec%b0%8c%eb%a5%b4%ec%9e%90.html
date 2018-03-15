@@ -1,0 +1,125 @@
+---
+layout: post
+title: 템플릿-콜백 패턴으로 Try-Catch-Finally 블럭을 무찌르자.
+date: 2010-08-11 09:40:19.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 템플릿 콜백 패턴
+- 토비의 스프링 3
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323138568'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>어제부터 계속 정리하고 싶었는데 어젠 이상하게 시간을 쏟아 버리는 바람에.. 이제 정리한다. 자세한 내용은 토비의 스프링 3에 나오는데 이번에 구글 캘린더 API 코딩하다가 써먹을 기회가 와서.. 적용해 봤다. 문제는 내 강의를 들었던 학생은 그걸 하지 못했다는게 아쉽다. 어디 한술에 배부르랴.. 그래도 내가 코딩한 걸 보고 그게 그건지 알아차렸으니.. 그걸로 만족한다.
+<div>
+</div>
+<div>
+<div id="">
+<a href="http://code.google.com/intl/ko-KR/apis/calendar/data/2.0/developers_guide_java.html" target="_blank" title="[http://code.google.com/intl/ko-KR/apis/calendar/data/2.0/developers_guide_java.html]로 이동합니다.">http://code.google.com/intl/ko-KR/apis/calendar/data/2.0/developers_guide_java.html</a></div>
+<div id=""><a href="http://code.google.com/intl/ko-KR/apis/gdata/javadoc/index.html" target="_blank" title="[http://code.google.com/intl/ko-KR/apis/gdata/javadoc/index.html]로 이동합니다.">http://code.google.com/intl/ko-KR/apis/gdata/javadoc/index.html</a></div>
+</div>
+<div id="">
+</div>
+<div id="">구글 캘린더 API를 사용하려면 위에 있는 문서만 보면 된다. 친절하게 안내해주고 있어서 쓰기 편하다. 그런데 문제는 예외처리다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<div id="">
+</div>
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp;public List&lt;CalendarEntry&gt; getMyCalendarList(){</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;URL feedUrl = makeUrl(OWN_CALENDAR_URL);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;CalendarFeed resultFeed = <b>calendarService.getFeed(feedUrl, CalendarFeed.class);</b></div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return resultFeed.getEntries();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (IOException e) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;throw new RuntimeException(e);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (ServiceException e) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;throw new RuntimeException(e);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div>
+</div>
+<div id="">
+저기서 호출하고 있는 calendarService는 구글에서 제공해주는 API로 IOException과 ServiceException을 던지는 메서드들을 왕창 가지고 있다. 또 그녀석들을 자주 쓰게 된다.</div>
+<div id="">
+</div>
+<div id="">
+따라서 어떤 호출을 하더라도 위와같은 예외 처리 코드가 생기기 마련이다. 이걸 어떻게 하면 좋을까? 스프링 개발자라면 이런 코드를 스프링과 잘 어울리는 형태로 처리할 수 있어야 한다.</div>
+<div id="">
+</div>
+<div id="">
+어떻게 할것인가? 어떻게 하면 저 지져분한 Try-Catch(-Filnally) 문에서 벗어날 것인가? 한번 도전 해보자...</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+결과는..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+public List&lt;CalendarEntry&gt; getMyCalendarList(){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return <b>calendarServiceTemplate</b>(<b>new CalendarServiceCallBack</b>&lt;List&lt;CalendarEntry&gt;&gt; () {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;public List&lt;CalendarEntry&gt; queryForObject() throws IOException, ServiceException {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return calendarService.getFeed(makeUrl(OWN_CALENDAR_URL), CalendarFeed.class).getEntries();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;});</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이것과 비슷한 형태가 될 것이다. 물론 중요한건 결과가 아니라 저렇게 바꾸는 프로세스.. 그걸 이해하고 자신의 스킬로 만드는 것이 중요하겠다. 토비의 스프링 3에서 아주 잘 배울 수 있으니 꼭.. 3장 템플릿을 정독하도록 하자. 연습하고. 또 연습하고. 또 연습하고. try-catch 문이 반복해서 나올 떄 마다 적용해 보도록 하자.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>

@@ -1,0 +1,5 @@
+<p>&nbsp; &nbsp; var excelformdown = function(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;location.href = "${actionURL}";<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>일단 화면에서 어떤 이미지 버튼을 클릭하면 자바스크립트로 특정 URL을 호출하게 하도록 하고...</p>
+<p>저 URL을 처리할 핸들러에서 파일을 응답으로 돌려주면 된다.</p>
+<p>&nbsp; &nbsp; @RequestMapping<br />&nbsp; &nbsp; public void excelformdown(HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; giveExcelForm("sales.xls", response);<br />&nbsp; &nbsp; }</p>
+<p>저 메소드 안 에서는 응답 유형을 multipart로 설정하고, 파일 이름을 설정해준다. 그리고 파일을 찾아서 output 스트림에 write() 해준다.</p>

@@ -1,0 +1,28 @@
+<p><a href="http://en.wikipedia.org/wiki/Builder_pattern">빌더 패턴</a>이 꽤 유용하다는 걸 알게 됐다. 외울 수 밖에 없던 API가 외우지 않아도 되는 API로 변모하는 모습을 보게 됐다. 물론 자바가 static 타입 언어이고, IDE 지원이 빠방하다는 것도 한 몫 했을 것이다.</p>
+<p>오늘도 예제를 만들다가 문득.. 이전에 만들었던 EmbeddedDatabaseFactory 코드를 찾아보게 되었다. 메모리 DB는 예제용으로 사용하기 정말 좋다. 별다른 DB 설정 없이 예제를 바로 실행할 수 있기 때문이다.</p>
+<p>이전에 블로깅했던 EmbeddedDB 설정은 다음과 같은 과정을 거쳐야 한다.</p>
+<ol>
+<li>EDF 객체 생성</li>
+<li>EDF 객체에 DB 이름과 DB 종류 설정</li>
+<li>RDP(ResourceDatabasePopulator) 객체 생성</li>
+<li>RDP에 스프링 Resource 추상화 사용해서 스크립트 추가</li>
+<li>EDF에 RDP 객체 설정</li>
+<li>EDF.getDatabase() 호출</li>
+</ol>
+<p>족히 6~7 라인은 필요한 과정이다. 코드는 이전 글에 있으니까 생략. 게다가 외우고 있어야 하는 API가 최소 세개 등장한다. EDF, RDP, Resource 게다가 마지막에 getDatabase() 메서드 호출까지.. 알고 이어야 한다.</p>
+<p>빌더 패턴으로 바뀌면 다 필요 없고, EDB(EmbeddedDatabaseBuilder)만 알면 된다. 그런 다음 네 가지 작업만 하면 된다.</p>
+<ol>
+<li><span style="background-color: #ffffff;">DB 이름 설정</span></li>
+<li><span style="background-color: #ffffff;">DB 종류 설정</span></li>
+<li><span style="background-color: #ffffff;">스크립트 추가</span></li>
+<li><span style="background-color: #ffffff;">build()</span></li>
+</ol>
+<p>코드는 다음과 같다.<br />
+[java]@Bean(destroyMethod = &quot;shutdown&quot;)<br />
+public DataSource dataSource(){<br />
+return new EmbeddedDatabaseBuilder()<br />
+.setName(&quot;bookDB&quot;)<br />
+.setType(EmbeddedDatabaseType.H2)<br />
+.addScript(&quot;classpath:whiteship/book-schema.sql&quot;)<br />
+.build();<br />
+}[/java]</p>

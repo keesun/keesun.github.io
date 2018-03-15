@@ -1,0 +1,119 @@
+<p>현재 업무를 엑셀 파일로 처리하고 있기 때문에 엑셀 파일과의 연동을 필수적입니다. 따라서 시스템에 들어있는 정보를 엑셀로 받아볼 수 있게 하거나 엑셀 정보를 시스템에 올려서 DB에 저장되게 하는 것도 필요합니다.
+<div>
+</div>
+<div>엑셀 업로드야 엑셀 파일 형식이 도메인 클래스 마다 다를 테고 비즈니스 로직마다 다를테니 일반화하기 힘들지만(뭐 어떤 규칙을 정하면 일반화를 못할 것도 없겠지만..) 엑셀 다운로드 경우에는 일반화하기 좋습니다. 리포트 형식의 엑셀을 원하는게 아니라면 말이죠;; 그런건 여기서 받은 엑셀 파일을 기초데이터로 삼아서 다른 직원보고 편집해서 리포트 만들라고 시키면 될테니 이런 간단한 재고관리 시스템에 무리한 기능을 넣고 싶진 않군요.</div>
+<div>
+</div>
+<div>
+어쨋든.. 일반화 시켜봅시다.</div>
+<div id="">
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+&lt;page:mgtpage label="재고 관리"&gt;</div>
+<div>&nbsp;&nbsp; &nbsp;&lt;page:search label="재고 검색"&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:input label="제품명" path="name" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:input label="제품번호" path="number" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:input label="색상" path="colorName" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:select label="성별" path="sexValue" items="${ref.sexList}" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:input label="공급업체" path="suppName" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:input label="창고" path="locationName" /&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;s:date label="날짜" fromPath="dateRange.from" toPath="dateRange.to"/&gt;</div>
+<div>&nbsp;&nbsp; &nbsp;&lt;/page:search&gt;</div>
+<div>&nbsp;&nbsp; &nbsp;&lt;script type="text/javascript"&gt;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;$(function() {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;$("#smdis-grid").jqGrid({</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;colNames:['id', '제품명', '제품번호', '색상', '사이즈', '공급업체', '창고', '수량', '날짜'],</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;colModel :[</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'id', index:'id', width:55, hidden:true},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'item.name', index:'item.name', width:90},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'item.number', index:'item.number', width:90},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'item.colorName', index:'item.color', width:90},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'item.size', index:'item.size', width:90},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'item.supp.name', index:'item.supp', width:80},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'location.name', index:'location.name', width:80},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'qty', index:'qty', width:80},</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{name:'date', index:'date', width:80}</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;]</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;});</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;});</div>
+<div>&nbsp;&nbsp; &nbsp;&lt;/script&gt;</div>
+<div id="">&lt;/page:mgtpage&gt;</div>
+</div>
+<div id="">
+</div>
+</div>
+<div>
+</div>
+<div id="">
+화면에 보여줄 그리드 정보가 들어있는 mgt.jsp 페이지 소스입니다. 태그 파일을 사용해서 중복 코드를 제거하고 여기서 꼭 다뤄야하는 정보만 남겨뒀습니다. 이 상태에서 엑셀을 일반화 시켜서 만들때 서버쪽으로 넘겨줘야 하는 정보가 들어있습니다. 컬럼명과 각 컬럼 값이 들어있는 path 정보입니다.</div>
+<div>
+</div>
+<div id="">
+화면에 등록된 그리드 정보를 그대로 엑셀로 옮기고 싶다면 그 두 정보를 가져와야 합니다. 구현 과정을 전부다 설명하기는 다소 귀찮군요.. 흠.. 할일도 많으니까 대충 생략하겠습니다.</div>
+<div id="">
+</div>
+<div id="">
+<img src="/assets/cfile7.uf.163A0C254C216F1808374E.jpg" class="aligncenter" width="600" height="436" alt="" filename="3.jpg" filemime="image/jpeg" />
+</div>
+<div id="">
+저기서 버튼을 누르면 컬럼 정보, Path 정보, 검색 매개변수들을 서버쪽으로 넘겨줍니다.</div>
+<div id="">
+</div>
+<div id="">
+그럼 서버가 받아서 SpEL과 JExcel API와 스프링이 제공해주는 AbstractJExcelView 엑셀뷰를 사용해서 엑셀을 만들어 줍니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+public class GenericExcelView extends AbstractJExcelView {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;protected void buildExcelDocument(Map&lt;String, Object&gt; model, WritableWorkbook wb, HttpServletRequest req, HttpServletResponse res) throws Exception {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;List&lt;?&gt; list = (List&lt;?&gt;) model.get("list");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String modelName = (String) model.get("modelName");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;List&lt;String&gt; colNameList = (List&lt;String&gt;) model.get("colNameList");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;List&lt;String&gt; colPathList = (List&lt;String&gt;) model.get("colPathList");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;res.setHeader("Content-Disposition", "attachment; filename=" + modelName + ".xls");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;WritableSheet sheet = wb.createSheet(modelName, 0);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(int column = 0 ; column &lt; colNameList.size() ; column++){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sheet.addCell(new Label(column, 0, colNameList.get(column)));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ExpressionParser parser = new SpelExpressionParser();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;int row = 1;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(Object object : list){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;StandardEvaluationContext context = new StandardEvaluationContext(object);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for(int column = 0 ; column &lt; colPathList.size() ; column++){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;String path = colPathList.get(column).replace(".", "?.");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;String value = parser.parseExpression(path).getValue(context, String.class);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sheet.addCell(new Label(column, row, value));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;row++;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이걸 사용하도록 GenericController 쪽에도 기능을 추가해줬는데 그거야 뭐 간단하니깐. 생략하겠습니다. 이제 재고관리와 상품관리쪽에 엑셀 업로드를 만들어야겠습니다. 내일할까나;; 흠.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><img src="/assets/cfile10.uf.120439284C21705C0D1C5D.jpg" class="aligncenter" width="600" height="466" alt="" filename="4.jpg" filemime="image/jpeg" />
+</div>

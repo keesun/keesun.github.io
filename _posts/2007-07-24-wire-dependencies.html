@@ -1,0 +1,63 @@
+---
+layout: post
+title: Wire dependencies
+date: 2007-07-24 02:29:49.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- JavaConfig 빈 엮기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879848'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2/reference/html/wire-deps.html" target="_blank">Chapter 4. Wire dependencies</a></p>
+<p>bean을 묶기 위해서, 간단하게 Java의 문법을 사용할 수 있다.</p>
+<p>@Bean(scope = DefaultScopes.SINGLETON)<br />public Person rod() {<br />&nbsp; return new Person("Rod Johnson");<br />}</p>
+<p>@Bean(scope = DefaultScopes.PROTOTYPE)<br />public Book book() {<br />&nbsp; Book book = new Book("Expert One-on-One J2EE Design and Development");<br />&nbsp; book.setAuthor(rod());&nbsp; // rod() method is actually a bean reference !<br />&nbsp; return book;<br />}</p>
+<p>위의 예제에서, 책의 저자는 rod 메소드의 반환값을 사용하고 있다. 하지만, book과 rod 모두 @Bean으로 마크된 메소드기 때문에, Spring의 관리하는 bean들을 반환하게 되며, 따라서 컨테이너의 관리 대상이 된다. rod 빈은 싱글톤이고 book 빈은 프로토타입이다. 설정 파일을 만들 때, Spring은 애노테이션 문맥을 알아차리고 rod() 메소드 호출을 'rod'라는 빈 name으로 참조하도록 한다.</p>
+<p>이 컨테이너는 매번 book 빈을 요청할 때 마다 똑같은(싱글톤) rod 빈을 참조하고 있는 다른(프로토타입) book 빈을 반환할 것이다.</p>
+<p>위의 코드는 아래와 동일하다:</p>
+<p>&lt;bean id="rod" class="Person" scope="singleton"&gt;<br />&nbsp;&nbsp; &lt;constructor-arg&gt;Rod Johnson&lt;/constructor-arg&gt;<br />&lt;/bean&gt;</p>
+<p>&lt;bean id="book" class="Book" scope="prototype"&gt;<br />&nbsp;&nbsp; &lt;constructor-arg&gt;Expert One-on-One J2EE Design and Development&lt;/constructor-arg&gt;<br />&nbsp;&nbsp; &lt;property name="author" ref="rod"/&gt;<br />&lt;/bean&gt;</p>
+<p>위의 예제는 가장 흔히 사용하는 scope을 사용하고 있지만, 어떤 타입의 scope이라도 사용할 수 있음을 알아두자.</p>
+<p>@Bean (scope = "customer")<br />public Bag shopingBag() {<br />&nbsp; return new Basket();<br />}</p>
+<p>@Bean (scope = "shift")<br />public Manager shopManager() {<br />&nbsp; ...<br />}</p>

@@ -1,0 +1,80 @@
+---
+layout: post
+title: Simplifying CRUD Web Applications
+date: 2008-02-13 08:05:49.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- TSE 2007
+tags:
+- "@MVC"
+- Spring 2.5 MVC
+- TSE 2007
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322790240'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring @MVC
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">2003년부터 있었고, 2.5에서 많이 바꼈다.<br />세 부분으로 구성되어있다.<br />- 요청을 다루기 위한 부분<br />&nbsp; &nbsp; - DataBinder<br />&nbsp; &nbsp; - Validator<br />&nbsp; &nbsp; - Tag library macros<br />- 확장 가능한 dispatcher 프레임워크<br />&nbsp; &nbsp; - routing engine<br />- 컨트롤러 상속구조<br />&nbsp; &nbsp; - Controller, ThrowawayController<br />&nbsp; &nbsp; - SimpleFromController 어렵다.</p>
+<p>Controller -&gt; @Controller<br />&lt;context:component-scan&gt;</p>
+<p>@RequestMapping, HTTP method를 명시할 수 있다. 패턴을 사용할 수 있고, Class에도 선언할 수 있다.</p>
+<p>DEMO</p>
+<p>리턴값<br />&nbsp; &nbsp; - String : 뷰이름<br />&nbsp; &nbsp; - ModelAndView<br />&nbsp; &nbsp; - Map(ModelMap): 뷰이름은 URL로 판단<br />&nbsp; &nbsp; - 아무개arbitrary 타입 객체: 뷰이름은 URL로 판단, 이때는 @ModelAttrubute("뷰에서 이 객체를 참조할 이름")를 사용해야 된다.</p>
+<p>DEMO<br />&nbsp; &nbsp; - JSP를 정말 간단하게 작성했다. 발표 주제 전달에 필요한 만큼만 코딩한다.</p>
+<p>아규먼트는 Spring에 의해서 자동으로 채워진다.<br />&nbsp; &nbsp; - @RequestParam("reauest 파라미터")을 아규먼트 앞에 붙여준다.<br />&nbsp; &nbsp; - 자동 바인딩.</p>
+<p>DEMO<br />&nbsp; &nbsp; - Portlet 패키지에 있는 ModelAndView를 import하는 실수 보여줌.<br />&nbsp; &nbsp; - 청중이 에러를 적극적으로 잡아준다. 리액션이 좋다.</p>
+<p>@Controller를 사용하면 테스트하기 좋다.</p>
+<p>@MVC 사용해서 CRUD하기</p>
+<p>TYpe || HTTP method || REST(아직 안됨) || Now<br />Create | POST | /account | /account<br />Read(one) | GET | /account/1 | /account?id=1<br />Read(all) | GET | account | account<br />Update | POST | /account/1/update | /account/update?id=1<br />Delete | POST | /account/1/1delete | /account/delete?id=1</p>
+<p>DEMO<br />&nbsp; &nbsp; - 청중이 앞서서 다음에 나올 것을 물어본다.<br />&nbsp; &nbsp; - Wait a minute. I will show you.로 대답한다.</div>
+<p>CRUD 코딩
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; - Get으로 폼뷰 보여주기<br />&nbsp; &nbsp; - 바인더 등록하기<br />@InitBinder public void initBinder(WebDataBinder binder){<br />// 바인더에 추가.<br />}<br />&nbsp; &nbsp; - POST로 저장하기<br />@RequestMapping public String createAccount(Account acc, BindingRresult result){<br />// BindingResult 타입의 변수를 인자로 받아서 거기에 에러가 있으면 ~~페이지로 보내고, 에러 없으면 저장.<br />
+ }<br />&nbsp; &nbsp; - 에러 났을 때 FROM으로 다시 보내기<br />@RequestMapping public String createAccount(@ModelAttribute("account") Account acc, BindingRresult result){<br />
+// 입력한 account 정보를 다시 보여줘야 하니까 @ModelAttribute를 사용한다.</p>
+<p> }<br />
+ &nbsp;&nbsp; - validation 추가하기<br />지금은 Validator를 만들고 직접 validate까지 호출해줘야 하지만, 나중에는 세터에 애노테이션만 붙이면 되는 방식으로 바뀔 듯.<br />&nbsp; &nbsp; - 세션사용하기<br />폼뷰 보여주는 메소드에서 new 해서 새로 만든 객체를 세션에 저장한다.<br />저장하는 메소드에서는 SesstionStatus 타입의 객체를 인자에 추가하고, setComplete()를 호출해서 세션에서 모델을 날려줘야 한다.</div>
+<p>Future directions
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">@PathElements</p>
+<p>@RequestMapping(value="/confiirm/{orderId}")<br />public Date confirm( @PathElement("orderId") String id) {<br />&nbsp; &nbsp; // REST 스타일의 URL을 사용할 수 있게 될 것이다.<br />}</p>
+<p>뷰</p>
+<p>HTML || GET || /account/1<br />XML || GET | /account/1.xml<br />JSON || GET | /account/1.json</p>
+<p>Flow</p>
+<p>FlowContext 객체를 사용해서 @Controller에서 플로우를 시작하도록 할 수 있게된다.</div>
+<p></p>

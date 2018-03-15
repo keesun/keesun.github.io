@@ -1,0 +1,134 @@
+---
+layout: post
+title: JPA @ManyToOne
+date: 2007-09-22 05:58:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Annotation
+tags:
+- "@ManyToOne"
+- JPA
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323129710'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.oracle.com/technology/products/ias/toplink/jpa/resources/toplink-jpa-annotations.html#ManyToOne" target="_blank">http://www.oracle.com/technology/products/ias/toplink/jpa/resources/toplink-jpa-annotations.html#ManyToOne</a><br /><img src="{{ site.baseurl }}/assets/dn382.jpg" class="aligncenter" width="270" height="60" alt="사용자 삽입 이미지" /><br />자 이번에는 Post쪽에서 생각해 보겠습니다. "하나의 Post는 하나의 Category와 연관을 맺고 있습니다." 그럼 1:1 인가요? ㅋㅋ 아니죠. "또 다른 하나의&nbsp; Post가 위의 Post가 연관을 맺고 있는 Category와 연관을 맺을 수 있습니다." 따라서 다:1 즉 ManyToOne의 관계이 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dn383.jpg" class="aligncenter" width="294" height="101" alt="사용자 삽입 이미지" /><br />@ManyToOne에 설정할 수 있는 속성들은 위와 같습니다. 이 중에서 세 개는 이미 @OneToMany에서 살펴보았고, 새로운 것은 딱 하나 optional 이 있습니다.</p>
+<p>optional 은 "부가적인", "임의의"란 뜻으로 해당 속성이 임의적으로 있을 수도 있고, 없을 수도 있는지를 설정하는 것 같습니다.</p>
+<table class="MsoTableColorfulGridAccent1" style="BORDER-COLLAPSE: collapse; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 5.4pt 0cm 5.4pt" cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr style="mso-yfti-irow: -1; mso-yfti-firstrow: yes">
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #b8cce4; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.7pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 102" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 5"><b><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">속성<span lang="EN-US"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" ?><o:p></o:p></span></font></font></span></b></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #b8cce4; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 102" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 1"><b><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">설명<span lang="EN-US"><o:p></o:p></span></font></font></span></b></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #b8cce4; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 102" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 1"><b><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">기본값<span lang="EN-US"><o:p></o:p></span></font></font></span></b></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 0">
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #365f91; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.7pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1; mso-background-themeshade: 191" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 68"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">cascade<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #a7bfde; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 127; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">관계를 맺고 있는 타겟 쪽에 어떠한 <span lang="EN-US">persistence operation</span>들을 연쇄적으로 적용하고 싶을 때 설정합니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><o:p><font face="맑은 고딕" size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><font size="2"><font face="맑은 고딕"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1">ALL, MERGE, PERSIST, REFRESH, REMOVE </span><span style="COLOR: black; mso-themecolor: text1">등의 값을 사용하여 여러 개의<span lang="EN-US"> cascade </span>속성을 설정할 수 있습니다<span lang="EN-US">.<o:p></o:p></span></span></font></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><o:p><font face="맑은 고딕" size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">참조무결성을 위한 설정으로 보이며<span lang="EN-US">, Hibernate</span>의<span lang="EN-US"> @Cascade </span>를 사용하여 보다 다양한<span lang="EN-US"> cascade </span>옵션을 사용할 수 있습니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #a7bfde; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 127; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">비어있는 <span lang="EN-US">CascadeType </span>배열<span lang="EN-US"><o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 1">
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #365f91; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.7pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1; mso-background-themeshade: 191" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 4"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">fetch<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #dbe5f1; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 51; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">연관을 맺고 있는<span lang="EN-US"> Entity</span>들을 요청하는 순간 가져오는 설정이<span lang="EN-US"> LAZY </span>며<span lang="EN-US">,<o:p></o:p></span></font></font></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><o:p><font face="맑은 고딕" size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">해당<span lang="EN-US"> Entity</span>를 가져올 때 미리 연관을 맺고 있는<span lang="EN-US"> Entity</span>들까지 모두 가져오는 것이 <span lang="EN-US">EAGER </span>입니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #dbe5f1; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 51; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">FetchType.LAZY<o:p></o:p></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 2">
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #365f91; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.7pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1; mso-background-themeshade: 191" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 68"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">optinal<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #a7bfde; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 127; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">해당 속성 또는 필드에 빈 값<span lang="EN-US">(null)</span>이 들어갈 수 있는지 여부를 나타냅니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><o:p><font face="맑은 고딕" size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">반드시 값이 필요하다면<span lang="EN-US">, true</span>로 설정합니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #a7bfde; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 1pt solid; mso-border-bottom-themecolor: background1; mso-border-bottom-alt: solid white .5pt; mso-background-themecolor: accent1; mso-background-themetint: 127; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">true<o:p></o:p></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 3; mso-yfti-lastrow: yes">
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #365f91; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.7pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #e0dfe3; mso-background-themecolor: accent1; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1; mso-background-themeshade: 191" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 4"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">targetEntity<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #dbe5f1; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #e0dfe3; mso-background-themecolor: accent1; mso-background-themetint: 51; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">만약<span lang="EN-US"> Generic</span>을 사용하지 않은<span lang="EN-US"> Collection</span>일 때는 이 속성을 관계의 주인이 되는 쪽 클래스로 설정해 주어야 합니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #e0dfe3; PADDING-RIGHT: 5.4pt; BORDER-TOP: #e0dfe3; PADDING-LEFT: 5.4pt; BACKGROUND: #dbe5f1; PADDING-BOTTOM: 0cm; BORDER-LEFT: #e0dfe3; WIDTH: 153.75pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #e0dfe3; mso-background-themecolor: accent1; mso-background-themetint: 51; mso-border-top-alt: solid white .5pt; mso-border-top-themecolor: background1" valign="top" width="205">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: black; mso-themecolor: text1"><font size="2"><font face="맑은 고딕">타입을 명시한<span lang="EN-US"> Collection</span>을 사용했을 때는 해당 타입으로 사용합니다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>다시 예제로 돌아가서 Post가 owning entity인데, 이 녀석을 삭제하거나, 변경한다고 해서, Category도 삭제되거나 변경되어야 하지는 않아도 될 것 같습니다. 흠.. 오히려 Category를 삭제하면 Post들이 모두 삭제 되어야 할 것 같은데 그러면 Cattegory에서 cascade 속성을 설정해야 하나;; 흠... </p>
+<p>Post 객체를 불러올 때 Post와 연관을 맺고 있는 Category도 가져와야 할 필요는 없어 보입니다.</p>
+<p>Post는 꼭 어느 Category엔가에는 들어야 할 것이기 때문에 외례키가 null일 경우는 없을 것 같습니다.</p>
+<p>위 정황을 종합하여 다음과 같이 설정할 수 있겠습니다.</p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><span lang="EN-US" style="COLOR: #646464; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt" /></font></p>
+<div style="BORDER-RIGHT: #e38fbc 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #e38fbc 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #e38fbc 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #e38fbc 1px solid; BACKGROUND-COLOR: #ffe4f4">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><span lang="EN-US" style="COLOR: #646464; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">@ManyToOne</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">(fetch=FetchType.</span><i><span lang="EN-US" style="COLOR: #0000c0; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">LAZY</span></i><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">, optional=</span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">false</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">)</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">public</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> Category getCategory() {</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">return</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> </span><span lang="EN-US" style="COLOR: #0000c0; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">category</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">;</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><font size="2">}</font></span></p>
+</div>
+<p>여기서 이만 끝나면 좋겠지만, 아직 끝나지 않았습니다. @JoinColumn 이라는 녀석을 붙여줘야 합니다. 다음 글에서 살펴보겠습니다.</p>

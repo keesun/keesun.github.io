@@ -1,0 +1,60 @@
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a>
+<ul>
+<li>레코드 갯수 세기</li>
+<ul>
+<li>COUNT(*) : 모든 레코드 갯수</li>
+<li>COUNT(DISTINCT 컬럼) : 해당 컬럼의 값이 NULL이 아니고 중복되지 않는 레코드 갯수</li>
+<li>COUNT(ALL 컬럼) : COUNT(컬럼) 형태로 쓰면 default로 ALL을 붙여서 사용함. 중복 허용.</li>
+</ul>
+<li>합계 구하기</li>
+<ul>
+<li>SUM(DISTINCT 컬럼)</li>
+<li>SUM(ALL 컬럼)</li>
+</ul>
+<li>평균 구하기</li>
+<ul>
+<li>AVG(컬럼)</li>
+<li>오라클은 숫자 타입이 NUMBER라서 정수가 아닌 수도 담을 수 있다. 따라서 정수만 담긴 컬럼의 평균 값이 소수가 나올 수 있다.</li>
+</ul>
+<li>최소/최대값 구하기</li>
+<ul>
+<li>MIN(컬럼)</li>
+<li>MAX(컬럼)</li>
+</ul>
+<li>그룹핑 하기</li>
+<ul>
+<li>SELECT ColumnA, AggFunc(AggFuncSpec) FROM Table<br />WHERE WhereSpec<br />GROUP BY ColumnA;</li>
+<li>주의할 것 : SELELT 절에 있는 ColumnA는 써도 되고 안 써도 되지만, 다른 컬럼은 쓰면 안 됌.</li>
+</ul>
+<li>그룹핑 후에 조건 주기</li>
+<ul>
+<li>SELECT StudentID, AVG(Mark) AS AverageMark<br />FROM StudentExam<br />GROUP BY StudentID<br />HAVING AVG(Mark) &lt; 50 OR AVG(Mark) &gt; 70;</li>
+</ul>
+<ul>
+<li>WHERE 절은 그룹핑 하기 전에 실행되기 때문에, 그룹핑의 결과를 다룰 수는 없슴.</li>
+<li>따라서 HAVING을 사용하여 그룹핑 후에 조건을 줄 수 있슴.</li>
+</ul>
+<li>상위에서 N개의 레코드 가져오기</li>
+<ul>
+<li>오라클의 ROWNUM 사용하기.</li>
+<li>SELECT StudentID, AverageMark FROM (<br />&nbsp;&nbsp; SELECT StudentID, AVG(Mark) AS AverageMark<br />&nbsp;&nbsp; FROM StudentExam<br />&nbsp;&nbsp; GROUP BY StudentID<br />&nbsp;&nbsp; ORDER BY AverageMark DESC<br />)<br />WHERE ROWNUM &lt;= 5;</li>
+<li>ROWNUM 키워드는 WHERE 절에서만 사용할 수 있다.</li>
+</ul>
+<li>랭킹 매기기</li>
+<ul>
+<li>오라클에서 RANK() OVER () 사용하기</li>
+</ul>
+<ul>
+<li>SELECT Ranking, StudentID, AverageMark FROM (<br />&nbsp;&nbsp; SELECT RANK() OVER (ORDER BY AVG(Mark) DESC) AS Ranking,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; StudentID, AVG(Mark) AS AverageMark<br />&nbsp;&nbsp; FROM StudentExam<br />&nbsp;&nbsp; GROUP BY StudentID)<br />WHERE Ranking &lt;= 4;</li>
+</ul>
+<ul>
+<li>소수점 이하를 모두 버렸을 때, 순위를 매기면 누가 더 높은 것인지 알 수 있다.</li>
+</ul>
+<li>Analytic Functions</li>
+<ul>
+<li>함수() OVER () 문법으로 SQL 표준은 아닌데 오라클에서 사용 가능한 문법.</li>
+<li>SELECT StudentID, Mark, AVG(Mark) OVER<br />(PARTITION BY StudentID<br />&nbsp;ORDER BY StudentID, Mark) Running_Avg_by_Student<br />FROM StudentExam<br />ORDER BY StudentID, Mark;</li>
+<li>OVER는 어렵다 어려워;;
+</li>
+</ul>
+</ul>

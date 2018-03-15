@@ -1,0 +1,15 @@
+<p><img src="/assets/fk21.png" class="aligncenter" width="600" height="319" alt="사용자 삽입 이미지" /><br />아~~ 이 짜릿함!!!<br />저 화면을 보려고 거의 두 시간이나 낑낑댔습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">참조<br /><a href="http://www.ibm.com/developerworks/kr/library/j-ap03137/index.html" target="_blank">사람을 위한 자동화: 연속 테스팅 (한글)</a><br /><a href="http://bcho.tistory.com/entry/Cobertura%EC%97%90%EC%84%9C-%EC%BD%94%EB%93%9C-%EC%BB%A4%EB%B2%84%EB%9F%AC%EC%A7%80-%EB%B6%84%EC%84%9D%EA%B2%B0%EA%B3%BC%EA%B0%80-%EC%9E%98%EB%AA%BB-%EB%82%98%EC%98%AC%EB%95%8C" target="_blank">Cobertura에서 코드 커버러지 분석결과가 잘못 나올때..</a><br /><a href="http://bcho.tistory.com/entry/Cobertura%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%BB%A4%EB%B2%84%EB%9F%AC%EC%A7%80-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%8B%9C-%EC%A3%BC%EC%9D%98%ED%95%A0-%EC%82%AC%ED%95%AD" target="_blank">Cobertura를 이용한 커버러지 테스트시 주의할 사항</a></div>
+<p>TDD 연습한 코드를 Cobertura가 제공하는 Ant Task를 사용해서 리포트를 작성한 화면입니다. 딱 봐도 Rent 클래스에 대한 테스트가 부족했다는 것을 알 수 있습니다.</p>
+<p>이상하다. 정말 열심히 TDD로 작성한 코드인데, Rent 클래스의 커버리지는 정말 이상하리 만큼 낮습니다. 그래서 살펴봤습니다.</p>
+<p><img src="/assets/fk22.png" class="aligncenter" width="600" height="324" alt="사용자 삽입 이미지" /><br />이야... 테스트 안 된 부분은 뻘건색으로 표시 됩니다. 죽여줍니다. ㅎㅎ 무서워서라도 테스트 코드를 잘 작성해야겠군요.</p>
+<p>toString() 메소드가 말썽이었군요. 그 위에있는 메소드도 RentalInfo에 있는 getRentalFee()는 테스트는 했는데 그것들을 쭉 돌아가며 호출하는 메소드는 그냥 작성한 것 같네요.</p>
+<p>흠... 그리고 클래스 목록에 Test 클래스까지 포함되어 있는데, 저 녀석은 instrument 대상에서 제외시켜줘야겠습니다.</p>
+<p><img src="/assets/gk32.png" class="aligncenter" width="600" height="324" alt="사용자 삽입 이미지" /><br />각 항목 별로 정렬도 됩니다. 가장 커버리지가 낮은 클래스는 나중에 버그가 숨어있기 가장 안전한 곳일테니, 테스트를 보충해주는게 좋을 것입니다.</p>
+<p>각 항목 이름을 클릭하면 다음과 같은 항목에 대한 도움말을 보실 수 있습니다.</p>
+<p><img src="/assets/fk23.png" class="aligncenter" width="516" height="536" alt="사용자 삽입 이미지" /><br />Branch Coverage는 뭔지 모르겠네요. 읽어봐도.. 별로;;</p>
+<p><a href="http://www.cenqua.com/clover/doc/coverage/intro.html" target="_blank">위키피디아</a>에서는 다음과 같이 설명되어 있습니다. </p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Branch coverage (sometimes called Decision Coverage) measures which possible branches in flow control structures are followed. Clover does this by recording if the boolean expression in the control structure evaluated to both true and false during execution.</div>
+<p>가능한 분기를 얼마나 테스트 했는지 나타내는 수치로군요. 제가 작성한 코드에서 예를 들어보겠습니다.</p>
+<p><img src="/assets/gk33.png" class="aligncenter" width="600" height="317" alt="사용자 삽입 이미지" /><br />분기문이 하나이고 해당 분기문을 한 번만 테스트 했네요.(왼쪽에 있는 숫자가 몇 번 테스트 됐는지 표시 해주는 것 같습니다. 추측인데.. 거의 맞는거 같습니다.) if 문은 두 곳으로 분기할 수 있는데 그 중에서 한 번만 테스트 한 것입니다.</p>
+<p>맞습니다. "삼각측량"을 사용하지 않았습니다.<br />역시 TDD는 쉽지 않습니다.<br />그러나 그만큼 재밌습니다.</p>

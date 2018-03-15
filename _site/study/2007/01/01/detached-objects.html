@@ -1,0 +1,6 @@
+<p>참조 : Hibernate In Action 4.1.3 Detached Obejcts</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">트랜잭션이 완료되면 Persistence Manager과 연관이 있었던 객체는 그대로 남아있게 된다. 하이버네이트에서는 Session의 close()메소드를 호출하면 그 연관이 사라지며 이 상태는 <span style="color: rgb(255, 118, 53);">DB과 동기화 되어 있지 않은 상태(동기화 된적이 있는 상태)</span>로 Detached라고 한다.</p>
+<p>하이버네이트에서 이 객체들은 새로운 persistent manager와 연관을 맺고 새로운 트랙잭션에서 <span style="color: rgb(0, 153, 102);">재사용이 가능하다.</span>=&gt;다시 Persistent 객체가 될 수 있다.</p>
+<p>DTO 패턴(안좋은 패턴 인듯..)을 피할 때 사용할 수 있다. &lt;= 8장에서 살펴본다고 함.</p>
+<p>evict()메소드를 호출하여 detached 상태가 될 수 있지만 cache 관리를 위해서 사용함으로 일반적인 방법은 아니다. Session의 close()를 사용하거나 원격으로 보내야 해서 직렬화 했을 때 모든 객체들이 detached된다.</p></div>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bl115.bmp" class="aligncenter" width="384" height="292" alt="사용자 삽입 이미지">bl115.bmp</a></p>

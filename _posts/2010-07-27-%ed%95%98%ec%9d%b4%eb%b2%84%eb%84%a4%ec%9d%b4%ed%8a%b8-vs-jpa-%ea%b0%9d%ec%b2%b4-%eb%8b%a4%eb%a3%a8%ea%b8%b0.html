@@ -1,0 +1,126 @@
+---
+layout: post
+title: "[하이버네이트 VS JPA] 객체 다루기"
+date: 2010-07-27 08:09:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- JPA
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323207788'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>JPA를 언젠간 써야 할텐데 아직도 하이버네이트가 그냥 편해서... @_@;; 암튼 이 둘은 객체를 다루는 API가조금 다른데 그걸 정리해둡니다.
+<div id="">
+
+</div>
+<div id="">
+<table width="590" bgcolor="#ffffff" style="border-collapse:collapse" cellpadding="1" cellspacing="1">
+<tbody>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%" id="">&nbsp;하이버네이트(Session)</td>
+<td style="border:1px solid #b1c4fc" width="33%">JPA(EntityManager)</td>
+<td style="border:1px solid #b1c4fc" width="33%">설명&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%" id="">save()</td>
+<td style="border:1px solid #b1c4fc" width="33%" id="">persist()&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%" id=""><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">저장(정확하게는 Pesistent 상태로 변경)</span>&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%" id="">&nbsp;get()</td>
+<td style="border:1px solid #b1c4fc" width="33%" id=""><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">find()</span>&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%"><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">DB에서 가져오기</span>&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%" id="">&nbsp;load()</td>
+<td style="border:1px solid #b1c4fc" width="33%" id="">&nbsp;getReference()</td>
+<td style="border:1px solid #b1c4fc" width="33%"><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">프록시 가져오기</span>&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%">&nbsp;delete()</td>
+<td style="border:1px solid #b1c4fc" width="33%" id="">remove()&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%"><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">삭제(정확하게는 Deleted 상태로 변경)</span>&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%">update()&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%" id="">없음&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%"><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">reattach 다시 부착하기(정확하게는 Detached 상태에서 Persistent 상태로 변경)</span>&nbsp;</td>
+</tr>
+<tr>
+<td style="border:1px solid #b1c4fc" width="33%">&nbsp;merge()</td>
+<td style="border:1px solid #b1c4fc" width="33%" id="">merge()&nbsp;</td>
+<td style="border:1px solid #b1c4fc" width="33%"><span class="Apple-style-span" style="border-collapse: separate; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; ">merge 병합하기(get() 해온 다음에 Detached 객체의 상태를 복사해간다.</span>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="">
+왠지 CRUD가 다 있어 보이지만 사실 아래 두 줄은 Update 관련 API가 아니라 Detached 상태의 객체를 Persistent 상태로 만들기 용 메서드가 뭐 이것들을 이용해서 Detached 상태 객체를 DB에 반영해서 Update 쿼리를 발생시킬 수도 있지만.. 사실 진정한 Update는 API로 존재하지 않는다.&nbsp;</div>
+<div id="">
+
+</div>
+<div id="">
+즉.. Persistent 상태의 객체를 가지고 어떤 속성을 변경했다 치자.. 이때 굳이 어떤 API를 써서 Update 문을 발생시키지 않아도 된다는 것이다.&nbsp;</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+Session session = getSession();&nbsp;</div>
+<div id="">
+Transaction tx = session.beginTransaction();&nbsp;</div>
+<div id="">
+Book book = (Book) session.get(Book.class, 12);&nbsp;</div>
+<div id="">
+<b>book.setName("토비의 스프링 3");&nbsp;</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+tx.commit();&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+session.close();&nbsp;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+저렇게 변경하고 아무것도 실행하지 않는다.&nbsp;왜일까? 퀴즈닷.</div>

@@ -1,0 +1,11 @@
+<p>AspectJ In Action의 저자답게 AspectJ로 DDD를 돕는 여러가지 방법을 설명해줬습니다.</p>
+<p>• Overview of Domain-driven design<br />• Aspects for crosscutting infrastructure<br />• Aspects for fine-grained DI<br />• Aspects for domain logic<br />• Aspects for enforcing DDD best<br />practices<br />• Proceeding towards DDD</p>
+<p>이런 순서대로 발표가 진행됐는데, 토비님께서 마소에 기고하셨던 내용과 비슷한 내용들이 초반에 언급되었고 그 뒤로는 AspectJ를 사용하여 DDD 구현에 도움이 되는 방법들을 소개해 줬습니다.
+<ol>
+<li>Service Layer에서 Aspect성 기능들을 Aspect로 구현하기.</li>
+<li>Aspect 사용해서 Repository나 Facade나 Service 객체들을 도메인에 DI 하기.</li>
+<li>도메인 로직 중에 Aspect성 기능들을 Aspect로 구현하기.</li>
+<li>아키텍처 정책을 수행하도록 강제하는 기능들을 Aspect로 구현하기.(web에서 Repository 호출하면 Eclipse에서 error로 표시하도록, DI사용해서 주입해야 할 것들을 명시적으로 new 하지 못하도록, ...)</li>
+</ol>
+<p>마지막으로 다음과 같은 '사고의 흐름'을 권장해줬습니다.</p>
+<p>• 도메인 엔티티와 도메인 로직부터 시작하기<br />– Basic domain-driven and object-oriented principle<br />• 시작할 때 기본적으로 service 계층은 없다고 생각하기<br />– See how far you can get<br />– Add service level as required<br />• 구현과 관련된 규칙들을 강제하기<br />• DDD로 리팩터링하기.</p>

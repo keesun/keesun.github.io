@@ -1,0 +1,13 @@
+<p>이전에 발생했던 두 개의 문제를 <span class="nickname">Alan Kang님의 도움으로 말끔하게 </span>해결했습니다.</p>
+<p>1. FF에서 아이콘 부분이 이상하게 보이던 것.<br />=&gt; "<br />
+							toolbar의 ul 및 a 태그에 height:100%가 적용되어 있어서 그렇습니다. 이것만 제거해주시면 잘 나올거예요 ^^"</p>
+<p>css를 수정해야 할 것 같습니다. css에서 다음의 부분에서 height : 100%를 삭제했습니다.<br /><img src="/assets/dk140000000000.png" class="aligncenter" width="588" height="512" alt="사용자 삽입 이미지" />자... 그리고 FF에서 확인했더니, 잘 보입니다. 얏호!!</p>
+<p><img src="/assets/ck130000000003.png" class="aligncenter" width="552" height="619" alt="사용자 삽입 이미지" /><br />2. IE에서 비명횡사 하던 문제.<br />=&gt; "<br />
+							 확인하였습니다. <strong><u><a href="http://labs.openmaru.com/projects/xquared/pages/469596">11월 8일 버전</a></u></strong>으로 갱신하시면 문제가 해결될거예요. 감사합니다!" </p>
+<p>네, 위 말대로, 새로운 버전을 받은 다음 예제코드의 자바스크립트 코드로 jsp 파일의 자바스크립트를 수정해 주었더니 문제가 발생하지 않았습니다.</p>
+<p>3. 번외</p>
+<p>이전과 달라진 코드가 있다면, 아래와 같이 view에 삽입되는 코드가 더 짧아졌다는 것입니다.
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">var xed;</p>
+<p>&nbsp; &nbsp; window.onload = function() {<br />&nbsp; &nbsp; &nbsp; &nbsp; xed = new xq.Editor($("xqEditor"));<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.setEditMode('wysiwyg');<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.loadStylesheet("css/xq_contents.css");<br />&nbsp; &nbsp; &nbsp; &nbsp; xed.focus();<br />&nbsp; &nbsp; }</div>
+<p>4. 이제부턴 본격적으로 XQuared의 자바스크립트 API를 살펴봐야겠군요.</p>
+<p>Edit 모드와 View 모드 설정.<br />창크기 조절.<br />아이콘/기능 추가.<br />단축키 변경/추가.</p>

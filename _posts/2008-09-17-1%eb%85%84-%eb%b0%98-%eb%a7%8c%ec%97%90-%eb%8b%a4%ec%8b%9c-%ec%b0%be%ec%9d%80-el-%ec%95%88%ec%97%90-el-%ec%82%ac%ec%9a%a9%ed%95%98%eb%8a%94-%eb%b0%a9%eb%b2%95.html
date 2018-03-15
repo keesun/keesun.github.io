@@ -1,0 +1,66 @@
+---
+layout: post
+title: 1년 반 만에 다시 찾은, EL 안에 EL 사용하는 방법
+date: 2008-09-17 08:50:07.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- EL 안에 EL
+- JSP
+- 고급 기술
+- 태그 파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323191125'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>커스텀 태그에서 Expression Language를 사용하다보면, 언젠간 아래처럼 쓰고 싶은 경우가 발생할 수도 있습니다. 전 예전에 한 번 <a href="http://whiteship.me/623" target="_blank">이 벽에 부딪혀서 결국 못 넘고 좌절한 적</a>이 있는데, 해당 글에 물개선생님이 남겨주신 댓글과 사부님이 만든 태그를 보니.. 이해가 됩니다.</p>
+<p>먼저 상황부터 설명을 하자면,..</p>
+<p>일단 EL 안에 EL을 사용하고 싶은 경우가 어떤 경우냐면.. 보통 ${member.name} 이렇게 쓰는데, 만약 이 때 이 name라는 값도 변수화 해서 property라는 태그 파일 속성으로 받도록 할 수 있겠습니다. 그리고 이 속성에는 name 뿐만 아니라, age, height 등등 여러 가지 member 객체가 가지고 있는 속성 값을 넣을 수 있다고 했을 때.. EL로 그 속성값을 뿌리려면..</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;%@ attribute name="property" required="false" %&gt;</p>
+<p>${member.${property}} </div>
+<p>이렇게 하고 싶습니다. 그쵸? 하지만, 해보시면 아시겠지만 안 됩니다. 저런 문법을 <a href="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/JSPIntro7.html" target="_blank">EL</a>이 지원하질 않습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">심각: Servlet.service() for servlet sample threw exception<br />org.apache.el.parser.ParseException: Encountered "{" at line 1, column 4.<br />Was expecting one of:<br />&nbsp; &nbsp; "}" ...<br />&nbsp; &nbsp; "." ...<br />&nbsp; &nbsp; "[" ...<br />&nbsp; &nbsp; "&gt;" ...<br />&nbsp; &nbsp; "gt" ...<br />&nbsp; &nbsp; "&lt;" ...<br />&nbsp; &nbsp; "lt" ...<br />&nbsp; &nbsp; "&gt;=" ...<br />&nbsp; &nbsp; "ge" ...<br />&nbsp; &nbsp; "&lt;=" ...<br />&nbsp; &nbsp; "le" ...<br />&nbsp; &nbsp; "==" ...<br />&nbsp; &nbsp; "eq" ...<br />&nbsp; &nbsp; "!=" ...<br />&nbsp; &nbsp; "ne" ...<br />&nbsp; &nbsp; "&amp;&amp;" ...<br />&nbsp; &nbsp; "and" ...<br />&nbsp; &nbsp; "||" ...<br />&nbsp; &nbsp; "or" ...<br />&nbsp; &nbsp; "*" ...<br />&nbsp; &nbsp; "+" ...<br />&nbsp; &nbsp; "-" ...<br />&nbsp; &nbsp; "?" ...<br />&nbsp; &nbsp; "/" ...<br />&nbsp; &nbsp; "div" ...<br />&nbsp; &nbsp; "%" ...<br />&nbsp; &nbsp; "mod" ...<br />&nbsp; &nbsp; "(" ...<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; at org.apache.el.parser.ELParser.generateParseException(ELParser.java:1874)<br />&nbsp; &nbsp; at org.apache.el.parser.ELParser.jj_consume_token(ELParser.java:1754)<br />&nbsp; &nbsp; at org.apache.el.parser.ELParser.DynamicExpression(ELParser.java:156)</div>
+<p>자.. 이런 에러가 발생합니다. 괄호를 안쪽부터 처리해주면 좋겠지만, 희망사항이었던 것 같습니다. ${property}의 값이 name이면 ${member.name} 이 되고.. 이건 내부적으로 member.getName()을 호출해서 가져다주면 좋을텐데 말이죠. 흠... 복잡해 질까봐 이렇게 구현하지 않았을지도 모르겠습니다.</p>
+<p>어쨋든, 저 윗 글에 물개선생님이 알려주신 코드대로 하면 EL안에 EL을 사용하는 효과를 얻을 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;%@ attribute name="property" required="false" %&gt;</p>
+<p>&lt;%<br />property = (property != null) ? property : "name";<br />Object memberPropertyValue = PageContextImpl.proprietaryEvaluate(<span style="font-weight: bold;">"${member." + property + "}</span>", Object.class, (PageContext)this.getJspContext(), null, false);<br />out.print(memberPropertyValue.toString());<br />%&gt;</div>
+<p>이렇게 PageContextImpl를 이용해서 가져오면 됩니다. 위에서 제가 원하던 방법대로 자바 코드를 사용해서 처리한 겁니다. <span style="font-weight: bold;">"${member." + property + "} </span>이렇게 하는 순간, 이미 안 쪽의 변수 값을 가져오기 때문에 이후에는 ${member.name}를 쓰는 것과 같은 것이 됩니다.<span style="font-weight: bold;"><br /></span><br />흠.. 이상합니다. 저 때도 분명 물개 선생님이 댓글로 코드까지 주셨는데, 저걸 못 써먹고 포기했었습니다. 거의 1년 반이 지난 이제와서 그때 포기했던걸 다시 하게 되네요. ㅋㅋ 1년 반이라...</p>

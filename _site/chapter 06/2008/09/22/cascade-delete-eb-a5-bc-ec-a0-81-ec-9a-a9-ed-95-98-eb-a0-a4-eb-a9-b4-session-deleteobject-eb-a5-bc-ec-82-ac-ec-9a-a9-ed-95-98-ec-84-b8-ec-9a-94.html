@@ -1,0 +1,49 @@
+<p>기본적으로 이 문제는 Session API를 사용할 것이냐, 아니면 HQL이나 네이티브 쿼리를 날릴 것이냐에 해당하는데, Cascade와 같은 옵션을 적용하려면 세션 컨텍스트랑은 전혀 관련없이 바로 바로 DB로 쿼리를 날려버리는 HQL이나 네이티브 쿼리등을 사용하면 안 됩니다. Session에 있는 add(Obejct), reattach(Object), delete(Object) 등을 이용해야.. 원하는 Cascade 옵션을 적용할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+@Entity<br />
+public class Employee {</p>
+<p>&nbsp; &nbsp; @Id<br />
+&nbsp; &nbsp; @GeneratedValue(strategy = GenerationType.AUTO)<br />
+&nbsp; &nbsp; private int id;<br />
+&nbsp; &nbsp; private String name; // Text field<br />
+&nbsp; &nbsp; private String loginId;<br />
+&nbsp; &nbsp; private String password; // Password<br />
+&nbsp; &nbsp; private int sex; // Radio button<br />
+<span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp; &nbsp; @CollectionOfElements</span><br style="font-weight: bold; color: rgb(0, 102, 153);" /><span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp; &nbsp; @Cascade(CascadeType.DELETE)</span><br style="font-weight: bold; color: rgb(0, 102, 153);" /><span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp; &nbsp; private List&lt;Integer&gt; hobbies; // check boxes</span><br />
+&nbsp; &nbsp; private String location; // Select<br />
+&nbsp; &nbsp; private String memo; // Textarea<br />
+...</div>
+<p>위와 같이 Cascade 설정을 해서 Emp를 지울 때 이 녀석을 참조하고 있는 value type 데이터도 지워지게 해뒀습니다. 자. 이게 제대로 동작하나 확인을 해봐야겠죠.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">
+&nbsp; &nbsp; @Test<br />
+&nbsp; &nbsp; public void delete(){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Employee employee = new Employee();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; employeeDao.add(employee);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; employee.addHobby(HobbyType.MOVIE);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; employee.addHobby(HobbyType.CODING);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; employeeDao.flushAndClear();<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; Employee emp = employeeDao.get(employee.getId());<br />
+&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(emp.getHobbies());<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="font-weight: bold;">employeeDao.deleteById(emp.getId());</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; employeeDao.flushAndClear();<br />
+&nbsp; &nbsp; }</div>
+<p>이 테스트 코드는 에러가 납니다. 왜 에러가 날까요? emp의 주키를 emp_hobby 테이블에서 참조하고 있는 레코드들이 아직 남아있는데, delete from emp wherer id = ? 이런 쿼리가 날아가기 때문입니다. 다음과 같은 에러를 볼 수 있습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">
+org.hibernate.exception.ConstraintViolationException: could not execute update query<br />
+	org.hibernate.exception.SQLStateConverter.convert(SQLStateConverter.java:71)<br />
+	org.hibernate.exception.JDBCExceptionHelper.convert(JDBCExceptionHelper.java:43)<br />
+	org.hibernate.hql.ast.exec.BasicExecutor.execute(BasicExecutor.java:84)<br />
+	org.hibernate.hql.ast.QueryTranslatorImpl.executeUpdate(QueryTranslatorImpl.java:396)<br />
+	org.hibernate.engine.query.HQLQueryPlan.performExecuteUpdate(HQLQueryPlan.java:259)<br />
+	org.hibernate.impl.SessionImpl.executeUpdate(SessionImpl.java:1141)<br />
+	org.hibernate.impl.QueryImpl.executeUpdate(QueryImpl.java:94)<br />
+<br />
+...</div>
+<p>이런 식의 에러 메시지를 만나게 됩니다. 그러나 위 코드에서 한 줄만 바꾸면 테스트는 통과하죠. </p>
+<p>Session API를 사용하는 쪽이 더 유연한 애플리케이션을 만드는데 도움이 되는 것으로 보입니다. 설정만 변경하면 위와 같이 Cascade.Delete를 처리할 수 있는데, 반해 SQL을 직접 날리는 DAO로 구성되어 있다면, 일일히 emp가 물고 있는 것들부터 다 지우고나서 지워야 할테니.. 이것참.. 번거로운 코딩일 뿐더러, 애플리케이션이 유연하지도 못한거 아닌가 싶습니다. 기능하나 변경하는데 사방을 건들테니 말이죠.</p>
+<p>Hibernate 좋아 좋아.</p>
+<p><a href="/1495">2008/02/24 - [Hibernate/Chapter 9] - 객체 상태</a><br />
+<a href="/1457">2008/02/07 - [Hibernate/Chapter 6] - 객체 상태 전이하기</a></p>

@@ -1,0 +1,12 @@
+<p>193페이지 코드가 엉망이었네요... 죄송합니다. 제 원래 원고에 있는 본문은 다음과 같습니다. 제가 최종 리뷰를 제대로 못했네요. 죄송합니다.</p>
+<p>&nbsp;</p>
+<p>서비스에는 별다른 비즈니스 로직이 없기 때문에, 단순히 DAO로 위임합니다. MemberDao에도 listByName 이라는 기능이 없으니 MemberDao에 다음 코드를 추가합니다.</p>
+<p>List&lt;Member&gt; listByName(String name);</p>
+<p>마지막으로 MemberDaoHibernate에 listByName을 다음과 같이 하이버네이트 Criteria를 사용해서 구현할 수 있습니다.</p>
+<p>@SuppressWarnings("unchecked")</p>
+<p><strong>public</strong> List&lt;Member&gt; listByName(String name) {</p>
+<p><strong>return</strong> getCriteria()</p>
+<p>.add(Restrictions.<em>like</em>("name", name, MatchMode.<em>ANYWHERE</em>))</p>
+<p>.list();</p>
+<p>}</p>
+<p>Restrictions.like() 메서드를 사용해서 구현했습니다.</p>

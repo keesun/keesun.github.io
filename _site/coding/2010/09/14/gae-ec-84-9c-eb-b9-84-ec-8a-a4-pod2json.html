@@ -1,0 +1,8 @@
+<p>ITunes를 비롯해서 여러 Podcast feed URL들은 XML 문서를 반환해주는데 난 JSON으로 처리하고 싶다. 사실 이보다 더 심각한 문제는 다른 도메인에서 제공하는 서비스를 Ajax로 호출할 수 없다는 것이다. 그래서 성윤이가 알려준 꼼수를 적용하려면 역시 내가 별도의 서비스를 구현하는 수밖에 없었다. 다행히 이미 GAE에 서비스 만들어 올리는 방법도 학습했었고, 스프링 3.0의 @ResponseBody를 쓰는 방법도 알고 있어서 손쉽게 ‘꼼수’를 적용할 수 있었다.</p>
+<p>간단한 서비스를 만들어 GAE에 올렸다.</p>
+<p><a href="http://pod2json.appspot.com/app/feed.json?callback=?&amp;feed=피드URL">http://pod2json.appspot.com/app/feed.json?callback=?&amp;feed=피드URL</a></p>
+<p>이런식으로 요청하면 해당 피드 URL에 들어있는 정보 중에서 제가 원하는 정보만 뽑아서 JSON으로 반환해 줍니다.</p>
+<p><a href="http://pod2json.appspot.com/app/feed.json?callback=?&amp;feed=http://danpod.kangjang.net/rss/gmp.xml">http://pod2json.appspot.com/app/feed.json?callback=?&amp;feed=http://danpod.kangjang.net/rss/gmp.xml</a></p>
+<p>예를 들어 이런 요청을 하면 결과를 jquery의 getJSON(url, function)에 넘겨주고 function에서는 전달받은 JSON을 처리할 수 있다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/13.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="1" border="0" alt="1" src="/assets/1_thumb3.jpg" width="244" height="187" /></a> </p>
+<p>에효.. 이참에 Ajax로 크로스 도메인인지 뭐시기 이슈도 경험해봤네;; 귀찮네;; 권한관리로 URL을 막게하면 되지 굳이.. 데스크탑 브라우저 주소창에 치면 다 접근 되는걸 왜 Ajax 호출은 막은건지.. 아직도 이유를 몰겠;; @_@;; 그리고 막히려면 다 막혀야지 IE에서 Ajax 호출하면 되면서 크롬이나 사파리는 안되다니.. 이상하고 답답하네요.</p>

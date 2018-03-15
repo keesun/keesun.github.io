@@ -1,0 +1,56 @@
+---
+layout: post
+title: 4. 화면과 모델 통합에서의 갈등
+date: 2007-02-22 06:09:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- TDD 도우미
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323094801'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>미쳐 생각하지 못했던 문제들이 슬슬 Clocking을 풀고 있습니다.</p>
+<p>1. 저장을 어떤 형태로 할 것인가? 저는 text 파일로 저장 읽어 오기를 구현해 뒀습니다. 하지만 List를 저장하기엔..ObjectStream이 좋을 것 같네요. text로 읽어와서 파싱하는 노가다를 하기 싫어요~ ㅠ.ㅠ... 그렇다면 text 파일로 리포트를 만들어 주는 기능을 <span style="color: rgb(255, 0, 0);">나중에</span> 만들고 일단 저장하기와 불러오기는 ObejctStream으로 변경 할까요? 네!<br /><img src="{{ site.baseurl }}/assets/ck15.gif" class="aligncenter" width="350" height="397" alt="사용자 삽입 이미지" /><br />2. 이런 이런 스크롤이 마우스 휠을 움직여도 움직이지 않아요. 마우스 휠로 스크롤을 움직이게 하든지..하니면 ExpendBar를 열거나 닫을 때마다 화면 크기를 딱 맞게 변하게 스크롤이 생기지 않도록 합시다. 방법은? 모르는데요. 으흐흐흐... 그렇다면 알고 나면 고칩니다. 일단 그냥 구현 합시다. 넹~</p>
+<p>3. ToDo List 에서는 하나의 작업 만 선택하도록 합시다. 왜요? 여러 작업을 동시에 START 시킬 순 없자나요. 아아.. OK. 뭐 그럽시다. 사실은 코딩하기 귀찮아서 그런거죠? 에이.. 설마..</p>
+<p>4. 처음 프로그램을 실행 했을 때를 생각해 봅시다. <br />4.1. 일단 Current Work에 Work가 없기 때문에 PAUSE 와 END 버튼은 disable 상태여야 합니다.<br />4.2. ToDo List 역시 아무것도 없기 때문에 START와 DELETE 역시 disable 상태여야 합니다. ADD만 그냥 두면 되겠군요.<br />4.3. 작업 하나를 입력 합니다. 그럼 START와 DELETE 버튼이 이용 가능해 지겠군요.<br />4.4. 작업 하나를 선택해서 START 시킵니다. 그럼 PAUSE 와 END 버튼이 이용 가능해 지겠군요. 대신에 START 버튼은 불이 꺼집니다.<br />4.5. PAUSE 버튼을 클릭하면 PAUSE 버튼의 title이 RESTART 로 바뀝니다. 그리고 START에는 다시 불이 들어옵니다.<br />4.6. PAUSE 버튼을 클릭한 상태에서 ToDo에서 작업을 선택하고 START를 클릭하면... 음.. 그렇게 되겠군요.<br />4.7. END 버튼을 클릭하면 PAUSE 버튼은 불이 꺼지고 Completed Work List에 완료된 작업이 추가 됩니다.</p>

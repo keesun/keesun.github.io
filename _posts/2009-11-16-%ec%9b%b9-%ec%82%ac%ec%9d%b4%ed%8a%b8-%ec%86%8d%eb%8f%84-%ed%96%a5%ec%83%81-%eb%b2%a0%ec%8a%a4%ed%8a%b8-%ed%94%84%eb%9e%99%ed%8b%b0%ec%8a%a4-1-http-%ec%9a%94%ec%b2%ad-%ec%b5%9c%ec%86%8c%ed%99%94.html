@@ -1,0 +1,62 @@
+---
+layout: post
+title: "[웹 사이트 속도 향상 베스트 프랙티스 1] HTTP 요청 최소화 하기"
+date: 2009-11-16 09:46:04.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 웹 개발
+- 웹 사이트 성능 향상
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323124239'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://developer.yahoo.com/performance/rules.html]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html"></a><a title="[http://developer.yahoo.com/performance/rules.html#num_http]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#num_http">http://developer.yahoo.com/performance/rules.html#num_http</a></p>
+<p>HTTP 요청 최소화하기(Minimize HTTP Requests)</p>
+<p>tag: content</p>
+<p>사용자 응답 시간 중 80%가 브라우저 단(front-end)에서 소요된다. 이 시간 중 대부분이 페이지의 모든 컴포넌트들(이미지, 스타일시트, 스크립트, 플래시 등)을 다운로드 하는데 소요된다. 컴포넌트의 갯수를 줄이면 페이지를 랜더링하는데 필요한 HTTP 요청의 수도 줄어들게 된다. 바로 이것이 페이지 로딩 속도를 높이는 핵심이다.</p>
+<p>화면에 있는 컴포넌트의 수를 줄이는 한가지 방법은 페이지의 디자인을 단순하게 만드는 것이다. 하지만 꽤 복잡한 컨텐츠로 구성되어 있는 페이지를 만들 때도 빠른 응답 속도를 보장할 수 있는 방법은 없을까? 이제부터 풍요롭게 디자인된 페이지를 지원하면서도 HTTP 요청을 줄이는 기술을 몇 가지 살펴보자.</p>
+<p>묶음 파일(Combined files)이란 모든 스크립트를 하나의 스크립트로 묶고, 그와 비슷하게 모든 CSS를 하나의 스타일시트로 묶어서 HTTP 요청을 요청을 줄이는 방법이다. 묶음 파일은 페이지 마다 필요한 스크립트와 스타일시트가 다를 때 좀 더 도전적인 과제가 될 수 있지만, 이러한 것을 배포 절차 중 하나로 만든다면 응답 시간을 줄일 수 있다.</p>
+<p><a title="[http://www.alistapart.com/articles/sprites]로 이동합니다." target="_blank" href="http://www.alistapart.com/articles/sprites">CSS Sprites</a>는 이미지 요청 수를 줄일 때 선호하는 방법이다. 배경 이미지들을 하나의 단일 이미지로 묶고 background-image와 background-position 속성을 사용해서 이미지의 일부를 보여주는 것이다.</p>
+<p><a title="[http://www.w3.org/TR/html401/struct/objects.html#h-13.6]로 이동합니다." target="_blank" href="http://www.w3.org/TR/html401/struct/objects.html#h-13.6">Image map</a>은 여러 개의 이미지 파일을 하나의 이미지로 만든다. 전체 사이즈는 거의 같겠지만, HTTP 요청의 수가 줄어들어 페이지 로딩 속도가 빨라진다. 이미지 맵은 네비게이션 바와 같이 연속적으로 나타나는 이미지 일 때 적합하다. 이미지 맵의 좌표를 정의하는 것은 매우 지루하고 오류를 범하기 쉬울 것이다. 이미지 맵을 사용하여 네비게이션을 하는 것 또한 적용하기 쉽지 않다. 따라서 권장하는 방법은 아니다.</p>
+<p>인라인 이미지(inline image)는 data: URL 스키마를 사용하여 이미지 데이타를 실제 페이지에 첨부한다. 이렇게 하면 HTML 문서의 크기가 늘어난다. 인라인 이미지를 (캐싱을 사용하는) 스타일시트에 넣는 방법으로 HTTP 요청을 줄이고 문서 크기가 늘어나는 것을 방지할 수 있다. 하지만 아직 인라인 이미지를 모든 주요 브라우저에서 지원하고 있지는 않다.</p>
+<p>페이지에 필요한 HTTP 요청을 줄이는 것부터가 시작이다. 특히 이것은 첫 방문자를 위한 성능 향상에서 가장 중요한 가이드라인이다.&nbsp; Tenni Theurer의 블로그 글 <a title="[http://yuiblog.com/blog/2007/01/04/performance-research-part-2/]로 이동합니다." target="_blank" href="http://yuiblog.com/blog/2007/01/04/performance-research-part-2/">Browser Cache Usage - Exposed!</a>에 따르면, 매일 여러분의 사이트 방문자 중 40~60%는 캐시가 비어있는 상태에서 찾아온다. 처음 방문하는 유저를 위해 페이지 로딩 속도를 높이는 것은 더 나은 사용자 경험에 있어서 핵심이다.</p>

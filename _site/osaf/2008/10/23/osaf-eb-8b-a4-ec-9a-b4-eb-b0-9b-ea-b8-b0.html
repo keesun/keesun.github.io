@@ -1,0 +1,31 @@
+<p><a href="https://sourceforge.net/project/showfiles.php?group_id=158280&amp;package_id=177263&amp;release_id=635242" target="_blank">OSAF 소스포지 링크</a>를 클릭하면 다음과 같이 두 개의 파일이 보입니다.</p>
+<p><img src="/assets/4901094fc1261C4.png" class="aligncenter" width="600" height="142" alt="" filename="1.png" filemime="" /><br />
+위에 있는 녀석은 OSAF 의존성 라이브러리들을 osaf홈/lib 폴더에 모두 담고 있습니다. 메이븐을 사용하지 않을 때는 거기에 있는 모든 라이브러리를 클래스패스에 추가해서 사용하시면 됩니다.</p>
+<p>메이븐을 사용하실 때에는 아래에있는 1메가 남짓의 파일을 받으시면 됩니다.</p>
+<p>소스포지를 이용해주시면 다운로드 집계가 되기 때문에 차후에 통계 자료를 참고할 수 있습니다.</p>
+<p>한 가지 방법이 더 있는데, 메이븐 리파지토리에 OSAF 메이븐 저장소를 등록하신 다음, 다음의 dependency 설정을 pom.xml에 추가하는 방법이 있습니다.</p>
+<div style="border: 3px double rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+&lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.opensprout&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;osaf-core&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.0.0-m1&lt;/version&gt;<br />
+&lt;/dependency&gt;</div>
+<p>이렇게만 추가하면, 필요한 모든 라이브러리까지 알아서 끌어오기 때문에 매우 편리합니다. </p>
+<p>OSAF 저장소를 추가하는 방법도 간단합니다.</p>
+<div style="border: 3px double rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+&lt;project&gt;<br />
+...<br />
+&nbsp;&nbsp;&nbsp; &lt;repositories&gt;<br />
+...<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;id&gt;osaf.repository&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;name&gt;OSAF Repository&lt;/name&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;url&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; http://www.opensprout.org:8082/nexus/content/groups/public/<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/repository&gt;<br />
+...<br />
+&nbsp;&nbsp;&nbsp; &lt;/repositories&gt;<br />
+..<br />
+&lt;/project&gt;</div>
+<p></p>

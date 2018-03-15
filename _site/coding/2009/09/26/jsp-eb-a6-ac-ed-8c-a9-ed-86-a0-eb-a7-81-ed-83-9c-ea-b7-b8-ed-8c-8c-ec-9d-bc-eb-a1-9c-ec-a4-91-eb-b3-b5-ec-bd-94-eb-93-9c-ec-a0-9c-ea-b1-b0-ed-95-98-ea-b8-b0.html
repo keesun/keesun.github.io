@@ -1,0 +1,70 @@
+<p>&lt;%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%&gt;<br />
+&lt;%@ taglib prefix="page" tagdir="/WEB-INF/tags/page"%&gt;<br />
+&lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%&gt;<br />
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%&gt;<br />
+&lt;%@ taglib prefix="s" tagdir="/WEB-INF/tags/study"%&gt;</p>
+<p>&lt;page:studypage&gt;<br />
+&lt;s:defaultpage&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;h1&gt;스터디 추가&lt;/h1&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;form:form commandName="study" method="post"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;p&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;스터디명&lt;/label&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:input path="studyName" cssClass="text" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:errors path="studyName" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;p&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;최대인원수&lt;/label&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:input path="maximum" cssClass="text" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:errors path="maximum" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;p&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;시작일&lt;/label&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:input path="startDay" cssClass="text"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:errors path="startDay" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;p&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;종료일&lt;/label&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:input path="endDay" cssClass="text"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:errors path="endDay" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;p&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;label&gt;설명&lt;/label&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:textarea path="descr" rows="4" cols="60" cssClass="text"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:errors path="descr" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/p&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;br/&gt;&lt;hr/&gt;&lt;br/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;a href="&lt;c:url value="/study/list.do"/&gt;"&gt;취소&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;input type="submit" value="저장" class="s_waitblock" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/form:form&gt;<br />
+&lt;/s:defaultpage&gt;<br />
+&lt;script type="text/javascript"&gt;<br />
+&nbsp; $(document).ready(function(){<br />
+&nbsp;&nbsp;&nbsp; $("#startDay").datepicker({ dateFormat: 'yy/mm/dd' });<br />
+&nbsp;&nbsp;&nbsp; $("#endDay").datepicker({ dateFormat: 'yy/mm/dd' });<br />
+&nbsp; });<br />
+&lt;/script&gt;<br />
+&lt;/page:studypage&gt;</p>
+<p>이미 태그 파일로 &lt;html&gt; &lt;/html&gt;과 js, css 임포트 하는 부분을 제거 해 두었습니다. 태그 파일을 여러 추상화 계층으로 세분화 해서 로우 레벨 태그파일과 하이 레벨 태그파일로 나눌 수도 있겠습니다. 저 위에 보이는 page 태그는 하이 레벨 태그 파일로 볼 수 있고, s 태그는 로우 레벨로 볼 수 있습니다. 하이 레벨이라고 해서 뭔가 더 여러운 태그라는게 아니라, 로우 레벨 태그를 조합하여 한 단계 더 추상화시킨 태그파일 입니다. 이런 구분이 원래 있는 것이 아니라 제가 생각하는 걸 정리한 것 뿐이오니,,, 괜히 "하이 레벨 태그 파일" 이런식으로 구글링을 하는 사태가 없기를 바랍니다.</p>
+<p>사설을 좀 길었네요, 일단락하기로 하고, 위 코드를 태그파일로 리팩토링하면 다음과 같이 됩니다.</p>
+<p>&lt;page:studypage&gt;<br />
+&lt;s:defaultpage&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;h1&gt;스터디 추가&lt;/h1&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;form:form commandName="study" method="post"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:ftext title="스터디명" path="studyName" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:ftext title="최대인원수" path="maximum" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:fdate title="시작일" path="startDay" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:fdate title="종료일" path="endDay" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:ftextarea title="설명" path="descr" rows="4" cols="60" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;hr/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;s:back-button url="/study/list.do" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;input type="submit" value="저장" class="s_waitblock" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/form:form&gt;<br />
+&lt;/s:defaultpage&gt;<br />
+&lt;script type="text/javascript"&gt;<br />
+&nbsp; $(document).ready(function(){<br />
+&nbsp;&nbsp;&nbsp; $(".fdate").datepicker({ dateFormat: 'yy/mm/dd' });<br />
+&nbsp; });<br />
+&lt;/script&gt;<br />
+&lt;/page:studypage&gt;</p>
+<p>이렇게 했을 때 좋은 점은 소스 코드에서 중복을 제거 했을 때 얻을 수 있는 장점과 같습니다.</p>
+<p>그러나,,, 단점도 있는데 태그 파일에 정의해준 속성만 받아서 사용하기 때문에 그만큼 사용할 수 있는 기능이 제한 될달까.. 그런게 좀 있습니다. 해결책은 있습니다. 태그 파일에 거의 모든 속성을 다 정의해 놓고 정말 필요한 것만 required로 하고 사용해도 될테지만.. 태그 파일을 만드는 비용이 꽤 많이 들겠지요. 결국 선택의 기로에 서게 되는데, 저는 귀찮아서;; 그냥 최소한의 속성만 정의해서 쓰는 편입니다.</p>

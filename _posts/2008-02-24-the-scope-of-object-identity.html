@@ -1,0 +1,99 @@
+---
+layout: post
+title: The Scope of Object Identity
+date: 2008-02-24 05:01:13.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 9
+tags:
+- DB identity
+- Java identity
+- No identity scope
+- Persistence context-scoped identity
+- Process-scoped identity
+- Scope of Object identity
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323133822'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>Java identity: a==b</li>
+</ul>
+<ul>
+<li>Database identity: x.getId().equals(y.getId())</li>
+</ul>
+<ul>
+<li>Scope of object identity: Java Identity와 Database identity모두 보장되는 상태.</li>
+</ul>
+<h1>Scope of object identity 종류</h1>
+<ul>
+<li>No identity scope: 하나의 DB 레코드가 같은 자바 객체로 여러번 애플리케이션으로 반환되든지<br />
+말든지 신경 안 쓴다. 문제가 생긴다. (만약에 두 개의 객체가 하나의 레코드를 표현하고 있는데, 그 두 개의 객체의 정보를<br />
+수정하면, DB에는 어떤 객체의 변화를 반영해야 하는가? 어떻게 하든 둘 중 하나는 손실 되겠군.)</li>
+</ul>
+<ul>
+<li>Persistence context-scoped identity: 단일 Persistence context<br />
+내부에서는 오직 하나의 객체만이 하나의 DB 레코드를 표현할 수 있도록 보장한다. 위에서 언급했던 문제가 없어지고 context<br />
+레벨에서의 cache를 보장할 수 있다.</li>
+</ul>
+<ul>
+<li>Process-scoped identity: 한 단계 더 나가서, 전체 JVM 프로세스 내부에서 오직 하나의 객체만이 하나의 DB 레코드를 표현할 수 있다.</li>
+</ul>
+<ul>
+<li>하이버는 persistence context-scope으로 구현했다.</li>
+</ul>
+<h1>Persistence context-scope 예제</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Test<br /><span class="code-keyword">public</span> void persistenceContextScope() <span class="code-keyword">throws</span> Exception {<br />	Session session = sessionFactory.openSession();<br />	Member member = <span class="code-keyword">new</span> Member();<br />	session.save(member);<br />	<span class="code-object">Long</span> memberId = member.getId();<br />	<br />	Member loadedMember1 = (Member) session.get(Member.class, memberId);<br />	Member loadedMember2 = (Member) session.get(Member.class, memberId);<br />	<br />	<span class="code-comment">// Java Identity In Persistence Context<br /></span>	assertTrue(loadedMember1 == loadedMember2);<br />	<span class="code-comment">// DB Identity In Persistence Context<br /></span>	assertTrue(loadedMember1.getId().equals(loadedMember2.getId()));<br />	session.flush();<br />	session.close();<br />	<br />	Session session2 = sessionFactory.openSession();<br />	Member loadedMember3 = (Member) session2.get(Member.class, memberId);<br /><br />	<span class="code-comment">// Java Identity Out Persistence Context<br /></span>	assertFalse(loadedMember1 == loadedMember3);<br />	<br />	<span class="code-comment">// DB Identity Out Persistence Context<br /></span>	assertTrue(loadedMember1.getId().equals(loadedMember3.getId()));<br />	<br />	session2.flush();<br />	session2.close();<br />}</pre>
+</div>
+</div>
+<ul>
+<li>Persistent Context 내에서는(Persistent 상태) 같은 주키로 가져온 객체는 Java identity와 DB identity 모두 동일하다.</li>
+</ul>
+<ul>
+<li>하지만 Detached 상태의 객체와 Persistence 상태의 객체의 Java Identity는 보장되지 않는다. 물론 이 때도 주키 속성은 가지고 있으니까 DB Identity는 보장된다.</li>
+</ul>
+<ul>
+<li>Detached 상태의 객체를 가지고 작업하는 것는 위와 같이 Scope of Object identity가 보장되지 않는 상태에서 작업하는 것이다.</li>
+</ul>

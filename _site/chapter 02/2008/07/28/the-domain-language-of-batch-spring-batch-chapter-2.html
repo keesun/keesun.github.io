@@ -1,0 +1,9 @@
+<p>배치 개념을 익히기 정말 좋은 챕터가 아닌가 생각됩니다. 스프링 배치의 도메인 언어인지, 일반적인 배치의 도메인 언어인지는 구분하기 힘들지만, 상당히 많이 정제되어 있다는 느낌을 받을 수 있었습니다. 분명, 수 많은 프로젝트의 배치 작업을 하면서 도출해낸 도메인 언어들이 아닐까 생각됩니다.</p>
+<p>요즘은 귀찮아서 그림을 안 그렸었는데, 오랜만에 그려봐야겠습니다. 레퍼런스에 나와있는 그림에 표현하지 않은 도메인(JobParameters, ExecutionContext, Persistence 여부)도 있어서요.</p>
+<p><img src="/assets/hk40.png" class="aligncenter" width="600" height="429" alt="사용자 삽입 이미지" /><br />후광이 있는 녀석들은 Persistent Domain입니다. 즉 (DB를 사용한다는 가정하에) Step이라는 테이블이 없다고 (즉, Step 정보를 유지하지 않는다고) 봐도 됩니다. 그래서 StepExecution 테이블에는 JobExecution의 주키를 참조하는 외례키 컬럼만 있고 Step_ID와 같은 컬럼은 없습니다.</p>
+<p>연한색 박스는 인터페이스, 진한 색은 클래스입니다.</p>
+<p>ExcutionContext는 StepExcuion 당 하나씩 생성됩니다.</p>
+<p>재미있는 건 저 도메인들을 저장하는 책임을 지닌 JobRepository라는 인터페이스인데, 이 녀석의 구현이 어떻게 되어 있을까 궁금했는데, <span style="text-decoration: line-through;">구현체는 없었습니다</span>. 어떻게 구현해야 할런지... JDBC 말고 애노테이션 기반 하이버네이트를 써서 구현하는 방법이 궁금해집니다. JobRepositoryHibernate 야.. 뭐 SessionFactory만 있으면 알아서 넣어줄테니 걱정되지 않는데, 저들 도메인의 맵핑 정보를 넘겨줘야 하는데 말이죠. 그걸 어떻게 애노테이션으로 할 방법은 없을까요. 흠... XML로만 해야 할까요. XML 로 해야 한다면, 맵핑 정보는 어떻게 만들면 될까요? 어느정도 고정적인 도메인이니까, 하나 만들어 두는게 좋을 것 같습니다.</p>
+<p>흠.. Spring Batch + 하이버네이트를 기반으로 한 어떤 프레임워크가 되겠군요.</p>
+<p>자세한 설명은 <a href="http://static.springframework.org/spring-batch/spring-batch-docs/reference/html/core.html" target="_blank">http://static.springframework.org/spring-batch/spring-batch-docs/reference/html/core.html</a> 를 참조하세요.</p>
+<p></p>

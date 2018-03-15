@@ -1,0 +1,36 @@
+<p>먼저, Servlet 3.0으로 파일업로드를 해보자.</p>
+<p>일단, 간단한 파일 업로드 폼을 만들었다.</p>
+<p>[gist id=1604411 file=upload.jsp]</p>
+<p>다음은 <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/WebServlet.html" target="_blank">@WebServlet</a>에 <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/annotation/MultipartConfig.html" target="_blank">@MultipartConfig</a>를 추가해서 업로드 파일을 저장할 장소와 파일 크기, 요청의 총 크기 등을 설정할 수 있다.</p>
+<p>[gist id=1604411 file=FileUploadServlet.java]</p>
+<p>여기서 핵심은, Part라는 API다. MultiPart 타입의 요청에서 한 부분을 Part라고 참조할 수 있으니, 해당 요청에 파일만 업로드 했다는 가정하에, 한 파일당 하나의 Part가 생신다고고 볼 수 있겠다. 이 Part에 접근하는 방법은 두개.</p>
+<ul>
+<li>전체다 가져오기: req.getParts()</li>
+<li>한개만 가져오기: req.getPart(String name)</li>
+</ul>
+<p>일단 괜찮아 보인다. 용량 설정과 디렉토리 설정을 할 수 있다는 것이 좋다. 이렇게 하면, 요청마다 업로드와 관련 된 설정을 유동적으로 가져가기 좋아보인다. 대신 여러번 설정해야 하면 귀찮기도 하겠지만, 커스텀 애노테이션을 만들거나, 자바 클래스 상속으로 해결할 수 있을지도 모르니깐.. (근데 이건 안해봐서 좀.. ㅋ)</p>
+<p>시험삼아 chmox.dmg파일을 업로드해보고, Request 정보를 출력해봤다.</p>
+<p>Name:<br />
+file<br />
+Header:<br />
+content-type<br />
+application/octet-stream<br />
+content-disposition<br />
+form-data; name="file"; filename="Chmox-0.3.dmg"<br />
+Size:<br />
+256905</p>
+<p>파일 이름을 알아내려면 content-diposition 헤더 정보를 읽어서 그 중에서도 filename="부터 "까지를 잘라내야하는데, 참 귀찮은 일이다. 그보다는 파일을 선택했을 때 뷰에서 해당 파일 이름을 input type="text"에 자동으로 채워주고, 서버에서는 그 값을 받아서 사용하는게 더 좋겠다.</p>
+<p>이번에는 이 기능을 스프링 3.1을 사용해서 해봤다.</p>
+<p><a href="http://static.springsource.org/spring/docs/3.1.x/spring-framework-reference/html/mvc.html#mvc-multipart-resolver-standard" target="_blank">http://static.springsource.org/spring/docs/3.1.x/spring-framework-reference/html/mvc.html#mvc-multipart-resolver-standard</a></p>
+<p>레퍼런스를 참고했다. 일단 레퍼런스에 글로만 설명된대로 web.xml을 손봐야한다.</p>
+<p>[gist id=1604411 file=web.xml]</p>
+<p>이렇게 하면 이제 해당 DispatcherServlet으로 들어오는 요청이 Servlet 3.0 파일 업로드 기능을 사용할 수 있게 된다.</p>
+<p>[gist id=1604411 file=SpringFileUploadController.java]</p>
+<p>아 그리고 빈을 하나 추가해줘야 한다. 아파치 커먼스 파일업로드를 쓸때도 하나 등록했었으니깐.. 이건 뭐 쌤쌤.</p>
+<p>[gist id=1604411 file=spring-servlet.xml]</p>
+<p>이전에는 요거 대신 아래 녀석을 등록했었다.</p>
+<p>[gist id=1604411 file=spring-common-fileupload-servlet.xml]</p>
+<p>차이가 있다면, 파일 업로드 용량을 스프링 빈으로 설정하던걸, web.xml로 옮겨갔다는 것... 난 이전이 더 편한것 같다.</p>
+<p>이런 고민이 생긴다.</p>
+<p>"특정 요청마다 다른 기준으로 용량을 제한해야 한다면?"</p>
+<p>스프링으로는 어떻게 하면 좋을까? multipartResolver는 DispatcherServlet당 하나밖에 못쓰니까.. 뭔가 URL 별로, 다른 MultipartResolver를 사용할 수 있는 기능을 가진 MultipartResolver를 만들면 될까나~?</p>

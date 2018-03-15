@@ -1,0 +1,85 @@
+---
+layout: post
+title: CallBack 사용해 보기
+date: 2007-02-20 08:08:33.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- callback
+- JDBC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323005659'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://younghoe.info/461" target="_blank">영회형의 최신글</a>에서 JDBC 노가다를 CallBack을 사용해서 멋지게 처리하는 글을 보고 이런 형태로 개선하면 좋을 것 같은 부분들이 떠올랐습니다.</p>
+<p>IO를 할 때 try-catch 블락이 계속 중복 되는데요. 아래의 코드를 보겠습니다.<br />[#M_ more.. | less.. |
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">&nbsp; &nbsp; public void getWebSiteInfoHavingNewPosts(){<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> request = "http://www.hanrss.com/api/list_subs_new_items.qst";</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; URL url = new URL(request);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = (HttpURLConnection)url.openConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">connection.setRequestProperty("Authorization", "Basic " +</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; new sun.misc.BASE64Encoder().encode(new String(id + ":" + password).getBytes()));</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; br = new BufferedReader(new InputStreamReader(connection.getInputStream()));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String line = "";<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; while ((line = br.readLine()) != null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(line);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(System.getProperty("line.separator"));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder.toString());<br />&nbsp; &nbsp; }</div>
+<p>&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">&nbsp; public void getRecentFivePostWithFSRL(){<br />&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; String fsrl="98000";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; request = "http://www.hanrss.com/api/get_recent_items.qst?fsrl=" + fsrl;</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try{<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; URL url = new URL(request);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = (HttpURLConnection)url.openConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; br = new BufferedReader(new InputStreamReader(connection.getInputStream()));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String line = "";<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; while ((line = br.readLine()) != null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(line);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(System.getProperty("line.separator"));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; }catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder);<br />&nbsp; &nbsp; }</div>
+<p>&nbsp;&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"> public void getOnePostWithFSRLAndSSRL(){<br />&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; String fsrl="98000";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; String ssrl="388743";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; request = "http://www.hanrss.com/myfeeds_main.qst?fsrl=" + fsrl + "&amp;ssrl=" + ssrl;</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; URL url = new URL(request);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = (HttpURLConnection)url.openConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; br = new BufferedReader(new InputStreamReader(connection.getInputStream()));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String line = "";<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; while ((line = br.readLine()) != null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(line);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(System.getProperty("line.separator"));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder);<br />&nbsp; &nbsp; }</div>
+<p>_M#]첫번째 메소드만 중간에 뭐가 한 문장이 추가 됩니다. 다른 두 개의 메소드는 빨간색 글씨 아래로는 완전히 같은 코드입니다. 빨간 글씨 아래의 큰 덩어리를 다른 메소드로 분리해 내고 싶었지만 첫번째 메소드 처럼 중간에 connection에 뭔가를 추가해야할 일이 생길 수도 때문에 그렇게 하지 못하고 <span style="color: rgb(0, 153, 102);">조금씩 묶어서 다른 메소드로 빼냈습니다.</span></p>
+<p>그랬더니 코드가 아래처럼 됐습니다.<br />[#M_ more.. | less.. | 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">&nbsp; &nbsp; public void getWebSiteInfoHavingNewPosts(){<br />&nbsp;<span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp;</span><span style="color: rgb(255, 0, 0);"> request = "http://www.hanrss.com/api/list_subs_new_items.qst";</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = getConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> connection.setRequestProperty("Authorization", "Basic " +</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; new sun.misc.BASE64Encoder().encode(new String(id + ":" + password).getBytes()));</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; makeResult(connection);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder.toString());<br />&nbsp; &nbsp; }</div>
+<p>&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">&nbsp; public void getRecentFivePostWithFSRL(){<br />&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; String fsrl="98000";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; request = "http://www.hanrss.com/api/get_recent_items.qst?fsrl=" + fsrl;</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try{<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = getConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; makeResult(connection);<br />&nbsp; &nbsp; &nbsp; &nbsp; }catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder);<br />&nbsp; &nbsp; }</div>
+<p>&nbsp;&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"> public void getOnePostWithFSRLAndSSRL(){<br />&nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; String fsrl="98000";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; String ssrl="388743";</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; request = "http://www.hanrss.com/myfeeds_main.qst?fsrl=" + fsrl + "&amp;ssrl=" + ssrl;</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpURLConnection connection = getConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; makeResult(connection);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(builder);<br />&nbsp; &nbsp; }</div>
+<p>_M#]물론 메소드들이 다이어트를 해서 조금 보긴 괜찮은데 <span style="color: rgb(0, 153, 102);">그래도 try-catch가 자꾸 중복되서 나오는게 보기 싫어졌습니다.</span> CallBack을 만들어서 써보고 싶어졌습니다. 결국 코드는 아래처럼 변했습니다.</p>
+<p>[#M_ more.. | less.. | &nbsp; &nbsp;
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">public void getWebSiteInfoHavingNewPosts(){</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request = "http://www.hanrss.com/api/list_subs_new_items.qst";</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">sendRequest(new ConnectionCallBack(){</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;public void doSomethingWithConnection(HttpURLConnection connection) {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;connection.setRequestProperty("Authorization", "Basic " +</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new sun.misc.BASE64Encoder().encode(new String(id + ":" + password).getBytes()));</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;});</span><br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(builder.toString());<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>&nbsp;&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"> public void getRecentFivePostWithFSRL(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String fsrl="98000";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request = "http://www.hanrss.com/api/get_recent_items.qst?fsrl=" + fsrl;</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">sendRequest(new ConnectionCallBack(){});</span><br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(builder);<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>&nbsp; 
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">&nbsp; public void getOnePostWithFSRLAndSSRL(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String fsrl="98000";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String ssrl="388743";<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request = "http://www.hanrss.com/myfeeds_main.qst?fsrl=" + fsrl + "&amp;ssrl=" + ssrl;</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);">sendRequest(new ConnectionCallBack(){});</span><br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(builder);<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>&nbsp;_M#]흠.. interface로 해두니까 꼭 구현을 해야 되서 아래 두 개의 메소드에서는 구현할 필요가 없는데 구현을 해야만 하는 상황이 생겼네요. 그래서 interface를 class로 바꾸고 빈 메소드로 만들어 두었습니다.</p>
+<p>으~ 어렵습니다... 마지막 코드도 별로 좋아보이지 않는데요. 흠...좀 더 공부하다 보면 좋은 방법이 생기겠죠.</p>

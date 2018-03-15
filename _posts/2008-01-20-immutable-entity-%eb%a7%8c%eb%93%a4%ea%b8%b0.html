@@ -1,0 +1,72 @@
+---
+layout: post
+title: Immutable Entity 만들기
+date: 2008-01-20 04:22:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- 맵핑 설정
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322726372'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>변하지 않아야 할 Persistent 객체가 있을 수 있다.</li>
+</ul>
+<ul>
+<li>이런 Persistent 클래스에는 필드로 직접 접근하도록 설정하고, accessor 메소드들을 만들지 않으면 된다.</li>
+</ul>
+<h1>설정하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>immutable entity 설정하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@org.hibernate.annotations.Entity(mutable=<span class="code-keyword">false</span>)<br />@org.hibernate.annotations.AccessType(<span class="code-quote">"field"</span>)<br /><span class="code-keyword">public</span> class Bid {<br /><br />}</pre>
+</div>
+</div>
+<ul>
+<li>@AccessType은 하이버네이트가 Pesistent 클래스에 접근하는 방법을 표시한다.</li>
+</ul>
+<ul>
+<li>클래스, 메소드, 필드 위에 붙여서 좀 더 세밀한 설정이 가능하다.</li>
+</ul>

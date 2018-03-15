@@ -1,0 +1,7 @@
+<p>참조 : <a href="http://kkanari.egloos.com/2228245" target="_blank">http://kkanari.egloos.com/2228245</a></p>
+<p>yum으로 패키지를 업데이트 할 때 사용하는 기본 repository가 너무 느립니다.<br />검색해보니 역시나 많은 정보들이 눈에 들어옵니다.</p>
+<p>yum 패키지 저장소에 관한 설정 파일은<br /><span style="font-weight: bold;">/etc/yum.repos.d</span><br />여기에 들어있습니다.</p>
+<p>이 곳에서 두 개의 파일을 수정해 줍니다.<br /><img src="/assets/dm256.png" class="aligncenter" width="600" height="311" alt="사용자 삽입 이미지" />
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">Core 파일에는<br />mirrorlist 을 주석처리 아래에 baseurl 추가하고 아래와같이 입력<br />baseurl=http://ftp.kaist.ac.kr/pub/fedora/linux/core/$releasever/$basearch/os/</p>
+<p>Update 파일에는<br />mirrorlist 을 주석처리 아래에 baseurl 추가하고 아래와같이 입력<br />baseurl=http://ftp.kaist.ac.kr/pub/fedora/linux/core/updates/$releasever/$basearch</div>
+<p>yum 사용이 한결 빨라집니다.</p>

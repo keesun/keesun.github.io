@@ -1,0 +1,19 @@
+<p>3.1. 새로 추가된 작업은 "해야할 작업" 목록에 추가 됩니다.</p>
+<p>&nbsp; &nbsp; @Test public void newWorkType(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.TODO, work.getType());<br />&nbsp; &nbsp; }</p>
+<p>음.. 화면을 먼저 만들걸.. 하는 생각이 계속 들면서 작업을 방해하기 시작하는데 메모를 해둬야 겠습니다.</p>
+<p>- 일시 정지 클릭하고 ToDo List에서 다른 작업의 시작 버튼을 클릭하면 일시 정지 된 작업은 TODO 리스트로 옮겨지고 Current Work에는 방금 선택한 작업이 올라옵니다.</p>
+<p>3.2. "작업 시작" 버튼을 클릭한 작업은 "진행 중인 작업" 목록에 추가 됩니다.</p>
+<p>&nbsp; &nbsp; @Test public void startWorkType(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work);<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.CURRENT, work.getType());<br />&nbsp; &nbsp; }</p>
+<p>3.3. "작업 완료" 버튼을 클릭한 작업은 "완료된 작업" 목록에 추가 됩니다.</p>
+<p>- "PAUSE" 버튼과 "RESTART" 버튼을 눌렀을 때 상태 변화를 생각 못했었군요. 테스트에 추가해야겠습니다.</p>
+<p>그 전에 일단 3.3. 부터 마무리 하구요.</p>
+<p>&nbsp; &nbsp; @Test public void endWorkType(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work);<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; work.end();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.END, work.getType());<br />&nbsp; &nbsp; }</p>
+<p>=&gt; 어라.. 여기까지 하다보니 테스트 코드에 엄청난 중복이 생겼습니다. test 메소드 하나로 위에 있는 세개를 전부 합치겠습니다.</p>
+<p>&nbsp; &nbsp; @Test public void workType(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.TODO, work.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.CURRENT, work.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; work.end();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.END, work.getType());<br />&nbsp; &nbsp; }</p>
+<p>그럼 이제 위에 있는 세개는 지워도 되겠군요. 책 읽은게 도움이 됐습니다. 흐흐 쌩큐 Beck!</p>
+<p>3.4. 선택한 분류의 작업만 보여주기.</p>
+<p>이건 SWT에 있는 EnpendBar로 구현을 했기 때문에.. 코드로 처리하지 않아도 될 것 같습니다.</p>
+<p>3.5. "PAUSE" 버튼을 클릭하면 pause 상태로 바꿔줍니다. 위에 있는 테스트 코드를 수정해서 시나리오를 만듭니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test public void workType(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.TODO, work.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.CURRENT, work.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; work.pause();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.PAUSE, work.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work2 = new Work("work2");<br />&nbsp; &nbsp; &nbsp; &nbsp; workList.add(work2);<br />&nbsp; &nbsp; &nbsp; &nbsp; work2.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.CURRENT, work2.getType());<br />&nbsp; &nbsp; &nbsp; &nbsp; work.end();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(WorkType.END, work.getType());<br />&nbsp; &nbsp; }</div>
+<p>- 하나의 작업이 실행 중일 때 다른 작업을 실행하지 못하게 합니다.</p>
+<p>SWT에서 실행 버튼을 disable 하게 해두는 걸로 하면.. 되겠죠? 훔</p>

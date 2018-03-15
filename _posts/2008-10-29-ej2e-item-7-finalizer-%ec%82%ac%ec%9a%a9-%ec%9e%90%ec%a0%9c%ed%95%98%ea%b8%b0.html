@@ -1,0 +1,69 @@
+---
+layout: post
+title: EJ2E Item 7. finalizer 사용 자제하기
+date: 2008-10-29 02:06:56.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- effective java
+- finalizer
+- item 7
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323113750'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: Effective Java 2nd Edition Item 7. Avoid finalizers</p>
+<p>Finalizer는 예측 불가능하고, 위험하며, 별로 필요없다. 자바에서 자원 반납은 try-finally 블럭에서 처리하는게 보통.</p>
+<p>finalizer의 단점은 바로 실행한다는 보장이 없다는 것이다. 객체를 참조하는 모든 레퍼런스가 없어지는 시점과 실제 finalizer를 실행하는 사이의 텀이 불규칙적이다. 따라서 호출 시기를 고려한 어떤 작업도 finalizer에서 하면 안 된다. ex) 파일 닫기.</p>
+<p>더딘 finalization으로 인해 심각한 문제가 발생할 수도 있다. 객체 자원 반환을 지연 시키는 경우도 인해 OutOfMemoryError가 발생할 수도 있다. (finalizer thread 우선 순위가 낮아서 계속 처리가 밀리는 듯...)</p>
+<p>finalizer 실행 자체를 안하고 프로그램이 종료 될 수도 있다. 중요 영속 상태를 갱신하는 일을 절대로 finalizer에서 하지 말아라. 만약 DB에서 공유 자원에 대한 락 해제를 finalizer에서 했다간 전체 시스템이 정지하는 사태가 벌어질 수도 있다.</p>
+<p>System.gc는 finalizer 실행할 가능성을 높여주긴 해도 보장하진 못한다. 그리고 finalier 실행을 보장하는 System.runFinalizersOnExit와 Runtime.runFinalizerOnExitr는 치명적인 결함이 있는데다가 deprecated돼다.</p>
+<p>finalizer를 사용하면 심각한 성능 문제도 있다. 저자의 로컬 컴터에서 430배 정도의 성능 차이가 발생했다.</p>
+<p>finalizer를 대신해서 명시적인 종료 메소드(explicit termination method)를 제공하라. ex) InputStream의 close 같은 메소드. 이 메소드 내부에서는 해당 객체를 더이상 사용할 수 없다는 flag를 설정하고, 다른 메소드들은 해당 flag를 참조하여 경우에 따라 IllegalStateException을 던진다.</p>
+<p>보통 명시적인 종료 메소드는 try-fianlly 블럭으로 감싸서 예외가 발생해도 실행하도록 한다.</p>
+<p>finalizer는 언제 사용하면 좋은가? </p>
+<p>하나는 "safety net"으로 사용자가 명시적인 종료 메소드 실행을 깜빡한 경우에 대한 대비책이다. 비록 호출될지 안될지도 모르지만 그래도 아예 안하는 것 보단 낫다. 이런 경우 로그 메시지를 뿌려서 해당 자원이 정상적으로 종료되지 않았다는 걸 알려주면 버그를 수정할 여지를 주게된다. ex) FileInputStream, FileOutputStream, Timer, Connection 얘네가 safety net으로 finalizer를 사용하고 있다.</p>
+<p>두 번째는 native peers다. native peers는 native 객체들은 일반 객체가 아니라서 GC 대상이 아니다. 만약 이런 native 객체들이 반드시 종료해야 하는 리소스를 가지고 있다면, 위에서 살펴본 명시적인 종료 메소드를 제공하는게 좋겠다.</p>
+<p>"finalizer zhaining"은 자동으로 이뤄지지 않는다. 어떤 클래스가 finalizer를 가지고 있고 그 하위 클래스가 그걸 재정의 했다면 그 상위의 finalizer를 반드시 명시적으로 호출해야 한다.</p>
+<p>// Manual finalizer chaining<br />@Override protected void finalize() throws Throwable {<br />&nbsp; try {<br />&nbsp; &nbsp; ... // Finalize subclass state<br />&nbsp; } finally {<br />&nbsp; &nbsp; super.finalize();<br />&nbsp; }<br />}</p>
+<p>이렇게 try-finally로 감싸야 현재 finalizer에서 예외가 발생해도 상위 클래스의 finalizer를 실행할 수 있다. 상위 클래스의 finalizer 호출을 깜빡할 수도 있는 것에 대비해서 finalizer guardian이라는 걸 사용할 수도 있는데;;;;</p>
+<p>finalizer guardian 이건 생략; -_-;;</p>

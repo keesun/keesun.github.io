@@ -1,0 +1,31 @@
+<p>1. Character 값을 DB에 저장하는 enum도 지원하도록 구현했고..<br />
+2. UserType 생성을 좀 더 간편화 했습니다.</p>
+<p>public enum FamillyCate implements PersistentEnum {</p>
+<p>&nbsp;&nbsp;&nbsp; FATHER('f', "부"), MOTHER('m', "모"), BROTHER('b', "형제"), SISTER('s', "자매");<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private final Character value;<br />
+&nbsp;&nbsp;&nbsp; private final String descr;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private FamillyCate(Character value, String descr) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.value = value;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.descr = descr;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public Character getValue() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return value;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; public String getDescr() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return descr;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+...<br />
+}</p>
+<p>이렇게.. Character 값을 DB에 저장할 enum을 사용할 수 있습니다. 이 enum에 대한 UserType 생성은 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">public class FamillyCateType extends GenericEnumUserType&lt;FamillyCate&gt;{<br />
+}</div>
+<p>
+이 enum에 대한 PropertyEditor는?</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">binder.registerCustomEditor(FamillyCate.class, new GenericEnumPropertyEditor&lt;FamillyCate&gt;(FamillyCate.class));
+</div>
+<p>캬,.. enum에 대한 <span style="font-weight: bold; color: rgb(95, 182, 54);">UserType과 PE를 전부 코드 한 줄</span>로.. 끝낼 수 있습니다. GenericEnumUserType와 GenericEnumPropertyEditor 코드는 비공개입니다. 영원히~</p>
+<p>자 그럼 오늘은 이만 하고,, 다음 번엔 enum 목록을 가져올 때 순서를 정해서 가져오는 방법을 마련해보도록 하겠습니다.</p>
+<p>ps: 오랜만에 dm 서버나 돌려봐야겠네요. 방명록에 누가 요청하셔서;; </p>

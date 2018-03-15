@@ -1,0 +1,24 @@
+<p><a title="[http://blog.xebia.com/2009/07/11/jpa-implementation-patterns-testing/]로 이동합니다." target="_blank" href="http://blog.xebia.com/2009/07/11/jpa-implementation-patterns-testing/"><a title="[http://blog.xebia.com/2009/07/13/jpa-implementation-patterns-wrap-up/]로 이동합니다." target="_blank" href="http://blog.xebia.com/2009/07/13/jpa-implementation-patterns-wrap-up/">http://blog.xebia.com/2009/07/13/jpa-implementation-patterns-wrap-up/</a></a></p>
+<p>차근 차근 봐둬야 할 글목록이 있군요.</p>
+<h3>Basic patterns</h3>
+<ul>
+<li><a href="http://blog.xebia.com/2009/03/09/jpa-implementation-patterns-data-access-objects/">Data Access Objects</a></li>
+<li><a href="http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/">Saving (detached) entities</a></li>
+<li><a href="http://blog.xebia.com/2009/04/03/jpa-implementation-patterns-retrieving-entities/">Retrieving entities</a></li>
+<li><a href="http://blog.xebia.com/2009/04/09/jpa-implementation-patterns-removing-entities/">Removing entities</a></li>
+<li><a href="http://blog.xebia.com/2009/05/11/jpa-implementation-patterns-service-facades-and-data-transfers-objects/">Service Facades and Data Transfers Objects</a></li>
+</ul>
+<h3>Advanced patterns</h3>
+<ul>
+<li><a href="http://blog.xebia.com/2009/03/16/jpa-implementation-patterns-bidirectional-assocations/">Bidirectional assocations</a></li>
+<li><a href="http://blog.xebia.com/2009/04/27/jpa-implementation-patterns-lazy-loading/">Lazy loading</a></li>
+<li><a href="http://blog.xebia.com/2009/05/25/jpa-implementation-patterns-bidirectional-associations-vs-lazy-loading/">Bidirectional associations vs. lazy loading</a></li>
+<li><a href="http://blog.xebia.com/2009/06/03/jpa-implementation-patterns-using-uuids-as-primary-keys/">Using UUIDs as primary keys</a> (guest blog by <a href="http://blog.xebia.com/author/asikkema/">Albert Sikkema</a>)</li>
+<li><a href="http://blog.xebia.com/2009/06/13/jpa-implementation-patterns-field-access-vs-property-access/">Field access vs. property access</a></li>
+<li><a href="http://blog.xebia.com/2009/06/21/jpa-implementation-patterns-mapping-inheritance-hierarchies/">Mapping inheritance hierarchies</a></li>
+<li><a href="http://blog.xebia.com/2009/07/11/jpa-implementation-patterns-testing/">Testing</a></li>
+</ul>
+<p>
+맨 위에 있는 DAO랑 맨 마지막에 있는 Testing만 읽어봤는데, 내용이 괜찮네요. DAO는 현재 사용하는 방식과 비슷하고, 테스트 쪽엔 모르는 것들이 있더군요. ObjectMother랑 Finess를 봐봐야겠습니다. </p>
+<p>테스트 데이터를 DBUnit으로 넣을까 ObjectMother를 사용할까.. 고민이로군요. 간단한건 DBUnit으로 XML 데이터 만들어서 넣고, 복잡한 객체 집합은 ObjectMother를 쓸까나?? 아니.. 그냥 둘 중 한 방법으로 쓴느게 햇갈리지도 않고 좋겠죠? 그러고보면 DB 스키마 기반으로 코딩한 것도 아닌데 굳이 XML로 DB 데이터 만들어 넣는건 좀.. 그렇네요. 객체 기반으로 코딩했으니... 테스트 데이터도 팩토리를 이용해서 만드는게.. 어울리는 듯하고.. 흠...</p>
+<p>일단은 댄스 연습 좀 하고 자야겠네요.</p>

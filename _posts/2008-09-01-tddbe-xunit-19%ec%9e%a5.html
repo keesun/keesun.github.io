@@ -1,0 +1,67 @@
+---
+layout: post
+title: TDDBE - xUnit 19장
+date: 2008-09-01 07:42:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 19장
+- TDD
+- xUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168339'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 "먼저 setUp() 메소드를 호출한다."를 구현했습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class TestCaseTest extends TestCase {</p>
+<p>&nbsp; &nbsp; WasRun test;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public TestCaseTest(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; protected void setUp() {<br />&nbsp; &nbsp; &nbsp; &nbsp; test = new WasRun("testMethod");<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testRunning(){<br />&nbsp; &nbsp; &nbsp; &nbsp; test.run();<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.wasRun == true;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testSetUp(){<br />&nbsp; &nbsp; &nbsp; &nbsp; test.run();<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.wasSetUp == true;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; new TestCaseTest("testRunning").run();<br />&nbsp; &nbsp; &nbsp; &nbsp; new TestCaseTest("testSetUp").run();<br />&nbsp; &nbsp; }<br />}</div>
+<p>테스트 클래스는 이미 setUp()을 반영했지만, 사실 setUp()을 반영하기 전에 구현을 마치고, 리팩터링 하면서 방금 구현한 setUp()을 사용해서 테스트 클래스까지 간단하게 리팩터링을 했습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">import java.lang.reflect.Method;</p>
+<p>public class TestCase {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; String methodName;</p>
+<p>&nbsp; &nbsp; public TestCase(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.methodName = methodName;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void run() {<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="font-weight: bold; color: rgb(0, 153, 102);">setUp();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Method method = this.getClass().getMethod(methodName, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; method.invoke(this, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(e);<br />&nbsp; &nbsp; &nbsp; &nbsp; } <br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="color: rgb(0, 153, 102); font-weight: bold;">protected void setUp() {}</span><br />}</div>
+<p>Template Method 패턴을 사용해서, 하위 클래스에서 setUp()을 맘대로 구현할 수 있도록.. 했구요. run()에 워크 플로우를 정의했죠.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class WasRun extends TestCase {</p>
+<p>&nbsp; &nbsp; boolean wasRun;<br />&nbsp; &nbsp; boolean wasSetUp;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public WasRun(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testMethod() {<br />&nbsp; &nbsp; &nbsp; &nbsp; wasRun = true;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; @Override</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; protected void setUp() {</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; wasRun = false;</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; wasSetUp = true;</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;">&nbsp; &nbsp; }</span></p>
+<p>}</p></div>
+<p>WasRun에서도 역시 방금 구현한 setUp()을 사용해서 생성자를 좀 더 간단하게 했습니다.</p>
+<p>'이번 장의 핵심 내용은 테스트 케이스들 간의 의존성을 없애기'였습니다. 지금처럼 매번 별도의 인스턴스를 만들기 때문에, 전역 변수를 사용하는 테스트가 아닌 이상 테스트 케이스들끼리 의존할 가능성은 거의 없게 됩니다.</p>

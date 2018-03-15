@@ -1,0 +1,107 @@
+---
+layout: post
+title: 11.4. Modeling JDBC operations as Java objects
+date: 2007-04-19 06:20:39.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 11
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323162414'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>DB를 좀더 객체지향적인 방법으로 접근하도록 다음의 클래스들을 사용할 수 있습니다. 다음의 클래스들로 할 수 있는 일은 모두(StoredProcedure 클래스만 빼고) JdbcTemplate에 있는 메소드를 사용하여 할 수 있습니다. 하지만 아래 있는 클래스를 사용하는 것이 편한 유저들을 굳이 말리진 않겠다는 군요.[footnote]if you feel that you are getting measurable value from using the RDBMS<br />
+				operation classes, feel free to continue using these classes.[/footnote]</p>
+<p><span style="font-weight: bold;">11.4.1. </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/object/SqlQuery.html" target="_blank">SqlQuery</a></p>
+<p>SQL 쿼리를 객체화 한 것으로 재사용 가능하며 멀티쓰레드 환경에서 안전한 클래스입니다.<br />이 클래스를 상속하는 클래스는 반드시 newRowMapper(..) 메소드를 구현해야 합니다.<br />이 메소드는 ResertSet에 있는 각각의 row를 객체로 맵핑 시키는 일을 합니다.<br />보통은 row를 자바 클래스로 매핑하는 일을 좀 더 쉽게 하기 위해 구현해둔 MappingSqlQuery&nbsp; 클래스를 상속하여 사용합니다.</p>
+<p><span style="font-weight: bold;">11.4.2. </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/object/MappingSqlQuery.html" target="_blank">MappingSqlQuery</a></p>
+<p>이 클래스를 상속할 때는 mapRow(..) 메소드를 구현해서 각 row를 객체로 매핑할 수 있도록합니다.<br />[#M_예제 코드 보기..|less..| 쿼리는 다음과 같이 이 클래스를 상속하여 생성자를 활용하여 만들어줍니다.<br />
+private class CustomerMappingQuery extends MappingSqlQuery {</p>
+<p> &nbsp;&nbsp; public CustomerMappingQuery(DataSource ds) {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; super(ds, "SELECT id, name FROM customer WHERE id = ?");<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; super.declareParameter(new SqlParameter("id", Types.INTEGER));<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; compile();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public Object mapRow(ResultSet rs, int rowNumber) throws SQLException {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; Customer cust = new Customer();<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; cust.setId((Integer) rs.getObject("id"));<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; cust.setName(rs.getString("name"));<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; return cust;<br />
+ &nbsp;&nbsp; } <br />
+}</p>
+<p>쿼리를 사용하기 위해서 위에서 만든 클래스의 객체를 만들고 쿼리의 파라미터에 들어갈 값을 객체의 배열로 넣어 줍니다.<br />
+public Customer getCustomer(Integer id) {<br />
+ &nbsp;&nbsp; CustomerMappingQuery custQry = new CustomerMappingQuery(dataSource); <br />
+ &nbsp;&nbsp; Object[] parms = new Object[1];<br />
+ &nbsp;&nbsp; parms[0] = id;<br />
+ &nbsp;&nbsp; List customers = custQry.execute(parms);<br />
+ &nbsp;&nbsp; if (customers.size() &gt; 0) {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; return (Customer) customers.get(0);<br />
+ &nbsp;&nbsp; }<br />
+ &nbsp;&nbsp; else {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; return null;<br />
+ &nbsp;&nbsp; }<br />
+}_M#]<span style="font-weight: bold;">11.4.3. </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/object/SqlUpdate.html" target="_blank">SqlUpdate</a></p>
+<p>update문을 나타내는 객체로 다음과 같이 사용합니다.<br />[#M_예제 코드 보기..|less..| public class UpdateCreditRating extends SqlUpdate {</p>
+<p> &nbsp;&nbsp; public UpdateCreditRating(DataSource ds) {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; setDataSource(ds);<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; setSql("update customer set credit_rating = ? where id = ?");<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; declareParameter(new SqlParameter(Types.NUMERIC));<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; declareParameter(new SqlParameter(Types.NUMERIC));<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; compile();<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; /**<br />
+ &nbsp; &nbsp; * @param id for the Customer to be updated<br />
+ &nbsp; &nbsp; * @param rating the new value for credit rating<br />
+ &nbsp; &nbsp; * @return number of rows updated<br />
+ &nbsp; &nbsp; */<br />
+ &nbsp;&nbsp; public int run(int id, int rating) {<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; Object[] params =<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; new Object[] {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; new Integer(rating),<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; new Integer(id)};<br />
+ &nbsp; &nbsp; &nbsp;&nbsp; return update(params);<br />
+ &nbsp;&nbsp; }<br />
+}_M#]<span style="font-weight: bold;">11.4.4. </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/object/StoredProcedure.html" target="_blank">StoredProcedure</a></p>
+<p>RDBMS에 있는 프로시져라는 것을 객체화 할 떄 사용한다고 하는데 gg... DB 공부 해야겠습니다.</p>
+<p><span style="font-weight: bold;">11.4.5. </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/object/SqlFunction.html" target="_blank">SqlFunction</a></p>
+<p>SQL 함수를 표현하는 클래스로 JdbcTemplate의 queryForXXX와 비슷한 기능을 합니다. 장점으로는 JdbcTempate을 만들지 않아도 됩니다.</p>
+<p>단일 row를 위해 사용하며 좀 더 복잡한 쿼리를 표현하고 싶을 땐 StoredProcedure 나 SqlCall 를 사용하랍니다.<br />[#M_예제 코드 보기..|less..| SqlCall public int countRows() {<br />&nbsp; &nbsp; SqlFunction sf = new SqlFunction(dataSource, "select count(*) from mytable");<br />&nbsp; &nbsp; sf.compile();<br />&nbsp; &nbsp; return sf.run();<br />}_M#]</p>

@@ -1,0 +1,64 @@
+---
+layout: post
+title: 12.2.4. Implementing Spring-based DAOs without callbacks
+date: 2007-04-24 02:36:56.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- hibernate
+- HibernateDaoSupport
+- ORM
+- Spring Reference 12장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323113993'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>콜백 메소드를 사용하지 않고 HibernateDaoSupport로 부터 Session을 구해서 다음과 같이 코딩할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ProductDaoImpl extends HibernateDaoSupport implements ProductDao {</p>
+<p>&nbsp; &nbsp; public Collection loadProductsByCategory(String category)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throws DataAccessException, MyException {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Session session = <span style="color: rgb(255, 0, 0);">getSession(getSessionFactory(), false);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List result = session.find(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "from test.Product product where product.category=?",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; category, Hibernate.STRING);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (result == null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 0, 0);">throw new MyException("invalid search result");</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return result;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; catch (HibernateException ex) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> throw convertHibernateAccessException(ex);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }<br />}</div>
+<p>이 때 유용하게 사용할 수 있는 메소드로는 역시 Session을 가져다 주는 getSession메소드 입니다.</p>
+<p>희한하네요. getSession() 메소드의 인자가 두 개인 녀석이 안보이는데 <span style="background-color: rgb(255, 218, 237);">레퍼런스에 있는 예제 코드가 잘못된 것 같습니다.</span> 이 것도 이슈트랙에 올려야 겠군요. "용겐 휄러 횽하 예제 코드가 또 틀렸어효"</p>
+<p>getSession(); getSession(boolean allowCreate); =&gt; HibernateDaoSupport 클래스에 있고<br />getSession(SessionFactory sessionFactory, boolean allowCreate); =&gt; SessionFactoryUtils 클래스에 있습니다.</p>
+<p>어쨋든 <span style="font-weight: bold;">allowCreate 속성은 Session을 만들 때 가져올 때 현재 트랜잭션에서 가져오느냐 아니면 새 트랜잭션에서 가져오느냐를 설정</span>해 줍니다. true면 새거 false면 현재 트랜잭션을 사용하게 됩니다.</p>
+<p><span style="font-weight: bold;">convertHibernateAccessException(ex); 메소드는 이름에서도 알 수 있듯이 Hibernate에서 발생하는 예외를 바꿔줍니다.</span> unchecked Exception으로 바꿔주는 일을 하겠죠.</p>
+<p>즉 하드코딩을 하더라도 Spring이 제공하는 예외 랩핑을 사용할 수 있지만 try-catch 보기도 싫고 굳이 예외 변경하는 코드를 매번 넣어야 하기 때문에 <span style="font-weight: bold; color: rgb(0, 153, 102);">대부분의 경우 HibernateTemplate을 사용하는게 편할 것 같습니다.</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /></p>

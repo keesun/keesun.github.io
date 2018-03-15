@@ -1,0 +1,13 @@
+<p>먼저 추가 할 기능의 명세서인 인터페이스가 필요하고 그것을 구현한 클래스가 필요합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public interface TicketTracked {<br />&nbsp; &nbsp; void incrementTicketCount();<br />}</p>
+<p>public class TicketTrackedImpl implements TicketTracked {<br />&nbsp; &nbsp; static int count = 0;<br />&nbsp; &nbsp; public void incrementTicketCount() {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("표 " + (++count) + " 장 팔았다.");<br />&nbsp; &nbsp; }<br />}</div>
+<p>그리고 어스팩트에 @DeclareParents를 사용하여 static 필드를 추가합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; /** introduction **/<br /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; @DeclareParents(value="aop.newStyle.domain.KeesunCinema", defaultImpl=TicketTrackedImpl.class)</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; public static TicketTracked mixin;</span></p>
+<p>&nbsp; &nbsp; @After("sellTicketPointcut() &amp;&amp;" + "this(ticketTracked)")<br />&nbsp; &nbsp; public void ticketTtrack(TicketTracked ticketTracked){<br />&nbsp; &nbsp; &nbsp; &nbsp; ticketTracked.incrementTicketCount();<br />&nbsp; &nbsp; }</div>
+<p>@DeclareParents 의 value 속성에는 새 기능(TIckTracked 인터페이스 구현체)을 추가할 클래스를 지정해 줍니다. * 을 사용하여 여러 클래스를 지정할 수도 있습니다. deaultImplt 에는 새 기능을 가진 클래스를 지정해 줍니다.</p>
+<p>테스트를 해봅니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void pointcutWithin(){<br />&nbsp; &nbsp; &nbsp; &nbsp; cinema.sellTicket(movie, new Date());<br />&nbsp; &nbsp; &nbsp; &nbsp; cinema.sellTicket(movie, new Date());<br />&nbsp; &nbsp; &nbsp; &nbsp; cinema.sellTicket(movie, new Date());</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; TicketTracked cinemaTicketTracked = (TicketTracked)cinema;<br />&nbsp; &nbsp; }</div>
+<p>표 세장을 사고 cinema가 제대로 TicketTracked 인터페이스를 추가로 구현했는지 확인해봤습니다. 테스트는 무난히 통과 하고 결과는 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">표 1 장 팔았다.<br />표 2 장 팔았다.<br />표 3 장 팔았다.</div>
+<p></p>

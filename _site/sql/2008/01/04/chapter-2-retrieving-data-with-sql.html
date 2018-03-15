@@ -1,0 +1,63 @@
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a></p>
+<ul>
+<li>'모든 컬럼 가져오기(SELECT * FROM Student;)'의 안 좋은 점.</li>
+<ul>
+<li>해당 테이블에 몇 개의 컬럼이 있는 DB가 알아봐야 하는 부과작업 필요해짐.</li>
+<li>컬럼들이 어떤 순으로 어떤게 올지 예측할 수 없다.</li>
+<li>간단한 테스트 용도 외에는 잘 안써.</li>
+</ul>
+<li>예약어Reseved나 SQL 키워드를 테이블 명이나 컬럼 명으로 했을 경우.</li>
+<ul>
+<li>오라클은 " "를 사용하여 감싸주며 그 안에는 모두 대분자로 표시해야함.</li>
+<ul>
+<li>자동으로 예약어나 키워드를 대문자로 변경하기 때문에...</li>
+</ul>
+</ul>
+<li>AS 로 별칭 사용하기. SELECT s.name AS StudentName FROM Student AS s</li>
+<ul>
+<li>FROM 절의 테이블 별칭에서 AS는 생략하는 것이 SQL-99 스팩.</li>
+<li>하지만 가독성을 위해서 명시적으로 표기해주는 것이 좋다.</li>
+</ul>
+<li>문자열 연결할 때 오라클은 || ' ' || 이것 사용.</li>
+<ul>
+<li>SELECT name || '은 ' || age || '살 입니다.' FROM Student;</li>
+<li>문자열 연결 용도라서 숫자 타입도 자동으로 문자로 변환해줌.</li>
+</ul>
+<li>정렬하기</li>
+<ul>
+<li>ORDER BY 컬럼 ACS/DESC</li>
+</ul>
+<li>중복제거</li>
+<ul>
+<li>SELECT DISTINCT 컬럼명 FROM 테이블;</li>
+</ul>
+<ul>
+<li>컬럼 두 개 이상을 지정하면, 두 개를 하나의 묶음으로 생각한 유일한 레코드Record 들을 가져온다.</li>
+</ul>
+<li>WHERE 절로 조건 주기</li>
+<ul>
+<li>조건이 TRUE를 만족하는 레코드만 가져오고 FALSE나 UNKNOWN인 레코드는 무시한다.</li>
+<li>날짜 비교하기</li>
+<ul>
+<li>'yyyy-mm-dd' 형태의 문자열은 모든 밴더들이 날짜로 변환해준다.</li>
+</ul>
+</ul>
+<ul>
+<li>AND 나 OR로 여러개의 조건 표시 가능.</li>
+<li>IN 을 사용하여 특정 컬럼의 값 범위 지정 가능.</li>
+</ul>
+<li>패턴 매칭</li>
+<ul>
+<li>WHERE comments LIKE '%greate%' = 컬럼에 greate가 들어가는 레코드.</li>
+<li>WHERE UPPER(comments) LIKE '%GREATE%' = 대소문자 구분 없이 greate가 들어가는 레코드.</li>
+<li>만약에 값에 %가 포함되어 있는 경우.</li>
+<ul>
+<li>WHERE CustomerRating LIKE '%50p%%' ESCAPE 'p';</li>
+</ul>
+</ul>
+<ul>
+<ul>
+<li>이런식으로 ESCAPE 문자 지정해서 바로 다음 문자 무시하도록 하기.</li>
+</ul>
+</ul>
+</ul>

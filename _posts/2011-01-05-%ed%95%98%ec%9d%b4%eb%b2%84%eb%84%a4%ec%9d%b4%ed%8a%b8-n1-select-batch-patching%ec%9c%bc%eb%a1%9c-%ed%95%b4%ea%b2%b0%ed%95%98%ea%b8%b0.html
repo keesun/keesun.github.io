@@ -1,0 +1,68 @@
+---
+layout: post
+title: "[하이버네이트 N+1 Select] Batch Patching으로 해결하기"
+date: 2011-01-05 23:30:53.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Hibernate
+tags:
+- Batch patching
+- N+1 Select
+- 하이버네이트
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323132808'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;">간단하다. Member -&gt; C 연관 관계 위에다가 @BatchSize라는 애노테이션을 붙여주면 된다. 애노테이션의 값으로는 해당 컬렉션 몇 개를 동시에 읽어올지 설정하면 된다.</p>
+<p>[java]<br />
+...<br />
+    @OneToMany(mappedBy = &quot;owner&quot;)<br />
+    @BatchSize(size=30)<br />
+    private Set&lt;Item&gt; items;<br />
+...<br />
+[/java]</p>
+<p style="clear: both;">이렇게 설정해 두면 Member를 순회하면서 Item 컬렉션에 접근할 때 개별적으로 Item 컬렉션을 select 하는게 아니라 첫번째 Member의 Item 컬렉션에 접근할 때 미리 배치 사이즈 만큼의 컬렉션을 같이 가져오게 된다. 만약에 배치 사이즈를 30으로 했다면 n/30+1 로 문제 크기가 줄어든다. 실제로는 그렇게 간단한 로직은 아니였던 것 같은 기억이 난다. 하이버네이트 책에 보면 잘 설명되어 있지만 대충 저정도 쿼리가 발생하니까 그냥 저렇게 알고 있어도 될 것 같다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_doamin_BatchPatchingSolutionTest.java_-_IntelliJ_IDEA_10.0.2.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_doamin_BatchPatchingSolutionTest.java_-_IntelliJ_IDEA_10.0.2.jpg" alt="" width="378" height="98" /></a>이렇게 말이다. 테스트 데이타로 member 객체 100명을 만들어 놨으니 이전 같으면 100 + 1 = 101 번의 select 가 날아갔을 터인데.. 이번에는 4 + 1 번밖에 안날아 갔다.</p>
+<p style="clear: both;">하지만 이 방법은 필요없는 컬렉션까지도 미리 패치해오는 경우가 발생할 수 있으니 최선책은 아니라고 볼 수 있다. 물론 위와 같이 모든 Member 객체를 순회하며 모든 컬렉션에 접근하는 경우라면 이렇게 사용해도 괜찮겠지만 말이다... 그래서 이 방법 말고도 다른 해결책이 또 있다.</p>
+<p style="clear: both;">그건 다음에~</p>
+<p><br class="final-break" style="clear: both;" /></p>

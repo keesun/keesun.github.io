@@ -1,0 +1,57 @@
+---
+layout: post
+title: EasyMock - Changing Behavior for the Same Method Call
+date: 2008-03-01 14:41:27.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- EasyMock
+- Fluent Interface
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323123562'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>같은 메소드가 여러번 호출 될 때, 매번 예측되는 결과가 다르다면..</p>
+<p>memberDao.add(member); // Member 객체가 무사히 저장된다.<br />memberDao.add(member); // 예외가 발생한다.</p>
+<p>이런 경우에 그냥 fluent interface로 계속해서 andReturn() 이나 andThrow()를 호출하여 recording 할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">memberDao.add(member)<br />&nbsp; &nbsp; .andReturn(resultMember);<br />&nbsp; &nbsp; .adndThrow(new DuplicatedEmailException());</div>
+<p>테스트 클래스 내부에서 의존하는 객체를 여러번 호출할 때, 각각이 다른 행위를 해야 한다면 유용하겠습니다.</p>

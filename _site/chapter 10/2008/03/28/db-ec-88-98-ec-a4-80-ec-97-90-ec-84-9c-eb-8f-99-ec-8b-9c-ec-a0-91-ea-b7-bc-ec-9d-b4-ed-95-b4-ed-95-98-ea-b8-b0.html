@@ -1,0 +1,97 @@
+<h1>특징</h1>
+<ul>
+<li>하이버네이트 애플리케이션 개발자로써 반드시 갖춰야 할 역량은 사용하는 DB의 기능과 특정 상황에서 DB isolation 레벨을 어떻게 조정할 수 있을지 이해하는 것이다.</li>
+</ul>
+<ul>
+<li>완벽한 격리(Isolation)는 비용이 크다. 그 단계(lebel)를 조정해서 완전한 분리의 정도를 낮추고 시스템의 성능과 확장성을 높일 수 있다.</li>
+</ul>
+<h1>트랜잭션 격리 이슈</h1>
+<ul>
+<li>이슈들을 지칭하는 용어는 ANSI SQL 표준에 정의되어 있다.</li>
+</ul>
+<ul>
+<li>lost update: 두 개의 트랜잭션이 하나의 데이터에 업데이트를 할 때 나중에 업데이트한 트랜잭션이 롤백 되버리면 첫 번째 트랜잭션이 커밋한 데이터까지 날아가 버린다.</li>
+</ul>
+<p><img src="/assets/fk200000000004.png" class="aligncenter" width="304" height="171" alt="사용자 삽입 이미지" /></p>
+<ul>
+<li>dirty read: 하나의 트랜잭션이 다른 트랜잭션이 아직 커밋하지 않은 데이터를 읽었을 때 다른 트랜잭션이 롤백 될 수 있기 때문에 이상한 데이터를 읽은 꼴이 될수도 있다.</li>
+</ul>
+<p><img src="/assets/fk200000000005.png" class="aligncenter" width="302" height="168" alt="사용자 삽입 이미지" /></p>
+<ul>
+<li>unrepeatable read: 하나의 트랜잭션이 두 번 같은 데이터를 읽어왔는데 그 사이에 다른 트랜잭션이 해당 데이터를 조작하여 그 값이 다를 수 있다.</li>
+</ul>
+<p><img src="/assets/fk200000000006.png" class="aligncenter" width="251" height="171" alt="사용자 삽입 이미지" /></p>
+<ul>
+<li>second lost updates problem: unprepeatble read의 한가지 형태로 첫 번째<br />
+트랜잭션이 데이터에 쓰기를 하고 커밋을 했는데 다른 트랜잭션이 같은 데이터에 쓰기를 하고 커밋을 하면 앞선 트랜잭션의 결과는<br />
+날아가 버린다. 근데 이건 어쩌면 당연한 걸 수도 있다. 나중에 자세히 다룬다.</li>
+</ul>
+<ul>
+<li>phantom read: 트랜잭션이 쿼리를 두 번 날렸는데 그 사이에 다른 트랜잭션이 데이터를 추가하거나 삭제해서 그 결과가 다를 수 있다.</li>
+</ul>
+<p><img src="/assets/fk200000000003.png" class="aligncenter" width="242" height="182" alt="사용자 삽입 이미지" /></p>
+<h1>ANSI 트랜잭션 격리 레벨</h1>
+<h2>Read uncommitted</h2>
+<ul>
+<li>lost update는 막고 dirty read는 허용.</li>
+<li>다른 트랜잭션에 의해 커밋되지 않은 데이터에 쓰기 작업을 할 수 없다. 하지만 읽기는 가능하다.</li>
+<li>exclusive write lock을 사용한다.</li>
+</ul>
+<h2>Read committed</h2>
+<ul>
+<li>dirty read는 막고 unrepeatable read는 허용.</li>
+<li>커밋되지 않은 쓰기 트랜잭션은 다른 트랜잭션들이 해당 레코드에 접근도 못하게 한다. 읽기 쓰기 전부 안 됨. 하지만 읽기 트랜잭션은 다른 트랜잭션이 자신이 읽고 있는 레코드에 (읽기 쓰기 모두) 접근하는 것을 허용한다.</li>
+<li>shared read lock과 exclusive write lock을 사용한다.</li>
+</ul>
+<h2>Repeatable read</h2>
+<ul>
+<li>unrepeatable read와 dirty read 둘 다 막는다. phantom read는 허용.</li>
+<li>읽기 트랜잭션이 사용하는 데이터에 대한 쓰기 트랜잭션을 막는다. 쓰기 트랜잭션이 사용하는 데이터에 접근하는 다른 모든 트랜잭션을 막는다.</li>
+</ul>
+<h2>Serializable</h2>
+<ul>
+<li>트랜잭션들을 일렬로 세워서 차례 차례 실행시키는 것과 같다.</li>
+</ul>
+<ul>
+<li>low-level lock만 사용해서는 구현하기 어렵다.</li>
+</ul>
+<h1>격리 수준(Isolation level) 선택하기</h1>
+<ul>
+<li>다음은 권고 사항이지 돌에 새겨넣은 말 같은 것이 아니다.</li>
+</ul>
+<ul>
+<li>read uncommitted 격리 수준은 사용하지 말아라.</li>
+</ul>
+<ul>
+<li>대부분의 경우 serializable 격리 수준 까지느 필요없다. phantom read가 보통 문제를 일어키지는 않는다. 성능에 심각한 영향을 끼친다.</li>
+</ul>
+<ul>
+<li>그러면 read committed와 repeatable read 둘 만 남았네.</li>
+</ul>
+<ul>
+<li>repeatable read: read lock이 write lock을 막는다. 이 방법 말고<br />
+versioned data를 사용하면 하이버네이트가 알아서 해준다. 하이버네이트의 Persistence context<br />
+cache와 versioning이 repeatable read를 보장해준다. 따라서, versioned data를 사용하기만<br />
+하면 모든 DB 트랜잭션이 이 격리 수준을 사용할 수 있다.</li>
+</ul>
+<h1>격리 수준 설정하기</h1>
+<ul>
+<li>DBMS마다 기본 격리 수준이 있다. 보통 read committed 또는 repeatable read 중 하나다.</li>
+</ul>
+<ul>
+<li>hibernate.connection.isolation = 4 이렇게 설정할 수 있다.</p>
+<ul>
+<li>1—Read uncommitted isolation</li>
+<li>2—Read committed isolation</li>
+<li>4—Repeatable read isolation</li>
+<li>8—Serializable isolation</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>이렇게 하이버 설정에 설정해버리면 이건 global 한 설정이 된다.</li>
+</ul>
+<ul>
+<li>때로는 특정 트랜잭션 마다 설정할 수 있다.</li>
+</ul>
+<p></p>

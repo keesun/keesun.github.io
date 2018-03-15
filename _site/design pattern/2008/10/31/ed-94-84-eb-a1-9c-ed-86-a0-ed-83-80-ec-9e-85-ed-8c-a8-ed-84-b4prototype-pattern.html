@@ -1,0 +1,57 @@
+<p>참조: Java 언어로 배우는 디자인 패턴 입문</p>
+<p>"복사해서 인스턴스 만들기"<br />
+"클래스에서 인스턴스를 만들지 않고 인스턴스에서 인스턴스 만들기"</p>
+<p>객체를 클래스를 사용하여 new로 생성하지 않고 복사해서 만들고 싶은 경우<br />
+- 취급하는 객체가 다양해서 각각을 별도의 클래스로 두기엔 무리가 있을 때..<br />
+- 클래스에서 객체 생성이 어려운 경우(ex. 런타임에 마우스 조작으로 만들어 내는 객체)<br />
+- 프레임워크와 생성할 인스턴스를 분리하고 싶을 때. 모형이 되는 객체를 등록해 놓고 그 객체를 복사해서 인스턴스 생성.</p>
+<p>예제 코드 from <a href="http://en.wikipedia.org/wiki/Prototype_pattern" target="_blank">Wikipedia</a></p>
+<pre style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);"><span class="coMULTI">/** Prototype Class **/</span><br />
+<span class="kw2">public</span> <span class="kw2">class</span> Cookie <span class="kw2">implements</span> <span class="kw3">Cloneable</span> <span class="br0">{</span><br />
+ <br />
+   <span class="kw2">public</span> <span class="kw3">Object</span> clone<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span><br />
+      <span class="kw2">try</span> <span class="br0">{</span><br />
+         Cookie copy = <span class="br0">(</span>Cookie<span class="br0">)</span><span class="kw2">super</span>.<span class="me1">clone</span><span class="br0">(</span><span class="br0">)</span>;<br />
+ <br />
+         <span class="co1">//In an actual implementation of this pattern you might now change references to</span><br />
+         <span class="co1">//the expensive to produce parts from the copies that are held inside the prototype.</span><br />
+ <br />
+         <span class="kw2">return</span> copy;<br />
+ <br />
+      <span class="br0">}</span><br />
+      <span class="kw2">catch</span><span class="br0">(</span><span class="kw3">CloneNotSupportedException</span> e<span class="br0">)</span> <span class="br0">{</span><br />
+         e.<span class="me1">printStackTrace</span><span class="br0">(</span><span class="br0">)</span>;<br />
+         <span class="kw2">return</span> <span class="kw2">null</span>;<br />
+      <span class="br0">}</span><br />
+   <span class="br0">}</span><br />
+<span class="br0">}</span><br />
+ <br />
+<span class="coMULTI">/** Concrete Prototypes to clone **/</span><br />
+<span class="kw2">public</span> <span class="kw2">class</span> CoconutCookie <span class="kw2">extends</span> Cookie <span class="br0">{</span> <span class="br0">}</span><br />
+ <br />
+<span class="coMULTI">/** Client Class**/</span><br />
+<span class="kw2">public</span> <span class="kw2">class</span> CookieMachine <span class="br0">{</span><br />
+ <br />
+   <span class="kw2">private</span> Cookie cookie;<span class="co1">//could have been a private Cloneable cookie; </span><br />
+ <br />
+   <span class="kw2">public</span> CookieMachine<span class="br0">(</span>Cookie cookie<span class="br0">)</span> <span class="br0">{</span> <br />
+      <span class="kw2">this</span>.<span class="me1">cookie</span> = cookie; <br />
+   <span class="br0">}</span> <br />
+   <span class="kw2">public</span> Cookie makeCookie<span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span> <br />
+      <span class="kw2">return</span> <span class="br0">(</span>Cookie<span class="br0">)</span>cookie.<span class="me1">clone</span><span class="br0">(</span><span class="br0">)</span>; <br />
+   <span class="br0">}</span> <br />
+   <span class="kw2">public</span> <span class="kw2">static</span> <span class="kw4">void</span> main<span class="br0">(</span><span class="kw3">String</span> args<span class="br0">[</span><span class="br0">]</span><span class="br0">)</span> <span class="br0">{</span><br />
+      Cookie tempCookie =  <span class="kw2">null</span>; <br />
+      Cookie prot = <span class="kw2">new</span> CoconutCookie<span class="br0">(</span><span class="br0">)</span>; <br />
+      CookieMachine cm = <span class="kw2">new</span> CookieMachine<span class="br0">(</span>prot<span class="br0">)</span>; <br />
+      <span class="kw1">for</span> <span class="br0">(</span><span class="kw4">int</span> i=<span class="nu0">0</span>; i&lt;<span class="nu0">100</span>; i++<span class="br0">)</span> <br />
+         tempCookie = cm.<span class="me1">makeCookie</span><span class="br0">(</span><span class="br0">)</span>; <br />
+   <span class="br0">}</span> <br />
+<span class="br0">}</span></pre>
+<pre class="source-java"><br />
+<img src="/assets/490ab78a7df8dAW.png" class="aligncenter" width="548" height="390" alt="" filename="1.png" filemime="" /></pre>
+<p>Prototype<br />
+- 원형 인터페이스로 객체 복사에 사용할 메소드를 정의한다.<br />- Cloneable 인터페이스 상속.</p>
+<p>ConcretePrototype<br />- Prototype 인터페이스 구현하여 실제 복사 로직 구현. </p>
+<p>Client<br />- Prototype 인터페이스를 사용하여 새로운 객체를 만든다.</p>
+<p>주의할 것.<br />- Cloenable은 마커 인터페이스.<br />- 실제 clone 메소드는 Object 클래스에 들어있다.<br />- 필드 대 필드 복사라서 배열의 경우 레퍼런스를 복사해서 위험할 수 있다. 그럴 땐 직접 clone 메소드를 재정의 해야 한다.<br />- clone을 재정의 할 떄는 super.clone()을 호출해야 한다.<br />- clone은 복사만 하지 생성자를 호출하지 않는다. 그래서 생성시에 로직이 필요한 땐 그 로직도 clone에 같이 넣어 준다.<br />- 자세한건 API를 보시라...</p>

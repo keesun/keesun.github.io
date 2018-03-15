@@ -1,0 +1,171 @@
+<p><a title="[http://blog.springsource.com/2009/12/04/logging-dependencies-in-spring/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2009/12/04/logging-dependencies-in-spring/">원문: http://blog.springsource.com/2009/12/04/logging-dependencies-in-spring/</a></p>
+<p>봄싹 위키: <a title="[http://springsprout.org/wiki/1439.do]로 이동합니다." target="_blank" href="http://springsprout.org/wiki/1439.do">http://springsprout.org/wiki/1439.do</a></p>
+<p>이 글은 스프링이 결정한 선택 사항들과 개발자들이 스프링을 사용하여 애플리케이션을 만들 때 로깅으로 이용할 수 있는 옵션을 다룬다. 무언가를 많이 변경했기 때문이 아니라, 여러분이 애플리케이션에서 로깅을 구현하고 설정할 때 정보에 근거할 수 있도록 이제는 출시가 임박한 스프링 3.0을 따라야 할 시점이다. 먼저 스프링에 어떤 필수 의존성이 있는지 살펴본 다음, common logging 라이브러리 예제를 사용하여 애플리케이션에 로깅을 설정하는 방법을 좀 더 자세히 살펴보겠다. 예를 들어 메이븐 중앙 스타일 구성물 작명 규약을 사용하는 의존성 설정을 보여주겟다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">스프링 의존성과 스프링에 의존하는 것들</span></span></p>
+<p>스프링은 광범위한 엔터프라이즈 및 여러 외부 도구를에 대한 연동과 지원을 제공하지만, 내부적으로 필수 의존성을 최소한으로 유지한다. 간단한 경우에 스프링을 사용할 때는 많은 수의 라이브러리를 다운로드(혹은 자동으로) 받을 필요가 없다. 기본적인 의존성 주입은 오직 하나의 외부 의존성을 필요로 하며, 그건 바로 로깅이다.(로깅 옵션에 대해서는 아래의 보다 자세한 설명을 참조하자.) 만약 의존성 관리를 메이븐으로 하고 있다면 로깅 의존성을 명시적으로 설정할 필요도 없다. 예를 들어, 애플리케이션 컨텍트를 만들고 의존성 주입을 이용하고 있다면 애플리케이션에 다음과 같이 설정하기만 하면 된다. 메이븐 의존성은 다음과 같을 것이다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;dependencies&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;3.0.0.RELEASE&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&lt;/dependencies&gt;</div>
+<p>
+이게 전부다. 기본적인 의존성 주입을 사용하는 경우처럼, 일반저긍로 스프링 API를 컴파일 할 필요가 없다면 scope가 runtime으로 설정해도 된다는 것에 주목하자.</p>
+<p>위 예제에서 메이븐 중앙 작명 규약을 사용했기 때문에, 메이븐 중앙 또는 스프링소스 S3 메이븐 저장소와 잘 동작한다. S3 메이븐 저장소를 이용하려면(마일스톤 또는 개발자 스냅샷 버전을 사용하기 위해), 저장소 위치를 메이븐 설정 파일에 명시해야 한다. 전체 배포는 저장소는 다음과 같다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;repositories&gt;<br />
+&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;id&gt;com.springsource.repository.maven.release&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;url&gt;http://s3.amazonaws.com/maven.springsource.com/release/&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;snapshots&gt;&lt;enabled&gt;false&lt;/enabled&gt;&lt;/snapshots&gt;<br />
+&nbsp;&nbsp; &lt;/repository&gt;<br />
+&lt;/repositories&gt;</div>
+<p>
+마일스톤 저장소는 다음과 같다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;repositories&gt;<br />
+&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;id&gt;com.springsource.repository.maven.milestone&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;url&gt;http://s3.amazonaws.com/maven.springsource.com/milestone/&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;snapshots&gt;&lt;enabled&gt;false&lt;/enabled&gt;&lt;/snapshots&gt;<br />
+&nbsp;&nbsp; &lt;/repository&gt;<br />
+&lt;/repositories&gt;</div>
+<p>
+스냅샷은 저장소는 다음과 같다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;repositories&gt;<br />
+&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;id&gt;com.springsource.repository.maven.snapshot&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;url&gt;http://s3.amazonaws.com/maven.springsource.com/snapshot/&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;snapshots&gt;&lt;enabled&gt;true&lt;/enabled&gt;&lt;/snapshots&gt;<br />
+&nbsp;&nbsp; &lt;/repository&gt;<br />
+&lt;/repositories&gt;
+</div>
+<p>
+스프링소스 EBR을 사요하려면 의존성을 나타낼 때 다른 이름 규약을 사용해야 한다. 이름은 보통 유추하기 쉽다. 예를 들어 이번 경우에는 다음과 같다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;dependencies&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;org.springframework.context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;3.0.0.RELEASE&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&lt;/dependencies&gt;</div>
+<p>
+물론 저장소도 명시적으로 설정해 줘야 한다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;repositories&gt;<br />
+&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;id&gt;com.springsource.repository.bundles.release&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;url&gt;http://repository.springsource.com/maven/bundles/release/&lt;/url&gt;<br />
+&nbsp;&nbsp; &lt;/repository&gt;<br />
+&lt;/repositories&gt;</div>
+<p>
+만약 의존성을 손으로 관리한다면, 위 저장소 설정에 보이는 URL은 브라우저로 볼수가 없고, http://www.springsource.com/repository에 사용자 인터페이스가 있으니 검색하여 의존성을 다운 받을 수 있다. 또한 이 사이트에는 간편한 메이븐과 Ivy 설정이 있으니 복사하여 붙여넣기로 쉽게 해당 도구에서 사용할 수 있다.</p>
+<p>만약 Ivy를 사용하여 의존성 관리하는 것을 선호한다면 위와 비슷한 이름과 설정 옵션이 관리 시스템에 있거나 예제 코드를 살펴보기 바란다.<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;"><span style="font-size: 11pt;">로깅</span></span></p>
+<p>로깅은 매우 중요한 스프링 의존성이다. 왜냐하면 a) 유일한 외부 의존성이자, b) 모두가 자신이 사용하는 도구에서 무언가 출력되는 것을 보고 싶어하며, c) 스프링은 로깅에 의존성을 가지는 다양한 툴과 연동하기 때문이다. 애플리케이션 개발자의 목적 중 하나는 보통 외부 컴포넌트를 포함한 전체 애플리케이션에 대해 중앙의 통합된 로깅 설정을 가지는 것이다. 로깅 프레임워크가 다양해지면서 예전보다 선택하기가 더 어려워졌다.</p>
+<p>스프링에 있는 필수 로깅 의존성은 Jakarta Commons Logging API(JCL)이다. JCL을 컴파일하고 JCL Log 객체를 스프링 프레임워크를 확장한 클래스에서 볼 수 있다. 스프링의 모든 버전에서 동일한 로깅 라이브러리를 사용하는 것이 사용자에게 중요하다. 스프링을 확장한 애플리케이션이더라도 뒷 단의 호환성이 보장되기 때문에 이전하기가 용이하다. 우리는 스프링의 모듈 중 하나를 명시적으로 commons-logging(JCL)에 의존하게 하고 다른 모듈들이 컴파일 시점에 해당 모듈에 의존하도록 하는 방법을 사용한다. 예를 들어, 메이븐을 사용하고 있으며, 어디서 commons-loggins에 대한 의존성을 가져와야 하는지 궁금하다면, 스프링에서 가져오도록 하고 명시적으로는 spring-core 모듈에서 가져온다.</p>
+<p>commons-logging의 좋은 점은 애플리케이션이 동작하는데 필요한 것이 아무것도 없다는 것이다. 런타임 감지 알고리즘을 가지고 있어서 클래스패스에 잘 알려진 로깅 프레임워크가 있다면 적절한 것을 찾아 사용하도록 되어있다.(또는 여러분이 어떤것을 사용하고 싶은지 알려줄 수도 있다) 만약에 사용할 수 있는 것이 아무것도 없다면 JDK(java.util.logging 또는 줄여서 JUL)로부터 로그를 가져온다. 여러분의 스프링 애플리케이션이 대부분의 경우 잘 동작하며 잘 로깅 된다는 것을 알아야 하며, 그것은 중요하다.</p>
+<p>불행히도, commons-logging의 안좋은 점은 역시 런타임 감지 알고리즘이다. 만약 시간을 되돌려 스프링을 새로운 프로젝트로 시작할 수 있다면 우리는 다른 로깅 의존성을 사용했을 것이다. 아마도 첫번째 선택은 많은 사람들이 애플리케이션에서 스프링과 함께 사용하고 있는 Simple Logging Facade for Java(SLF4J)일 것이다.</p>
+<p>commons-loggins을 교체하는 것은 쉽다. 실행중에 클래스패스에 없도록 만들자. 메이븐에서 의존성을 제외할 수 있다. 스프링 의존성 선언 방법으로 인해 다음과 같이 한번만 선언하면 된다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;dependencies&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;3.0.0.RELEASE&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;commons-logging&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;commons-logging&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/exclusions&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&lt;/dependencies&gt;
+</div>
+<p>
+이제 이 애플리케이션은 JCL API가 클래스패스에 없으니 깨질 것이다. 새로운 것을 제공하여 그것을 고쳐보자. 다음 절에서 우리는 어떻게 JCL 구현체의 대안으로 SLF4J를 사용하는지 예제를 살펴보겠다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">SLF4J 사용하기</span></span></p>
+<p>SLF4J는 연동할 다른 프레임워크를 찾는 작업을 실행중에 하지 않고 컴파일 시점에 바인딩 하기 때문에 commons-loggins 보다 보다 깔끔한 의존성과 실행시 보다 더 효율적이다. 이것은 즉 실행중에 여러분이 어떤 것을 사용하고 싶은지 보다 명시적으로 선언하고 그것을 적절하게 설정해야 한다는 뜻이다. SLF4J는 여러 로깅 프레임워크에 대한 바인딩을 지원하기 때문에 여러분들이 기존에 사용하고 있던 것을 선택하고 해당 설정과 관리로 바인딩할 수 있다.</p>
+<p>SLF4J는 JCL을 포함한 여러 로깅 프레임워크에 대한 바인딩을 제공한다. 또한 그 반대로 마찬가지다. 다른 로깅 프레임워크와 자신을 연결해준다. 따라서 SLF4J를 스프링에서 사용하기 위해서는 commons-logging 의존성을 SLF4J-JCL 브릿지 의존성으로 교체해야 한다. 그렇게 한번 하면 스프링 내부의 로깅 호출이 SLF4J에 대한 로깅 호출로 바뀐다. 따라서 만약 애플리케이션에서 다른 라이브러리들도 해당 API를 사용하고 있다면, 로깅을 설정하고 관리할 곳은 한 부분이다.</p>
+<p>일반적인 선택은 스프링에서 SLF4J로 연결하고, SLF4J에서 Log4J로 명시적인 바인딩을 하는 것이다. 4개의 의존성을&nbsp; 명시적으로 제공해야 한다. brigde, SLF4J API, binding to Log4J, Log4J 구현체. 메이븐에서 다음과 같이 설정할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;dependencies&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;3.0.0.RELEASE&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;commons-logging&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;commons-logging&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/exclusions&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.5.8&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.5.8&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.5.8&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;log4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;log4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.2.14&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&lt;/dependencies&gt;</div>
+<p>
+로깅을 하기위해서는 좀 많은 의존성처럼 보인다. 실제로 그렇긴 하지만 꼭 그래야 하는건 아니며 순수commons-logging 보다 더 잘 동작할 것이다. 특히 OSGi 플랫폼같이 제약적인 컨테이너를 사용한다면 말이다. 이른바 실행시점이 아니라 컴파일 시점에 바인딩을 하기 때문에 성능상 장점을 얻을 수 있다.</p>
+<p>SLF4J 사용자들 사이에서 보다더 일반적인 선택은 <a title="[http://logback.qos.ch/]로 이동합니다." target="_blank" href="http://logback.qos.ch/">Logback</a>에 지접 바인딩하여 과정을 짧게 하고 의존성을 더 줄이는 것이다. Logback이 SLF4J를 지겁 구현하기 때문에 추가적인 바인딩 과정을 제거해주기 때문에, 4개가 아니라 오직 두 개 라이브러리만 필요하다. (jcl-over-slf4j와 logback). 만약 그렇게 하면 slf4j-api 의존성 자체로 명시적인 의존성에서 제거할 필요가 있을지 모르겠다. 오직 한 버전 API 만 클래스패스에서 사용하길 원하기 때문이다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">Log4J 사용하기</span></span><br style="font-weight: bold;" /><br />
+많은 개발자들은 Log4J를 로깅 프레임워크로 사용하고 설정하고 관리한다. 효율적이며 잘 만들어졌다. 실제로 스프링을 만들고 테스트할 때 실행시에 사용하는 것이기도 하다. 스프링 또한 Log4j 설정과 초기화를 간편히 할 수 있는 것들을 제공한다. 따라서 몇몇 모듈은 Log4J에 대한 부가적인 컴파일 시점 의존성을 가지고 있다.</p>
+<p>Log4j를 기본 JCL 의존성으로 사용할 때 필요한 것은 Log4J를 클래스패스에 두는것이 전부이다. 그리고 (log4j.properties 또는 log4j.xml을 클래스패스 루트에) 설정 파일을 제공하면 된다. 따라서 메이븐 사용자는 다음과 같이 의존성 선언을 하면된다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;dependencies&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;3.0.0.RELEASE&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;log4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;log4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;1.2.14&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&lt;/dependencies&gt;</div>
+<p>
+그리고 다음은 콘솔에 로깅하는 log4j.properties다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+og4j.rootCategory=INFO, stdout</p>
+<p>log4j.appender.stdout=org.apache.log4j.ConsoleAppender<br />
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout<br />
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %t %c{2}:%L – %m%n</p>
+<p>log4j.category.org.springframework.beans.factory=DEBUG
+</div>
+<p>
+<span style="font-weight: bold;"><span style="font-size: 11pt;">네이티브 JCL과 런타임 컨테이너</span></span><br style="font-weight: bold;" /><br />
+많은 사람들이 스프링 애플리케이션을 JCL 구현체 자체를 제공하는 컨테이너에서 구동한다. IBM 웹스피어 애플리케이션 서버(WAS)가 그중 하나이다. 이것은 보통 문제를 야기하고, 불행히도 정답은 없다. commons-logging을 애플리케이션에서 간단하게 제외하는 것이 대부분 상황에서 충분한건 아니다.</p>
+<p>정리하자면: 문제는 JCL 또는 common-logging 자체가 아니라 commons-logging을 다른 프레임워크(보통 Log4J)에 바인딩하는 것과 관련이 있다. commons-logging이 런타임 탐색하는 방법이 몇몇 컨테이너가 사용하고 있는 예전 버전(1.0)과 현재 대부분의 사람들이 사용하고 있는 버전(1.1)과 다르기 때문이다. 스프링은 JCL API에서 별다른 것을 사용하지 않기 때문에 깨질것은 없지만, 조만간 로깅을 하려는 스프링 또는 여러분의 애플리케이션이 Log4J로 바인할 때 동작하지 않을 수 있다.</p>
+<p>그런 경우 WAS를 사용할 때는 클래스로더 계층 구조(IBM은 이것을 "parent last"라 부른다.)를 변경하여 컨테이너가 아니라 애플리케이션이 JCL 읜존성을 제어하게 할 수 있다. 하지만 이 방법이 항상 가능한 건 아니지만,&nbsp; 여러분이 사용하는 컨테이너틔 버전과 기능에 따라 다양한 대안들이 공공연히 제시되고 있다.</p>

@@ -1,0 +1,41 @@
+<p>검색하면 무지하게 많이 나옵니다. 그런데 저에게 필요한걸 찾기는 어렵더군요. 하지만 결국에 찾았죠. 캬캬</p>
+<p><a href="http://www.agentbob.info/agentbob/79-AB.html" target="_blank">http://www.agentbob.info/agentbob/79-AB.html</a></p>
+<p><a href="http://wiki.eclipse.org/Generating_a_Private_Key_and_a_Keystore" target="_blank">http://wiki.eclipse.org/Generating_a_Private_Key_and_a_Keystore</a></p>
+<p>이 두 글이 없었으면.... 아마.. 포기했거나 훨씬 더 오래 걸렸겠죠. 어흑.. 너무 고마운 블로거들...</p>
+<p>일단 나한테 주어진 파일은..</p>
+<ul>
+<li>abc.key =&gt; 키 파일</li>
+<li>abc.csr =&gt; 인증서 요청용 파일</li>
+<li>abc.pem =&gt; 인증 기관에서 받은 파일</li>
+<li>abc.key 생성할 때 사용한 암호.</li>
+</ul>
+<p>체인파일이라고 pem 파일이 하나더 있긴한데.. 그건 패스;; httpd에 설정하는건 그냥 이 파일들 경로만 지정해주면 되는데 톰캣에 설정하려면 왜 이렇게 복잡한 건지... 에효.. 하나 하나 적어 둡니다.</p>
+<p>1. 키 파일 변환</p>
+<pre>openssl pkcs8 -topk8 -nocrypt -outform der -in abc.key -out <strong>tmpfile</strong></pre>
+<p>2. 인증 파일 변환</p>
+<pre>openssl x509 -in cert.pem -inform PEM -out <strong>cert.der</strong> -outform DER</pre>
+<p>3. 자바 파일 다운</p>
+<p><a href="http://www.agentbob.info/agentbob/80/version/default/part/AttachmentData/data/ImportKey.java" target="_blank">http://www.agentbob.info/agentbob/80/version/default/part/AttachmentData/data/ImportKey.java</a></p>
+<p>이 파일이 필요합니다. 애초에 ~.key 파일로 keystore를 만들 수 있으면 좋았을텐데.. 그러질 못하니까 지금 이런짓을 하고 있는 겁니다. 이 자바 파일을 이용해서 keystore를 생성할껍니다. 혹시라도 링크가 짤릴 수도 있으니까 깃헙에도 올려두겠습니다. 이런거 가지고 뭐라하진 않겠지;;</p>
+<p>[gist id=2372922]</p>
+<p>그런 다음 여기서 keypass  변수를 찾아서 abc.key를 생성할 때 사용한 암호를 적어줍니다.</p>
+<p>4. 컴파일</p>
+<p>별거 없죠. javac ImportKey.java</p>
+<p>5. keystore 생성</p>
+<p>java ImportKey tmpfile cert.der tomcat</p>
+<p>첫번째 변수는 키를 변환한 파일, 두번째 변수는 인증서를 변환한 파일, 세번째는 톰캣 설정에 사용할 alias입니다.</p>
+<p>이 명령어를 사용하면 콘솔에 어떤 경로에 파일이 생겼다고 알려줍니다. 기본값은 사용자 홈 디렉토리/keystore.ImportKey인데.. 자바 파일을 수정하기 나름이겠죠.</p>
+<p>6. 확인</p>
+<p>잘 만들어졌나 확인하려면</p>
+<p>keytool -list -keystore ~/keystore.ImportKey</p>
+<p>이렇게 찍어보면 tomcat이라는 alias로 뭔가 들어있는게 보일겁니다.</p>
+<p>7. 톰캣 설정</p>
+<p>&lt;Connector <strong>port="포트"</strong> maxThreads="512" connectionTimeout="10000" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8" SSLEnabled="true" scheme="https" secure="true" sslProtocol="TLS" clientAuth="false" <strong>keystoreFile="키스토어경로" keystorePass="키생성시 사용한 암호" keyAlias="tomcat"</strong> /&gt;</p>
+<p>이 네개의 값만 잘 설정해 주시면 됩니다. 물론 maxThreads나 connectionTimeout 같은 값도 잘 설정해야겠죠. 포트는 기본값이 443이긴한데.. 원하면 다른 포트를 사용하셔도 됩니다. 여기서는... keystoreFile은 ~/keystore.ImportKey가 되고 keystorePass는 최초에 abc.key 생성할 때 사용한 암호.. 그 암호를 그대로 ImportKey.java 에 사용했으니.. 그 값을 그대로 적어주면 되겠죠. keyAlias는 ImportKey를 자바로 실행할 때 준 마지막 매개변수인 그 값을 설정했습니다.</p>
+<p>8. 톰캣 재시작</p>
+<p>이건 뭐 알아서..</p>
+<p>9. 포트 확인</p>
+<p>netstat -na | grep 포트</p>
+<p>이 명령으로 SSL을 적용한 포트가 동작하고 있는지 확인하시면 됩니다.</p>
+<p>&nbsp;</p>
+<p>끝!!!</p>

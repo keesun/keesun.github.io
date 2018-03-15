@@ -1,0 +1,28 @@
+<p>참조 : <a href="http://developer.yahoo.com/yui/datatable/" target="_blank">http://developer.yahoo.com/yui/datatable/</a></p>
+<p>흠.. 이 부분이 가장 중요한 부분인데요. 아직 잘 모르겠습니다. 제가 원하는 건 현재 페이지가 List나 자바의 배열 객체를 가지고 있을 때 이것을 어떻게 DataTable로 표현 할 것인가 입니다.</p>
+<p>답을 찾을 수 있을지 모르겠지만 일단 ㄱㄱ..</p>
+<p>DataTable을 만들기 위해서 DataSource 객체를 만들차례입니다. </p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">var YAHOO.example.puppies = [<br />
+ &nbsp; {name:"Ashley",breed:"German Shepherd",age:12},<br />
+ &nbsp; {name:"Dirty Harry",breed:"Norwich Terrier",age:5},<br />
+ &nbsp; {name:"Emma",breed:"Labrador Retriever",age:9},<br />
+ &nbsp; {name:"Oscar",breed:"Yorkshire Terrier",age:6},<br />
+ &nbsp; {name:"Riley",breed:"Golden Retriever",age:6},<br />
+ &nbsp; {name:"Shannon",breed:"Greyhound",age:12},<br />
+ &nbsp; {name:"Washington",breed:"English Bulldog",age:8},<br />
+ &nbsp; {name:"Zoe",breed:"Labrador Retriever",age:3}<br />
+];</div>
+<p>먼저 예제로 보여주는 경우는 DataSource 객체를 만들 때 생성자에 JavaScript 배열이 담긴 파일을 넣어 줍니다. 
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">var myDataSource = new YAHOO.util.DataSource(YAHOO.example.puppies);</div>
+<p>그리고 responseType을 JavaScript 배열로 지정해 줍니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSARRAY;</div>
+<p>마지막으로 key에 매핑될 객체의 속성들을 지정해 줍니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">myDataSource.responseSchema = {<br />&nbsp; &nbsp; fields: ["name","breed","age"]<br />};</div>
+<p>responseType으로는 다음과 같은 것들이 있습니다.
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">TYPE_JSARRAY - final Number :: Type is a JavaScript Array. :: Default Value: 0<br />TYPE_JSFUNCTIOn - final Number :: Type is a JavaScript Function. :: Default Value: 1<br />TYPE_JSON - final Number :: Type is JSON. :: Default Value: 3<br />TYPE_TEXT - final Number :: Type is plain text. :: Default Value: 5<br />TYPE_UNKNOWN - final Number :: Type is unknown. :: Default Value: -1<br />TYPE_XHR - final Number :: Type is hosted on a server via an XHR connection. :: Default Value: 2<br />TYPE_XML - final Number :: Type is XML. :: Default Value: 4 </div>
+<p>흠...전부 외부 파일로 부터 데이타들을 읽어오는 것 같네요. 흠;;; 매번 이런 파일들을 생성해서 사용할 수도 없고 어떻게 사용하라는거지..ㅠ.ㅠ</p>
+<p>request에서 "list" 라는 이름으로 List 객체를 가지고 있을 때 displayTag 같은 경우는 &nbsp;&nbsp; 
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp;&lt;display:table name="list" export="true"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="name" title="이름" href="detail.do" paramId="id" paramProperty="id"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="email" autolink="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="phone" title="연락처"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="blogAddress" title="Blog" autolink="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="messengerId" title="MSN"/&gt;<br />&nbsp; &nbsp; &lt;/display:table&gt;</div>
+<p>이런식으로 쓰면 되는데...흠.. 도무지 감이 잡히질 않는 군요. request에 있는 배열은 DataSource로 어떻게 넣을 수 있지??</p>
+<p>&lt;table&gt; 태그로 data들을 표현했다면 DataSource를 만들 필요가 없습니다. DataTable에서 적절하게 매핑할 수 있습니다. 그 방법은 좀이따가 살펴보겠습니다.</p>
+<p>jstl 등을 사용해서 &lt;table&gt; 태그를 만들어서 사용해야 되나.. 그렇게 되면 displayTag보다는 불편한거 아닌가.. 흠..;;; 아 머리야; 일단 STOP</p>

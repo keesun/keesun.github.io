@@ -1,0 +1,91 @@
+---
+layout: post
+title: "[Node.js] mongoos로 MongoDB에 데이터 저장하기"
+date: 2011-06-07 01:00:57.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- MongoDB
+- node.js
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168928'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/06/2011-06-07_______12.52.01.png"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/2011-06-07_______12-thumb.52.01.png" alt="" width="380" height="236" /></a>1. mongoose 모듈 로딩(로딩이라는 표현이 맞는지는 모르겠다. node.js에서는 뭐라고 한담?)</p>
+<p style="clear: both;">(1.5) db 커넥션 정의하기</p>
+<p>2. 스키마 정의</p>
+<p style="clear: both;">3. 사용하기</p>
+<p style="clear: both;">이런 3단계가 매우 쉽다. 좀 더 구체적으로.. 모델 정보를 담을 js 파일을 만들었다. 이름은 models.js 그리고 그 안에서..</p>
+<p style="clear: both;">var mongoose = require('mongoose');</p>
+<p style="clear: both;">이것으로 1번 끝.</p>
+<p style="clear: both;">var db = mongoose.connect('mongodb://localhost/rtfeedback');</p>
+<p style="clear: both;">이것으로 2번 끝. 이제 스키마를 정의해보자.</p>
+<p style="clear: both;">var Schema = mongoose.Schema,<br />
+ObjectId = Schema.ObjectId;</p>
+<p style="clear: both;">var Comments = new Schema({<br />
+id :ObjectId,<br />
+from :String,<br />
+to :String,<br />
+body :String,<br />
+date :Date<br />
+});<br />
+mongoose.model("Comments", Comments);</p>
+<p style="clear: both;">이것으로 3번 끝..</p>
+<p style="clear: both;">마지막으로 이 models.js를 하나의 모듈처럼 사용할 수 있도록 exports에 Comments를 추가해주자. 이건 node.js의 모듈 시스템 동작 원리인데.. 뭔가 참 심플해 보인다.</p>
+<p style="clear: both;">var Comments = exports.Comments = db.model('Comments');</p>
+<p style="clear: both;">이것으로 모듈화 끝.</p>
+<p style="clear: both;">이제 models.js를 사용할 apps.js로 넘어가자.</p>
+<p style="clear: both;">var models = require('./lib/models'),<br />
+Comments = models.Comments;</p>
+<p style="clear: both;">여기 보면 models.Comments라고해서 아까 위에서 exports에 추가한 것을 사용할 수 있다.</p>
+<p style="clear: both;">이제 저장해볼까?</p>
+<p style="clear: both;">var newComments = new Comments();<br />
+newComments.to = channel;<br />
+newComments.from = from;<br />
+newComments.body = msg;<br />
+newComments.date = new Date();<br />
+newComments.save(function(err){<br />
+console.log(err);<br />
+});</p>
+<p style="clear: both;">끝이닷!!</p>
+<p><br class="final-break" style="clear: both;" /></p>

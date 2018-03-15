@@ -1,0 +1,64 @@
+---
+layout: post
+title: MessageSource 인터페이스
+date: 2007-03-14 23:55:08.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- MessageSource 인터페이스
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323107065'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<blockquote>
+Strategy interface for <span style="color: rgb(255, 0, 0);">resolving messages</span>, with support for the <span style="color: rgb(255, 0, 0);">parameterization<br />
+ </span>and <span style="color: rgb(255, 0, 0);">internationalization </span>of such messages.</p></blockquote>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/MessageSource.html" target="_blank">MessageSource 인터페이스</a>에 있는 메소드들은 다음과 같습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk85.jpg" class="aligncenter" width="500" height="120" alt="사용자 삽입 이미지" /><br />이 인터페이스를 구현한 클래스들은 다음과 같습니다.
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractApplicationContext.html" title="class in org.springframework.context.support">AbstractApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractMessageSource.html" title="class in org.springframework.context.support">AbstractMessageSource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractRefreshableApplicationContext.html" title="class in org.springframework.context.support">AbstractRefreshableApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/AbstractRefreshablePortletApplicationContext.html" title="class in org.springframework.web.portlet.context">AbstractRefreshablePortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/AbstractRefreshableWebApplicationContext.html" title="class in org.springframework.web.context.support">AbstractRefreshableWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractXmlApplicationContext.html" title="class in org.springframework.context.support">AbstractXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/ClassPathXmlApplicationContext.html" title="class in org.springframework.context.support">ClassPathXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/DelegatingMessageSource.html" title="class in org.springframework.context.support">DelegatingMessageSource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/FileSystemXmlApplicationContext.html" title="class in org.springframework.context.support">FileSystemXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/GenericApplicationContext.html" title="class in org.springframework.context.support">GenericApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/GenericWebApplicationContext.html" title="class in org.springframework.web.context.support">GenericWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/ReloadableResourceBundleMessageSource.html" title="class in org.springframework.context.support">ReloadableResourceBundleMessageSource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/ResourceBundleMessageSource.html" title="class in org.springframework.context.support">ResourceBundleMessageSource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/StaticApplicationContext.html" title="class in org.springframework.context.support">StaticApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/StaticMessageSource.html" title="class in org.springframework.context.support">StaticMessageSource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/StaticPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">StaticPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/StaticWebApplicationContext.html" title="class in org.springframework.web.context.support">StaticWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/XmlPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">XmlPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/XmlWebApplicationContext.html" title="class in org.springframework.web.context.support">XmlWebApplicationContext</a></dd>
+</dl>
+<p>이 중에서 Reference와 MessageSource 인터페이스 API에서 언급하고 있는 클래스는 세개 입니다.</p>
+<p>1. <a href="ReloadableResourceBundleMessageSource" target="_blank">ResourceBundleMessageSource 클래스</a><br />JDK의 <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/ResourceBundle.html" target="_blank">ResourceBundle 클래스</a>와 <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/text/MessageFormat.html" target="_blank">MessageFormat 클래스</a>를 기반으로 만들었으며, 번들들에 특정 이름으로 접근할 수 있는 클래스입니다.</p>
+<p>2. <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/ReloadableResourceBundleMessageSource.html" target="_blank">ReloadableResourceBundleMessageSource 클래스</a><br />JVM 실행 도중 번들들을 다시 읽어 들이는 것이 가능합니다. </p>
+<p>3. <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/StaticMessageSource.html" target="_blank">StaticMessageSource 클래스</a><br />MessageSource의 간단한 구현체로 기본적인 국제화를 지원하며 테스트를 위해 만들었습니다.</p>

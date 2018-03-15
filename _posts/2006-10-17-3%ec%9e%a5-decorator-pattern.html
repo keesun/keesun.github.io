@@ -1,0 +1,98 @@
+---
+layout: post
+title: 3장 Decorator Pattern
+date: 2006-10-17 07:39:12.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Design Pattern
+tags:
+- Decorator Pattern
+- design pattern
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323104068'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div>
+<img style="" onclick="viewImage('/whiteship200/26175508_504x261.jpg');" src="{{ site.baseurl }}/assets/26175508_504x261.jpg" alt="" border="0" /> </div>
+<div>이번에는 스타버즈의 메뉴를 class diagram으로 그린 것입니다.</div>
+<div>기본적인 Beverage class를 상속 받는 방식으로 새로운 메뉴를 생성하고 있습니다.</div>
+<div>만약..커피를 주문할 때 우유,&nbsp; 두유, 모카, 크림과 같은 첨가물을 추가하는 경우 각각이 다른 class로 생성하여 상속 받게 됩니다. 즉, 모카 커피 class, 두유 커피 class, 우유 커피 class, 크림 커피 class, 우유 모카 커피 class..... 이런 식으로 하위 class가 무지막지하게 늘어나게 됩니다. 만약에 새로운 <font style="background-color: rgb(204, 255, 204)">첨가물 하나가 추가 된다면 추가되는 class는 하나가 아닐 것입니다.</font></div>
+<div>이런 방법은 별로 좋치 않겠군요.. 그래서 Beverage class에 <font style="background-color: rgb(204, 255, 204)">첨가물들이 들어 있는지에 대한 boolean 변수(플래그-flag)를 만들어 두고</font> cost() 메소드 안에서는 첨가물이 들어있는지 확인하고 첨가되어있는 <font style="background-color: rgb(204, 255, 204)">첨가물의 가격을 전부 더하는 내용을 넣어 둡니다.</font></div>
+<div>그리고 이것을 상속받는 하위 클래스에서는 cost() 메소드를 상속받은 후 자기 자신의 가격(커피, 에스프레소..등의 자체 가격)에<font style="background-color: rgb(204, 255, 204)"> super.coast()를 호출하여 첨가물의 가격을 구해서 더하면 될 것입니다.</font></div>
+<div>따라서 Beverage class가 다음과 같이 달라집니다.</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/26175509_483x382.jpg');" src="{{ site.baseurl }}/assets/26175509_483x382.jpg" alt="" border="0" /> </div>
+<div>Beverage class에 있는 cost() 메소드는 다음과 같습니다.</div>
+<div>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">
+<div>public class Berverage{</div>
+<div>&nbsp; public double cost(){</div>
+<div> &nbsp;&nbsp; if(hasMilk())</div>
+<div> &nbsp; &nbsp; &nbsp; cost += milkCost;</div>
+<div> &nbsp;&nbsp; if(hasSoy())</div>
+<div> &nbsp; &nbsp; &nbsp; cost += soyCost;</div>
+<div> &nbsp;&nbsp; ...</div>
+<div> &nbsp;&nbsp; return cost;</div>
+<div>&nbsp; }</div>
+<div>}</div>
+</div>
+</div>
+<div>이렇게 첨가되어 있는(hasXXX) 첨가물의 가격을 더해서 return합니다.</div>
+<div>그러면 하위 class들의 cost에서는</div>
+<div>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">
+<div>public class HouseBlend{</div>
+<div>&nbsp; public double cost(){</div>
+<div> &nbsp;&nbsp; cost += super.cost();</div>
+<div> &nbsp;&nbsp; return cost;</div>
+<div>&nbsp; }</div>
+<div>}</div>
+</div>
+</div>
+<div>이렇게 해서 자기 자신(houseBlend의 가격)에 첨가물의 가격(super.cost())을 더해서 return하면 됩니다.</div>
+<div>일단은 이 방법이 맨 처음에 사용했던 방법보다 간단해 보입니다.</div>
+<div>적어도 class가 기하급수적으로 늘어나진 않으니깐요..</div>
+<div>하지만 새로운 첨가물이 추가 될 때 마다 Beverage에 새로운 변수가 두개(첨가물의 가격, 첨가물의 첨가 여부를 나타내는 boolean변수)와 메소드 두개(setter와 hasXXX())가 생기며 cost() 메소드에 if문이 추가 되겠네요.</div>
+<div>그리고 만약에 녹차가 새로 추가 됐는데 녹차에 크림을 얹는 일이 발생할 수도 있겠네요.</div>
+<div>1장에서 장난감 오리가 날수 있던 것과 마찬가지 문제입니다.</div>
+<div>앗 그리고 첨가물을 한번밖에 추가를 못하는 군요..</div>
+<div>흠... 이런 문제를 해결하기 위해서든 뭔가 근본적인 디자인을 바꿔야 할 것 같군요..</div>
+<div>다음에 계속 살펴보겠습니다.</div>

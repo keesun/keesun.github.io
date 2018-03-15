@@ -1,0 +1,156 @@
+---
+layout: post
+title: 냄새 나는 Switch 코드와 다형성
+date: 2006-11-30 07:02:43.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- polymorphism
+- switch문
+- 다형성
+- 인터페이스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322986440'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://hanuska.blogspot.com/2006/08/swich-statement-code-smell-and.html">Switch Statement code smell and polymorphism</a><br />
+위 글을 보면서 정리하고 있습니다.</p>
+<p>switch-case 문을 사용한 소스코드를 보겠습니다.<br />
+[#M_ more.. | less.. |<br />
+<font color="#0000ff">public class Client {<br />
+&nbsp; private double <strong>a</strong>;<br />
+&nbsp; private double <strong>b</strong>;<br />
+&nbsp; private double <strong>r</strong>;<br />
+&nbsp; ...<br />
+&nbsp; public double calculateArea(int shape) {<br />
+&nbsp; &nbsp; &nbsp; double area = 0;<br />
+&nbsp; &nbsp; &nbsp; switch(shape) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case SQUARE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>area = a * a;</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case RECTANGLE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>area = a * b;</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case CIRCLE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>area = Math.PI * r * r;</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; return area;<br />
+&nbsp; }</p>
+<p>&nbsp; public double calculatePerimeter(int shape) {<br />
+&nbsp; &nbsp; &nbsp; double perimeter = 0;<br />
+&nbsp; &nbsp; &nbsp; switch(shape) {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case SQUARE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>perimeter = 4 * a;</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case RECTANGLE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>perimeter = 2 * (a + b);</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; case CIRCLE:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>perimeter = 2 * Math.PI * r;</strong><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; return perimeter;<br />
+&nbsp; }<br />
+&nbsp; ...<br />
+}</font>_M#]<br />
+위 코드를 보시면 swtich-case 문이 두 개의 메소드에서 중복이 되며 이것은 리팩토링이 필요하다는 것을 뜻합니다.</p>
+<p>이 코드는 instanceOf 연산자를 사용해서 간추릴 수는 있지만 여전히 중복이 존재합니다. 이럴 때 다형성을 사용하려면 먼저 AbstractShape 클래스나 Shape라는 인터페이스를 만듭니다. 그리고 이를 구현 하거나 상속 받도록 구성합니다.</p>
+<p><img alt="" src="{{ site.baseurl }}/assets/ClassDiagram1.gif" /></p>
+<p>출처 : <a href="http://photos1.blogger.com/blogger/2606/2479/1600/ClassDiagram1.gif">http://photos1.blogger.com/blogger/2606/2479/1600/ClassDiagram1.gif</a></p>
+<p>위 UML 대로 코딩한 소스 코드는 다음과 같습니다.<br />
+[#M_ more.. | less.. |<br />
+<span style="color: gray">Shape.java file</span><br />
+<font color="#0000ff">public interface </font><strong>Shape</strong><font color="#0000ff"> {<br />
+&nbsp; </font><strong>public double getArea();</strong><br />
+<font color="#0000ff">&nbsp; </font><strong>public double getPerimeter();</strong><br />
+<font color="#0000ff">}</p>
+<p></font><span style="color: gray">Square.java file</span><br />
+<font color="#0000ff">public class </font><strong>Square</strong><font color="#0000ff"> implements Shape {<br />
+&nbsp; private double a;<br />
+&nbsp; ...<br />
+&nbsp; public double getArea() {<br />
+&nbsp; &nbsp; &nbsp; return a * a;<br />
+&nbsp; }<br />
+&nbsp; public double getPerimeter() {<br />
+&nbsp; &nbsp; &nbsp; return 4 * a;<br />
+&nbsp; }<br />
+}</p>
+<p></font><span style="color: gray">Rectangle.java file</span><br />
+<font color="#0000ff">public class </font><strong>Rectangle</strong><font color="#0000ff"> implements Shape {<br />
+&nbsp; private double a;<br />
+&nbsp; private double b;<br />
+&nbsp; ...<br />
+&nbsp; public double getArea() {<br />
+&nbsp; &nbsp; &nbsp; return a * b;<br />
+&nbsp; }<br />
+&nbsp; public double getPerimeter() {<br />
+&nbsp; &nbsp; &nbsp; return 2 * (a + b);<br />
+&nbsp; }<br />
+}</p>
+<p></font><span style="color: gray">Circle.java file</span><br />
+<font color="#0000ff">public class </font><strong>Circle</strong><font color="#0000ff"> implements Shape {<br />
+&nbsp; private double r;<br />
+&nbsp; ...<br />
+&nbsp; public double getArea() {<br />
+&nbsp; &nbsp; &nbsp; return Math.PI * r * r;<br />
+&nbsp; }<br />
+&nbsp; public double getPerimeter() {<br />
+&nbsp; &nbsp; &nbsp; return 2 * Math.PI * r;<br />
+&nbsp; }<br />
+}</font>_M#]<br />
+이제 Client 코드에서는 switch 문이 사라집니다.<br />
+<font color="#0000ff">
+<div style="padding-right: 10px; padding-left: 10px; padding-bottom: 10px; padding-top: 10px; background-color: #faffa9"><font color="#0000ff">public class Client {<br />
+&nbsp; private </font><strong>Shape shape</strong><font color="#0000ff">;<br />
+&nbsp; ...<br />
+&nbsp; public double calculateArea() {<br />
+&nbsp; &nbsp; &nbsp; return </font><strong>shape.getArea()</strong><font color="#0000ff">;<br />
+&nbsp; }<br />
+&nbsp; public double calculatePerimeter() {<br />
+&nbsp; &nbsp; &nbsp; return </font><strong>shape.getPerimeter()</strong><font color="#0000ff">;<br />
+&nbsp; }<br />
+}</font></div>
+<p></font><br />
+Clinet의 코드가 처음 것에 비해 굉장히 단순해 졌으며 유연해 졌습니다. 새로운 도형이 추가 되어도 그 도형이 Shape 인터페이스만 구현했다면 이 코드는 수정될 필요가 없어졌습니다.</p>
+<p>책임이라는 관점에서 살펴본다면 처음의 Client 코드는 도형의 세부 길이 까지 너무 많은 걸 알고 었는데 반해 여기서는 도형이 뭘 할 줄 아느냐만 (메소드만) 을 이용하고 있습니다.</p>
+<p>인터페이스와, 다형성을 사용한 swich문의 중복과 coupling을 해결한 재밌는 글이였습니다.</p>

@@ -1,0 +1,158 @@
+---
+layout: post
+title: 복잡한 로직은 복잡한 DAO로 직결되는가?
+date: 2010-07-07 01:14:33.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- SQL
+- 복잡한 로직
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323129311'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>아니지 않을까... 비즈니스 로직이 복잡하다고 해서 SQL이 복잡해 질 필요는 없다.
+<div>
+</div>
+<div id="">재고 마감 로직을 생각해보자. 모든 창고에 들어있는 모든 상품들의 전일 재고량, 금일 입고량, 금일 출고량을 가져와서 금일 재고량을 계산한다고 치자. 이걸 가지도 또 상품 카테고리 별로 묶고 창고 별로 묶어서 집계를 내야 하는데.. 일단은 그 전 단계까지만 해보자.</div>
+<div>
+</div>
+<div>
+Location - Inventory</div>
+<div>Item - Inventory</div>
+<div>Item - InvIn</div>
+<div>Item - InvOut</div>
+<div>Item - InvDailyClosing</div>
+<div>
+</div>
+<div>
+이렇게 관계가 맺어져 있으니 SQL로 join을 하던 sub select를 하던 어떻게든 SQL 한방으로 어떤 창고에 있는 어떤 상품의 '전일 재고량', '금일 입고량', '금일 출고량'을 한방에 가져올 수 있을 것 같다.</div>
+<div>
+</div>
+<div id="">
+근데 난 그렇게 하지 않는다. 사실 그렇게 복잡한걸 만들지도 못한다. 만들라면 공부해가면서 만들겠지만 무지 오래 걸릴 것 같다. 그래서 난 그냥 자바 코드로 SQL을 대신한다.</div>
+<div>
+</div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.<b>delelteAllAt(today)</b>;</div>
+<div>
+</div>
+<div>
+<div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(Location location : locationDao.getAll()) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 모든 상품 마다</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;for(Item item : itemDao.getAll()){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 전일 재고량 조사</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyStart = <b>inventoryDao.getQtyOf(yesterday(today), item, location)</b>;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 금일 입고량 조사</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyIn = <b>invInDao.getQtyOf(today, item, location)</b>;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 금일 출고량 조사</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyOut = <b>invOutDao.getQtyOf(today, item, location)</b>;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 금일 재고량 계산</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyEnd = qtyStart + qtyIn - qtyOut;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 나머진 생략...</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div id="">
+</div>
+</div>
+</div>
+<div>
+</div>
+<div>즉 이런식으로 짠다. 굵은 글씨 부분은 DAO test를 해서 해당 기능이 내가 원한대로 동작하는지 일일히 확인해다. DBUnit을 사용해서 테스트용 데이터를 넣고 저 기능을 실행해보는 방식이다. 이렇게 구현하니까 상당히 마음이 놓인다. 저걸 만약 한방에 SQL로 구현했다던지.. 테스트 없이 구현했다면.. 글쎄.... 그렇겐 못했을 것 같다.</div>
+<div id="">
+</div>
+<div id="">
+암튼 이래서.. 복잡한 로직을 처리하는 DAO 코드라 할지라도 단순해진다. 이런걸 디바이드 앤 퀀쿼 라고 하던가.. 몰겠다. 머라하든.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">
+<div id="">
+</div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp;public double getQtyOf(Date date, Item item, Location location) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Object result = getSession().createQuery("<b>select sum(qty) from InvIn where date = :date and item = :item and location = :location group by item</b>")</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setDate("date", DateUtils.getDateOnly(date))</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setEntity("item", item)</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setEntity("location", location)</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.uniqueResult();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result == null)</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return 0.0;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return (Double) result;</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="">
+</div>
+</div>
+<div id="">
+</div>
+<div id="">
+대충 이정도 코드가 생기는데.. 이정도야 뭐.. 초간단 SQL 수준 아닌가..</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이렇게 짜면 걱정되는게.. 성능인데... DB에 자주 다녀올수록 더 많은 부하가 생기는건 사실이지만 어차피 복잡한 쿼리 자체도 join 여러번 하면서 부하가 생길테니.. SQL 도사가 아닌 이상 차라리 성능을 조금 포기하고 유지 보수 가능하고 알아보기 쉬운 코드로 나눠서 작성하는게 더 좋치 않을까 싶다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div>
+</div>
+<div>
+</div>

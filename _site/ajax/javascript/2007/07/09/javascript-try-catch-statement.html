@@ -1,0 +1,11 @@
+<p>참조 : <a href="http://www.w3schools.com/js/js_try_catch.asp" target="_blank">http://www.w3schools.com/js/js_try_catch.asp</a></p>
+<p><span style="font-weight: bold;">자바스크립트 - 에러 잡기</span><br />인터넷을 돌아다니다 보면 누구나 한번쯤 "디버그 하시겠습니까?"라는 팝업창을 본적이 있을 것이다. 이런 창은 개발자들에게는 유용한 정보일지 몰라도 사용자에게는 그렇치 않다. 아마 사이트를 바로 떠날 것이다.</p>
+<p>이번에는 그러한 에러를 잡아서 자바스크립트로 창을 띄워서 사용자를 잃지 않는 방법을 살펴본다.</p>
+<p>웹 페이지에서 에러를 잡는 두 가지 방법<br />1. try - catch문 사용<br />2. onerror 이번트 사용</p>
+<p><span style="font-weight: bold;">Try...Catch Statement</span><br />try 블럭으로 에러가 발생하는지 확인할 부분을 감싸고 catch 블럭으로 에러가 발생했을 때 할 일을 정의한다.<br />문법
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">try<br />{<br />//Run some code here<br />}<br />catch(err)<br />{<br />//Handle errors here<br />}</div>
+<p>예제
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;html&gt;<br />&lt;head&gt;<br />&lt;script type="text/javascript"&gt;<br />var txt=""<br />function message()<br />{<br />try<br />&nbsp; {<br />&nbsp; adddlert("Welcome guest!")<br />&nbsp; }<br />catch(err)<br />&nbsp; {<br />&nbsp; txt="There was an error on this page.\n\n"<br />&nbsp; txt+="Click OK to continue viewing this page,\n"<br />&nbsp; txt+="or Cancel to return to the home page.\n\n"<br />&nbsp; if(!confirm(txt))<br />&nbsp; &nbsp; {<br />&nbsp; &nbsp; document.location.href="http://www.w3schools.com/"<br />&nbsp; &nbsp; }<br />&nbsp; }<br />}<br />&lt;/script&gt;<br />&lt;/head&gt;</p>
+<p>&lt;body&gt;<br />&lt;input type="button" value="View message" onclick="message()" /&gt;<br />&lt;/body&gt;</p>
+<p>&lt;/html&gt;</p></div>
+<p>에러가 발생할 부분을 try 블럭으로 감싸고 catch에서 사용자에게 보여줄 에러 메시지를 작성하고 confirm()으로 확인창을 띄워서 사용자가 Cancle을 클릭하면 다른 페이지로 이동하도록 한다.</p>

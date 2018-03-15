@@ -1,0 +1,80 @@
+---
+layout: post
+title: Maven Embedder 사용해서 자바 코드로 메이븐 Phase 또는 Goal 실행하기
+date: 2009-05-12 07:03:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Maven Embedder
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323202429'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://maven.apache.org/guides/mini/guide-embedding-m2.html]로 이동합니다." target="_blank" href="http://maven.apache.org/guides/mini/guide-embedding-m2.html">http://maven.apache.org/guides/mini/guide-embedding-m2.html</a><br />
+<a title="[http://repo1.maven.org/maven2/org/apache/maven/maven-embedder/]로 이동합니다." target="_blank" href="http://repo1.maven.org/maven2/org/apache/maven/maven-embedder/">http://repo1.maven.org/maven2/org/apache/maven/maven-embedder/</a></p>
+<p>메이븐 pom.xml에 의존성을 추가해 줍니다. 엄청 많은 transitive 의존성들이 추가되기 때문에 조금 오래 걸릴 겁니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- maven emberdder --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.apache.maven&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;maven-embedder&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;3.0-alpha-2&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>이 녀석 하나가 끌고 오는 것만 15개입니다. 따라서 총 16개의 라이브러리를 추가한 겁니다. @_@ 사용하는 방법은 다른 것들은 다 기본 값을 사용하도록 하고, ClassLoader를 설정한 configuration을 만들어서 MavenEmbedder를 만들고, 실행할 phase나 goal들을 MavenExecutionRequest에 담고 execute를 하면 Result를 받을 수 있습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Configuration configuration = new DefaultConfiguration()<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .setClassLoader(Thread.currentThread().getContextClassLoader());</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ConfigurationValidationResult validationResult = MavenEmbedder<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .validateConfiguration(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (validationResult.isValid()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MavenEmbedder embedder = new MavenEmbedder(configuration);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MavenExecutionRequest request = new DefaultMavenExecutionRequest();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; request.setGoals(Arrays.asList(new String[] { "package", "cargo:start" }));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MavenExecutionResult result = embedder.execute(request);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (result.hasExceptions()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>이런 식이죠. 이렇게 하지 않고, 그냥 콘솔 명령어를 호출하도록 </p>
+<p>Runtime rt = Runtime.getRuntime();<br />
+Process p = rt.exec("/apps/apache-maven-2.0.10/bin/mvn.bat package");</p>
+<p>이렇게 짤 수도 있지만, 이렇게 하면 메이븐이 돌다가 에러 난 상황에 적절한 대처를 하기가 어렵기 때문에 위와 같이 다소 장황한 방법을 사용했습니다.</p>

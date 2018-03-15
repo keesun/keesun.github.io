@@ -1,0 +1,91 @@
+---
+layout: post
+title: Components
+date: 2007-07-20 04:12:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 02
+tags:
+- Spring JavaConfig 애노테이션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322989451'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2a/reference/html/components.html" target="_blank">Chapter 2. Components<br /></a><br />애노테이션을 사용하여 자바 구조를 계층화 하는 자바 설정은, 개발자들이 자바만을 사용하여 빈을 생성하고 설정할 수 있도록 한다. 간단하게, 개발자는 자바 코드를 사용하여 빈을 만들고 설정하며, 컨테이너가 그것들을 사용하도록 지시한다. 계속 진행하기 전에, Spring의 이상은 설정파일이 어떤 형태든(자바든 XML이든) 상관없이 우지 된다는 것을 유념하라.</p>
+<p>JavaConfig에서 사용할 수 있는 가장 중요한 애노테이션들을 살펴보자:</p>
+<p><font size="3"><span style="font-weight: bold;">2.1. @Configuration</span></font></p>
+<p>@Configuration 애노테이션은 설정 클래스를 지칭한다:</p>
+<p>@Configuration<br />public class WebConfiguration {<br />&nbsp;&nbsp; // bean definitions follow<br />}</p>
+<p>@Configuration은 클레스에 적용하는 애노테이션이고 설정할 bean들에 기본으로 적용할 것들을 나타낸다.</p>
+<p>@Configuration(defaultAutowire = Autowire.BY_TYPE, defaultLazy = Lazy.FALSE)<br />public class DataSourceConfiguration <br />&nbsp; &nbsp;&nbsp; extends ConfigurationSupport {<br />}</p>
+<p>&lt;beans/&gt; 태그와 동일하게 생각하면 된다. @Configuration 애노테이션을 달고 있는 클레스는 유틸리티 메소드를 제공하는 ConfigurationSupport 를 확장함을 나타낸다.<br /><font size="3"><br /><span style="font-weight: bold;">2.2. @Bean</span></font></p>
+<p>이름이 암시하듯이, @Bean 애노테이션은 bean 정의(&lt;bean/&gt; 태그)를 나타낸다. 간단한 예제로 살펴보자.</p>
+<p>@Bean (scope = DefaultScopes.SESSION)<br />public ExampleBean exampleBean() {<br />&nbsp; return new ExampleBean();<br />}</p>
+<p>위의 코드는 Spring 컨테이너에게 method의 이름(bean name)을 사용하여 bean을 생성하도록 하고, 값(실제 bean 객체)을 반환한다. bean은 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-session" target="_blank">session</a> 스콥이다. 즉, exampleBean() 메소드는 HTTP session 마다 새로운 객체를 생성해 줄 것이다.</p>
+<p>순수 자바 코드를 사용하기 때문에:</p>
+<p>- static method를 사용하면 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-class-static-factory-method" target="_blank">factory-mathod</a>를 사용할 필요가 없다.</p>
+<p>@Bean<br />public ExampleBean exampleBean() {<br />&nbsp; return ExampleFactory.createBean();<br />}</p>
+<p>또한</p>
+<p>- 복잡한 객체 생성시 필요한 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-extension-factorybean" target="_blank">FactoryBean</a>/<a href="http://static.springframework.org/spring/docs/2.0.x/api/index.html" target="_blank">MethodInvokingFactoryBean</a>도 필요없다.</p>
+<p>@Bean(aliases = { "anniversaries" })<br />public List&lt;Date&gt; birthdays() {<br />&nbsp; List&lt;Date&gt; dates = new ArrayList&lt;Date&gt;();<br />&nbsp; Calendar calendar = Calendar.getInstance();</p>
+<p>&nbsp; calendar.set(1977, 05, 28);<br />&nbsp; dates.add(calendar.getTime());<br />&nbsp; dates.add(computeMotherInLawBirthday());</p>
+<p>&nbsp; return dates;<br />}</p>
+<p>@Bean은 메소드에 붙일 수 있는 애노테이션이고 bean 객체를 생성하고 설정할 때 사용할 자바 코드를 나타낸다. 이 애노테이션은 XML 빈 설정에서 사용할 수 있는 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-autowire" target="_blank">autowiring</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-lazy-init" target="_blank">lazy-init</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-dependencies" target="_blank">dependecy-check</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-dependson" target="_blank">depends-on</a>과 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes" target="_blank">scope</a>과 같은 대부분의 설정을 지원한다. 또한, 라이프사이클 메소드와 XXXAware 인터페이스도 전부 지원한다.</p>
+<p>public class AwareBean implements BeanFactoryAware {</p>
+<p>&nbsp; private BeanFactory factory;</p>
+<p>&nbsp; // BeanFactoryAware setter<br />&nbsp; public void setBeanFactory(BeanFactory beanFactory) throws BeansException {<br />&nbsp;&nbsp; this.factory = beanFactory;<br />&nbsp; }</p>
+<p>&nbsp; public void close(){<br />&nbsp; &nbsp; // do clean-up<br />&nbsp; }<br />}</p>
+<p>@Bean(destroyMethodName = "close", lazy = Lazy.TRUE)<br />public AwareBean createBeanFactoryAwareBean() {<br />&nbsp;&nbsp; return new AwareBean();<br />}</p>
+<p>destroyMethodNanme 외에도, @Bean 애노테이션은 initMethodName을 제공한다. though its usage is discourage as one already has<br />
+control over the object creation and thus can call the initializing<br />
+method if needed.<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">2.3. @ExternalBean</span></font></p>
+<p>@ExternalBean은 단순한 마크업 애노테이션으로 '부모 애플리케이션 컨텍스트'에 정의 되어 있는 '외부의' 빈을 인젝션 할 때 사용한다. 예제를 살펴보자:</p>
+<p>@Configuration<br />public abstract class ExternalBeanConfiguration {<br />&nbsp; @Bean<br />&nbsp; public TestBean james() {<br />&nbsp; &nbsp; TestBean james = new TestBean();<br />&nbsp; &nbsp; // inject dependency from ann()<br />&nbsp; &nbsp; james.setSpouse(ann());<br />&nbsp; &nbsp; return james;<br />&nbsp; }</p>
+<p>&nbsp; // Will be taken from the parent context<br />&nbsp; @ExternalBean<br />&nbsp; public abstract TestBean ann();<br />}</p>
+<p>JavaConfig가 @ExternalBean을 만나게 되면, 소유하고 있는 메소드를 오버라이드하여 언제든 메소드를 호출할 수 있도록 한다. '부모 애플리케이션 컨텍스트'는 메소드 이름에 해당하는 bean을 찾아 준다(bean naming과 관련된 챕터에서 보다 자세한 내용을 참조). 이런 방법을, 설정 파일은 순수 자바로 남을 수 있고 익숙하게 리팩터링 할 수 있다.</p>
+<p>@ExternalBean이 일반 메소드에도 역시 작동함을 기억하라. 위의 예제는 추상 메소드를 사용하여 실행되지도 않을 쓰레기 코드를 작성하는 것을 방지했다.</p>
+<p>@Configuration<br />public class ExternalBeanOnNormalMethod {</p>
+<p>&nbsp; @ExternalBean<br />&nbsp; public TestBean ann(){<br />&nbsp; &nbsp; &nbsp; System.out.println("this code will not execute as the method " +<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "will be overriden with a bean look up at runtime");<br />&nbsp; }<br />}</p>
+<p><font size="3"><span style="font-weight: bold;">2.4. @ScopedProxy</span></font></p>
+<p>Spring은 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-other-injection" target="_blank">scoped 프록시</a>(자세한 내용은 링크 참조)를 사용하여 scoped 종속성의 사용을 편리하게 했다. 그런 프록시를 생성하는 가장 쉬운 방법은, XML 설정을 사용할 때는 &lt;aop:scope-proxy/&gt; 태그를 사용하는 것이였다. JavaConfig는 그 대안으로 @ScopedProxy 애노테이션을 제공하여 동일한 semantic과 설정 옵션을 사용할 수 있다.</p>
+<p>XML을 사용한 레퍼런스의 문서에 있는 예제를 JavaConfig를 사용하여 다음과 같이 작성할 수 있다.</p>
+<p>// a HTTP Session-scoped bean exposed as a proxy<br />@Bean(scope = DefaultScopes.SESSION)<br />@ScopedProxy<br />public UserPreferences userPreferences() {<br />&nbsp;&nbsp; return new UserPreferences();<br />}</p>
+<p>@Bean<br />public Service userService() {<br />&nbsp;&nbsp; UserService service = new SimpleUserService();<br />&nbsp;&nbsp; // a reference to the proxied 'userPreferences' bean<br />&nbsp;&nbsp; service.seUserPreferences(userPreferences());<br />&nbsp;&nbsp; return service;<br />}</p>

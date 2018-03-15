@@ -1,0 +1,85 @@
+---
+layout: post
+title: 8.2.1. HQL 공부하기 - select절
+date: 2007-01-24 11:19:27.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323174311'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Session에 있는 createQuery(Sring) 메소드를 이용해서 HQL을 사용할 수 있습니다.</p>
+<p>가장 간단한 HQL은 다음과 같습니다.<br />s.createQuery("from Member");</p>
+<p>여기서 " "사이에 들어간 부분이 HQL로 SQL과는 차이가 있으며 클래스의 이름은 @Entity의 name속성에 지정한 값을 쿼리에서 사용해야 합니다.[footnote]<a href="http://whiteship.tistory.com/408">HQL과 @Entity에 있는 name 속성의 관계</a> 참조[/footnote]</p>
+<p>select문 사용하기</p>
+<p>1. 모든 멤버를 가져오고 싶을 때 select * from Member SQL에서 이렇게 썼는데요. HQL은 이렇게 쓰면 에러가 발생합니다. select m from Member m 처럼 마치 레퍼런스 변수 만들듯이 표현해 주어야 합니다.</p>
+<p>2. 특정 변수만 가져오고 싶을 때는 select m.name from Member m 처럼 가져오고 싶은 필드 명을 m이라는 Member의 인스턴스를 통하여 가져오듯이 표현합니다.</p>
+<p>3. 여러개의 변수를 읽어 오면(ex select m.name, m.email from Member) 배열의 리스트로 받아 옵니다. 근데 가져온 값을 사용하기가 좀 복잡하네요.</p>
+<p>4. SQL 함수인 count, avg, sum, max, min등의 함수도 사용할 수 있습니다.</p>
+<p><font size="2"><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span><strong /></span></p>
+<div style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: #faffa9">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span><strong>public</strong> <strong>void</strong> testSelectHQL() {</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" ?><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>insertDatas();</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span lang="EN-US" style="COLOR: #3f7f5f; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">//1</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>q = s.createQuery(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"select m from k_Member m"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(3, q.list().size());</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span lang="EN-US" style="COLOR: #3f7f5f; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">//2</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>q = s.createQuery(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"select m.name from k_Member m"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>List&lt;String&gt; names = q.list();</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(3,<span style="mso-spacerun: yes">&nbsp; </span>names.size());</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"seal"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">, names.get(0));</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span lang="EN-US" style="COLOR: #3f7f5f; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">//3</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>q = s.createQuery(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"select m.name, m.email from k_Member m"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>List&lt;Object&gt; datas = q.list();</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>Object[] line1 = (Object[]) datas.get(0);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"seal"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">, (String)line1[0]);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"seal@os.net"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">, (String)line1[1]);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span lang="EN-US" style="COLOR: #3f7f5f; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">//4</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>q = s.createQuery(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"select count(*) from k_Member"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>assertEquals(<strong>new</strong> Long(3), q.uniqueResult());</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">}</span></p>
+</div>
+<p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left">
+<p></font></p>

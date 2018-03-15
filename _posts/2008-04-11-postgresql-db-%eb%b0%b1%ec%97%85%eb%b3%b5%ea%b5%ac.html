@@ -1,0 +1,61 @@
+---
+layout: post
+title: PostgreSQL DB 백업/복구
+date: 2008-04-11 00:59:24.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 실습
+tags:
+- DB 백업
+- DB 복구
+- PostgreSQL
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323149769'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>su - postgres</p>
+<p>pg_dump db이름 &gt; 폴더/백업파일명</p>
+<p>백업파일 다운로드</p>
+<p>dropdb -U postgres db이름</p>
+<p>createdb -U postgres -E 인코딩 db이름</p>
+<p>psql -U postgres db이름</p>
+<p>\i 백업파일명</p>
+<p></p>

@@ -1,0 +1,8 @@
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">It is a good idea to use constructor injection instead of setter injection to evade circular reference. = FALSE</div>
+<p>=&gt; evade circular reference. 이게 뭐지..<br /><a href="../../../../613">Circular dependencies</a></p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">The prototype-scoped beans ignore lazy-init&nbsp; attribute of bean&nbsp; element of the wiring configuration file only if the bean is instantiated using plain BeanFactory , not using the ApplicationContext = TRUE</div>
+<p>=&gt; 난 false 떙!! 흠... 이 건 알아야 하는데.. 뭐더라..<br />=&gt; 레퍼런스에서는 ApplicationContext에서 Singletone 빈의 상황에서 설명을 하고 있습니다. 그런데 Prototype 빈의 경우에 BeanFactory에서는 lazy-init이 무시 되나 봅니다. 왜??...</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">The method used as init-method&nbsp; cannot be the private one. = TRUE</div>
+<p>=&gt; 오.. 모르겠는데;; 답은 private 이여도 되네요..하지만 public으로 해야 Spring IDE에서 읽을 수 있다는 군요.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Enter the name of the attribute of the &lt;ref/&gt; element (spring-beans.dtd) which DOES NOT make XML parser to validate whether Spring bean referenced by such &lt;ref/&gt; element exists in the wiring configuration file. = bean</div>
+<p>=&gt; 이건 뭐야;;&nbsp; 답은 bean.. 레퍼런스 3.3.3.2인가.. 3.3.2인가. &lt;ref bean="이름" /&gt; 이렇게 예제가 나와있었네요.</p>

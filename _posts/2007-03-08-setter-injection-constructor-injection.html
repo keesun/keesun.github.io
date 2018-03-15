@@ -1,0 +1,77 @@
+---
+layout: post
+title: Setter Injection & Constructor Injection
+date: 2007-03-08 05:19:13.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Constructor Injection
+- Depedency Injection
+- Setter Injection
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323100447'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>예제로 사용될 Member 클래스 입니다.<br />[#M_ more.. | less.. |import java.util.List;</p>
+<p>public class Member {</p>
+<p>&nbsp; &nbsp; public Member(){}</p>
+<p>&nbsp; &nbsp; public Member(String id, String password){<br />&nbsp; &nbsp; &nbsp; &nbsp; this.id = id;<br />&nbsp; &nbsp; &nbsp; &nbsp; this.password = password;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; private String id;</p>
+<p>&nbsp; &nbsp; private String password;</p>
+<p>&nbsp; &nbsp; private List&lt;String&gt; wishList;</p>
+<p>&nbsp; &nbsp; private int age;</p>
+<p>&nbsp; &nbsp; public String getId() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return id;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setId(String id) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.id = id;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String getPassword() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return password;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setPassword(String password) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.password = password;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public List&lt;String&gt; getWishList() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return wishList;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setWishList(List&lt;String&gt; wishList) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.wishList = wishList;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public int getAge() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return age;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setAge(int age) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.age = age;<br />&nbsp; &nbsp; }<br />}<br />_M#]<span style="font-weight: bold;">1. Setter Injection</span></p>
+<p>이것을 사용하기 위해서는 setter가 있어야 합니다. 설정파일에는 다음과 같이 &lt;property /&gt; 태그를 이용해서 Injection을 합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="keesun" class="beanConfiguration.Member"&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; <span style="color: rgb(255, 0, 0);">&lt;property name="id" value="whiteship" /&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &lt;property name="password" value="pass" /&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &lt;property name="age" value="26" /&gt;</span><br />&nbsp;&nbsp; &nbsp;&lt;/bean&gt;</div>
+<p>다음과 같이 테스트 메소드를 작성한 뒤 테스트 해 봅니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void setterInjection(){<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Member keesun = (Member) bf.getBean("keesun");<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; assertEquals("whiteship", keesun.getId());<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; assertEquals("pass", keesun.getPassword());<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; assertEquals(<span style="color: rgb(23, 127, 205);">26, keesun.getAge()</span>);<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>됩니다. 이때 적절한 primitive type으로 알아서 바꿔주는 것을 확인할 수 있습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. Constructor Injection</span></p>
+<p>이것을 사용하기 위해서는 인자가 있는 생성자가 필요합니다. 설정파일에는 &lt;constructor-arg /&gt; 태그를 사용합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="keesun2" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;constructor-arg value="whiteship" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;constructor-arg value="pass" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;constructor-arg value="26" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>테스트 코드는 위에서 getBean("keesun2")로만 바꿔주면 됩니다.</p>

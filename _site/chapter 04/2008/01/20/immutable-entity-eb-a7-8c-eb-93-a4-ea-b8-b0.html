@@ -1,0 +1,20 @@
+<h1>특징</h1>
+<ul>
+<li>변하지 않아야 할 Persistent 객체가 있을 수 있다.</li>
+</ul>
+<ul>
+<li>이런 Persistent 클래스에는 필드로 직접 접근하도록 설정하고, accessor 메소드들을 만들지 않으면 된다.</li>
+</ul>
+<h1>설정하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>immutable entity 설정하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@org.hibernate.annotations.Entity(mutable=<span class="code-keyword">false</span>)<br />@org.hibernate.annotations.AccessType(<span class="code-quote">"field"</span>)<br /><span class="code-keyword">public</span> class Bid {<br /><br />}</pre>
+</div>
+</div>
+<ul>
+<li>@AccessType은 하이버네이트가 Pesistent 클래스에 접근하는 방법을 표시한다.</li>
+</ul>
+<ul>
+<li>클래스, 메소드, 필드 위에 붙여서 좀 더 세밀한 설정이 가능하다.</li>
+</ul>

@@ -1,0 +1,127 @@
+---
+layout: post
+title: 'YUI :: DataTable :: ColumnSet 객체 만들기'
+date: 2007-03-18 04:44:18.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- YUI
+tags:
+- ColumnSet
+- DataTable
+- YUI
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322793315'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://developer.yahoo.com/yui/datatable/" target="_blank">http://developer.yahoo.com/yui/datatable/</a></p>
+<p>ColumnSet 의 생성자는 객체의 배열을 받는데 각각의 객체는 DataTable의 맨 위에 해당하는 &lt;TH&gt; 엘리먼트를 나타냅니다. </p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">var myColumnHeaders = [<br />&nbsp; &nbsp; {key:"name", text:"Dog's Name"},<br />&nbsp; &nbsp; {key:"breed", text:"Dog's Breed"},<br />&nbsp; &nbsp; {key:"age", text:"Dog's Age (in Weeks)", type:"number"}<br />];</p>
+<p>var myColumnSet = new YAHOO.widget.ColumnSet(myColumnHeaders);</p></div>
+<p>myColumnHeaders는 배열이고 이 배열을 ColumnSet의 생성자에 넣습니다. 배열의 요소는 Column객체를 나타내며 Column에 지정할 수 있는 속성으로 다음과 같은 것들이 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">
+<li>abbr - String ::<br />
+                                            Column head cell ABBR for accessibility.</li>
+<li>children - Object[] ::<br />
+                                            Array of object literals that define children (nested headers) of a Column.</li>
+<li>className - String ::<br />
+                                            Custom CSS class to be applied to every cell in the Column.</li>
+<li>currentlyAsc </li>
+<li>editor - String ::<br />
+                                            Defines the type of editor for Column, otherwise Column is not editable.</li>
+<li>formatter - HTMLFunction ::<br />
+                                            Defines a custom format function for Column, otherwise default is used,<br />
+according to Column type.</li>
+<li style="color: rgb(255, 0, 0);">key - String ::<br />
+                                            Associated database field, or null.</li>
+<li><span style="color: rgb(255, 0, 0);">resizeable - Boolean ::<br />
+                                        True if Column is resizeable, false otherwise.<br />
+                                        </span>
+<div style="color: rgb(255, 0, 0);" class="detail">
+                                    </div>
+<div class="default"><span style="color: rgb(255, 0, 0);"><br />
+                                        Default Value: false</span>
+                                    </div>
+</li>
+<li><span style="color: rgb(255, 0, 0);">sortable - Boolean ::<br />
+                                        True if Column is sortable, false otherwise.<br />
+                                        </span>
+<div style="color: rgb(255, 0, 0);" class="detail">
+                                    </div>
+<div class="default"><span style="color: rgb(255, 0, 0);"><br />
+                                        Default Value: false</span>
+                                    </div>
+</li>
+<li>sortOptions.ascFunction - Function ::<br />
+                                        Custom sort handler to arrange Column in ascending order.</p>
+<div class="detail">
+                                    </div>
+<div class="default">
+                                        Default Value: null
+                                    </div>
+</li>
+<li>sortOptions.descFunctio - Function ::<br />
+                                        Custom sort handler to arrange Column in descending order.</p>
+<div class="detail">
+                                    </div>
+<div class="default">
+                                        Default Value: null
+                                    </div>
+</li>
+<li style="color: rgb(255, 0, 0);">text - String ::<br />
+                                            Text or HTML for display in Column's assocated TH element.</li>
+<li><span style="color: rgb(255, 0, 0);">type - String ::<br />
+                                        Data types: "string", "number", "date", "currency", "checkbox", "select",<br />
+"email", "link".<br />
+                                        </span>
+<div style="color: rgb(255, 0, 0);" class="detail">
+                                    </div>
+<div class="default"><span style="color: rgb(255, 0, 0);"><br />
+                                        Default Value: "string"</span>
+                                    </div>
+</li>
+<li>width - String ::<br />
+                                            Column width</li>
+</div>
+<p>abbr이 뭐죠? 흠.. html 태그 중에 하나[footnote]<a href="http://www.w3schools.com/tags/tag_abbr.asp" target="_blank">참조</a>를 해보니 축약어에 대한 설명을 달 때 사용하는 태그 였습니다.[/footnote] 였군요. currentlyAcs 속성에 관한건 <a href="http://developer.yahoo.com/yui/datatable/" target="_blank">API</a>에서 찾을 수가 없었습니다. 이 속성들은 다른 예제 코드들을 보면서 차차 익혀가야겠습니다. 흐흐;;</p>
+<p>이전 글에서 보았던 basic.html에 있던 코드의 일부를 다시 보겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">var myColumnHeaders = [<br />&nbsp; &nbsp; {key:"POID", abbr:"Purchase order ID", sortable:true, resizeable:true},<br />&nbsp; &nbsp; {key:"Date", type:"date", sortable:true, resizeable:true},<br />&nbsp; &nbsp; {key:"Quantity", type:"number", sortable:true, resizeable:true},<br />&nbsp; &nbsp; {key:"Amount", type:"currency", sortable:true, resizeable:true},<br />&nbsp; &nbsp; {key:"Title", type:"html", sortable:true, resizeable:true}<br />];</p>
+<p>var myColumnSet = new YAHOO.widget.ColumnSet(myColumnHeaders);</p></div>
+<p>ColumnSet의 생성자에 넣을 배열의 요소들은 각각이 Column객체이며 그 객체의 속성으로 key, abbr, sortable, resizeable, type 등을 지정했습니다.</p>

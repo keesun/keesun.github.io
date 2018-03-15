@@ -1,0 +1,67 @@
+---
+layout: post
+title: Bean Visibility
+date: 2007-07-24 02:19:39.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 03
+tags:
+- JavaConfig 빈 가시성
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322701993'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2/reference/html/bean-visibility.html" target="_blank">Chapter 3. Bean Visibility</a></p>
+<p>JavaConfig의 멋진 기능 중 하나는 bean의 가시성을 설정할 수 있다는 것이다. JavaConfig는 메소드 접근 지시자를 사용하여 메소드에서 반환할 bean에 접근 할 수 있는지 없는지 여부를 결정할 수 있다. </p>
+<p>다음의 설정을 살펴보자.</p>
+<p>@Configuration<br />public abstract class VisibilityConfiguration {</p>
+<p>&nbsp; @Bean<br />&nbsp; public Bean publicBean() {<br />&nbsp; &nbsp;&nbsp; Bean bean = new Bean();<br />&nbsp; &nbsp;&nbsp; bean.setDependency(hiddenBean());<br />&nbsp; &nbsp;&nbsp; return bean;<br />&nbsp; }<br />&nbsp; <br />&nbsp; @Bean<br />&nbsp; protected HiddenBean hiddenBean() {<br />&nbsp; &nbsp;&nbsp; return new Bean("protected bean");<br />&nbsp; }</p>
+<p>&nbsp; @Bean<br />&nbsp; private HiddenBean secretBean() {<br />&nbsp; &nbsp;&nbsp; Bean bean = new Bean("private bean");<br />&nbsp; &nbsp;&nbsp; // hidden beans can access beans defined in the 'owning' context<br />&nbsp; &nbsp;&nbsp; bean.setDependency(outsideBean());<br />&nbsp; }</p>
+<p>&nbsp; @ExternalBean<br />&nbsp; public abstract Bean outsideBean()<br />}</p>
+<p>위 설정 내용을 바탕으로 다음과 같은 XML 설정 파일을 사용할 수 있다.(여러 설정 파일 종류를 혼용하는 전략에 대해서는 본 챕터에서 다룰 것이다.)</p>
+<p>&lt;beans&gt;<br />&nbsp;&lt;!-- the configuration above --&gt;<br />&nbsp;&lt;bean class="my.java.config.VisibilityConfiguration"/&gt;</p>
+<p>&nbsp;&lt;!-- Java Configuration post processor --&gt;<br />&nbsp;&lt;bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/&gt;</p>
+<p>&nbsp;&lt;bean id="mainBean" class="my.company.Bean"&gt;<br />&nbsp; &nbsp; &lt;!-- this will work --&gt;<br />&nbsp; &nbsp; &lt;property name="dependency" ref="publicBean"/&gt;<br />&nbsp; &nbsp; &lt;!-- this will *not* work --&gt;<br />&nbsp; &nbsp; &lt;property name="anotherDependency" ref="hiddenBean"/&gt;<br />&nbsp;&lt;/bean&gt;<br />&lt;/beans&gt;</p>
+<p>위의 설정에서 하나의 JavaConfig가 설정에 포함되며, 3개의 빈을 생성할 책임을 지고 있다. publicBean, hiddenBean 그리고 secretBean이다. 이 세개의 bean들은 각자 서로를 참조할 수는 있지만, ApplicationContext 입장에서는 오직 publicBean만 참조할 수 있다. hiddenBean과 secretBean은 접근이 오직 VisiblilityConfiguration 내부로 제한되어 있다.</p>
+<p>@Bean 애노테이션이 달리 메소드 중에 public이 아닌 것(protected, private, defalut)들은 모두 '감춰진' bean으로 생성될 것이다.  </p>
+<p>위의 예제에서, mainBean은 publicBean과 heddenBean을 사용하여 설정하고 있다. 하지만, hiddenBean은 숨겨져 있기 때문에 런타임시에 다음과 같은 에러를 발생시킨다.</p>
+<p>org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'hiddenBean' is defined<br />&nbsp;...</p>
+<p>가시성을 제공하기 위해, JavaConfig는 Spring 컨테이너가 제공하는 application context <a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html" target="_blank">상속구조</a>의 장점을 받아들였다. 자식 애플리케이션 컨테이너에서 숨겨진 빈들을 소유하고있는&nbsp; 부모 컨텍스트에 있는 빈들에 접근할 수 있다. </p>

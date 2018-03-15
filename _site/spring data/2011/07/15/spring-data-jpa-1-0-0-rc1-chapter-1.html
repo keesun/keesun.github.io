@@ -1,0 +1,245 @@
+<p><span style="font-size: medium;"><strong>1장. 리파지토리</strong></span></p>
+<p><strong><span style="font-size: small;">1.1 소개</span></strong></p>
+<p>데이터 접근 계층 구현이 너무 뻔하고 지겨운 코드 작성이 많다. 그리고 도메인 클래스는 빈약하고 전혀 객체 지향적이거나 도메인 주고적인 방식으로 만들어지지 않는다.</p>
+<p>그래서 스프링 데이터에서는 데이터 접근 계층 구현 개발 비용을 줄여주고자 한다.</p>
+<p><strong><span style="font-size: small;">1.2 핵심 개념</span></strong></p>
+<p>Spring Data 리파지토리 추상화의 핵심 인터페이스는 Repository다. 일종의 마커 인터페이스로 클래스 타입과 ID 타입을 사용해서 Typeable하다. 이 인터페이스의 하위 인터페이스로 CRUD 기능을 제공하는 CrudRepository가 있다.</p>
+<p>예제 1.1 Repository 인터페이스</p>
+<p>[java]<br />
+public interface CrudRepository&lt;T, ID extends Serializable&gt; {</p>
+<p>    T save(T entity);                                                                   </p>
+<p>    T findOne(ID primaryKey);                                                           </p>
+<p>    Iterable&lt;T&gt; findAll();                                                              </p>
+<p>    Long count();</p>
+<p>    void delete(T entity);                                                              </p>
+<p>    boolean exists(ID primaryKey);                                                      </p>
+<p>    // … more functionality omitted.                                                    <br />
+}<br />
+[/java]</p>
+<p>인터페이스 설명은 생략. 메서드 이름만 봐도 알겠구만 뭘 굳이;</p>
+<p>이걸 기반으로 여러 Spring Data 하위 프로젝트에서 이 구현체를 제공한다.</p>
+<p>CrudRepository이외에도 페이징 처리를 쉽게 할 수 있도록 PagingAndSortingRespository를 제공한다.</p>
+<p>예제 1.2 PagingAndSortingRepository</p>
+<p>[java]<br />
+public interface PagingAndSortingRepository&lt;T, ID extends Serializable&gt; extends Repository&lt;T, ID&gt; {</p>
+<p>    Iterable&lt;T&gt; findAll(Sort sort);</p>
+<p>    Page&lt;T&gt; findAll(Pageable pageable);<br />
+}<br />
+[/java]</p>
+<p>이 인터페이스를 사용해서 두 번째 페이지에서 20개 만큼 가져오려면 다음과 같이 할 수 있다.</p>
+<p>[java]<br />
+PagingAndSortingRepository&lt;User, Long&gt; repository = // … get access to a bean<br />
+Page&lt;User&gt; users = repository.findAll(new PageRequest(1, 20);<br />
+[/java]</p>
+<p>1.3 쿼리 메서드</p>
+<p>CRUD 기능 이외에 리파지토리를 사용해서 주로 데이터베이스에서 데이터를 쿼리한다. Spring Data에서 그런 쿼리를 선언하는 방법은 4단계 프로세스를 거친다.</p>
+<p>1. Respository 또는 Repository 하위 인터페이스를 상속받는 인터페이스 정의하기</p>
+<p>[java]<br />
+public interface PersonRepository extends Repository&lt;User, Long&gt; { … }<br />
+[/java]</p>
+<p>2. 쿼리 메서드 정의하기</p>
+<p>[java]<br />
+List&lt;Person&gt; findByLastname(String lastname);<br />
+[/java]</p>
+<p>3. Spring에서 해당 인터페이스의 프록시를 만들도록 빈 설정하기</p>
+<p>[xml]<br />
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
+&lt;beans:beans xmlns:beans=&quot;&lt;a href=&quot;http://www.springframework.org/schema/beans&amp;quot;&quot;&gt;http://www.springframework.org/schema/beans&quot;&lt;/a&gt;<br />
+  xmlns:xsi=&quot;&lt;a href=&quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;&quot;&gt;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/a&gt;<br />
+  xmlns=&quot;&lt;a href=&quot;http://www.springframework.org/schema/data/jpa&quot;&gt;http://www.springframework.org/schema/data/jpa&lt;/a&gt;<br />
+  xsi:schemaLocation=&quot;&lt;a href=&quot;http://www.springframework.org/schema/beans&quot;&gt;http://www.springframework.org/schema/beans&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;http://www.springframework.org/schema/beans/spring-beans.xsd&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/data/jpa&quot;&gt;http://www.springframework.org/schema/data/jpa&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&amp;quot;&quot;&gt;http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&quot;&lt;/a&gt;&amp;gt;</p>
+<p>  &lt;repositories base-package=&quot;com.acme.repositories&quot; /&gt;</p>
+<p>&lt;/beans&gt;<br />
+[/xml]</p>
+<p>4. 리파지토리 인스턴스를 주입 받아서 사용하기</p>
+<p>[java]<br />
+public class SomeClient {</p>
+<p>  @Autowired<br />
+  private PersonRepoyitory repository;</p>
+<p>  public void doSomething() {<br />
+    List&lt;Person&gt; persons = repository.findByLastname(&quot;Matthews&quot;);<br />
+  }<br />
+[/java]</p>
+<p>각 과정을 상세히 살펴보자.</p>
+<p>1.3.1. 리파지토리 인터페이스 정의하기</p>
+<p>extends Repository를 하면 되지만, CRUD 기능이 필요하거나 페이징, 소팅이 필요하면 CrudRepository나 PagingAndSortingRepository를 상속받는다.</p>
+<p>1.3.1.1. 라피지토리 정의 상세 튜닝</p>
+<p>- Sring Data 인터페이스를 상속받고 싶지 않다면, 해당 인터페이스에 @RepositoryDefinition 애노테이션을 붙일 수도 있다.</p>
+<p>- CrudRepository의 일부 메서드만 사용하고 싶다면, CrudRepository를 상속받지 말고, CrudRepository에 있는 메서드 중에서 일부만 복사해서 인터페이스에 넣어두면 된다.</p>
+<p>예제 1.3 선택적인 CRUD 메서드 노출</p>
+<p>[java]<br />
+interface MyBaseRepository&lt;T, ID extends Serializable&gt; extends Repository&lt;T, ID&gt; {<br />
+  T findOne(ID id);<br />
+  T save(T entity);<br />
+}<br />
+[/java]</p>
+<p>[java]<br />
+interface UserRepository extends MyBaseRepository&lt;User, Long&gt; {</p>
+<p>  User findByEmailAddress(EmailAddress emailAddress);<br />
+}<br />
+[/java]</p>
+<p>먼저, 모든 도메인 리파지토리에서 사용할 공통 인터페이스를 정의했다. 그래서 UserRepository에서도 findOne과 save 사용할 수 있다.</p>
+<p>1.3.2. 쿼리 메서드 정의하기</p>
+<p>1.3.2.1. 쿼리 룩업 전략</p>
+<p>쿼리를 메서드 이름에서 직접 만드는 방법과 부가적인 쿼리를 사용하는 방법이 있는데, 이건 전적으로 사용하는 스토어에 따라 달라진다. 몇가지 알고리즘이 있다.</p>
+<p>세개의 기본 전력이 있다. query-loockup-strategy라는 속성으로 설정할 수 있다.</p>
+<p>CREATE</p>
+<p>쿼리 메서드 이름으로 특정 쿼리를 만든다. 쿼리 구조에 대해서는 여기를 봐라. 라고 하는데… 링크가 짤려있네;; 헐….</p>
+<p>USE_DECLARED_QUERY</p>
+<p>이 전략은 먼저 선언된 쿼리를 찾는다. 쿼리는 애노테이션 또는 다른 여러 방법으로 정의할 수 있다. 자세한건 문서를 찾아봐라. (어느 문서..??). 만약에 리파지토리에서 선언된 쿼리를 못 찾으면 애플리케이션 실행 도중 실패한다.</p>
+<p>CREATE_IF_NOT_FOUND(기본값)</p>
+<p>이 전략은 위에 두 전략을 합쳐둔 것이다. 선언된 쿼리를 못찾으면 메서드 이름으로 쿼리를 만든다.</p>
+<p>1.3.2.2. 쿼리 생성</p>
+<p>쿼리 생성 전략은 Spring Data 리파지토리 인프라 기반으로 만들었다. 메서드 접두어에 findBy, find, readBy, read, getBy, get을 때어내고 나머지 부분을 엔티티 프로퍼티와 조건(AND, OR)으로 인식한다.</p>
+<p>예제 1.4. 메서드 이름으로 쿼리 생성하는 예제</p>
+<p>[java]<br />
+public interface PersonRepository extends Repository&amp;lt;User, Long&amp;gt; {</p>
+<p>  List&amp;lt;Person&amp;gt; findByEmailAddressAndLastname(EmailAddress emailAddress, String lastname);<br />
+}<br />
+[/java]</p>
+<p>Between, LessThan, GreaterThan, Like 등을 지원하지만, 지원하는 오퍼레이터는 데이터베이스와 데이터 스토어에 따라 달라질 수 있으니 레퍼런스를 참고하라.</p>
+<p>1.3.2.2.1. Property expressions</p>
+<p>nested 프로퍼티에도 조건을 정의할 수 있다. Persion-Address(ZipCode) 구조에서 다음과 같이 메서드 이름을 정의할 수 있다.</p>
+<p>[java]<br />
+List&amp;lt;Person&amp;gt; findByAddressZipCode(ZipCode zipCode);<br />
+[/java]</p>
+<p>이렇게 하면 x.address.zipCode로 순회 한다. 알고리즘은 일단 전체)(AddressZipCode)를 프로퍼티 이름으로 간주하고 도메인 클래스에서 해당 이름의 속성을 찾아본다. 찾지 못하면, 캐멀 케이스를 기준으로 오른쪽부터 잘라서 찾아본다(AddressZip, Code). 앞부분(AddressZip)에 해당하는 속성을 찾으면 그 뒤에는 뒷부분 가지고 nested를 찾아보게 된다. 앞부분에 해당하는 걸 못 찾으면 왼쪽으로 한 칸 이동해서 짜른다.(Address, ZipCode) 그런 다음 다시 찾는다.</p>
+<p>대부분의 경우에는 이런 방식으로 잘 동작하지만, 잘못된 프로퍼티를 찾게되는 경우도 있다. Persion이 만약에 addressZip이라는 속성을 가지고 있다면 그렇게 될 것이다. 이런 애매한 상황을 해결하고자 언더바(_)를 사용할 수 있다. 즉 다음과 같이 작성할 수 있다.</p>
+<p>[java]<br />
+List&amp;lt;Person&amp;gt; findByAddress_ZipCode(ZipCode zipCode);<br />
+[/java]</p>
+<p>1.3.2.3. 특별 매개변수 핸들링</p>
+<p>위 예제에서 사용한 것처럼 메서드 매개변수로 쿼리의 매개변수를 넘겨주면 되는데, 몇몇 특별한 타입의 매개변수를 넘겨서, 동적으로 페이징과 정렬을 처리할 수 있다.</p>
+<p>예제 1.5. 쿼리 메서드로 페이징과 정렬 처리</p>
+<p>[java]<br />
+Page&amp;lt;User&amp;gt; findByLastname(String lastname, Pageable pageable);</p>
+<p>List&amp;lt;User&amp;gt; findByLastname(String lastname, Sort sort);</p>
+<p>List&amp;lt;User&amp;gt; findByLastname(String lastname, Pageable pageable);<br />
+[/java]</p>
+<p>Pageable 인스턴스를 넘겨주면 동적으로 페이징을 처리할 수 있다. Pageable 인스턴스에서 정렬도 같이 처리할 수 있는데, 정렬만 하고 싶다면 Sort를 사용하면 된다.</p>
+<p>1.3.3. 리파지토리 인스턴스 만들기</p>
+<p>가장 쉬운 방법은 Spring Data 모듈에서 제공하는 네임스페이스를 사용해서 스캔하는 것이다.</p>
+<p>[xml]<br />
+&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;<br />
+&amp;lt;beans:beans xmlns:beans=&quot;&lt;a href=&quot;http://www.springframework.org/schema/beans&amp;quot;&quot;&gt;http://www.springframework.org/schema/beans&quot;&lt;/a&gt;<br />
+  xmlns:xsi=&quot;&lt;a href=&quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;&quot;&gt;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/a&gt;<br />
+  xmlns=&quot;&lt;a href=&quot;http://www.springframework.org/schema/data/jpa&quot;&gt;http://www.springframework.org/schema/data/jpa&lt;/a&gt;<br />
+  xsi:schemaLocation=&quot;&lt;a href=&quot;http://www.springframework.org/schema/beans&quot;&gt;http://www.springframework.org/schema/beans&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;http://www.springframework.org/schema/beans/spring-beans.xsd&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/data/jpa&quot;&gt;http://www.springframework.org/schema/data/jpa&lt;/a&gt;<br />
+    &lt;a href=&quot;http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&amp;quot;&quot;&gt;http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&quot;&lt;/a&gt;&amp;gt;</p>
+<p>  &amp;lt;repositories base-package=&quot;com.acme.repositories&quot; /&amp;gt;</p>
+<p>&amp;lt;/beans:beans&amp;gt;<br />
+[/xml]</p>
+<p>이렇게 해두면, com.acme.repositories 패키지 밑 그 하위 패키지에 있는 모든 클래스 중에서 Repository 인터페이스 혹은 그 하위 인터페이스를 상속받은 인터페이스를 찾아서 프록시를 만들어 빈으로 등록해준다. 각 빈의 이름은 인터페이스 이름을 따라서 정해지는데, 예를 들어 UserRepository 인터페이스의 프록시 빈은 userRepository라는 이름으로 등록된다.  base-package 속성에는 와일드카드를 사용해서 패키지 패턴을 설정할 수도 있다.</p>
+<p>필터 사용하기</p>
+<p>기본으로 Repository나 그 하위 인터페이스를 확장한 모든 인터페이스를 선택하지만 &lt;include-filter /&gt;와 &lt;exclude-filter /&gt;필터를 사용해서 세부적으로 조절할 수 있다. 동작 방식은 context 네임스페이스와 동일하다.</p>
+<p>예를 들어, 특정 인터페이스를 빼고 싶다면 다음과 같이 설정할 수 있다.</p>
+<p>예제 1.6. exclude-filter 엘리먼트 사용하기</p>
+<p>[xml]<br />
+&amp;lt;repositories base-package=&quot;com.acme.repositories&quot;&amp;gt;<br />
+  &amp;lt;context:exclude-filter type=&quot;regex&quot; expression=&quot;.*SomeRepository&quot; /&amp;gt;<br />
+&amp;lt;/repositories&amp;gt;<br />
+[/xml]</p>
+<p>SomeRepository로 끝나는 인터페이스는 빈으로 등록되지 않는다.</p>
+<p>직접 설정하기</p>
+<p>만약 리파지토리 인스턴스를 직접 정의하고 싶다면, &lt;repository /&gt; 엘리먼트를 사용할 수 있다.</p>
+<p>[xml]<br />
+&amp;lt;repositories base-package=&quot;com.acme.repositories&quot;&amp;gt;<br />
+  &amp;lt;repository id=&quot;userRepository&quot; /&amp;gt;<br />
+&amp;lt;/repositories&amp;gt;<br />
+[/xml]</p>
+<p>1.3.3.2. 스프링 컨테이너 밖에서 사용하기</p>
+<p>스프링 컨테이너를 사용하지 않고 리파지토리 인프라를 사용하고 싶다면, 여전히 스프링 라이브러리는 클래스패스에 둔 상태로, RepositoryFactory라는 것을 사용하면 된다.</p>
+<p>예제 1.7. 컨테이너 밖에서 리파지토리 팩토리 사용하기</p>
+<p>[java]<br />
+RepositoryFactorySupport factory = … // Instantiate factory here<br />
+UserRepository repository = factory.getRepository(UserRepository.class);<br />
+[/java]</p>
+<p><strong><span style="font-size: small;">1.4. 커스텀 구현체</span></strong></p>
+<p>1.4.1. 단일 리파지토리에 기능 추가하기</p>
+<p>부가 기능을 추가하려면, 별도의 인터페이스를 정의하고 그 구현체를 만든다. 그런 다음 리파지토리 인터페이스에 별도로 만든 인터페이스를 추가로 확장하도록 선언한다.</p>
+<p>예제 1.8. 커스텀 리파지토리 기능 인터페이스</p>
+<p>[java]<br />
+interface UserRepositoryCustom {</p>
+<p>  public void someCustomMethod(User user);<br />
+}<br />
+[/java]</p>
+<p>예제 1.9. 커스텀 리파지토리 기능 구현체</p>
+<p>[java]<br />
+class UserRepositoryImpl implements UserRepositoryCustom {</p>
+<p>  public void someCustomMethod(User user) {<br />
+    // Your custom implementation<br />
+  }<br />
+}<br />
+[/java]</p>
+<p>부가기능 구현체 자체는 Spring Data에 의존하지 않으며 일반적인 스프링 빈이 될 수 있다. 따라서 얼마든지 의존성 주입이나 AOP를 활용할 수 있다.</p>
+<p>예제 1.10. 리파지토리 인터페이스에 기능 추가</p>
+<p>[java]<br />
+public interface UserRepository extends CrudRepository&amp;lt;User, Long&amp;gt;, UserRepositoryCustom {</p>
+<p>  // Declare query methods here<br />
+}<br />
+[/java]</p>
+<p>이렇게 기존 리파지토리에 커스텀 리파지토리 인터페이스를 추가 확장하도록 해준다. 이렇게 해두면 CRUD 기능 뿐 아니라 부가 기능도 사용할 수 있게 된다.</p>
+<p>설정</p>
+<p>커스텀 라파지토리 인터페이스의 구현체는 repository 엘리먼트의 repository-impl-postfix 속성의 값으로 판단하는데, 기본값은 Impl이다.</p>
+<p>예제 1.11 설정 예제</p>
+<p>[xml]<br />
+&amp;lt;repositories base-package=&quot;com.acme.repository&quot;&amp;gt;<br />
+  &amp;lt;repository id=&quot;userRepository&quot; /&amp;gt;<br />
+&amp;lt;/repositories&amp;gt;</p>
+<p>&amp;lt;repositories base-package=&quot;com.acme.repository&quot; repository-impl-postfix=&quot;FooBar&quot;&amp;gt;<br />
+  &amp;lt;repository id=&quot;userRepository&quot; /&amp;gt;<br />
+&amp;lt;/repositories&amp;gt;<br />
+[/xml]</p>
+<p>첫번째 설정은 UserRepositoryImpl을 리파지토리 구현 클래스로 찾게되고, 두번째 설정은 UserRepositoryFooBar를 찾게된다.</p>
+<p>직접 주입하기</p>
+<p>생략. 애노테이션 쓰면 잘 등록되고, 잘 주입된다.</p>
+<p>1.4.2. 모든 리파지토리에 커스텀 기능 추가</p>
+<p>먼저, 공통 기능을 가지고 있는 인터페이스를 선언한다.</p>
+<p>예제 1.14 커스텀 공유 기능 가지고 잇는 인터페이스</p>
+<p>[java]<br />
+public interface MyRepository&amp;lt;T, ID extends Serializable&amp;gt;<br />
+  extends JpaRepository&amp;lt;T, ID&amp;gt; {</p>
+<p>  void sharedCustomMethod(ID id);<br />
+}<br />
+[/java]</p>
+<p>이제 나머지 모든 리파지토리에서는 이 인터페이스를 확장하도록 하고, 이 인터페이스의 구현체를 만든다.</p>
+<p>*주의*</p>
+<p>이때 당연히 스프링이 MyRepository의 인스턴스를 만들게 하고 싶지 않을텐데 그럴 땐 @NoRepositoryBean을 붙여주면 된다.</p>
+<p>예제 1.15. 커스텀 리파지토리 공통 클래스</p>
+<p>[java]<br />
+public class MyRepositoryImpl&amp;lt;T, ID extends Serializable&amp;gt;<br />
+  extends SimpleJpaRepository&amp;lt;T, ID&amp;gt; implements MyRepository&amp;lt;T, ID&amp;gt; {</p>
+<p>  public void sharedCustomMethod(ID id) {<br />
+    // implementation goes here<br />
+  }<br />
+}<br />
+[/java]</p>
+<p>이 구현체를 스프링 데이터 리파지토리의 공통 클래스로 쓰게 하려면 이 구현체를 반환하는 RepositoryFactoryBean을 만들어야 한다.</p>
+<p>예제 1.16. 커스텀 리파지토리 팩토리 빈</p>
+<p>[java]<br />
+public class MyRepositoryFactoryBean&amp;lt;T extends JpaRepository&amp;lt;?, ?&amp;gt;<br />
+  extends JpaRepositoryFactoryBean&amp;lt;T&amp;gt; {</p>
+<p>  protected RepositoryFactorySupport getRepositoryFactory(…) {<br />
+    return new MyRepositoryFactory(…);<br />
+  }</p>
+<p>  private static class MyRepositoryFactory extends JpaRepositoryFactory{</p>
+<p>    public MyRepositoryImpl getTargetRepository(…) {<br />
+      return new MyRepositoryImpl(…);<br />
+    }</p>
+<p>    public Class&amp;lt;? extends RepositorySupport&amp;gt; getRepositoryClass() {<br />
+      return MyRepositoryImpl.class;<br />
+    }<br />
+  }<br />
+}<br />
+[/java]</p>
+<p>마지막으로, 이 커스텀 팩토리를 factory-class 속성에 추가하여, 스프링이 어떤 커스텀 팩토리 구현체를 사용할지 알려준다.</p>
+<p>예제 1.17. 커스텀 팩토리 사용하기</p>
+<p>[xml]<br />
+&amp;lt;repositories base-package=&quot;com.acme.repository&quot;<br />
+  factory-class=&quot;com.acme.MyRepositoryFactoryBean&quot; /&amp;gt;<br />
+[/xml]</p>

@@ -1,0 +1,49 @@
+<p>참조:&nbsp;
+<div>
+<a href="http://www.json.org/java/">http://www.json.org/java/</a></div>
+<div><a href="http://decoder.tistory.com/38">http://decoder.tistory.com/38</a></div>
+<div>
+</div>
+<div id="">
+예전에는 JSON.simple 이라는 프로젝트였나본데, 소스 코드를 묶어서 주네요. 의존성도 없고 깔끔하군요. 최근까지도 계속 업데이트를 하고 있는 것 같으니 믿고 써볼만 해 보입니다.</div>
+<div id="">
+</div>
+<div id="">
+몇일 전 Confluence 위키 내용을 RestTemplate을 이용해서 가져온 적이 있는데, 그 데이터 타입을 XML로 받을까 JSON으로 받을까 고민했었는데 그냥 JSON으로 받기로 했습니다. XML 받아서 OXM으로 파싱해도 되는데 일단 전송되는 텍스트량이 XML은 너무 많고 JSON은 꽤 간결하기 떄문입니다. 그 뒤에 객체로 변환하는 과정이 둘 중에 어떤게 편하냐를 가지고도 판단해보려고 했는데 OXM 써보기도 전에 JSON으로 기울태세 입니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;RequestCallback callback = new SpringSproutDefaultRestRequestCallBack();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ResponseExtractor&lt;String&gt; extractor = new SpringSproutJsonRestResponseExtractor();</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;RestTemplate restTemplate = new RestTemplate();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String result = restTemplate.execute(SPACE_LIST_URL, HttpMethod.GET, callback, extractor);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(result);</div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;// ref: http://decoder.tistory.com/38</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>JSONObject </b>spaceListJSON = new JSONObject(result);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>JSONArray </b>spaceJSONArray = <b>spaceListJSON.getJSONArray</b>("space");</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(int i = 0 ; i &lt; spaceJSONArray.length() ; i++){</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>JSONObject </b>spaceJSON = <b>spaceJSONArray.getJSONObject</b>(i);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println(<b>spaceJSON.getString</b>("name"));</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println(<b>spaceJSON.getString</b>("key"));</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println(<b>spaceJSON.getString</b>("description"));</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+</div>
+<div id="">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="">캬.... 간단하군요. 이제 저 코드를 Extractor 쪽으로 옮겨서 RestTemplate 호출할 때 자동으로 ConfluenceSpace 컬렉션 객체가 튀어나오도록 해봐야겠습니다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>

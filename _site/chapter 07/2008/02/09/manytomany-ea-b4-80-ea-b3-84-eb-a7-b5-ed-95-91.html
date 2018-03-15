@@ -1,0 +1,67 @@
+<h1>단방향 다대다 관계</h1>
+<ul>
+<li>대부분 추가적인 정보가 필요하기 때문에, 별도의 assiation class를 만들게 된다. 여기서는 간단한 다대다 맵핑.</li>
+</ul>
+<h2>Set 타입으로 맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToMany<br />@JoinTable(name = <span class="code-quote">"CATEGORY_ITEM"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>), <br />	inverseJoinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br /><span class="code-keyword">private</span> Set&lt;Item&gt; items = <span class="code-keyword">new</span> HashSet&lt;Item&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>이 때는 Category 클래스에 별도의 컬럼이 생기지 않는다. @ManyToOne에서 Join Table을 만들었을 때는 inverseJoinColumns의 컬럼이 생겼었다.</li>
+</ul>
+<ul>
+<li>콜렉션에 추가할 때(category.getItems().add(itme)) 다음의 SQL 날린다. insert into CATEGORY_ITEM (CATEGORY_ID, ITEM_ID) values (?, ?)</li>
+</ul>
+<h2>Idbag 타입으로 맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToMany<br />@CollectionId(<br />	columns=@Column(name=<span class="code-quote">"CATEGORY_ITEM_ID"</span>),<br />	generator = <span class="code-quote">"sequence"</span>,<br />	type = @Type(type=<span class="code-quote">"<span class="code-object">long</span>"</span>)<br />)<br />@JoinTable(name = <span class="code-quote">"CATEGORY_ITEM"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>), <br />	inverseJoinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br /><span class="code-keyword">private</span> Set&lt;Item&gt; items = <span class="code-keyword">new</span> HashSet&lt;Item&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>surrogate 키를 가지고 있기 때문데, 중복을 허용한다.</li>
+</ul>
+<ul>
+<li>@CollectionId, @Type은 하이버네이트의 애노테이션이다.</li>
+</ul>
+<ul>
+<li>콜렉션에 추가할 때 다음의 SQL 날린다. insert into CATEGORY_ITEM (CATEGORY_ID, CATEGORY_ITEM_ID, ITEM_ID) values (?, ?, ?)</li>
+</ul>
+<h2>List 타입으로 맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToMany<br />@JoinTable(name = <span class="code-quote">"CATEGORY_ITEM"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>), <br />	inverseJoinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br />@IndexColumn(name = <span class="code-quote">"DISPLAY_POSITION"</span>)<br /><span class="code-keyword">private</span> List&lt;Item&gt; items = <span class="code-keyword">new</span> ArrayList&lt;Item&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>콜렉션에 추가할 때 다음의 SQL 날린다. insert into CATEGORY_ITEM (CATEGORY_ID, DISPLAY_POSITION, ITEM_ID) values (?, ?, ?)</li>
+</ul>
+<h1>양방향 다대다 관계</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Item.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToMany(mappedBy=<span class="code-quote">"items"</span>)<br /><span class="code-keyword">private</span> Set&lt;Category&gt; categories = <span class="code-keyword">new</span> HashSet&lt;Category&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>양방향 관계에서 1쪽의 inverse로 맵핑했었던 이유? 외례키 컬럼을 두 번이나 사용했으니까.</li>
+</ul>
+<ul>
+<li>이번에도 마찬가지로, 두 쪽 중에 한 쪽은 inverse로 설정해 주어야 한다.</li>
+</ul>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">cascade 설정 중에 all, delete, delete-orphans는 다대다 관계에서 의미가 없다.</span><br />
+왜? Value 타입이면 모를까, Entity 타입인데, 다른 Entity가 지워진다고 해서, 해당 Entity까지 지워지라는<br />
+보장은 없다. 거의 그런 경우는 없을 것이다. 따라서 의미가 없다. save or update만 사용하는게 좋겠다.</li>
+</ul>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">양방향 관계에 있는 콜렉션 타입 결정은 inverse와 관련이 있다. </span>inverse쪽에는 bag과 set처럼<br />
+id가 없는 것들만 올 수 있다. 왜? index나 키를 생성하는 쪽 SQL을 무시해버리면 indexColumn에 필요한 정보가<br />
+들어갈리 없으니까. 결론적으로, 양쪽 모두 index나 키를 가지는 콜렉션끼리 다대다 관계를 가질 수 없다. 왜? 양쪽 중 한<br />
+쪽은 inverse로 설정할 텐데 그러면 그 쪽에 필요한 정보가 생성되지 않을테니까.</li>
+</ul>

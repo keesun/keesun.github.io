@@ -1,0 +1,184 @@
+---
+layout: post
+title: "[회사일] MemberService 만들기. GenericService 만들기"
+date: 2010-06-09 07:50:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SLT
+tags:
+- GenericService
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323152383'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번엔 바로 GenericService 인터페이스부터 만들죠.
+<div>
+</div>
+<div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>public interface GenericService&lt;E, S&gt; {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;void add(E e);</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;List&lt;E&gt; list(PageParam pageParam, S s);</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;E getById(int id);</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;void update(E e);</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;void deleteBy(int id);</div>
+<div>&nbsp;&nbsp; &nbsp;</div>
+<div>}</div>
+</div>
+<div>
+</div>
+</div>
+<div id="">
+</div>
+<div>
+간단합니다. GenericDao랑 비슷하죠. 이 구현체도 간단합니다. 오히려 GenericDaoImpl 보다 훨씬더..</div>
+<div id="">
+</div>
+<div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class GenericServiceImpl&lt;<b>D extends GenericDao&lt;E, S&gt;</b>, E, S&gt; implements GenericService&lt;E, S&gt;{</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired protected D dao;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void add(E e) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.add(e);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public List&lt;E&gt; list(PageParam pageParam, S s) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.initCurrentPageInfosWith(dao.totalSize(s));</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dao.list(pageParam, s);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public E getById(int id) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return <b>dao.getById(id);</b></div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void update(E e) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.update(e);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void deleteBy(int id) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.deleteBy(id);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>&nbsp;&nbsp; &nbsp;</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+</div>
+<div id="">
+</div>
+<div id="">
+유일하게 복잡한 부분이 저 위에 Generic 타입 선언한 부분인데.. GenericDao에 있는 메서드를 사용하려면 D라는 타입이 GenericDao를 확장한 녀석이라는걸 알려줘야 합니다. 그리고 GenericDAO에 넘겨주는 타입이 GenericService에서 사용할 타입과 같다는것도 알려줘야 해서 저렇게 복잡해졌습니다. 만야게 GenericDao 뒤에 붙인 &lt;E, S&gt;를 때어내면 dao.getById(id) 부분에서 타입 불일치 때문에 컴파일 에러가 떨어집니다.ㅋ</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public interface MemberService extends GenericService&lt;Member, MemberSearchParam&gt;{</div>
+<div id="">
+</div>
+<div id="">
+}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class MemberServiceImpl extends GenericServiceImpl&lt;MemberDao, Member, MemberSearchParam&gt; implements MemberService{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">위에서 만든걸 이용해서 만든 MemberService와 MemberServiceImpl 입니다. 캬.. 간단하군요.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>

@@ -1,0 +1,13 @@
+<p><a href="https://github.com/SpringSource/spring-framework/pull/69" target="_blank">https://github.com/SpringSource/spring-framework/pull/69</a></p>
+<p><a href="https://github.com/rstoyanchev/spring-mvc-async-sample" target="_blank">https://github.com/rstoyanchev/spring-mvc-async-sample</a></p>
+<p>흠냐.. 맨 위에껀 스프링 3.2에 작업중인 코딩 내역이고 아래 링크는 실제로 어떻게 사용할 수 있는 보여주는 예제 프로젝트입니다. 로센이 작업했네요. 멋쟁이.</p>
+<p>예제 프로젝트를 받아서 돌려봤는데 매우 깔끔하게 동작합니다. 뷰를 Thymeleaf라는 것을 사용했는데... 흠.. JS랑 맛물리는 뭔가가 있는것 같기도 하고 첨보는거라 뷰가 어떻게 돌아가는지 몰겠네요. 어쨌든 HTML 파일 하나를 사용하고 있습니다.</p>
+<p>자바스립트는 두개를 사용하는데 하나는 제이쿼리, 하나는 넉아웃.js 그리고 제이쿼리 플러그인으로 하나더 jquery-stream.js이라고 있기는 한데... 소스코드를 봐도.. 크롬 개발자 도구로 봐도.. 사용하진 않는것 같습니다.</p>
+<p>스프링 설정은 자바 설정으로 만들었는데 굳이 설정 파일은 루트와 웹을 나눴으면서 애플리케이션 컨텍스트는 나눠서 등록하지 않는 모습이 이번에도 보이는데... 왜 CCL을 사용하지 않고 DS만 사용할꺼면서 빈 설정은 나누는지 잘 모르겠네요. 그럴꺼면 걍 웹용 설정 파일만 만들어도 될텐데 말이죠. web.xml도 없고 톰캣7 기능을 사용해서 자바 웹 설정으로 web.xml을 대신합니다.</p>
+<p>서론이 길었군요. 스프링 3.2부터는 @RequestMapping이 붙은 메서드에서 리턴할 수 있는 타입이 두개가 더 생깁니다. 비동기 서블릿과 관련된 리터타입이죠.</p>
+<ul>
+<li>스프링에서 만들어 둔 DeferredResult</li>
+<li>자바 컨커런시에 있는 Callable</li>
+</ul>
+<p>지금 데모용 프로젝트에서는 DeferredResult를 사용하고 있습니다. DR을 사용하는 부분만 보겠습니다.</p>
+<p>[gist id=2419701]</p>

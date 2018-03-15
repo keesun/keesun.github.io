@@ -1,0 +1,116 @@
+<p><font style="font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: rgb(0, 153, 102)" size="2">1. PawnTest를 만들고 test 메소드를 만들지 않았기 때문에 에러가 나는 모습을 보여라.</font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1082955331.bmp" class="aligncenter" width="446" height="223" alt="">1082955331.bmp</a>_M#]<br />
+<font style="font-weight: bold; font-family: verdana,arial,helvetica,sans-serif; color: rgb(0, 153, 102)" size="2">2. testCreate라는 메소드를 만들고 test 메소드를 만드는 문법을 제대로 지켰는지 확인하라.</font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1381474949.bmp" class="aligncenter" width="434" height="162" alt="">1381474949.bmp</a><br />
+소스코드<br />
+PawnTest.java<br />
+[#M_ more.. | less.. | <br />
+package chapter1;</p>
+<p>import org.junit.Test;</p>
+<p>public class PawnTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void Create(){</p>
+<p> &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+_M#]<br />
+<font style="font-weight: bold; font-family: verdana,arial,helvetica,sans-serif; color: rgb(0, 153, 102)" size="2">3. testCreate 메소드에 Pawn 객체를 추가하는 코드를 추가하라. 존재하지 않는 클래스이기 때문에 컴파일 에러가 나는 것을 확인하고 Pawn class를 만들고 test를 성공시켜라.</font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1358876731.bmp" class="aligncenter" width="363" height="87" alt="">1358876731.bmp</a><a href="http://whiteship.epril.com/wp-content/uploads/1/1192531269.bmp" class="aligncenter" width="434" height="141" alt="">1192531269.bmp</a><br />
+소스코드<br />
+PawnTest.java 와 Pawn.java<br />
+[#M_ more.. | less.. | <br />
+import org.junit.Test;</p>
+<p>public class PawnTest {</p>
+<p> &nbsp; &nbsp;@Test<br />
+ &nbsp; &nbsp;public void Create(){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;new Pawn();<br />
+ &nbsp; &nbsp;}<br />
+}</p>
+<p>public class Pawn {</p>
+<p>}<br />
+_M#]<br />
+_M#]<font style="color: rgb(0, 153, 102)" size="2"><br />
+</font><font style="font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: rgb(0, 153, 102)" size="2">4. Pawn 객체를 지역 변수에 참조시켜라. 그리고 그 객체의 색(color)을 요구해라. 그 색깔이 JUnit의 assertion을 이용해서 기본적으로 "white"라는 문자열인지 확인하는 코드를 작성하라. test가 실패하는 것을 보고나서 그 test가 성공하도록 수정하라.</font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | </p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1231722528.bmp" class="aligncenter" width="434" height="226" alt="">1231722528.bmp</a><br />
+소스보기<br />
+PawnTest.java 와 Pawn.java<br />
+[#M_ more.. | less.. | <br />
+import static org.junit.Assert.*;</p>
+<p>import org.junit.Test;</p>
+<p>public class PawnTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void Create(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn one = new Pawn();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String color = one.getColor();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals("white", color);<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>public class Pawn {</p>
+<p> &nbsp;&nbsp; public String getColor() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return "white";<br />
+ &nbsp;&nbsp; }</p>
+<p>}<br />
+_M#]<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1316867071.bmp" class="aligncenter" width="434" height="152" alt="">1316867071.bmp</a><br />
+_M#]<font style="font-family: verdana,arial,helvetica,sans-serif" size="2"><br style="color: rgb(153, 204, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold">5. testCreate에 두 번째 pawn을 생성하고 그 생성자에 "black"이라는 색깔을 인자로 넘겨줘라. 두 번째 pawn의 색이 "black"인지 확인하라. test가 실패하는 것을 보여라. 그리고 성공하도록 수정하라. 기본 생성자는 없애고 생성자에 색을 받아서 초기화 할 수 있도록 수정하라. 이번 변화로 인해 4번 문제에서 작성한 코드에 변화가 생겨야 할 것이다.</span></font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1287838776.bmp" class="aligncenter" width="455" height="81" alt="">1287838776.bmp</a><br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1305035964.bmp" class="aligncenter" width="434" height="161" alt="">1305035964.bmp</a><br />
+소스보기<br />
+PawnTest.java 와 Pawn.java<br />
+[#M_ more.. | less.. | <br />
+import static org.junit.Assert.*;</p>
+<p>import org.junit.Test;</p>
+<p>public class PawnTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void Create(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn firstPawn = new Pawn("white");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String firstPawnColor = firstPawn.getColor();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals("white", firstPawnColor);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; Pawn secondPawn = new Pawn("black");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String secondPawnColor = secondPawn.getColor();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals("black", secondPawnColor);<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>public class Pawn {</p>
+<p> &nbsp;&nbsp; String color;</p>
+<p> &nbsp;&nbsp; public Pawn(String color) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.color = color;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public String getColor() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return color;<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]</p>
+<p>_M#]<br />
+<font style="font-family: verdana,arial,helvetica,sans-serif" size="2"><span style="color: rgb(0, 153, 102); font-weight: bold">6. testCreate안에 상수 문자열 "white"와 "black"을 생성하고 test를 다시 실행하라.</span></font></p>
+<p>답보기<br />
+[#M_ more.. | less.. | <br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1115741061.bmp" class="aligncenter" width="500" height="79" alt="">1115741061.bmp</a><br />
+소스보기<br />
+PawnTest.java <br />
+[#M_ more.. | less.. | <br />
+import static org.junit.Assert.*;</p>
+<p>import org.junit.Test;</p>
+<p>public class PawnTest {</p>
+<p> &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void Create(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; final String firstPawnColor = "white";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn firstPawn = new Pawn(firstPawnColor);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(firstPawnColor, firstPawn.getColor());</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; final String secondPawnColor = "black";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Pawn secondPawn = new Pawn(secondPawnColor);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(secondPawnColor, secondPawn.getColor());<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+_M#]</p>

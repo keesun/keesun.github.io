@@ -1,0 +1,64 @@
+---
+layout: post
+title: SWT 프로그램 실행하기
+date: 2007-02-21 08:48:19.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Eclipse
+- swt
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323143699'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : SWT-JFace In Action, <a href="http://www.developer.com/java/other/article.php/10936_3330861_1" target="_blank">SWT Programming with Eclipse</a></p>
+<p>코드는 아래와 같습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class HelloSWT {<br />&nbsp; &nbsp; public static void main(String[] args) {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Display display = new Display();<br />&nbsp; &nbsp; &nbsp; &nbsp; Shell shell = new Shell(display);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">Text helloText = new Text(shell, SWT.CENTER);</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; helloText.setText("Hello SWT!");</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; helloText.pack();</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; shell.pack();<br />&nbsp; &nbsp; &nbsp; &nbsp; shell.open();<br />&nbsp; &nbsp; &nbsp; &nbsp; while (!shell.isDisposed()) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!display.readAndDispatch())<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display.sleep();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; display.dispose();</p>
+<p>&nbsp; &nbsp; }<br />}</div>
+<p>다른 부분은 거의 템플릿 같고 빨간 부분에 뭔가 만들어 주면 될 것 같습니다.</p>
+<p>실행을 하려면 아.. 먼저 컴파일 에러를 없애려면 swt.jar 파일이 필요합니다. swt.jar 파일은&nbsp; <a href="http://www.eclipse.org/swt/" target="_blank">여기</a>서[footnote]stable 버젼에서 사용하는 OS 종류를 클릭하시면 됩니다.[/footnote] swt_버전.zip 파일을 다운 받으시면 안에 들어 있습니다. <span style="color: rgb(255, 0, 0);">swt.jar 파일을 라이브러리에 추가해 줍니다.</span></p>
+<p>그럼 이제 컴파일 에러는 없어지지만 실행하면 ~~.dll 파일을 못찾겠다고 합니다. 못 찾는 파일은.. zip 파일 안에 들어 있습니다. 그 파일을 현재 프로젝트가 사용중인 JDK or JRE 버젼의 디렉토리 밑에 있는 bin 폴더 안에 복사해서 넣어 주면 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk14.gif" class="aligncenter" width="115" height="43" alt="사용자 삽입 이미지" /><br />이런 앙증맞은 화면이 떳군요.</p>
+<p>참조 하면 좋을 것 같은 링크 : <a href="http://www.eclipse.org/swt/widgets/" target="_blank">http://www.eclipse.org/swt/widgets/</a></p>

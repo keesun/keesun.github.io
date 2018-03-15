@@ -1,0 +1,5 @@
+<p>간단하네요~ 상위 프로젝트(부모-자신 관계가 아닌, 다단 구조에서 상위)의 pom.xml에서 해당 프로젝트의 packaging을 pom으로 하고, &lt;modules&gt; 엘리먼트를 사용해서 하위 프로젝트의 이름을 명시해주면 됩니다. 그럼 상위 프로젝트에서 빌드를 하면, 자신은 물론 자신이 &lt;modules&gt;에 명시한 모든 프로젝트를 동일하게 빌드해줍니다.</p>
+<p>상위 pom.xml
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">...<br />&nbsp; &nbsp; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br />&nbsp; &nbsp; &lt;groupId&gt;org.opensprout&lt;/groupId&gt;<br />&nbsp; &nbsp; &lt;artifactId&gt;osaf&lt;/artifactId&gt;<br />&nbsp; &nbsp; &lt;packaging&gt;pom&lt;/packaging&gt;<br />&nbsp; &nbsp; &lt;version&gt;1.0.0-m1&lt;/version&gt;<br />&nbsp; &nbsp; &lt;name&gt;OpenSprout Application Framework&lt;/name&gt;<br />&nbsp; &nbsp; &lt;url&gt;http://www.opensprout.org&lt;/url&gt;<br />...<br />&nbsp; &nbsp; &lt;modules&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;module&gt;osaf-core&lt;/module&gt;<br />&nbsp; &nbsp; &lt;/modules&gt;<br />...</div>
+<p>프로젝트 구조<br /><img src="/assets/kk2.jpg" class="aligncenter" width="305" height="224" alt="사용자 삽입 이미지" /><br />바로 하위 폴더를 만들고 그 안에 파일들을 복사해두면 됩니다.</p>
+<p></p>

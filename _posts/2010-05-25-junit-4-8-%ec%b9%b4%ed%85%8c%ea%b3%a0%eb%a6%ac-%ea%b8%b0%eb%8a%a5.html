@@ -1,0 +1,132 @@
+---
+layout: post
+title: JUnit 4.8 카테고리 기능
+date: 2010-05-25 07:00:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- JUnit 4.8
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952049'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div id="">
+<a href="http://kentbeck.github.com/junit/doc/ReleaseNotes4.8.html">http://kentbeck.github.com/junit/doc/ReleaseNotes4.8.html</a></div>
+<div id="">
+</div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>public interface FastTests { /* category marker */ }</div>
+<div>public interface SlowTests { /* category marker */ }</div>
+<div>
+</div>
+<div>
+public class A {</div>
+<div>&nbsp;&nbsp; &nbsp;@Test</div>
+<div id="">&nbsp;&nbsp; &nbsp;public void a() {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;fail();</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Category(SlowTests.class)</div>
+<div>&nbsp;&nbsp; &nbsp;@Test</div>
+<div>&nbsp;&nbsp; &nbsp;public void b() {</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>}</div>
+<div>
+</div>
+<div>
+@Category({SlowTests.class, FastTests.class})</div>
+<div>public class B {</div>
+<div>&nbsp;&nbsp; &nbsp;@Test</div>
+<div>&nbsp;&nbsp; &nbsp;public void c() {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;}</div>
+<div>}</div>
+<div>
+</div>
+<div>
+@RunWith(Categories.class)</div>
+<div>@IncludeCategory(SlowTests.class)</div>
+<div>@SuiteClasses( { A.class, B.class }) // Note that Categories is a kind of Suite</div>
+<div id="">public class SlowTestSuite {</div>
+<div>&nbsp;&nbsp;// Will run A.b and B.c, but not A.a</div>
+<div>}</div>
+<div>
+</div>
+<div>
+@RunWith(Categories.class)</div>
+<div>@IncludeCategory(SlowTests.class)</div>
+<div>@ExcludeCategory(FastTests.class)</div>
+<div>@SuiteClasses( { A.class, B.class }) // Note that Categories is a kind of Suite</div>
+<div>public class SlowTestSuite {</div>
+<div>&nbsp;&nbsp;// Will run A.b, but not A.a or B.c</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div>
+</div>
+<div id="">
+<div id="">
+1. A.a() 테스트: 아무것도 설정안함.</div>
+<div id="">2. A.b() 테스트: SlowTest.class 카테고리로 지정함(애노테이션 참조)</div>
+<div id="">3. B.c() 테스트: SlowTest.class과 FastTest.class 카테고리에 모두 해당함.( c() 메소드를 가지고 있는 클래스에 붙인 애노테이션 참조)</div>
+<div id="">
+</div>
+<div id="">
+첫번째 SlowTestSuite&nbsp;실행할 때는 SlowTest.class 카테고리를 포함시킴. 테스트 대상으로 A.class와 B.class에 있는 모든 테스트를 지정해줌.</div>
+<div id="">=&gt; 따라서 A와 B 클래스에 들어있는 테스트 1, 2, 3이 모두 테스트 대상이 되지만 그 중에서 SlowTest 카테고리에 해당하는 1번(A.b())과 3번(B.c())만 실행됨.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="">
+두번째&nbsp;SlowTestSuite 실행할 때는 SlowTest.class 카테고리를 포함시키고 FastTests.class는 제외시킴.</div>
+<div id="">=&gt; 따라서 위 결과와 비슷하지만 FastTests.class 카테고리에도 들어갈 수 있는 3번이 제외됨.</div>
+<div id="">
+</div>
+<div id="">
+벤댕이 그림을 그려서 보면 좋겠지만 귀찮아서..패스</div>
+</div>

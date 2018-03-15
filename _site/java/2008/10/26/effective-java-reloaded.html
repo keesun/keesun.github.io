@@ -1,0 +1,56 @@
+<p>참조: <a title="[http://parleys.com/display/PARLEYS/Home#title=Effective%20Java%20Reloaded;talk=18317360;slide=1]로 이동합니다." target="_blank" href="http://parleys.com/display/PARLEYS/Home#title=Effective%20Java%20Reloaded;talk=18317360;slide=1">Parleys.com에서 Effective Java Reloaded</a></p>
+<p>Generic</p>
+<p>- PECS, Producer extends, Consumer super.<br />
+- 타입제한으로 인해 다형성같은 유연함이 떨어질 땐, PECS를 적용하면 유연하게 만들 수 있다.</p>
+<p>Enum</p>
+<p>- int 값을 얻고 싶을 때 ordinal()+1 을 반환하는건 유지보수 힘들다.(순서 바뀔 수도 있고, 중간 요소가 빠져있을 수도 있고, 같은 수를 반환할 수가 없다.)<br />
+- int 속성을 enum 생성자에 전달하고 그 값을 반환하도록 코딩한다.(오.. 멋지다.)<br />
+public enum Ensemble {<br />
+&nbsp; SOLO(1), DUET(2), TRIO(3), ...<br />
+&nbsp; <br />
+&nbsp; private final int numberOfMusicians;</p>
+<p>&nbsp; Ensemble(int size){<br />
+&nbsp; &nbsp; numberOfMusicians = size;<br />
+&nbsp; }<br />
+&nbsp; <br />
+&nbsp; public int numberOfMusicians() {<br />
+&nbsp; &nbsp; return numberOfMusicians;<br />
+&nbsp; }</p>
+<p>}</p>
+<p>- int 상수 사용 문제. not typesafe, no namespace, brittle, 출력시 값이 명시적이지가 않아, 순회하기도 힘들어, 64비트 넘으면 ㄷㄷㄷ<br />
+- EnumSet을 enum이 가지고 있는 메소드에 넘긴다.<br />
+public void applyStyles(Set&lt;Style&gt; styles) {...}</p>
+<p>text.applyStyles(EnumSEt.of(Style.BOLD, Style.ITALIC));</p>
+<p>- ordinal()은 EnumSet, EnumMap 같은 곳에서 내부적으로 사용할 목적이니까, 프로그래밍 할 땐 쓰지 말도록.</p>
+<p>- 싱글톤 퀴즈, enum으로 싱글톤 만들기<br />
+&nbsp;Serializable Singleton</p>
+<p>public enum Elvis {<br />
+&nbsp; INSTANCE;<br />
+&nbsp; ...<br />
+}</p>
+<p>- enum 제약 사항<br />
+확장 못 한다. 메소드는 인터페이스를 사용해서 확장 가능<br />
+Emulated Extensible Enum</p>
+<p>Lazy initialization</p>
+<p>- 언제 사용하는가<br />
+성능, initialization circularity 해결하려고</p>
+<p>- static 필드는 Holder Class 사용하기<br />
+private static class FiledHolder {<br />
+&nbsp; static final FieldType field = computeFirldValue();<br />
+}</p>
+<p>static FieldType getField(){<br />
+&nbsp; return FieldHolder.field;<br />
+}</p>
+<p>- 인스턴스 필드는 더블 체킹</p>
+<p>private volatile FieldType field;</p>
+<p>FieldType getField(){<br />
+&nbsp; FieldType result = field;<br />
+&nbsp; if(result == null){&nbsp; // 1st check (no lock)<br />
+&nbsp; &nbsp; synchronized(this){<br />
+&nbsp; &nbsp; &nbsp; result = field;<br />
+&nbsp; &nbsp; &nbsp; if(result == null)&nbsp; // 2nd check (w/ lock)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; field = result = computeFieldValue();<br />
+&nbsp; &nbsp; }<br />
+&nbsp; }<br />
+&nbsp; return result;<br />
+}</p>

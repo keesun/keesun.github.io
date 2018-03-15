@@ -1,0 +1,34 @@
+<p>하이버네이트와 스프링 풀셋으로 구성되어 있는 웹 애플리케이션에서 자바 enum을 사용할 때 생기는 이슈가 뭘까? </p>
+<p>1. DB에 어떤 값을 넣을 것이고, <br />
+2. 화면에는 어떤 값을 보여주고 어떻게 바인딩 할 것인가?</p>
+<p>이 두 가지라고 한다. 그 밖에 이슈 될만한 것은.. 흠.. 뭐.. 없지 않을까 싶다. 왜 이슈일까?</p>
+<p>1번 문제를 보자. DB에 잘 안 들어갈까? 하이버네이트로 맵핑을 해보자.</p>
+<p>enum UserType {<br />
+&nbsp;MEMBER, MANAGER<br />
+}</p>
+<p>@Entity<br />
+class Member {<br />
+...<br />
+&nbsp; @Column<br />
+&nbsp; UserType userType;<br />
+}</p>
+<p>이 상태로도 SessionFactory를 생성하는데 별 문제도 없을 뿐더러, 읽고 저장하기가 잘 된다. 문제는 DB에 들어가는 값이다. DB에 들어가는 값을 보면, UserType.MEMBER는 0, UserType.MANAGER는 1이 integer 컬럼에 저장된다. enum의 ordinal() 메서드가 반환해주는 값을 그대로 저장한 것이다. 문제는 ordinal() 값이 고정이 아니라, enum 순서에 따라 바뀐다는 것이다. 이런... 그럼 안 되겠다. ordinal 말고, String을 저장하고 싶다면, JPA의 @Enumerated 애노테이션을 추가해주면 된다. @Enumerated(EnumType.STRING) 이렇게 말이다. 이 것을 사용하면 방금 말한 ordinal 문제는 사라질 것이다. DB에는 ordinal이 반환하는 Integer대신 enum의 name이 저장될 것이다.</p>
+<p>그런데.. 어떤 이유에선가 굳이 integer 값을 DB에 저장하고 싶다면 어찌해야 될까? 이제부터 복잡해진다. 일단 enum에 필드를 하나 추가하고, EJ2가 추천하는 방법으로 enum을 구현한다. 다음에는 하이버네이트의 UserType 인터페이스를 구현한 클래스를 하나 만들고,</p>
+<p>&nbsp;&nbsp;&nbsp; @Type(type="koma.domain.usertype.CodeCateUserType")<br />
+&nbsp;&nbsp;&nbsp; @Column<br />
+&nbsp;&nbsp;&nbsp; CodeCate codeCate;</p>
+<p>이런식으로 하이버네이트의 @Type 애노테이션을 이용하여 맵핑 방법(db에 어떻게 저장하고, db에서 어떻게 꺼내 올 것인가)을 담고 있는 UserType 구현체를 지정해주어야 한다. 이 구현체를 만들 때는 UserType 인터페이스가 제공하는 메서드 10개 정도를 구현해야 된다. 귀찮은 일이다. 그래서 GenericEnumUserType 이라는 클래스를 만들었다. 간단하게 상속만 하고, 생성자만 만들면 되도록 귀찮을 일을 줄여놨다. 자 그럼 일단 첫 번째 문제는 해결이다.</p>
+<p>두 번째 문제는 첫 번째에 비하면 비교적 쉽다. 지난 프로젝트에서 PropertyEditor와 씨름을 했던탓에 면역이 생긴 것 같다. 화면에 Enum을 보여줄 떄 enum의 name을 보여주고 싶진 않을것이다. 역시 새로운 필드를 추가해야겠다. 그리고 화면에 보여줄 때는 그 값을 출력하고, 화면에서 어떤 것을 선택했을 때에는 아까 DB에 입력한 값을 선택해서 가져오도록 화면 코드를 작성했다. </p>
+<p>다음은 그렇게 해서 가져온 integer 값을 Enum 객체로 샥 바꿔주는 일을 할 PropertyEditor를 만드는 것이다. 간단하다. getAsText()에서는 getValue()로 가져온 객체를 내가 사용하는 enum으로 타입을 변환 한 다음 아까 추가한 필드의 getter를 사용하여 String 값을 넘겨주었다. 이제 화면에서 사용자 친화적인 문구를 볼 수 있을 것이다. 다음은 setAsTest(String text)를 재정의 하여 text는 화면에서 선택한 enum이 DB에 입력하는 값인 integer 값일 것이다, 일단 Integer.parseInt()를 해야 겠다. 아.. 이런.. Enum 클래스에서 valueOf(Class, String) 메서드를 제공해준다. 하지만 난 int 값을 사용하기로 마음 먹었으니 저 클래스는 사용하지 못하겠다. 유틸을 하나 만들었다. Enum 클래스와 int 값을 받아서 해당 int 값을 가지고 있는 Enum을 돌려받는.. 그런 클래스다. 자 그럼 이제 이 유틸을 이용해서 setAsText(String text) 구현도 마칠 수 있다. 이러한 PropertyEditor 역시 매번 만들어 쓰기 귀찮으니깐, 아예 클래스를 만들지 않고 객체만 만들어 사용할 수 있는 GenericEnumPropertyEditor를 만들었다. 두 번째 문제도 해결됐다.</p>
+<p>오늘 내가 할 일은 이게 끝인 듯 하다. 자 그럼 잠깐 회고를 해보자.</p>
+<p>DB에 int 값이 아닌 enum의 name 문자열을 저장한다면 어떻게 될까?</p>
+<p>일단, UserType을 만들 필요가 없어진다. 아까도 이야기 했듯이 @Column과 @Enumerated(EnumType.STRING)를 사용하면 UserType 없이고, 문자열로 enum을 DB에 저장할 수 있다. GenericEnumUserType도 필요가 없고, 매번 UserType 클래스를 만들어야 하는 수고도 줄어든다.</p>
+<p>다음, 화면에서 enum 목록(Arrays.asList(enum.values());를 사용하면 간단)을 보여줄 때, enum에 추가한 사용자 친화적인 설명을 담고 있는 descr 속성에 담겨있는 값을 보여주고, 실제로 선택하는 값이 DB에 저장하는 int값이 아닌 enum의 name이라면 어떻게 바뀔까? getAsText() 구현은 동일하고, setAsText()에서 받아오는 값이 Enum의 name이니깐, Enum.valueOf(Class, String)을 사용할 수 있다. 굳이 Util 클래스를 만들 필요도 없고, setAsText() 구현도 간단해진다. 다만, Enum 마다 PropertyEditor 객체를 지정해 줘야 하는 건 어쩔 수 없다. 하지만 이건 정말 일도 아니다. 새로운 클래스를 추가하는 것도 아닌데 이 일이 뭐 크게 대수겠는가.</p>
+<p>결국.. DB에 어떤 이유로 인해 enum의 interger 값을 저장하는 것이 enum의 name 문자열을 저장하는 것보다 훨씬 복잡하고, 귀찮은 것 같다.</p>
+<p>DB에 int를 저장하는게 좋을까 string을 저장하는게 좋을까? integer 값을 저장해야 하는 별다른 이유가 없다면 나는 enum의 name을 저장하고 싶다.</p>
+<p>수정은 내일.. 오늘은 이만 퇴근..</p>
+<p>===========================</p>
+<p>할려고 했으나.. 이게 끝이 아니란다. DB에 저장할 enum 필드를 선택할 수 있게 해야 되고(결국 위에서 실컷 고민한게.. 물거품처럼 하얘지는 느낌이다.), </p>
+<p>enum 목록을 가져올 때 정렬을 할 수 있어야 한단다.(그럼 이것도 Arrays.asList(enum.values()); 만으로는 어림 없을 듯 하다.)</p>
+<p>또한 i18n까지도..</p>
+<p>@_@</p>

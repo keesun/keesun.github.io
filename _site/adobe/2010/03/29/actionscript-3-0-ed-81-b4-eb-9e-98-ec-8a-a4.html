@@ -1,0 +1,448 @@
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class Shape</div>
+<div id="">{</div>
+<div id="">&nbsp;&nbsp; &nbsp;var visible:Boolean = true;</div>
+<div id="">}</div>
+<div id="">
+</div>
+<div id="">
+true 값을 가지고 있는 visible이라는 Boolean 타입 변수를 가지고 있는 Shape 클래스.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">
+<div id="">
+</div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<div id="">// ActionScript 2.0</div>
+<div id="">class flash.display.BitmapData {}</div>
+<div id="">
+</div>
+<div id="">
+// ActionScript 3.0</div>
+<div id="">package flash.display</div>
+<div id="">{</div>
+<div id="">public class BitmapData {}</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div id="">3.0 부터는 package문을 사용하기 때문에 클래스 이름에 패키지 이름을 선언할 필요 없다.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+클래스 속성(class attributes)</div>
+<div id="">
+</div>
+<div id="">
+dynamic: 실행 중에 인스턴스에 추가적인 속성을 추가할 수 있다.</div>
+<div id="">final: 다른 클래스가 확장할 수 없다.</div>
+<div id="">internal(default): 같은 패키지에서만 참조할 수 있다.</div>
+<div id="">public: 모든 곳에서 참조할 수 있다.</div>
+<div id="">
+</div>
+<div id="">
+생략하면 internal 사용.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+클래스 본문</div>
+<div id="">
+</div>
+<div id="">
+변수, 상수, 메서드 등을 정의할 수 있다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<div id="">function hello():String</div>
+<div id="">{</div>
+<div id="">&nbsp;&nbsp; &nbsp;trace("hola");</div>
+<div id="">}</div>
+<div id="">class SampleClass</div>
+<div id="">{</div>
+<div id="">&nbsp;&nbsp; &nbsp;hello();</div>
+<div id="">&nbsp;&nbsp; &nbsp;trace("class created");</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div id="">3.0 부터는 명령문도 포함시킬 수 있다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">class StaticTest</div>
+<div id="">{</div>
+<div id="">static var message:String = "static variable";</div>
+<div id="">var message:String = "instance variable";</div>
+<div id="">}</div>
+<div id="">// In your script</div>
+<div id="">var myST:StaticTest = new StaticTest();</div>
+<div id="">trace(StaticTest.message); // output: static variable</div>
+<div id="">trace(myST.message); // output: instance variable</div>
+</div>
+<div id="">
+</div>
+<div id="">3.0 부터는 static 변수와 인스턴스 변수 이름가 같은 이름을 사용할 수 있다.</div>
+<div id="">
+</div>
+<div id="">
+클래스 프로퍼티 속성(class property attributes)</div>
+<div id="">
+</div>
+<div id="">
+클래스의 프로퍼티들이 가질 수 있는 속성</div>
+<div id="">
+</div>
+<div id="">
+internal(default): 같은 패키지에서만 참조 가능</div>
+<div id="">private: 같은 클래스 내부에에서만 참조 가능</div>
+<div id="">protected: 같은 클래스와 상속 받는 클래스에서 참조 가능.</div>
+<div id="">public: 어디서나 참조 가능</div>
+<div id="">static: 해당 프로퍼티가 클래스에 속한다는 것을 명시.</div>
+<div id="">사용자 정의 네임스페이스: 사용자가 정의한 커스텀 네임스페이스</div>
+<div id="">
+</div>
+<div id="">
+2.0에서는 private으로 해놔도 실행 중에 []를 사용해서 접근할 수 있는데. 3.0부터는 안 됨. 대신 클래스가 dynamic으로 선언되어 있으면 접근은 되지만 undefined가 반한됨.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+static 특성</div>
+<div id="">
+</div>
+<div id="">
+상송되지 않음.&nbsp;</div>
+<div id="">클래스 범위에 속함.&nbsp;</div>
+<div id="">인스턴스가 아니라 클래스 이름으로 접근해야 함.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+사용자 정의 네임스페이스</div>
+<div id="">
+</div>
+<div id="">
+패스 나중에 자세히</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+변수</div>
+<div id="">
+</div>
+<div id="">
+var 또는 const를 사용하여 선언할 수 있다.</div>
+<div id="">const 키워드로 선언한 것을 상수라고 한다.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+정적 변수</div>
+<div id="">
+</div>
+<div id="">
+<div id="">class StaticVars</div>
+<div id="">{</div>
+<div id="">public static var totalCount:int = 0;</div>
+<div id="">public static const MAX_NUM:uint = 16;</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div id="">var또는 const와 static을 추가하여 선언한다.</div>
+<div id="">클래스의 인스턴스가 아니라 클래스에 연결된다.</div>
+<div id="">외부에서는 반드시 클래스 이름으로 접근해야 한다.&nbsp;인스턴스로 접근하면 에러 난다.</div>
+<div id="">선언할 때 초기화 해야한다. 안그러면 에러난다.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+인스턴스 변수</div>
+<div id="">
+</div>
+<div id="">
+static 키워드 없이 var 또는 const로 선언한 것.</div>
+<div id="">인스턴스 마다 고유한 값을 가진다.</div>
+<div id="">하위 클래스에서 재정의 할 수 없다.&nbsp;getter나 setter를 재정의하면 된다.</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+메서드</div>
+<div id="">
+</div>
+<div id="">
+클래스 정의에 포함되는 함수.</div>
+<div id="">function이라는 키워드로 정의한다.</div>
+<div id="">
+</div>
+<div id="">
+함수 명령문으로 함수 정의</div>
+<div id="">public function sampleFunction():String {}</div>
+<div id="">
+</div>
+<div id="">
+함수 표현식으로 함수 정의</div>
+<div id="">public var sampleFunction:Function = function () {}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+함수 명령문 사용하는 이유</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 간결하고 쉽게 읽을 수 있다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- override나 final 키워드 사용가능</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+생성자 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+클래스 이름과 같은 이름을 가진 함수</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">new 키워드로 해당 클래스의 인스턴스를 만들 떄 사용한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">class Example</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public var status:String;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public function Example()</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">status = "initialized";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">var myExample:Example = new Example();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">trace(myExample.status); // output: initialized</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+생성자에는 public만 사용가능. 생략하면 기본으로 public. 사용자 정의 네임스페이스도 사용 못함.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">super()를 사용하여 상위 클래스의 생성자를 명시적으로 호출 가능.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">super()를 명시적으로 호출하지 않으면 자동으로 제일 먼저 호출해줌.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+return 문을 사용할 수는 없지만 값을 반환하지는 못한다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+정적 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+static 키워드로 선언한 메서드.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">인스턴스가 아니라 클래스에 연결된다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+인스턴스 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+static 키워드 없이 선언한 메서드</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+getter와 settter 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">class GetSet</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private var privateProperty:String;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public function get publicAccess():String</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return privateProperty;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public function set publicAccess(setValue:String):void</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;privateProperty = setValue;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+getXXX, setXXX 라는 이름을 사용하지 않아도 된다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">var myGetSet:GetSet = new GetSet();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">trace(myGetSet.publicAccess); // output: null</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">myGetSet.publicAccess = "hello";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">trace(myGetSet.publicAccess); // output: hello</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이렇게 사용할 수 있다.</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+바운드 메서드(메서드 클로저)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+함수의 인자로 전달되는 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">함수의 반환값으로 전달되는 메서드</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">바운드 메서드 내부에서 this는 해당 메서드를 구현하는 인스턴스에 연결된다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">함수 클로저의 this는 호출 시점에 함수와 연결된 객체를 가리킨다. 이게 차이점이다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">class ThisTest {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private var num:Number=3;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;function foo():void // bound method defined</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;trace("foo's this: " + this);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;trace("num: " + num);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;function bar():Function</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return foo; // bound method returned</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+var myTest:ThisTest = new ThisTest();</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">var myFunc:Function = myTest.bar();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">trace(this);&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">// output: [object global]</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>myFunc();</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">/* output:&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">foo's this: [object ThisTest]</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">output: num: 3 */</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+myFunc()는 바운드 메서드라 this가 여전히 자신이 속한 원래 인스턴스를 가리키고 있다.</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+클래스와 enum</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+enum을 지원하는게 딱히 없음.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그냥 java 5 이전처럼 static const 사용해서 정의.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public final class Day</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">{</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const MONDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const TUESDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const WEDNESDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const THURSDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const FRIDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const SATURDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public static const SUNDAY:Day = new Day();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+</div>
+<p>[#M_더보기|접기|
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<p>_M#]</p></div>
+</div>

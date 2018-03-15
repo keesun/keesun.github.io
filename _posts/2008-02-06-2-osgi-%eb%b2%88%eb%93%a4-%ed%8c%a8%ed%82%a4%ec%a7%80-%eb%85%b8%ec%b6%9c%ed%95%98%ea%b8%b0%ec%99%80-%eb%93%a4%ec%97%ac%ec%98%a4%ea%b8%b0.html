@@ -1,0 +1,110 @@
+---
+layout: post
+title: 2. OSGi 번들 패키지 노출하기와 들여오기.
+date: 2008-02-06 02:13:23.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- Export Package
+- Import Package
+- OSGi
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1321894083'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. 앞에서 만든 Store에 간단한 인터페이스 하나와 그걸 구현한 클래스를 만듭니다.</p>
+<p>public interface Greeting {</p>
+<p>&nbsp;&nbsp; &nbsp;public String hi(String name);<br />}</p>
+<p>public class GreetingImpl implements Greeting {</p>
+<p>&nbsp; &nbsp; public String hi(String name) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return "hi " + name;<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p><img src="{{ site.baseurl }}/assets/gk54.png" class="aligncenter" width="600" height="354" alt="사용자 삽입 이미지" /><br />service 패키지에 Greeting 인터페이스, service.impl 패키지에는 GreetingImpl 클래스를 두었습니다. 그리고 이 두 개의 패키지 안에 있는 클래스들을 다른 번들에서 사용할 수 있도록 Export 해주어야 합니다.</p>
+<p>2. 패키지 Export 하기</p>
+<p>MENIFEST.MF 파일을 클릭하고, 하단의 Runtime 탭을 클릭하고, Export packages에서 Add 버튼을 클릭하여 밖으로 노출시킬 패키지들을 추가해줍니다. Alt + S로 저장해 줍니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk55.png" class="aligncenter" width="600" height="476" alt="사용자 삽입 이미지" /><br />3. 확인하기</p>
+<p>위 번들을 다시 Export 해서, 다시 C:\plugins 폴더에 Store_1.0.0.jar 파일을 갱신합니다. 지금은 파일만 수정했을 뿐, OSGi 플랫폼에 올라가있는 번들은 수정되지 않았습니다. </p>
+<p>지금 올라가 있는 Store 번들은 이클립스로 보고 있는 프로젝트의 번들이 아니라, 이전 글에서 Export 했던 Jar 파일을 기반으로 올라간 번들입니다. 그렇기 때문에, 방금전에 다시 Export를 한 것입니다. 어쨋든 좀 햇갈릴 수도 있겠지만, 지금까지 잘 따라오셨다면 다음과 같이 번들을 업데이트 할 수 있습니다.</p>
+<p>update [id] 명령은 원래 RESOLVED 상태에서 수행됩니다. 그런데 만약 현재 번들이 ACTIVE 상태였다면, 해당 번들을 STOP으로 멈춘다음에 update를 수행하고, 다시 START 시켜줍니다.(똑똑한 Equinox, 나이스 OSGi 스팩)</p>
+<p><img src="{{ site.baseurl }}/assets/ek35.png" class="aligncenter" width="600" height="351" alt="사용자 삽입 이미지" /><br />현재 번들이 service 패키지와 service.impl 패키지를 노출시키고 있는 것을 확인했습니다.</p>
+<p>4. 새로운 번들 만들기</p>
+<p>위의 번들을 사용할 새로운 번들을 만듭니다. 첫 번째 글을 참조하시면 쉽게 만들 수 있을테니 생략하겠습니다.번들 이름은 편의상 StoreManage라고 하겠습니다.</p>
+<p>5. Store 번들의 패키지 사용하기</p>
+<p>StoreManager 번들의 Actovator를 다음과 같이 구현하려고 합니다.</p>
+<p>public class Activator implements BundleActivator {</p>
+<p>&nbsp; &nbsp; public void start(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreMaganer 번들 가동했습니다.");<br /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; Greeting greeting = new GreetingImpl();</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(greeting.hi("기선"));</span><br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void stop(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreManager 번들 멈춥니다.");<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>위 코드에서 빨간색 부분이 당연히 에러가 납니다. 저런 클래스가 StoreManager에는 없기 때문입니다. 이 번들에서 다른 번들의 패키지를 import 하면 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk37.png" class="aligncenter" width="600" height="468" alt="사용자 삽입 이미지" /><br />MENIFEST.MF 파일을 클릭하고, Dependecies 탭을 클릭하고 오른쪽의 imported Packages에서 add를 클릭하여, 노출된 패키지 중에서 검색을 합니다. service와 service.impl을 클릭하고 저장해 줍니다.</p>
+<p>그런다음 Organize Import를 하면, 에러는 사라집니다.(위 과정을 거치지 않고, Organize Import를 했을 때, 노출된 패키지 중에서 검색 한 다음 자동으로 MENIFEST.MF 파일에 import-package를 추가해주고, 그 다음에 소스 코드에서도 import를 추가해주면 좋겠는데 말이죠...)</p>
+<p> 6. 새로운 번들 설치하기</p>
+<p>위에서 만든 번들을 이전 번들과 마찬가지로, Export 해서 배포 가능한 번들 Jar로 만들어 주고, install 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk56.png" class="aligncenter" width="600" height="222" alt="사용자 삽입 이미지" /><br />7. 시작 합니다.</p>
+<p>INSTALLED 상태가 됐네요. 이제 시작하기 전에 혹시나 이 번들이 필요로 하는 패키지를 못찾지는 않았을까 걱정이 되서, diag [id]로 확인해 봤습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk38.png" class="aligncenter" width="484" height="296" alt="사용자 삽입 이미지" /><br />없는게 없다는군요. 그럼 start [id]로 시작시켜 봅니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk57.png" class="aligncenter" width="600" height="222" alt="사용자 삽입 이미지" /><br />귿!! (번들 번호가 바꼈는데, 제가 구현할 때 빠트린게 있어서 다시 Uninstall 하고, Export 한 다음에 다시 Install 해서 그렇습니다.)</p>
+<p>다음 글에서는 이렇게 구현체를 직접 제공하는게 아니라, 인터페이스만 제공 하고 서비스 레지스트리를 사용해서 서비스로 노출하는 방법을 살펴보겠습니다.</p>
+<p>================================================================================<br />복잡한 샘플</p>
+<p>한번 ACTIVE 상태가 되면, 그 안에서 노출시킨 패키지의 클래스들 중에서 다른 번들에 의해 사용되는 클래스는 번들이 사라져도, 레지스트리에 계속 남아서 사용됩니다.<br />[#M_ more.. | less.. | osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;INSTALLED &nbsp; StoreManager_1.0.0</p>
+<p>osgi&gt; diag 1<br />initial@reference:file:workspace/StoreManager/ [1]<br />&nbsp; Missing imported package service_0.0.0.<br />&nbsp; Missing imported package service.impl_0.0.0.</p>
+<p>osgi&gt; start 1<br />org.osgi.framework.BundleException: The bundle could not be resolved. Reason: Missing Constraint: Import-Package: service; version="0.0.0"<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:305)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:260)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:252)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.FrameworkCommandProvider._start(FrameworkCommandProvider.java:260)<br />&nbsp;&nbsp; &nbsp;at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />&nbsp;&nbsp; &nbsp;at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />&nbsp;&nbsp; &nbsp;at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />&nbsp;&nbsp; &nbsp;at java.lang.reflect.Method.invoke(Unknown Source)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.FrameworkCommandInterpreter.execute(FrameworkCommandInterpreter.java:150)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.FrameworkConsole.docommand(FrameworkConsole.java:291)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.FrameworkConsole.console(FrameworkConsole.java:276)<br />&nbsp;&nbsp; &nbsp;at org.eclipse.osgi.framework.internal.core.FrameworkConsole.run(FrameworkConsole.java:218)<br />&nbsp;&nbsp; &nbsp;at java.lang.Thread.run(Unknown Source)</p>
+<p>osgi&gt; install file:/c:/plugins/Store_1.0.0.jar<br />Bundle id is 2</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;INSTALLED &nbsp; StoreManager_1.0.0<br />2 &nbsp; &nbsp;INSTALLED &nbsp; Store_1.0.0</p>
+<p>osgi&gt; diag 2<br />file:/c:/plugins/Store_1.0.0.jar [2]<br />&nbsp; No unresolved constraints.</p>
+<p>osgi&gt; start 2<br />StoreMaganer 번들 가동했습니다.<br />hi 토비<br />Store 번들을 가동 했습니다.</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; stop 1<br />StoreManager 번들 멈춥니다.</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.<br />hi 토비</p>
+<p>osgi&gt; stop 2<br />Store 번들을 멈췄습니다.</p>
+<p>osgi&gt; stop 1<br />StoreManager 번들 멈춥니다.</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.<br />hi 토비</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp; &nbsp;RESOLVED &nbsp;&nbsp; Store_1.0.0</p>
+<p><span style="color: rgb(255, 0, 0);">osgi&gt; uninstall 2</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">osgi&gt; ss</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">Framework is launched.</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">1 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">osgi&gt; stop 1</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">StoreManager 번들 멈춥니다.</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">osgi&gt; start 1</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">StoreMaganer 번들 가동했습니다.</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">hi 토비</span></p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0</p>
+<p>osgi&gt; <br />_M#]<br />오묘한, 번들 라이프사이클과 서비스 레지스트리. 이 부분은 꼭 열공해야겠습니다.</p>

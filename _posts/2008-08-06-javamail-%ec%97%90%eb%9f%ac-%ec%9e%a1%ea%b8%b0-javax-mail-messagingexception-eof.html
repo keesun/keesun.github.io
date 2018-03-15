@@ -1,0 +1,54 @@
+---
+layout: post
+title: 'JavaMail 에러 잡기 - javax.mail.MessagingException: [EOF]'
+date: 2008-08-06 11:01:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- javamail
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323008392'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>javax.mail.MessagingException: [EOF]</p>
+<p>이 에러는 윈도우에서 자동으로 시작한 SMTP 서비스를 끄고, 별도로 설치한 메일 서버(저는 Mailtraq)에서 SMTP 서비스를 켜주면 해결 됨. 포트를 제외한 모든 커넥션 설정이 Mailtraq에 돌아갈 SMTP 서비스로 되어 있는데 정작 SMTP 서비스는 Mailtraq에서 돌지 않고 윈도 서비스로 돌고 있었습니다. 포트가 같으니까 못 돌린거죠.</p>
+<p>일단 SMTP로 메일 보내기까진 완성. 이제 IMap이랑 POP3로 메일함을 읽오보실까나.</p>

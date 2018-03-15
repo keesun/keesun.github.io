@@ -1,0 +1,56 @@
+---
+layout: post
+title: EasyMock - Specifying Return Values
+date: 2008-03-01 03:00:43.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- andReturn()
+- EasyMock
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323151769'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>테스트의 대상이 사용하는 Mock의 메소드가 반환할 값이 필요한 경우에 다음과 같이 할 수 있습니다.</p>
+<p>1. 예상되는 메소드 호출을 expect() 메소드로 감싸기.<br />2. <code>andReturn(Object returnValue) 사용해서 예상되는 리턴값을 expect() 메소드 뒤에 .으로 이어서 호출하기<br /></code>
+<pre><div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">   public void testVoteAgainstRemoval() {<br />        mock.documentAdded("Document");   // expect document addition<br />        // expect to be asked to vote for document removal, and vote against it<br />        <span style="color: rgb(255, 0, 0);">expect(mock.voteForRemoval("Document")).andReturn((byte) -42);</span><br />        replay(mock);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        assertFalse(classUnderTest.removeDocument("Document"));<br />        verify(mock);<br />    }</div><br />저 위의 빨간 줄 한 줄을 expectLastCall()을 사용해서 두 줄로 나눌 수도 있습니다.<br /><br />    mock.voteForRemoval("Document");<br />    expectLastCall().andReturn((byte) 42);<br /><br />메소드가 심하게 길어지지 않는 이상 굳이 두 줄로 코드를 나눌 필요는 없겠습니다.<br /></pre>
+<p><code><br /> </code></p>

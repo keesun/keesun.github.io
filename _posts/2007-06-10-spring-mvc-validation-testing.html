@@ -1,0 +1,63 @@
+---
+layout: post
+title: Spring MVC Validation Testing
+date: 2007-06-10 14:53:46.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '09장 Validation'
+tags:
+- Validation Testing
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323075659'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <br /><a href="http://www.amazon.com/Expert-Spring-MVC-Web-Flow/dp/159059584X/ref=pd_bbs_sr_1/102-5450252-7448917?ie=UTF8&amp;s=books&amp;qid=1181484158&amp;sr=8-1" target="_blank">Spring MVC</a> 9장<br /><a href="http://younghoe.info/99" target="_blank">springmodules의 valang을 활용한 Validation 테스트</a><br /><a href="http://forum.springframework.org/showthread.php?t=23960" target="_blank">Where is ErrorsVerifier class mentioned in Expert Spring MVC?</a></p>
+<p>본문에서 Validator를 테스트 하는 방법을 소개하고 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class PersonValidatorTests extends TestCase {<br />&nbsp; &nbsp; public void testEmptyPersonValidation() {<br />&nbsp; &nbsp; &nbsp; &nbsp; Person person = new Person();<br />&nbsp; &nbsp; &nbsp; &nbsp; Validator validator = new PersonValidator();<br />&nbsp; &nbsp; &nbsp; &nbsp; BindException errors = new <span style="color: rgb(255, 0, 0);">BindException(person, "target");</span><br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">validator.validate(person, errors);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; new ErrorsVerifier(errors) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; forProperty("firstName").hasErrorCode("person.firstName.required")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .forProperty("lastName").hasErrorCode("person.lastName.required")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .otherwise().noErrors();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }<br />}</div>
+<p>위의 소스 코드는 Spring MVC 281페이지 그대로 입니다. 하지만 위의 코드는 선뜻 이해가 가지 않았습니다. <br />언뜻 봤을 때 person 객체를 두번이나 사용한 것부터 뭔가 이상하게 느껴졌으며(좀 더 보고 있으니까 바인딩 할 때 한번 검증할 때 한 번 사용하는 의도 인것 같습니다.)<br />ErrorsVerifier라는 익명 클레스의 사용이 낯설었습니다.</p>
+<p>ErrorsVerifier를 사용한 것을 보면 <a href="http://whiteship.tistory.com/405" target="_blank">fluent interface</a> 개념으로 구현하여 매우 재밌고 직관적으로 작명된 메소드의 이름들을 확인할 수 있습니다. 하지만 안타깝게도 책에 나온 설명과 달리 저 클레스(?)는 spring 프레임웤에 존재하지 않습니다.</p>
+<p>이 클레스를 찾느라 여러명이 고생한 흔적을 구글에서 찾을 수 있었는데 그 곳에서 보다 더 값진 것을 발견했습니다. 바로 <a href="http://younghoe.info/" target="_blank">뛰어난 선배님</a>의 <a href="http://forum.springframework.org/showthread.php?t=23960" target="_blank">재미난 참여</a>를 살펴 볼 수 있었습니다.</p>
+<p>위 링크에 가시면 Spring에는 전혀 없던 ErrorsVerifier 코드를 만들어 낸 과정이 들어있습니다.</p>
+<p>ErrorsValidator 다운<a href="http://whiteship.epril.com/wp-content/uploads/1/dm231.java" class="aligncenter">dm231.java</a></p>
+<p>ErrorsValidator를 사용한 예제 코드
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class MemberInfoValidatorTest extends TestCase{</p>
+<p>&nbsp;&nbsp; &nbsp;public void testEmptyMemberInfo() {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; MemberInfo memberInfo = new MemberInfo();<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Validator validator = new MemberInfoValidator();<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; BindException errors = new BindException(memberInfo, "target");<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; validator.validate(memberInfo, errors);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; ErrorsVerifier errorsVerifier = new ErrorsVerifier(errors);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; errorsVerifier.forProperty("name").hasErrorCode("required")<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; .forProperty("password").hasErrorCode("required")<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; .forProperty("confirmPassword").hasErrorCode("required")<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; .forProperty("email").hasErrorCode("required");<br />&nbsp;&nbsp; &nbsp;}<br />}</div>
+<p>음~ 좋네요. 다시 보니까 Spring MVC 에 나온 코드는 컴파일 에러가 나지 않을까 싶네요;; 클레스파일이 없기도 없거니와 인너 클래스의 사용이 이상해요. 중괄호 연속 두 개씩.. 대체 무슨 의미인건지;;; 어떻게 하라는건지~ㅋㅋ </p>

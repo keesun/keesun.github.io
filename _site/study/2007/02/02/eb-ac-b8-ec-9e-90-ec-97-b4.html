@@ -1,0 +1,11 @@
+<p>문자열 만드는 방법이 여러가지네요. Java에서는 " " 이거를 사용했는데 ' ' 이것도 되고 """ """ 이렇게 세개씩 써서 만들 수도 있습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = """<br />... spring hibernate<br />... python<br />... ruby<br />... php<br />... perl<br />... """<br />&gt;&gt;&gt; a<br />' \nspring hibernate\npython\nruby\nphp\nperl\n'<br />&gt;&gt;&gt; print a</p>
+<p>spring hibernate<br />python<br />ruby<br />php<br />perl</div>
+<p>문자열에 * 하면 문자열을 복사해서 붙여 줍니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = "spring"<br />&gt;&gt;&gt; a * 2<br />'springspring'</div>
+<p>문자열 포맷 코드를 사용해서 출력가능 전부 %s 로 쓰면 알아서 바꿔서 출력해준다고 합니다. toString()이랑 비슷한듯..
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; print "%d number" % 5<br />5 number<br />&gt;&gt;&gt; print "%s number" % 5<br />5 number<br />&gt;&gt;&gt; print "%s number" % 4.3<br />4.3 number<br />&gt;&gt;&gt; print "%c number" % 4.3<br />sys:1: DeprecationWarning: integer argument expected, got float<br /> number<br />&gt;&gt;&gt; print "%c number" % 4<br /> number<br />&gt;&gt;&gt; print "%c number" % 'c'<br />c number<br />&gt;&gt;&gt; print "%c number" % '4'<br />4 number<br />&gt;&gt;&gt;</div>
+<p>오호.. 문자열을 다루는데 필요한 여러 메소드 제공해 줍니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = "Spring Hibernate php"<br />&gt;&gt;&gt; a.replace("php", "Python")<br />'Spring Hibernate Python'<br />&gt;&gt;&gt; a<br />'Spring Hibernate php'<br />&gt;&gt;&gt;</div>
+<p>Python도 문자열을 상수로 다루는 것 같습니다.</p>
+<p>이밖에도 여러 메소드는 <a href="http://tdd.or.kr/pf/book/render_page?pagename=JumpToPython._5b2_5d_c0_da_b7_e1_c7_fc_b0_fa_c1_a6_be_ee_b9_ae._281_29_c0_da_b7_e1_c7_fc._281-2_29_b9_ae_c0_da_bf_ad&amp;keyword=&amp;filename=&amp;curpage=&amp;historyname=&amp;content=&amp;newname=" target="_blank">이곳</a>의 제일 아래를 참조하시면 됩니다.</p>

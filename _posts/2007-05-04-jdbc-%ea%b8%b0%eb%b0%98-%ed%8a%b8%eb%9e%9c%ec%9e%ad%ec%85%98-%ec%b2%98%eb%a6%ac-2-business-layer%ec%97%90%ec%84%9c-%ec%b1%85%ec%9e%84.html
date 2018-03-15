@@ -1,0 +1,73 @@
+---
+layout: post
+title: JDBC 기반 트랜잭션 처리 2. Business Layer에서 책임
+date: 2007-05-04 11:29:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323202757'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : Spring 프레임워크 워크북</p>
+<p>이번에는 DAO 계층이 아닌 Service 계층으로 트랜잭션 책임을 다시 가져왔습니다. 따라서 서비스 계층이 이 전글에 비하면 좀 더 복잡해 졌습니다. 게다가 쌩 JDBC를 사용하고, 거기다 트랜잭션 처리도 AOP 사용해서 모듈화 하지 않았기 때문에 코드는 다음과 같이 다소 복잡합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberServiceImplTransactionInBusiness implements MemberService{</p>
+<p>&nbsp; &nbsp; private MemberDao memberDao;</p>
+<p>&nbsp; &nbsp; private DataSource dataSource;</p>
+<p>&nbsp; &nbsp; public void setDataSource(DataSource dataSource) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.dataSource = dataSource;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setMemberDao(MemberDao memberDao) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.memberDao = memberDao;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void add(Member member) throws SQLException {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Connection con = null;<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; con = dataSource.getConnection();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; con.setAutoCommit(false);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">memberDao.add(con, member);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //TODO 예외발생<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">TransactionTestingUtil.generateSQLExceptionMethod();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; con.commit();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; catch (SQLException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(con != null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; con.rollback();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw e;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; finally {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(con != null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; con.close();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>add()메소드에서 해야할 일은 딱 두 줄(파란색)임에도 불구하고 여러 줄의 코드가 정신없이 널려있습니다. DAO 코드를 보겠습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberDaoJdbcTransactionInBusiness implements MemberDao {</p>
+<p>&nbsp; &nbsp; public void add(Member member) {<br />&nbsp; &nbsp; &nbsp; &nbsp; throw new UnsupportedOperationException();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void add(Connection con, Member member) throws SQLException {<br />&nbsp; &nbsp; &nbsp; &nbsp; StringBuilder addMemberQuery = new StringBuilder();<br />&nbsp; &nbsp; &nbsp; &nbsp; addMemberQuery.append("INSERT INTO Member(id, password, name, email) ");<br />&nbsp; &nbsp; &nbsp; &nbsp; addMemberQuery.append("VALUES (?, ?, ?, ?)");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; PreparedStatement pstmt = con.prepareStatement(addMemberQuery.toString());<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pstmt.setString(1, "whiteship3");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pstmt.setString(2, "pass");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pstmt.setString(3, "기선");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pstmt.setString(4, "keesun3@email.com");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pstmt.executeUpdate();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; catch (SQLException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw e;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>JDBC 코딩이 별로 재미도 없고 복잡합니다. 서비스 계층에서 사용하던 connection 객체를 그대로 이어 받아서 사용합니다. 그리고 만약 복잡한 SQL을 사용했을 떄 DB가 바껴버리면 그 복잡한 SQL들을 다 어떻게 관리할지 걱정이 됩니다.</p>
+<p>테스트코드는 이전 글과 동일합니다. Spring 설정파일은 다음과 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="memberService" class="com.bookbuying.member.service.MemberServiceImplTransactionInBusiness"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="memberDao" ref="memberDao" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="memberDao" class="com.bookbuying.member.dao.MemberDaoJdbcTransactionInBusiness" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="driverClass" value="${db.driver}"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="jdbcUrl" value="${db.url}"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="user" value="${db.username}"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="password" value="${db.password}"/&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>다음 글에서는 Spring의 Transaction 관련 주요 API들(TransactionDefinition, TransactionStatus, PlatformTransactionManager)을 사용하여 구현하겠습니다.</p>

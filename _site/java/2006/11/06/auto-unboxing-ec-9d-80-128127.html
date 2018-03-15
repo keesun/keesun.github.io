@@ -1,0 +1,78 @@
+<p>5.0에 새로 추가된 Auto boxing, Auto unboxing이 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">정수 중에서는 -128~127 사이의 정수에만 적용</span>이 되는군요.</p>
+<p><a href="http://dna.daum.net/technote/java/PrincipleOfJavaInternalForDeveloperEasyToLost">Daum DNA에 올라온 글</a>의 거의 마지막 부분에 나오는 소스코드 입니다.</p>
+<p>소스코드보기<br />
+[#M_ more.. | less.. | </p>
+<pre class="wiki">public class AutoBoxingTester {<br />
+<br />
+	public static void main(String[] args) {<br />
+		int i = 0;<br />
+		Integer ii = i; // boxing. JDK 1.4에서는 incompatible type error가 발생 했었으나 Tiger에서는 괜찮다.<br />
+		int j = ii; // unboxing<br />
+<br />
+		for (ii = 0; ii &lt; 5; ii++) { // Integer인데도 ++ 연산자 지원.<br />
+		}<br />
+<br />
+		i = 129;<br />
+		ii = 129;<br />
+		if (ii == i) {<br />
+			System.out.println("i is same ii.");<br />
+		}<br />
+<br />
+		// -128 ~ 127 사이의 수는 unboxing이 되어 == 연산이 허용되지만,<br />
+		// 그 범위 외의 경우 Integer로 boxing된 상태므로 equals를 이용해야함.<br />
+		// 이는 버그가 발생했을 경우 찾기 쉽지 않은 단점도 내포하고 있다.!!<br />
+		checkIntegerSame(127, 127); // same<br />
+		checkIntegerSame(128, 128); // Not same<br />
+		checkIntegerEquals(128, 128); // equals<br />
+		checkIntegerSame(-128, -128); // same<br />
+		checkIntegerSame(-129, -129); // Not same<br />
+		checkIntegerEquals(-129, -129); // equals<br />
+		<br />
+		System.out.println("--------------------------------------------");<br />
+		Boolean arriving = false;<br />
+		Boolean late = true;<br />
+		String ret = arriving ? (late ? "도착했지만 늦었네요." : "제시간에 잘 도착했군요.") : <br />
+								(late ? "도착도 못하고 늦었군요." : "도착은 못했지만 늦진 않았군요.");<br />
+		System.out.println(ret);<br />
+		<br />
+		StringBuilder sb = new StringBuilder();<br />
+		sb.append("appended String");<br />
+		String str = "just String";<br />
+		boolean mutable = true;<br />
+		CharSequence chSeq = mutable ? sb : str;<br />
+		System.out.println(chSeq);<br />
+	}<br />
+<br />
+	private static void checkIntegerSame(Integer ii, Integer jj) {<br />
+		if (ii == jj) {<br />
+			System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is same ii.");<br />
+		} else {<br />
+			System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is NOT same ii!!");<br />
+		}<br />
+	}<br />
+<br />
+	private static void checkIntegerEquals(Integer ii, Integer jj) {<br />
+		if (ii.equals(jj)) {<br />
+			System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is equals ii.");<br />
+		} else {<br />
+			System.out.println("ii = " + ii + ", jj = " + jj + " ==&gt; jj is NOT equals ii!!");<br />
+		}<br />
+	}<br />
+<br />
+}</pre>
+<p>_M#]<br />
+테스트 결과 보기<br />
+[#M_ more.. | less.. | <br />
+i is same ii.<br />
+ii = 127, jj = 127 ==&gt; jj is same ii.<br />
+ii = 128, jj = 128 ==&gt; jj is NOT same ii!!<br />
+ii = 128, jj = 128 ==&gt; jj is equals ii.<br />
+ii = -128, jj = -128 ==&gt; jj is same ii.<br />
+ii = -129, jj = -129 ==&gt; jj is NOT same ii!!<br />
+ii = -129, jj = -129 ==&gt; jj is equals ii.<br />
+--------------------------------------------<br />
+도착도 못하고 늦었군요.<br />
+appended String<br />
+_M#]<br />
+정수는 -128 ~ 127 의 범위를 벗어날 경우 unboxing이 되지 않는 다는 것을 보여주는 예제였습니다.</p>
+<p></p>

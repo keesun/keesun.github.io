@@ -1,0 +1,57 @@
+---
+layout: post
+title: 5. Development Using Patterns
+date: 2007-06-06 12:59:07.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JSP
+- Using Patterns
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322776151'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">1. Why Use Patterns?</span><br />Best Practice니까..<br />재사용 하려고..<br />의사소통을 위해..<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. Introducting the J2EE Patterns Catalog</span><br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/index.html" target="_blank">http://java.sun.com/blueprints/corej2eepatterns/Patterns/index.html</a><br />Presentation tier :: 데이터를 보여주는 것을 책임지는 계층<br />Business tier :: 비즈니스 처리를 책임지는 계층<br />Integration tier :: resource 계층과의 연결을 책임지는 계층</p>
+<p><span style="font-weight: bold;">3. Looking at Presentation Design Patterns</span><br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/InterceptingFilter.html" target="_blank">Decorating Filter Pattern</a> :: request를 처리하기 전에 filter를 거치도록 함.<br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/FrontController.html" target="_blank">Front Controller Pattern</a> :: filter를 거쳐온 request를 단일 서블릿에서 처리 함.<br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/DispatcherView.html" target="_blank">Dispatcher View Pattern</a> :: 처리된 결과를 보여줄 JSP를 찾아줌.<br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/ViewHelper.html" target="_blank">View Helper Pattern</a> :: 결과를 보여줄 때 커스텀 태그과 JavaBeans를 적용<br />p105쪽 그림</p>
+<p><span style="font-weight: bold;">4. Understanding MVC</span><br />MVC 아키텍처를 적용함으로써 애플리케이션 데이터와 그 데이터를 보여주는 것을 분리함.<br />분리함으로 써 뷰가 보다 가벼워 짐(lightweight), 쉽게 변경할 수 있슴, 재사용 편리해짐(pluggable and transportable across platform)<br />p106쪽 그림<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">5. MVC 예제</span><br />모델 만들기(JavaBean) -&gt; View 만들기(JSP) -&gt; 특정 URL을 특정 컨트롤러(servlet)에 바인딩(web.xml) -&gt; 컨트롤러 구현(servlet)</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">느낀점</span><br />- web.xml에 Main 서블릿 등록하는 모습이 Spring의 dispatcher Sevlet과 거의 비슷<br />- 마지막에 만든 servlet 코드가 너무 방대하다. 역할을 더 나눠야 할 것 같다.<br />- "컨트롤러 : 화면 = 1 : 다" 요런 관계인데 이러면 정말 서브릿이 무한대로 커지는 거 아닌가?<br />- Single Entry Point를 유지하면서도 다수의 컨트롤러를 등록하는 방법을 찾아야겠다.</div>
+<p></p>

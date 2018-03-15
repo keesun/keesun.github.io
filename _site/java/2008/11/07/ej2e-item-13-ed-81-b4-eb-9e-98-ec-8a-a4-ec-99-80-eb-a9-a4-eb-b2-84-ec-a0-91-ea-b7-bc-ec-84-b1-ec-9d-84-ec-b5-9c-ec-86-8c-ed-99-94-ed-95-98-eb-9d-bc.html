@@ -1,0 +1,15 @@
+<p>참조: Effective Java 2nd Edition. Item 13: Minimize the accessibility of classes and memebers</p>
+<p>잘 설계된 모듈은 내부 데이터 및 구체적인 정보는 외부 모듈로부터 숨긴다. 깨끗하게 구현체와 API를 분리해둔다. 그런 다음 오직 API만을 사용해서만 의사소통 하고 내부 동작은 다른 모듈이 알 필요 없게 한다. =&gt; information hiding 또는 encapsulation</p>
+<p>Information Hiding이 중요한 이유<br />- 모듈간의 의존도를 낮춘다. decoupling<br />- 독립적으로 개발, 테스트, 최적화, 사용, 이해, 수정 할 수 있다.<br />- 여러 모듈 병렬 개발이 가능해져서 개발 시간을 단축시킨다.<br />- 유지보수 비용을 낮춘다. 이해하기 쉽기 때문에 빠르게 디버깅 할 수 있다.<br />- 재사용성이 좋다.<br />- 규모가 큰 시스템 개발시 위험을 감소시켜준다.</p>
+<p>자바가 제공하는 information hiding 기반 시설<br />- acess control. 클래스 인터페이스, 멤버의 접근성을 기술하는 매커니즘.<br />- 적당한 지시자를 사용하는 것이 관건</p>
+<p>제 1 규칙: 각각의 클래스 또는 멤버의 접근성을 가능한한 최소한의 접근성만 보장하라.</p>
+<p>최상위 클래스 또는 인터페이스라면 두 가지 접근 레벨만 사용하면 된다.<br />- package-private<br />- public</p>
+<p>멤버(필드, 메소드, 내부 클래스, 내부 인터페이스)는 네 가지 접근 레벨이 가능하다<br />- private<br />- package-private<br />- protected<br />- public</p>
+<p>private과 package-private<br />- 클래스 내부 구현에 관한 것이지 외부로 노출한 API에 영향을 주지 않는다.<br />protected와 public<br />- 멤버는 외부로 노출한 API며, 영원히 제공되어야 한다. 구체 구현체와 외부와를 연결해주는 의사소통 수단이 된다.</p>
+<p>메소드 접근성과 관련된 제약 사항<br />- 상위 클래스의 메소드를 재정의 할 때는 상위 클래스의 접근성보다 더 낮은 접근성을 제공하면 안 된다.[JLS. 8.4.8.3]<br />- 이를 어기면 컴파일 에러<br />- 인터페이스에 정의하는 메소드는 암묵적으로 public이 된다. [JLS, 9.1.5]</p>
+<p>테스트를 할 때, 클래스. 인터페이스, 멤버의 접근성을 조금 높이는 경향이 있다. 즉 private에서 package-private으로 올린다. 거기까진 괜찮다. 그 이상은 올리면 안 된다. 테스트 때문에 외부로 노출하는 API가 되어서는 안 된다.</p>
+<p>인스턴스 필드는 절대로 public이면 안 된다.<br />- mutable 객체의 경우 필드에 저장한 값을 제한하지 못해. 이런 클래스는 thread-safe 하지 않다.<br />- immutable 객체를 public final로 한다면 필드를 새로운 객체로 변경할 수 없게 된다.<br />- static 필드의 경우도 마찬가지다. 단 예외가 있다면 상수는 public static final도 제공한다.<br />- 길이가 0이 아닌 배열은 항상 mutable하다. 따라서 public static final 배열을 가지고 있으면 안 된다.</p>
+<p>public static final 배열에 대한 대안.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">private static final Thing[] PRIVATE_VALUES = { ... };<br />public static final List&lt;Thing&gt; VALUES =<br />&nbsp; &nbsp; Collections.unmodifiableList(Arrays.asList(PRIVATE_VALUES));</div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">private static final Thing[] PRIVATE_VALUES = { ... };<br />&nbsp; public static final Thing[] values() {<br />&nbsp; return PRIVATE_VALUES.clone();<br />}</div>

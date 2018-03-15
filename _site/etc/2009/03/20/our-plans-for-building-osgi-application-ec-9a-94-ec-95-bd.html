@@ -1,0 +1,27 @@
+<p>참조 및 요약: <a href="http://blog.springsource.com/2009/03/18/our-plans-for-building-osgi-applications/" target="_blank">Our plans for building OSGi application</a></p>
+<p><span style="font-weight: bold;">OSGi 빌드 요구 사항</span></p>
+<p>- 의존성 메타 데이터 중복 제거: 사용하는 빌드에 따라 pom.xml, ivy.xml에도 의존성을 정의하고 MANIFEST.MF 파일에도 의존성을 정의하는데 그러지 말고 한 곳에서 의존성을 정의하는 방법이 필요하다.</p>
+<p>- 기존의 빌드 시스템 활용: 사용자들은 기존의 방식대로 메이븐 또는 Ant 빌드를 사용하고 싶어한다.</p>
+<p>- 자동으로 MANIFEST.MF 파일 생성하기</p>
+<p>- OSGi MANIFEST.MF 파일에서 의존성 가져오기: MANIFEST.MF 파일을 중심으로 의존성을 해결할 때 필요하다.</p>
+<p><span style="font-weight: bold;">시나리오</span></p>
+<p>1. 메이븐 + 이클립스 - pom.xml-주도: OSGi Manifest 파일은 메이븐 또는 이클립스 플러그인을 사용하여 자동생성한다. Manifest 생성에 필요한 대부분의 정보는 자바 코드에서 얻을 수 있지만 버전 정보는 그렇지 않다.&nbsp; 버전 정보는 pom.xml에서 그 정보를 가져올 수 있겠다. Manifest 템플릿을 통해서 그런 일을 할 수 있고 OSGi 속성이나 커스텀 헤더를 추가할 수 있겠다.</p>
+<p>2. Ant + Ivy + 이클립스 - ivy.xml-주도: Ant 태스크로 manifest 파일을 생성한다. 위의 방법과 비슷하지만 단점으로 아직 이클립스에서 Ivy 2를 지원하는 플러그인이 없다. 개발자가 ivy.xml 파일을 작성하면 이클립스 플러긴을 사용해서 manifest를 만들고 이클립스 클래스패스를 자동으로 수정해주도록 한다.</p>
+<p>3. 메이븐 + 이클립스 - MANIFEST.MF-주도: 개발자가 MANIFEST.MF 파일을 직접 또는 플러그인을 통해서 작성하면 그 파일을 기반으로 의존성을 처리한다. 이때 이클립스의 클래스패스 컨테이너를 이용한다. 테스트를 지원하기 위해 TEST.MF 파일에는 테스트에 필요한 의존성을 정의할 수 있게한다. 여기에 정의한 의존성은 테스트할 떄에만 가져온다. 남은 부분은 이것을 메이븐에 어떻게 적용하느냐 인데 현재 두 가지 옵션을 고려중이다. 하나는 pom.xml을 생성하는 것이고 다른 한 방법은 메이븐의 의존성 처리와 연동 또는 그것을 교체하는 것이다.</p>
+<p>4. Ant + Ivy + 이클립스 - MANIFEST.MF-주도: 3번 방법과 비슷하고 2번의 단점인 Ivy 2 이클립스 플러긴 지원이 필요없어진다. Manifest-주도 이클립스 클래스패스 컨테이너를 사용할 것이기 때문이다.<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;">OSGi 빌드 툴</span><br style="font-weight: bold;" /><br />
+- Bundlor: spring build 프로젝트에서 개발 중이며 몇 주후에 첫 번째 버전을 공개할 예정. 번들을 만들어 주며, manifest.mf 파일을 만들어 준다. <a href="http://www.springsource.com/repository/app/" target="_blank">http://www.springsource.com/repository/app/</a> 이곳에 있는 대부분의 번들을 이 툴로 만들었다. manifest 템플릿을 제공하여 커스터마이징 할 수 있게 해준다. </p>
+<p>- BundlorEclipse: 이클립스 플러그인으로 Bundlor 기능을 이클립스에서 직접 사용할 수 있다. 소스 코드를 저장 버튼을 눌러 저장할 떄마다 manifest를 계속해서 수정해준다.</p>
+<p>- 오프라인 의존성 리졸버</p>
+<p>- Manifest 클래스패스 컨테이너</p>
+<p>- 메이븐/Ivy 의존성 리졸버/pom.xml/ivy.xml&nbsp; 생성기</p>
+<p><span style="font-weight: bold;">왜 bnd를 사용하지 않고 Bundlor를 만들었나?</span><br style="font-weight: bold;" /><br />
+처음에는 spring dm 프로젝트에서는 bnd를 사용했지만 다음의 부가 기능이 필요해서 만들었다.<br />
+- JDT-기반 코드 스캐닝<br />
+- 일부(Partial) 코드 처리하기<br />
+- 계속적인 manifest 생성</p>
+<p><span style="font-weight: bold;">이클립스가 아닌 다른 IDE 활용하기</span><br style="font-weight: bold;" /><br />
+이클립스 말고 IntelliJ나 NetBeans 사용자를 위해 그쪽 팀에 Bundlor 핵심 라이브러리를 커밋했다. 그 결과 어떤 IDE 에서도 OSGi 개발 툴을 사용할 수 있게 됐다.</p>
+<p><span style="font-weight: bold;">추가 요구사항</span><br style="font-weight: bold;" /><br />
+- 벌크 번들 생성</p>
+<p>- 저장소-기반 코드 완성: dm 서버 저장소를 기반으로 소스 코드에서 자동 완성을 하면 자동으로 import 문을 추가해주고 Manifest에도 import 문을 추가해준다.</p>

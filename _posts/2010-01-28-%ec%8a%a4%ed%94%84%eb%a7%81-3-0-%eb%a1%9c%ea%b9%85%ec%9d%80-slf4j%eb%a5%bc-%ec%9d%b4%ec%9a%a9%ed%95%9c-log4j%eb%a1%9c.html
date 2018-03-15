@@ -1,0 +1,184 @@
+---
+layout: post
+title: "[스프링 3.0] 로깅은 SLF4J를 이용한 Log4J로"
+date: 2010-01-28 08:08:59.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.0'
+tags:
+- 로깅
+- 스프링 3.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323207783'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링을 사용하면 기본적으로 JCL(자카르타 커먼스 로깅)을 사용하게 되는데 JCL이 실제 로거를 선택하는 시점이 런타임이라 클래스로더 문제라던가 런타임시 오버헤드가 생길 수 있는데 이것을 개선한 구현체 <a title="[http://www.slf4j.org/docs.html]로 이동합니다." target="_blank" href="http://www.slf4j.org/docs.html">SLF4J</a>로 갈아타면 그러너 문제 걱정을 덜 수 있겠습니다. 보너스로 문자열 연결로 발생하는 오버 헤드도 개선할 수 있으며 귀찮은 if문 추가하는 코딩에서 벗어날 수 있는 문법? API?를 제공해줍니다. 그래서인지 스프링도 3.0부터는 본격적으로 spring-core가 의존하는 JCL을 SLF4J로 교체하고 사용하는 예제 및 레퍼런스 설명을 보여주고 있습니다..</p>
+<p>갈아타는 방법은 다음과 같습니다.</p>
+<p>1. 스프링에서 참조하는 JCL 라이브러리를 빼버리기.<br />
+2. JCL-over-SLF4J 추가하기.<br />
+3. SLF4J API 추가.<br />
+4. SLF4J-log4j 추가.<br />
+5. log4j 추가.</p>
+<p>이전에 스프링소스 블로그와 레퍼런스에 올라온 방법은 이걸 그대로 메이븐 의존성으로 옮겨적고 있지요. </p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.springframework.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- Exclude Commons Logging in favor of SLF4j --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;commons-logging&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;commons-logging&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.slf4j.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.slf4j.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.slf4j.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;log4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;log4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;1.2.15&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;javax.mail&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;mail&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;javax.jms&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jms&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;com.sun.jdmk&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jmxtools&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;com.sun.jmx&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jmxri&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>1번은 단순히 JCL 라이브러리에 의존할 생각이 없기 때문에 빼버리는 것이고, 그때 JCL에 의존하는 클래스들이 깨질 텐데 그것을 JCL-over-SLF4J를 이용해서 겉은 JCL 같지만 내부에서는 SLF4J API를 호출하도록 일종의 어댑터 나 다리 역할을 해주는 라이브러리를 추가하고, 인터페이스 격인 3. SLF4J API를 추가한 뒤 실제 사용할 로거로 SL4J를 구현한 4. SLF4J-Log4J 라이브러리를 추가합니다. 마지막으로 최종적으로 사용할 로거 5. Log4J를 추가한 것입니다. 이때 Log4J가 불필요하게 참조하는 jmx, mail, jms 등의 라이브러리를 제외시켜줍니다.</p>
+<p>만약에 Log4J가 아니라 다른 로거를 사용할 거라면 4번과 5번을 교체하면 될테고 JCL 뿐 아니라 log4j에 대한 직접 호출도 slf4j로 오게 하려면 2번 대신 log4j-over-slf4j을 추가하면 되겠습니다.</p>
+<p>굉장히 장황니다. @_@;; 하지만 뭐.. 좋다는데.. 갈아타긴 해야겠죠.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile27.uf.1170B4224B6141DB25EB10.jpg" class="aligncenter" width="600" height="361" alt="" filename="1.jpg" filemime="image/jpeg" />출처: <a href="http://www.slf4j.org/slf4j-in-10-slides.ppt">SLF4J in 10 slides</a>, by Ceki Gülcü</p>
+<p>위와 같은 설정은 스프링 3.0 예제와 레퍼런스에서 사용하고 있습니다. 정말 장황합니다. 일단 여기서 1, 2번은 필수다 하지만 레퍼런스와 블로그 글에도 나와있듯이 그 이하 3, 4, 5는 Logback이라는 SLF4J API 구현체로 한방 설정이 가능합니다. </p>
+<p>logback은 크게 세 가지 모듈로 나뉘는데 그 중에 SLF4J API 구현체인 classic 모듈이 있고, Log4J를 개선한 core 모듈이 있습니다. logback 모듈을 가져오면 위에서처럼 log4j가 끌고오는 부가적인 라이브러리도 없고 깔끔하게 log4j API를 사용할 수 있습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;spring-context&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.springframework.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- Exclude Commons Logging in favor of SLF4j --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;commons-logging&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;commons-logging&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;/exclusion&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/exclusions&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.slf4j&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;${org.slf4j.version}&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;scope&gt;runtime&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.ch.qos.logback.classic&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.9.9&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>따라서 굳이 Log4J가 아닌 다른 로거로 갈아탈 계획이 없다면 이렇게만 설정해도 되겠습니다. 로깅 설정만 거의 1/3로 줄어듭니다.</p>
+<p>사용법은 </p>
+<p>1. SLF4J API를 이용해서 로거를 만들고..</p>
+<p>import org.slf4j.Logger;<br />
+import org.slf4j.LoggerFactory;</p>
+<p>Logger log = LoggerFactory.getLogger(AccountJsonBindingTests.class);</p>
+<p>2. 다음과 같이 로깅하면 됩니다.</p>
+<p>log.info("name is {}", name);</p>
+<p>+를 사용해서 문자열 연산을 할 필요도 없고, if문을 줘서 문자열 연산을 막을 필요도 없습니다.</p>
+<p>3. log4j 설정은 프로퍼티 파일이나 XML로 할 수 있는데 스프링 3.0 예제는 보통 XML을 사용하더군요. src와 test 소스 폴더 하위의 클래스패스 루트에 각각 다음과 같은 log4j.xml 파일을 둡니다.</p>
+<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;!DOCTYPE log4j:configuration PUBLIC "-//LOGGER" "log4j.dtd"&gt;</p>
+<p>&lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- Appenders --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;appender name="console" class="org.apache.log4j.ConsoleAppender"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;param name="Target" value="System.out" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;layout class="org.apache.log4j.PatternLayout"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;param name="ConversionPattern" value="%-5p: %c - %m%n" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/layout&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/appender&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- 3rdparty Loggers --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;logger name="org.springframework.core"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;level value="info" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/logger&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;logger name="org.springframework.beans"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;level value="info" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/logger&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;logger name="org.springframework.context"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;level value="info" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/logger&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;logger name="org.springframework.web"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;level value="info" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/logger&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- Root Logger --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;root&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;priority value="warn" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;appender-ref ref="console" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/root&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&lt;/log4j:configuration&gt;</p>
+<p>src와 test 간의 차이는 마지막 부분의 &lt;root&gt; 안의 &lt;priority&gt;가 src에서는 warn이고 test에서는 info라는 것 뿐이 없습니다. 이 설정에서는 Log4J를 사용하고 있는데.. logback API를 이용해서 설정해도 당근 잘 동작합니다.</p>

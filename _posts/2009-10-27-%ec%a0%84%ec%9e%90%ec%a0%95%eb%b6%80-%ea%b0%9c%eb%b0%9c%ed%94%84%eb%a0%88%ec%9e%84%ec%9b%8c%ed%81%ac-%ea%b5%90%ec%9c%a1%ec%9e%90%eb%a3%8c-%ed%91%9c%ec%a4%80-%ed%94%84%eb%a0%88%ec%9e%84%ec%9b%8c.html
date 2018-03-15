@@ -1,0 +1,102 @@
+---
+layout: post
+title: "[전자정부 개발프레임워크 교육자료] 표준 프레임워크 개요 PPT 감상문"
+date: 2009-10-27 08:45:29.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 교육자료
+- 전자정부 개발프레임워크
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323155812'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+6 페이지</p>
+<p>개발프레임워크는 단위컴포넌트, 래퍼(Wrapper), 정적인아키텍처, 동적인아키텍처로 구성되어 있으며, 일반적으로 단위 컴포넌트는 오픈소스나 상용 솔루션을 도입함.
+</div>
+<p>
+음.. 그렇구나. 개발 프레임워크는 네 가지로 구성 되는 구나. 근데 도통 모르겠네, 래퍼는 대충 뭔지 알겠는데, 단위 컴포넌트, 정적 아키텍처, 동적 아키텍처는 뭐야.</p>
+<p>단위 컴포넌트는 특정한 기술적/업무적 목적을 지원하는 블라브라.. 아 몰라 몰라;;<br />
+정적 아키텍처는 객체들간의 연관 관계를 다루고 동적 아키텍처는 객체들간의 상호작용을 다룬다고??? 이게 뭔소리야!!!!! 아 놔.. @_@... 패스</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+58 페이지(MVC)</p>
+<p>// 업무로직은 controller가 담당, 여러 View에서 재사용.
+</div>
+<p>
+으응??? 진짜????? 컨트롤러가 담당한다고? ㅋㅋㅋㅋㅋ 여러 뷰에서 뭘 재사용해.. 뭘.. 컨트롤러를?? 흠..;; 이것 참...</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+&nbsp;59 페이지(ORM)</p>
+<p>일반적인 개발 <br />
+매핑 적용: 테이블 컬럼과 자바 클래스간의 직접적인 매핑 필요 <br />
+유연성: SQL 변경시 코드를 직접 변경하고 배포해야 함 <br />
+표준 패턴: 패턴 없음<br />
+DB 제어: 직접적으로 DB제어 가능<br />
+활용 기술: SQL</p>
+<p>ORM 구축<br />
+매핑 적용: 개발자는 직접 객체지향 관점에서 처리 가능<br />
+유연성: 매핑 정보의 수정만으로 적용 가능<br />
+ 표준 패턴: 매핑 정보, XML 등이 템플릿 형태로 적용됨<br />
+DB 제어: Mapping의 경우 직접적인 제어가 어려울 수 있음<br />
+활용 기술: Persistence 프레임워크 (Hibernate, iBatis)</div>
+<p>
+이야.. ORM 좋네. 매핑 정보만 수정하면 배포 안 해도 되는거야?? 대신 DB 제어는 직접적으로(?) 못해?? 진짜?? ORM도 SQL 쓰지 안쓰나.. 흠.. 희한하네..</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+61 페이지(DI)</p>
+<p>DI(Dependency Injection)는 컴포넌트 간 연관성 및 참조 정보를 직접적으로 코드 내에서 가지는 것이 아니라, 외부 파일 등에 연관 정보를 설정하고, WAS가 기동 하는 Run-Time시에 연관 정보를 가지도록 하는 것임</p>
+<p>일반적인 개발<br />
+컴포넌트: EJB 컴포넌트 활용 (무겁고 복잡함)<br />
+유연성: 참조 변경이나 컴포넌트 재사용시 어려움 (컴포넌트 내부 코드 변경 필요)<br />
+표준 패턴: 패턴 없음<br />
+연관 제어: 연관성 파악이 어려움 (전체 코드 분석 필요)<br />
+활용 기술: EJB</p>
+<p>DI 구축<br />
+컴포넌트: 순수 자바 코드 (POJO) 활용하여 컴포넌트 구현 Lightweight Component 체계<br />
+유연성: 쉽게 참조 변경 가능하고 재사용 가능 (컴포넌트 내부 코드 변경 불필요)<br />
+표준 패턴: 매핑 정보, XML 등이 템플릿 형태로 적용됨<br />
+연관 제어: 설정 파일 만으로 연관성 파악 가능<br />
+활용 기술: Component 프레임워크 (Spring, HiveMind)</div>
+<p>
+DI하기 참~~ 어렵구만, WAS가 있어야 돼. 젠장...</p>
+<p>근데, 정작 중요한 "테스트"에 대한 얘기는 거의 없네.. "테스트 도구" 얘기만 있고.. 테스트는 다른 PPT에서 다루나. </p>
+<p>뭐 일단은 재밌네!! 캬캬캬.</p>
+<p>다른 것도 봐야지</p>

@@ -1,0 +1,36 @@
+---
+layout: post
+title: "[자바 퍼포먼스] 1장 전략, 접근방법, 방법론"
+date: 2012-01-26 07:10:24.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Java Performance
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<ul>
+<li>"애플리케이션에서 기대하는 throughput은 어느 정도인가?"</li>
+<li>"기대하는 요청-응답 latency는 어느 정도인가?"</li>
+<li>"얼마나 많은 동접자 또는 동시 작업을 지원해야하는가?"</li>
+<li>"최대 동접자 또는 동시 작업 중일 때 수용할 수 있는 throughput과 latency는 어느 정도인가?"</li>
+<li>"가장 최악의 경우 latency는?"</li>
+<li>"감당할 수 있는 수준의 latency 내에서 GC 주기는?"</li>
+</ul>
+<p>이런 질문으로 지표를 정해야 할텐데... 고객이 이런걸 알 수가 있나? 그냥 측정부터 해보는게 좋겠어.</p>
+<p>나머지는 그냥 전통적인 (폭포식) 소프트웨어 개발 프로세스에 성능 테스트랑 프로파일을 추가해서 분석, 설계, 코딩에 그 결과를 반영해서 다시 또 개발 프로세스가 돌고 돌고 돌고 하도록 그림을 그린 Wilson &amp; Kesselman의 성능 프로세스라는 그림을 소개하고 있다.</p>
+<p>다음으로는 하향식 방법과 상향식 방법을 설명하고 있다. 하향식은 애플리케이션 모니터링부터 시작한다. OS 시스템 모니터링, JVM 모니터링, JEE 서버 모니터링 등을 수행한 뒤 모니터링 정보를 바탕으로 JVM 커맨드 라인 옵션을 튜닝하거나, OS를 튜닝하거나, 애플리케이션을 프로파일링 한다. 프로파일링을 하면 코드가 더 효율적인 구현방식으로 바뀌거나, 비효율적인 라이브러리를 교체하는 등의 작업을 할 수도 있다.</p>
+<p>상향식은 아주 밑바닥인 CPU 아키텍처, CPU 갯수등을 분석하는 것부터 시작한다. 아... 이 부분은 너무 로우 레벨이라.. 아흑.. path length니, CPU cache miss니.. @_@ 패스.</p>
+<p>나머지도 패스.</p>
+<p>&nbsp;</p>

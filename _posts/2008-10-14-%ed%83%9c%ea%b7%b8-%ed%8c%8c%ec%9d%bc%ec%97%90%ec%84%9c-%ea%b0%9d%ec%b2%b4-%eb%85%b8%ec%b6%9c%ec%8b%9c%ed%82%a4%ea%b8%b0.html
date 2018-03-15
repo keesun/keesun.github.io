@@ -1,0 +1,61 @@
+---
+layout: post
+title: 태그 파일에서 객체 노출시키기
+date: 2008-10-14 04:27:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- jspContext
+- variable
+- 태그파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323095104'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>태그 파일에 어떤 객체를 전달하는게 아니라, 그 반대로 태그 파일에서 어떤 객체를 외부로 노출 시킬 수 있습니다. 태그 파일을 사용하고 있는 쪽에서 태그 파일이 가지고 있는 어떤 값에 접근하고자 할 때 유용하게 사용할 수 있겠습니다. jspContext를 사용하여 원하는 객체를 원하는 이름으로 저장해두면 됩니다.</p>
+<p>상위 태그 파일</p>
+<p>gridpage.tag</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;%@ variable name-given="<span style="font-weight: bold;">startNum</span>" %&gt;</p>
+<p>&lt;%<br />jspContext.setAttribute("startNum", count);<br />%&gt;</div>
+<p>JSP 파일</p>
+<p>grid.jsp
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;o:gridpage&gt;<br />&nbsp;&nbsp; <span style="font-weight: bold;">${startNum}</span><br />&lt;/o:gridpage&gt;</div>

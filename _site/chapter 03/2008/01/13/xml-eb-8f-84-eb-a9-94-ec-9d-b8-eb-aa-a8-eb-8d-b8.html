@@ -1,0 +1,42 @@
+<h1>특징</h1>
+<ul>
+<li>The XML data model is weak, its type system is complex and underpowered.</li>
+</ul>
+<ul>
+<li>its data integrity is almost completely procedural.</li>
+</ul>
+<ul>
+<li>it introduces hierarchical data structures that were outdated decades ago.</li>
+</ul>
+<ul>
+<li>However, data in XML format is attractive to work with in Java; we have nice tools.</li>
+</ul>
+<h1>XML로 도메인 모델 뽑아내기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>DOM4J로 도메인 모델 뽑아내기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">Session dom4jSession = session.getSession(EntityMode.DOM4J);<br />Element userXML =<br />    (Element) dom4jSession.load(User.class, storedUserId);</pre>
+</div>
+</div>
+<ul>
+<li>Element 클래스는 Dom4J API</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>화면에 출력하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">try</span> {<br />    OutputFormat format = OutputFormat.createPrettyPrint();<br />    XMLWriter writer = <span class="code-keyword">new</span> XMLWriter( <span class="code-object">System</span>.out, format);<br />    writer.write( userXML );<br />} <span class="code-keyword">catch</span> (IOException ex) {<br />    <span class="code-keyword">throw</span> <span class="code-keyword">new</span> RuntimeException(ex);<br />}</pre>
+</div>
+</div>
+<h1>맵핑할 때 node 속성 사용하기</h1>
+<ul>
+<li>&lt;class&gt; 나 &lt;property&gt; 맵핑에서의 node 속성(node="name")은 XML 엘리먼트의 이름을 정의한다.</li>
+</ul>
+<ul>
+<li>&lt;property&gt; 맵핑에서 node 속성(node="@name")은 XML 엘리먼트의 속성을 정의한다.</li>
+</ul>
+<ul>
+<li>&lt;property&gt; 맵핑에서의 node 속성(node="name/@attname")은 name이라는 자식 엘리먼트에 attname이라는 속성을 정의한다.</li>
+</ul>
+<ul>
+<li>위의 속성을 사용해서 맵핑하면, 도메인 모델을 표현할 XML을 원하는 형태로 정의할 수 있다.</li>
+</ul>

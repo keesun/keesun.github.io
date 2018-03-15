@@ -1,0 +1,9 @@
+<p><img src="/assets/hk140000000000.jpg" class="aligncenter" width="270" height="396" alt="사용자 삽입 이미지" /><br />프로젝트와 프로젝트 사이에 텀이 생겨서, 요즘 다듬고 있는 OSAF 1.5 입니다. 범용성은 없고, 얼리어댑터에게만 유용한 프레임워크입니다. 초고속 애플리케이션 개발을 지원하는 OSAF의 맛보기 정도랄까요. </p>
+<p>프로젝트를 만드는 김에 OSGi 번들로 만들생각입니다. 굳이 Spring DM 번들일 필요는 없지만, 일단 베이스는 Spring DM 번들로 시작했습니다. 보시면 이미 번들도 생성이 되었죠. 캬캬캬</p>
+<p>설치도 해봤습니다. 맨 아래에 있습니다.</p>
+<p><img src="/assets/jk140000000000.jpg" class="aligncenter" width="600" height="579" alt="사용자 삽입 이미지" /><br />하지만... INSTALLED 상태로 짐작하실 수 있겠지만... 미싱 라이브러리가 장난 아닙니다.</p>
+<p><img src="/assets/jk140000000001.jpg" class="aligncenter" width="600" height="465" alt="사용자 삽입 이미지" /><br />그래서.. 걍 이 번들 안에 나머지 jar도 왕창 다 묶어서 배포해버릴 생각으로<br />bundle:bundleall을 사용했습니다.(무슨 말인지 이해 못하시겠다면, 두 번째 링크 참조) 하지만, jta 라이브러리를 손댈 때 문제가 발생하더군요.</p>
+<p><img src="/assets/hk140000000001.jpg" class="aligncenter" width="600" height="464" alt="사용자 삽입 이미지" /><br />멀지 않았습니다. 코드만 공개하려면 일찌감치 공개할 수 있었지만, 주석도 달고 테스트도 추가하면서 현재 커버리지 53%를 넘긴 상태 입니다. 핵심 코드 테스트는 오늘부로 모두 완료한 상태고, 나머진 테스트하기 귀찮은 것들이 몇 개 있는데, 그것들은 뭐 기계적으로 좀 추가해서라도 65% 정도는 넘길 생각입니다.&nbsp; 이 번들이 RESOLVED만 되면, 최종 관문으로 사부님한테 검사 받고, 그 관문이 통과되면 예제를 후루룩 만든담에.. 공개!!!</p>
+<p>멀지 않았습니다.</p>
+<p>참조<br /><a href="http://www.springsource.com/repository/" target="_blank">http://www.springsource.com/repository/</a> &lt;-- 번들 많아요. 없는 것도 있어요.(전부 있다는 뜻이 아님.)<br /><a href="http://felix.apache.org/site/maven-bundle-plugin-bnd.html" target="_blank">http://felix.apache.org/site/maven-bundle-plugin-bnd.html</a> &lt;-- bnd 메이븐 플러긴 공부좀 해야겠어요. 지금은 기본 설정으로 만들었지만;;)<br /><a href="http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/" target="_blank">http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/</a> &lt;-- JTA를 포함한 하이버네이트 관련 번들을 볼 수 있는 코드를 제공하는데.. svn 주소가 접속이 안 됨. 7월에 올린 글인데 벌써 코드를 지운거야?? ㅠ.ㅠ 왜..</p>
+<p>ps: 과연 사부님이 최종 관문 통과 시켜주실까??</p>

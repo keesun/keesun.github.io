@@ -1,0 +1,40 @@
+<p><a title="[http://www.infoq.com/news/2009/07/junit-4.7-rules]로 이동합니다." target="_blank" href="http://www.infoq.com/news/2009/07/junit-4.7-rules">http://www.infoq.com/news/2009/07/junit-4.7-rules</a></p>
+<p>Rule은 기본적으로 각각의 테스트에 부가적인 기능을 추가할 수 있는 확장 매커니즘이랍니다. 뭔지 잘 감이 오지 않으신다면, 일종의 인터셉터라고 생각하시면 될 듯 합니다. 테스트 메서드에 인터셉터를 적용할 수 있다는 거겠죠. 하지만, 만든 사람이 Rule이라고 하니까 그냥 룰이라고 부르고, 익숙해지는게 좋을 듯 합니다.</p>
+<p>기본으로 제공할 룰이 몇 개 있는 듯 합니다.</p>
+<p>&nbsp;&nbsp;&nbsp; *&nbsp; TemporaryFolder: 테스트 할 때 필요한 파일과 폴더를 만들 수 있게 해주고, 테스트가 끝날 때 만든 것들을 전부 지워준다는군요. 아주.. 아주 아주.. 원하던 기능입니다. 배포되면 바로 써먹어 봐야겠습니다. 최근 만들었던 테스트 중 일부가 파일이랑 폴더를 만들거든요.</p>
+<p>&nbsp;&nbsp;&nbsp; * ExternalResource: 소켓, 내장 서버 같은 외부 자원을 미리 설정할 필요가 있을 때 사용하고 테스트 실행 뒤에 제거 해준다는군요. 주로 이런 테스트를 작성해보질 않았는데, 이 녀석 떄문에 좀 더 쉽게 테스트를 만들 수 있다면 좋겠습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; * ErrorCollector: 테스트가 하나 실패해도 나머지를 계속 테스트 하고 테스트 끝나면 모든 에러를 보고 하도록 해주는 룰</p>
+<p>&nbsp;&nbsp;&nbsp; * ExpectedException: 예측한 예외와 에러 메시지가 발생하는지 확인할 때 사용. 이 녀석도 보통 하는 테스트니까 자주 사용하게 될 듯 하네요.</p>
+<p>&nbsp;&nbsp;&nbsp; * Timeout: 클래스에 있는 모든 테스트에 동일한 타임아웃 적용. 타임아웃은 거의 사용해본 적이 없네요. 흠..</p>
+<p>
+public class DigitalAssetManagerTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Rule<br />
+&nbsp;&nbsp;&nbsp; public TemporaryFolder tempFolder = new TemporaryFolder();</p>
+<p>&nbsp;&nbsp;&nbsp; @Rule<br />
+&nbsp;&nbsp;&nbsp; public ExpectedException exception = ExpectedException.none();</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void countsAssets() throws IOException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; File icon = tempFolder.newFile("icon.png");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; File assets = tempFolder.newFolder("assets");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; createAssets(assets, 3);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DigitalAssetManager dam = new DigitalAssetManager(icon, assets);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertEquals(3, dam.getAssetCount());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void createAssets(File assets, int numberOfAssets) throws IOException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for (int index = 0; index &lt; numberOfAssets; index++) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; File asset = new File(assets, String.format("asset-%d.mpg", index));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Assert.assertTrue("Asset couldn't be created.", asset.createNewFile());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void throwsIllegalArgumentExceptionIfIconIsNull() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; exception.expect(IllegalArgumentException.class);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; exception.expectMessage("Icon is null, not a file, or doesn't exist.");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; new DigitalAssetManager(null, null);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>테스트 코드를 보면 countsAssets 테스트에서 TemporaryFolder를 이용해서 파일과 폴더를 만드는 걸 볼 수 있습니다. 저렇게 만든 것들이 테스트가 끝나면 자동으로 없어진다니... 조금 더 테스트가 편해지는 것 같습니다.</p>
+<p>두 번째 테스트는 일단 예상하는 예외와 에러 메시지를 ExpectedException한테 알려준 뒤에, 예외가 발생하는 코드를 작성했네요.</p>
+<p>음... 뭐.. 그렇군요.</p>
+<p>Rule을 잘 써서 Runner들을 대체 할 수 있겠군요. SpringJUnit4~~Runner도 잘하면 Rule로 대체 할 수 있겠지요.</p>
+<p>덤으로..&nbsp; @Configurable 클래스를 테스트 할 때 javaagent 옵션을 설정해줘야 되서 매우 불편한데, 테스트를 실행할 때 특정 자바 아규먼트를 가지고 실행하도록 코드에서 설정이 가능하면 좋겠습니다. 흠.. 이슈에 올려볼까요. 켄트 벡 아저씨가 만들어 주실려나.. @_@</p>

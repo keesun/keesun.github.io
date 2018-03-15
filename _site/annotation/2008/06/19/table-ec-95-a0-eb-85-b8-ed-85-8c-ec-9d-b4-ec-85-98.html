@@ -1,0 +1,6 @@
+<p>패키지: javax.persistence</p>
+<p>라이브러리: persistence-api-1.0.jar</p>
+<p>속성: <br />- catalog: 테이블의 카탈로그<br />- name: 테이블 이름. 기본값은 entity 이름<br />- schema: 테이블의 스키마<br />- uniqueConstraints: Unique 제약을 걸 컬럼 설정.</p>
+<p>예제
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "date", "item_id", "bay_id" }))<br />pubic class Inv { ... }</div>
+<p></p>

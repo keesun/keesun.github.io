@@ -1,0 +1,62 @@
+---
+layout: post
+title: "... 가변인수(varargs)"
+date: 2006-12-11 04:01:49.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- "..."
+- 가변인수
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322637942'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이것도 J2SE 5.0에 새로 추가된 기능 중에 하나로 <span style="background-color: rgb(255, 153, 0);">"임의 개수의 인수를 받을 때"</span> 사용합니다.</p>
+<p>5.0&nbsp; 이전에서 임의의 갯수의 인자를 넘겨주고 싶을 때는&nbsp; 배열을 만들어서 넘겨주고 받는 쪽에서도 배열로 받아야 했습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"> &nbsp;&nbsp; @Test<br /> &nbsp;&nbsp; public void passArray(){<br /> &nbsp;&nbsp; &nbsp; &nbsp; int[] numbers1 = {1, 2, 3, 4, 5};<br /> &nbsp;&nbsp; &nbsp; &nbsp; int[] numbers2 = foo(numbers1);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; assertTrue(Arrays.equals(numbers1, numbers2));<br /> &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; private int[] foo(int[] numbers){<br /> &nbsp;&nbsp; &nbsp; &nbsp; return numbers;<br /> &nbsp;&nbsp; }</div>
+<p>5.0 부터는 <span style="background-color: rgb(153, 204, 102);">넘겨줄 때 배열을 만들어서 넘기지 않아도 받을 때 알아서 배열로 받아주는</span>(물론 배열을 넘겨도 됩니다.) <span style="background-color: rgb(153, 204, 102);">가변인수</span> 라는 것이 생겼습니다. 모양은 쩜 세 개 ... 이것입니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"> &nbsp;&nbsp; @Test<br /> &nbsp;&nbsp; public void primitiveVargs(){<br /> &nbsp;&nbsp; &nbsp; &nbsp; int[] array1 = foo(1, 2, 3, 4, 5);&nbsp; //배열을 만들지 않아도 넘어갑니다.<br /> &nbsp;&nbsp; &nbsp; &nbsp; int[] array2 = foo(array1); &nbsp; &nbsp; &nbsp; &nbsp; //배열을 넘겨도 넘어갑니다.</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; assertTrue(Arrays.equals(array1, array2));<br /> &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; private int[] foo(int... numbers) { &nbsp;&nbsp; //가변인수를 사용했기 때문이지요.<br /> &nbsp;&nbsp; &nbsp; &nbsp; return numbers;<br /> &nbsp;&nbsp; }</div>
+<p>private int[] foo(int... numbers) 이것과 private int[] foo(int[] numbers) <span style="color: rgb(212, 26, 1);">둘 다 존재하면 충돌</span>이 일어납니다. 둘 중에 하나만 있어야 합니다. 가변인수도 일종의 배열이기 때문에 그런것 같습니다.</p>

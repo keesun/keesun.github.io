@@ -1,0 +1,64 @@
+---
+layout: post
+title: 13.11. Convention over configuration 3
+date: 2007-06-19 07:47:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- DefaultRequestToViewNameTranslator
+- ModelAndView
+- Spring CoC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323189495'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>마지막으로 살펴볼 CoC는 ModelAndView 객체의 View에 해당하는 논리적인 View의 이름에 관련된 것입니다.<br />
+<blockquote>요청 -&gt; view 이름 :: <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/view/DefaultRequestToViewNameTranslator.html" target="_blank">DefaultRequestToViewNameTranslator</a></p></blockquote>
+<p>앞에서 살펴봤던 예제 코드를 다시 살펴보겠습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public ModelAndView list(HttpServletRequest request, HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("issue/list")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .addObject(issueService.getAll());<br />&nbsp; &nbsp; }</div>
+<p>여기서 논리적인 뷰의 이름으로 issue/list 를 넘겨주고 있습니다. 이 이름은 다음과 같은 ViewReslover에 의해 WEB-INF/jsp/issue/list.jsp 를 랜더링 하게 됩니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; &lt;bean id="viewResolver"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="viewClass"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="org.springframework.web.servlet.view.JstlView" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="prefix" value="/WEB-INF/jsp/" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="suffix" value=".jsp" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>DefaultRequestToViewNameTranslator 를 사용하면 요청을 바탕으로 논리적인 View 이름을 생성하여 ViewResolver에 넘겨주게 됩니다. 특히나 이 클래스는 Spring의 DispatcherServlet&nbsp; 이 기본으로 가지고 있기 때문에 명시적으로 선언하지 않아도 됩니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">샘플<br />&nbsp;http://localhost:8080/gamecast/display.html -&gt; display<br />&nbsp;http://localhost:8080/gamecast/displayShoppingCart.html -&gt; displayShoppingCart<br />&nbsp;http://localhost:8080/gamecast/admin/index.html -&gt; admin/index</div>
+<p>위의 ModelAndView 코드를 다음과 같이 수정할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public ModelAndView list(HttpServletRequest request, HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView()<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .addObject(issueService.getAll());<br />&nbsp; &nbsp; }</div>
+<p>이렇게 보니까 ModelAndView 라는 이름이 어색하지 않게 보이네요. :)</p>

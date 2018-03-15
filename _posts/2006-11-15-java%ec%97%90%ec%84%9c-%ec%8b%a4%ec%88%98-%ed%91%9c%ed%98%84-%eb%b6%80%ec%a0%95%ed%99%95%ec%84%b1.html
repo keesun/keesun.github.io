@@ -1,0 +1,146 @@
+---
+layout: post
+title: Java에서 실수 표현 부정확성
+date: 2006-11-15 07:03:31.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- 부동소수
+- 연산
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323147366'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Agile Java 4장 번역서 p180~p181에 걸쳐 실수 표현의 부정확함에 대한 내용이 나옵니다. 어떤 문제가 있으면 어떻게 해결할 수 있을지 고민해 봅니다.</p>
+<p>먼저 float로 테스트를 해봤습니다. <br />
+[#M_ more.. | less.. |<br />
+import static org.junit.Assert.*;<br />
+import org.junit.Test;</p>
+<p>public class FloatTest {<br />
+ &nbsp; &nbsp;@Test<br />
+ &nbsp; &nbsp;public void floatMultyply(){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;float value = 0.3f * 3;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(0.9, value);<br />
+ &nbsp; &nbsp;}<br />
+}</p>
+<p>이 테스트 코드의 결과는 fail입니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1139388268.bmp" class="aligncenter" width="388" height="238" alt="">1139388268.bmp</a><br />
+_M#]<br />
+double로도 테스트를 해봤습니다.<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void doubleMultifly(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; double value = 0.3 * 3;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, value);<br />
+ &nbsp;&nbsp; }</p>
+<p>결과<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1140320167.bmp" class="aligncenter" width="449" height="242" alt="">1140320167.bmp</a><br />
+_M#]<br />
+해결책으로 제시된 방법은<br />
+1. 반올림을 사용한다.<br />
+2. BIgDecimal 클래스를 사용한다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">먼저 1번 방법을 사용해보려고 Math 클래스의 메소드들을 들여다 봤습니다. return type이 전부 정수 형태 입니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1185064946.bmp" class="aligncenter" width="378" height="186" alt="">1185064946.bmp</a><br />
+이걸 사용해서 실수를 반올림하면 조금 난감한 상황이 발생할 것 같습니다. -_-;;;</p>
+<p>DecimalFormat class를 사용해봤습니다.<br />
+[#M_ more.. | less.. | <br />
+public class FloatTest {<br />
+ &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void floatMultyply(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; float value = 0.3f * 3;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; DecimalFormat df = new DecimalFormat("#.0");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, df.format(value));<br />
+ &nbsp;&nbsp; }<br />
+ &nbsp;&nbsp; @Test<br />
+ &nbsp;&nbsp; public void doubleMultifly(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; double value = 0.3 * 3;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; DecimalFormat df = new DecimalFormat("#.0");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, df.format(value));<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>결과는<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1205979505.bmp" class="aligncenter" width="449" height="244" alt="">1205979505.bmp</a>이런 어처구니 없는 결과가 있나. # 때문인것 같아서 #을 0으로 바꿔보았습니다. 그랬더니 결과는<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1032824768.bmp" class="aligncenter" width="449" height="243" alt="">1032824768.bmp</a>더 어처구니 없는 결과가 나왔습니다. -_-;;;; 아 난감해...<br />
+_M#]</div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)">두 번째 방법인 BIgDecimal을 사용해보겠습니다.<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void bigDecimalFormat(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; BigDecimal value = new BigDecimal(0.3);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; BigDecimal three = new BigDecimal(3);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; value = value.multiply(three);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, value);<br />
+ &nbsp;&nbsp; }</p>
+<p>결과는<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1323618597.bmp" class="aligncenter" width="449" height="245" alt="">1323618597.bmp</a>BigDecimalFormat을 사용하더라도 길이만 길어졌을 뿐 정확하진 않습니다. 여기서도 역시 반올림을 사용해줘야 할 것 같습니다. API를 뒤져서 MathContext라는 녀석을 찾았습니다.</p>
+<p>소스코드를 다음과 같이 변경합니다.<br />
+@Test<br />
+ &nbsp;&nbsp; public void bigDecimalFormat(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; BigDecimal value = new BigDecimal(0.3);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; BigDecimal three = new BigDecimal(3);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; MathContext mc = new MathContext(1);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; value = value.multiply(three, mc);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, value);<br />
+ &nbsp;&nbsp; }<br />
+결과는<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1246165719.bmp" class="aligncenter" width="449" height="244" alt="">1246165719.bmp</a>헉.. 역시 또 어처구니 없는 결과가... assert에 무슨 문제라도 있는 것일까요?<br />
+_M#]</div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237)">번외로 Wrapper 클래스를 가지고도 해봤습니다.<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void floatObjectMultuply(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Float value = new Float(0.3);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; value = value * 3;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(0.9, value);<br />
+ &nbsp;&nbsp; }</p>
+<p>결과는<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1075121918.bmp" class="aligncenter" width="449" height="217" alt="">1075121918.bmp</a><br />
+_M#]</div>
+<p>
+참고할 곳 : <a href="http://www.javaservice.net/%7Ejava/bbs/read.cgi?m=devtip&amp;b=javatip&amp;c=r_p&amp;n=1118831957&amp;p=3&amp;s=t">http://www.javaservice.net/~java/bbs/read.cgi?m=devtip&amp;b=javatip&amp;c=r_p&amp;n=1118831957&amp;p=3&amp;s=t</a><br />
+<a href="http://javaservice.net/%7Ejava/bbs/read.cgi?m=resource&amp;b=qna2&amp;c=r_p&amp;n=1118716242&amp;p=1&amp;s=t#1118716242">http://javaservice.net/~java/bbs/read.cgi?m=resource&amp;b=qna2&amp;c=r_p&amp;n=1118716242&amp;p=1&amp;s=t#1118716242</a><br />
+<a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html">http://docs.sun.com/source/806-3568/ncg_goldberg.html</a> &nbsp;&nbsp; &lt;--- 완전 수학 문서;;</p>
+<p>위에서 발생했던 이상한 현상(0.9, 0.9 같은데도 다르다고 하던 현상)이 민재님 덕분에 해결됐습니다. assertion을 할 때 같은 type끼리 비교를 해야되는데.. 하나는 double이고 하나는 BigDecimal이였기 때문에 같은 0.9여도 fail로 나온 것입니다.</p>
+<p>assertion을 할 때 두개의 인자만 줄 수 있는 것이 아니라 세번째 인자도 줄 수가 있는데요. API를 보겠습니다.</p>
+<p></p>

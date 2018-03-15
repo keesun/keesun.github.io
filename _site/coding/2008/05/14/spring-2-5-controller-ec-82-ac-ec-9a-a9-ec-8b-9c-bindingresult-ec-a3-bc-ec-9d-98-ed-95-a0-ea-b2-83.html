@@ -1,0 +1,8 @@
+<p>스프링 레퍼런스에 BindingResult에 대한 언급은 단 한 줄.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">org.springframework.validation.Errors / org.springframework.validation.BindingResult&nbsp; validation results for a preceding command/form object (the immediate preceding argument).</div>
+<p>이게 끝입니다. 한 줄이라고 무시하면 안 됩니다. 진짜 중요한 한 줄입니다.</p>
+<p>public String update(@ModelAttribute("model") Foo model, <span style="font-weight: bold; color: rgb(255, 0, 0);">BindingResult result</span>, Bar bar)</p>
+<p>public String update(@ModelAttribute("model") Foo model, Bar bar, <span style="color: rgb(255, 0, 0); font-weight: bold;">BindingResult result</span>)</p>
+<p>이 두 줄의 코드는 어쩌면 아무런 차이가 없을 수도 있지만 Validator를 만들어 보시면 그 차이를 알 수 있습니다. 무슨 차이인지는 비밀입니다. ㅋㅋ 이미 스프링 레퍼런스에 다 설명이 나와있어서 비밀이랄 것도 없지만 말이죠.ㅋ</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);"><span style="font-weight: bold;">힌트 1.</span><br />validator.validate(model, result);</p>
+<p><span style="font-weight: bold;">힌트 2.</span><br />public void validate(Object obj, Errors errors) {<br />&nbsp; &nbsp; ...<br />}</div>

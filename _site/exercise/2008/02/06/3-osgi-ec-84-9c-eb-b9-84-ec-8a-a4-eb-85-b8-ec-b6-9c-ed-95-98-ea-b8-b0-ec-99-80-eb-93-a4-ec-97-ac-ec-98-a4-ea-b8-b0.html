@@ -1,0 +1,94 @@
+<p>1. Runtime 수정하기.</p>
+<p>먼저 service.impl 패키지는 노출시키지 않고, service 패키지만 노출 시킵니다. 그 안에 들어있는 인터페이스만 외부로 노출 시키려는 것이지요.</p>
+<p><img src="/assets/fk39.png" class="aligncenter" width="590" height="482" alt="사용자 삽입 이미지" /><br />이거면 됩니다. 그러면 이제 더 이상, StoreManager에서 service.impl 패키지를 import 할 수 없습니다. 따라서 구현체는 사용할 수 가 없게 됩니다. 구현체는 제공하지 말고 서비스를 registry에 등록하겠습니다.</p>
+<p>2. Service Registry에 등록하기.</p>
+<p>Activator로 이동해서. Store 번들이 ACTIVE 상태가 될 때, 특정 서비스를 등록하도록 코딩합니다.</p>
+<p>public class Activator implements BundleActivator {</p>
+<p>&nbsp; &nbsp; public void start(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Store 번들을 가동 했습니다.");<br />&nbsp; &nbsp; &nbsp; &nbsp; String className = Greeting.class.getName();<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> context.registerService(className, new GreetingImpl(), null);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("GreetingImpl 객체를 '" + className + "'으로 서비스 레지스트리에 등록 했습니다.");<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void stop(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Store 번들을 멈췄습니다.");<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>context에, 서비스를 등록합니다. 인터페이스의 이름으로 구현체를 등록합니다. JNDI와 비슷한 것 같네요.</p>
+<p>자 이제 이 번들을 다시 Export 하고, start 시켜봅니다.<br />[#M_ more.. | less.. | osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828</p>
+<p>osgi&gt; install file:/c:/plugins/Store_1.0.0.jar<br />Bundle id is 1</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;INSTALLED &nbsp; Store_1.0.0</p>
+<p>osgi&gt; bundle 1<br />file:/c:/plugins/Store_1.0.0.jar [1]<br />&nbsp; Id=1, Status=INSTALLED &nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\1\data<br /><span style="color: rgb(255, 0, 0);">&nbsp; No registered services.</span><br />&nbsp; No services in use.<br /><span style="color: rgb(255, 0, 0);">&nbsp; Exported packages</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; service; version="0.0.0"[exported]</span><br />&nbsp; No imported packages<br />&nbsp; No fragment bundles<br />&nbsp; No named class spaces<br />&nbsp; No required bundles</p>
+<p>osgi&gt; start 1<br />Store 번들을 가동 했습니다.<br />GreetingImpl 객체를 'service.Greeting'으로 서비스 레지스트리에 등록 했습니다.</p>
+<p>osgi&gt; bundle 1<br />file:/c:/plugins/Store_1.0.0.jar [1]<br />&nbsp; Id=1, Status=ACTIVE &nbsp; &nbsp;&nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\1\data<br /><span style="color: rgb(255, 0, 0);">&nbsp; Registered Services</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; {service.Greeting}={service.id=21}</span><br />&nbsp; No services in use.<br /><span style="color: rgb(255, 0, 0);">&nbsp; Exported packages</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; service; version="0.0.0"[exported]</span><br />&nbsp; Imported packages<br />&nbsp; &nbsp; org.osgi.framework; version="1.4.0"&lt;System Bundle [0]&gt;<br />&nbsp; No fragment bundles<br />&nbsp; Named class space<br />&nbsp; &nbsp; Store; bundle-version="1.0.0"[provided]<br />&nbsp; No required bundles</p>
+<p>osgi&gt; <br />_M#]<br />ACTIVE 상태가 된 다음에 서비스가 등록 된 것을 확인할 수 있습니다.</p>
+<p>3. Dependencies 수정하기.</p>
+<p>이제 StoreManager를 수정해야 합니다. 먼저 Depedencies에서 service.impl을 제거해 줍니다. 인터페이스만 알고 있으면 되기 때문에, service만 남겨둡니다.</p>
+<p><img src="/assets/fk40.png" class="aligncenter" width="428" height="199" alt="사용자 삽입 이미지" /><br />이렇게 수정해면, GreetingImpl 클래스를 참조할 수 없기 때문에 에러가 발생하는데, 이 때 이상하게 Greeting<br />
+까지 못 찾는다고 에러가 납니다. 이건 Eclipse의 버그 같습니다. 이럴 때는 그냥 Eclipse를 껐다가 다시키면,<br />
+Greeting 인터페이스를 참조할 수 있습니다.</p>
+<p>이제 Activator에서 GreetingImpl 객체를 직접 만들어 사용하던 코드를 context에서 서비스를 가져오도록 수정해야 합니다.</p>
+<p>서비스를 가져오려면 ServiceTracker를 사용해야 하는데, 그러려면, StoreManager에 org.osgi.util.tracker 패키지를 import 해주어야 합니다.</p>
+<p><img src="/assets/gk59.png" class="aligncenter" width="431" height="146" alt="사용자 삽입 이미지" /><br />4. ServiceTracker 사용하기</p>
+<p>이제 구현해 줍니다.</p>
+<p>public class Activator implements BundleActivator {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">private ServiceTracker greetingServiceTracker;</span></p>
+<p>&nbsp; &nbsp; public void start(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreMaganer 번들 가동했습니다.");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">String serviceName = Greeting.class.getName();</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker = new ServiceTracker(context, serviceName, null);</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker.open();</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; Greeting greeting = (Greeting) greetingServiceTracker.getService();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("'" + serviceName + "' 서비스를 가져왔습니다.");<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(greeting.hi("토비"));<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void stop(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreManager 번들 멈춥니다.");<br />&nbsp; &nbsp; &nbsp; &nbsp; <br /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker.close();</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker = null;</span><br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Service Tracker 닫습니다.");<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>ACTIVE 상태가 되면, 서비스 트래커를 만들고, 열어 줍니다. RESOLVED 상태가 될 때(stop)는 닫은 다음에 null로 만들어 줍니다.</p>
+<p>그리고 Store 번들을 시작한 다음에 StoreManager를 시작하면 잘 동작합니다.</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; start 2<br />Store 번들을 가동 했습니다.<br />GreetingImpl 객체를 'service.Greeting'으로 서비스 레지스트리에 등록 했습니다.</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.<br />'service.Greeting' 서비스를 가져왔습니다.<br />hi 토비</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; </p>
+<p>자 이 상태에서 Store를 stop하고, StoreManager도 stop한 다음에 StoreManaegr를 먼저 start 시킬 수 있습니다. 그럴 수도 있겠죠. 아직 작업이 마무리 되지 않았는데, 접속을 시도하고 있다고 생각해시면 그럴 수도 있다는 것이 상상되실 겁니다. 이런 상황에서 어떤 일이 벌어지는지 보겠습니다.</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; stop 2<br />Store 번들을 멈췄습니다.</p>
+<p>osgi&gt; stop 1<br />StoreManager 번들 멈춥니다.<br />Service Tracker 멈춥니다.</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; diag 1<br />file:/c:/plugins/StoreManager_1.0.0.jar [1]<br />&nbsp; No unresolved constraints.</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.<br />'service.Greeting' 서비스를 가져왔습니다.<br />org.osgi.framework.BundleException: Exception in storemanager.Activator.start() of bundle StoreManager.<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:1018)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:974)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:346)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:260)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:252)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.FrameworkCommandProvider._start(FrameworkCommandProvider.java:260)<br />&nbsp; &nbsp; at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />&nbsp; &nbsp; at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />&nbsp; &nbsp; at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />&nbsp; &nbsp; at java.lang.reflect.Method.invoke(Unknown Source)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.FrameworkCommandInterpreter.execute(FrameworkCommandInterpreter.java:150)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.FrameworkConsole.docommand(FrameworkConsole.java:291)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.FrameworkConsole.console(FrameworkConsole.java:276)<br />&nbsp; &nbsp; at org.eclipse.osgi.framework.internal.core.FrameworkConsole.run(FrameworkConsole.java:218)<br />&nbsp; &nbsp; at java.lang.Thread.run(Unknown Source)<br />Caused by: java.lang.NullPointerException<br />&nbsp; &nbsp; at storemanager.Activator.start(Activator.java:22)<br />... 생략</p>
+<p>재밌습니다. 분명 StoreManager가 Resolved 상태였는데(종속성이 모두 해결되고 Start 될 수 있는 상태) start를 시키면... NullPointerException이 발생합니다.</p>
+<p>왜 그러죠?</p>
+<p>당연하죠. 서비스 레지스트리에 StoreManager의 Activator에서 찾으려는 Service가 없기 때문이죠.</p>
+<p>왜 없죠?</p>
+<p>Store 번들이 stop 으로 인해 RESOLVED 상태가 되면서, 등록됐던 서비스들이 사라져버려서 그렇습니다. <br />증거는 아래를 열어보세요.<br />[#M_ more.. | less.. | osgi&gt; start 12<br />Cannot find bundle 12</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.<br />'service.Greeting' 서비스를 가져왔습니다.<br />hi 토비</p>
+<p>osgi&gt; bundle 1<br />file:/c:/plugins/StoreManager_1.0.0.jar [1]<br />&nbsp; Id=1, Status=ACTIVE &nbsp; &nbsp;&nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\1\data<br />&nbsp; No registered services.<br />&nbsp; Services in use:<br />&nbsp; &nbsp; {service.Greeting}={service.id=22}<br />&nbsp; No exported packages<br />&nbsp; Imported packages<br />&nbsp; &nbsp; org.osgi.framework; version="1.4.0"&lt;System Bundle [0]&gt;<br />&nbsp; &nbsp; org.osgi.util.tracker; version="1.3.3"&lt;System Bundle [0]&gt;<br />&nbsp; &nbsp; service; version="0.0.0"&lt;file:/c:/plugins/Store_1.0.0.jar [2]&gt;<br />&nbsp; No fragment bundles<br />&nbsp; Named class space<br />&nbsp; &nbsp; StoreManager; bundle-version="1.0.0"[provided]<br />&nbsp; No required bundles</p>
+<p>osgi&gt; bundle 2<br />file:/c:/plugins/Store_1.0.0.jar [2]<br />&nbsp; Id=2, Status=ACTIVE &nbsp; &nbsp;&nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\2\data<br />&nbsp; Registered Services<br />&nbsp; &nbsp; {service.Greeting}={service.id=22}<br />&nbsp; No services in use.<br />&nbsp; Exported packages<br />&nbsp; &nbsp; service; version="0.0.0"[exported]<br />&nbsp; Imported packages<br />&nbsp; &nbsp; org.osgi.framework; version="1.4.0"&lt;System Bundle [0]&gt;<br />&nbsp; No fragment bundles<br />&nbsp; Named class space<br />&nbsp; &nbsp; Store; bundle-version="1.0.0"[provided]<br />&nbsp; No required bundles</p>
+<p>osgi&gt; stop 2<br />Store 번들을 멈췄습니다.</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp; &nbsp;State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp; &nbsp;ACTIVE &nbsp; &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp; &nbsp;RESOLVED &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; bundle 2<br />file:/c:/plugins/Store_1.0.0.jar [2]<br />&nbsp; Id=2, Status=RESOLVED &nbsp;&nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\2\data<br />&nbsp; No registered services.<br />&nbsp; No services in use.<br />&nbsp; Exported packages<br />&nbsp; &nbsp; service; version="0.0.0"[exported]<br />&nbsp; Imported packages<br />&nbsp; &nbsp; org.osgi.framework; version="1.4.0"&lt;System Bundle [0]&gt;<br />&nbsp; No fragment bundles<br />&nbsp; Named class space<br />&nbsp; &nbsp; Store; bundle-version="1.0.0"[provided]<br />&nbsp; No required bundles</p>
+<p>osgi&gt; bundle 1<br />file:/c:/plugins/StoreManager_1.0.0.jar [1]<br />&nbsp; Id=1, Status=ACTIVE &nbsp; &nbsp;&nbsp; Data Root=C:\Documents and Settings\MyHome\바탕 화면\eclipse-SDK-3.3.1.1-win32\eclipse\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration\org.eclipse.osgi\bundles\1\data<br />&nbsp; No registered services.<br />&nbsp; No services in use.<br />&nbsp; No exported packages<br />&nbsp; Imported packages<br />&nbsp; &nbsp; org.osgi.framework; version="1.4.0"&lt;System Bundle [0]&gt;<br />&nbsp; &nbsp; org.osgi.util.tracker; version="1.3.3"&lt;System Bundle [0]&gt;<br />&nbsp; &nbsp; service; version="0.0.0"&lt;file:/c:/plugins/Store_1.0.0.jar [2]&gt;<br />&nbsp; No fragment bundles<br />&nbsp; Named class space<br />&nbsp; &nbsp; StoreManager; bundle-version="1.0.0"[provided]<br />&nbsp; No required bundles_M#]<br />뭔가 멋지지가 않습니다.</p>
+<p>5. 좀 더 멋지게 ServiceTracker 사용하기.</p>
+<p>일단 StoreManager가 Resolved 상태가 됐다면, Start 시켜서, AVTIVE 상태로 만들고 싶습니다.(서비스가 없더라도 말이죠.) 그러다가 원하는 서비스가 등록되면, 그 때 서비스를 얻어낸 다음 할 일을 처리하게 하고 싶습니다.</p>
+<p>public class Activator implements BundleActivator {</p>
+<p><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; public static class GreetingServiceTracker extends ServiceTracker {</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; public GreetingServiceTracker(BundleContext context) {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; super(context, Greeting.class.getName(), null);</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; }</span><br style="color: rgb(255, 0, 0);" /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; public Object addingService(ServiceReference reference) {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Greeting greeting = (Greeting) context.getService(reference);</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(greeting.hi("토비"));</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return greeting;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; }</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; }</span></p>
+<p>&nbsp; &nbsp; private ServiceTracker greetingServiceTracker;</p>
+<p>&nbsp; &nbsp; public void start(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreMaganer 번들 가동했습니다.");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker = <span style="color: rgb(255, 0, 0);">new GreetingServiceTracker(context);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker.open();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void stop(BundleContext context) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StoreManager 번들 멈춥니다.");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker.close();<br />&nbsp; &nbsp; &nbsp; &nbsp; greetingServiceTracker = null;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Service Tracker 멈춥니다.");<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>ServiceTracker의 addingService() 메소드는 ServiceTracker 객체를 만들 때 필요한 ServiceTrackerCustomizer 파라미터가 null일 때 호출 됩니다. 그래서 위처럼 생성자에서 super를 사용해서 세 번째 인자에 null을 넣어 주어야 addingService() 메소드가 호출되고, 그럼 이 메소드 안에서 context.getService(ServiceReference);를 사용해서 서비스 객체를 가져옵니다. 여기서 비밀이 있는 것 같은데 우선은 복잡한 건 제끼고 예제부터 실행해 보겠습니다.</p>
+<p>이번에도 위에서 했던 것처럼, Export 한 다음, StoreManager와 Store를 stop 시키고, StoreManager를 먼저 start 시켜보겠습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id &nbsp;&nbsp; State &nbsp; &nbsp; &nbsp; Bundle<br />0 &nbsp;&nbsp; ACTIVE &nbsp; &nbsp;&nbsp; org.eclipse.osgi_3.3.1.R33x_v20070828<br />1 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; StoreManager_1.0.0<br />2 &nbsp;&nbsp; RESOLVED &nbsp;&nbsp; Store_1.0.0</p>
+<p>osgi&gt; start 1<br />StoreMaganer 번들 가동했습니다.</p>
+<p>osgi&gt; start 2<br />Store 번들을 가동 했습니다.<br />hi 토비<br />GreetingImpl 객체를 'service.Greeting'으로 서비스 레지스트리에 등록 했습니다.</p>
+<p>osgi&gt; </p></div>
+<p>와우~~ 멋지지 않나요.</p>
+<p>뭐가 멋진지 모르겠다구요??</p>
+<p>분명 StoreManager를 먼저 실행 시켰는데 에러가 발생하지 않았습니다. 멋지지 않아요??? 물론 여기까진 별로 멋지지 않을 수도 있습니다. 그런데.. Store를 start 시키자 마자. StoreManager에서 해야 했던 일이 실행됐습니다.</p>
+<p>이건 정말 멋진겁니다.</p>
+<p>그런데 코딩이 정말... 피곤하죠. 이제 Spring DM이 등장할 차례 입니다.</p>
+<p>참조 : http://www.eclipsezone.com/eclipse/forums/t91059.html</p>

@@ -1,0 +1,130 @@
+---
+layout: post
+title: 13.2. The DispatcherServlet
+date: 2007-05-07 14:03:44.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- Spring Reference 13장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323083674'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;web-app&gt;</p>
+<p>&nbsp; &nbsp; &lt;servlet&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-name&gt;example&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br />&nbsp; &nbsp; &lt;/servlet&gt;</p>
+<p>&nbsp; &nbsp; &lt;servlet-mapping&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-name&gt;example&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;url-pattern&gt;*.form&lt;/url-pattern&gt;<br />&nbsp; &nbsp; &lt;/servlet-mapping&gt;</p>
+<p>&lt;/web-app&gt;</p></div>
+<p>이렇게 web.xml에서 DispatcherServlet을 등록해 두면 .form 으로 끝나는 url은 모두 'example' 이라는 DispatcherServlet이 담당하게 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cl185.jpg" class="aligncenter" width="500" height="331" alt="사용자 삽입 이미지" /><br />(1)Front Controller 패턴을 사용하여 모든 요청을 하나의 서브릿에서 받은 뒤 <br />(2)각각의 요청을 처리할 컨트롤러를 Handler Mapping을 기반으로 찾아서 요청을 넘기게 됩니다.<br />(3)컨트롤러에서 요청을 처리한 뒤 ModelAndView 객체를 다시 Dispatcher에게 넘기면 <br />(4)Dispatcher는 받은 객체의 view 이름과 ViewResolver를 사용하여 해당 응답을 랜더링할 view에게 Model 객체들을 넘기게 되고 그것을 바탕으로 HTML 을 만들고<br />(5)다시 Dispatcher에게 제어권을 넘기면<br />(6)Reponse에 방금 만들어낸 HTML을 실어 보냅니다.</p>
+<p>Spring 프레임워크는 맨 위에 있는 web.xml의 내용을 바탕으로 Dispatcher를 초기화 할 때 <br />"Dispatcher의 이름"-servlet.xml 파일을 WEB-INF 폴더에서 찾고 그 안에 등록한 모든 bean들을 생성합니다.<br />
+<blockquote>each DispatcherServlet has its own WebApplicationContext, which inherits all the beans already defined in the root WebApplicationContext. These inherited beans defined can be overridden in the servlet-specific scope, and new scope-specific beans can be defined local to a given servlet instance.</p></blockquote>
+<p>위의 레퍼런스 인용구에서 볼 수 있듯이 DispatcherSevlet이 WebApplicationContext를 가지고 있고 여기에 설정할 수 있는 특별한 bean들은 다음과 같습니다.</p>
+<table class="MsoTableColorfulGridAccent1" style="border-collapse: collapse;" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(184, 204, 228) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Bean type<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(184, 204, 228) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: black;" lang="EN-US">Explanation<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">Controllers<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(167, 191, 222) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: black;" lang="EN-US">MVC</span><span style="color: black;">의<span lang="EN-US"> C</span>에 해당하는 각종 컨트롤러들<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">Handler mappings<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(219, 229, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal"><span style="color: black;">요청을 처리할 컨트롤러들<br />
+  명시<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">View resolvers<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(167, 191, 222) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: black;" lang="EN-US">View </span><span style="color: black;">이름을 풀 수 있는 컴포넌트들<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">Locale resolver<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(219, 229, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal"><span style="color: black;">국제화 지원하기 위해<span lang="EN-US"> client</span>의<span lang="EN-US"> locale </span>알아낸다<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">Theme resolver<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(167, 191, 222) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: black;">테마 사용할 때 사용<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">multipart file resolver<o:p></o:p></span></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color white; border-width: medium medium 1pt; padding: 0cm 5.4pt; background: rgb(219, 229, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal"><span style="color: black;" lang="EN-US">Http<br />
+  </span><span style="color: black;">폼에서 파일 업로드 할 때 사용<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border: medium none ; padding: 0cm 5.4pt; background: rgb(54, 95, 145) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: white;" lang="EN-US">Handler exception resolver(s)<o:p></o:p></span></p>
+</td>
+<td style="border: medium none ; padding: 0cm 5.4pt; background: rgb(167, 191, 222) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="color: black;">특정 예외가 발생할 때의 보여줄<span lang="EN-US"> view </span>등록<span lang="EN-US"><o:p></o:p></span></span></p>
+</td>
+</tr>
+</tbody>
+</table>

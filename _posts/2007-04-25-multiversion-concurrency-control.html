@@ -1,0 +1,71 @@
+---
+layout: post
+title: Multiversion concurrency control
+date: 2007-04-25 09:07:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 개념
+tags:
+- Multiversion concurrency control
+- non-lock concurrency control
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323117042'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control" target="_blank">http://en.wikipedia.org/wiki/Multiversion_concurrency_control</a><br />
+<blockquote><b>multiversion concurrency control</b> (abbreviated <b>MCC</b> or <b>MVCC</b>) is a <a href="http://en.wikipedia.org/wiki/Concurrency_control" title="Concurrency control">concurrency control</a> method commonly used by <a href="http://en.wikipedia.org/wiki/Database_management_system" title="Database management system">database management systems</a> to provide concurrent access to the database.</p></blockquote>
+<p>MVCC는 각각의 사용자에게 각자 작업할 수 있는 스냅샷을 제공합니다. 트랜잭션이 커밋되기 전에는 각자 작업한 내용을 다른 사람들이 볼 수 없습니다.</p>
+<p>MCC는 타임스탬프 또는 증가하는 트랜잭션 ID를 사용하여 <a href="http://en.wikipedia.org/wiki/Serializability" title="Serializability">serializability</a>를 만족시킵니다. </p>
+<p>많은 버젼을 관리해야 한다는 단점이 있지만 읽기 작업을 방해(block)하지 않는다는 장점이 있습니다.</p>
+<p>MCC를 사용하는 데이타베이스들
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Berkeley_DB" title="Berkeley DB">Berkeley DB</a> <sup id="_ref-BDB_0" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-BDB" title="">[4]</a></sup></li>
+<li><a href="http://en.wikipedia.org/wiki/Firebird_%28database_server%29" title="Firebird (database server)">Firebird (database server)</a> <sup id="_ref-3" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-3" title="">[5]</a></sup></li>
+<li><a href="http://en.wikipedia.org/wiki/FLAIM_Database_Engine" title="FLAIM Database Engine">FLAIM</a></li>
+<li><a href="http://en.wikipedia.org/wiki/InterBase" title="InterBase">InterBase</a> (all versions) <sup id="_ref-IBMVCC_0" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-IBMVCC" title="">[6]</a></sup></li>
+<li><a href="http://en.wikipedia.org/wiki/Microsoft_SQL_Server" title="Microsoft SQL Server">Microsoft SQL Server</a> (only in SQL Server 2005)</li>
+<li><a href="http://en.wikipedia.org/wiki/MySQL" title="MySQL">MySQL</a> when used with <a href="http://en.wikipedia.org/wiki/InnoDB" title="InnoDB">InnoDB</a> <sup id="_ref-4" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-4" title="">[7]</a></sup> or <a href="http://en.wikipedia.org/wiki/Falcon_%28storage_engine%29" title="Falcon (storage engine)">Falcon</a> <sup id="_ref-5" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-5" title="">[8]</a></sup> storage engines.</li>
+<li><a href="http://en.wikipedia.org/wiki/ObjectStore" title="ObjectStore">ObjectStore</a> (only in read-only mode)<sup id="_ref-ObjectStoreMVCC_0" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-ObjectStoreMVCC" title="">[9]</a></sup></li>
+<li><a href="http://en.wikipedia.org/wiki/Oracle_database" title="Oracle database">Oracle</a></li>
+<li><a href="http://en.wikipedia.org/wiki/PostgreSQL" title="PostgreSQL">PostgreSQL</a> <sup id="_ref-6" class="reference"><a href="http://en.wikipedia.org/wiki/Multiversion_concurrency_control#_note-6" title="">[10]</a></sup> and PostgreSQL derivatives such as <a href="http://en.wikipedia.org/w/index.php?title=Netezza&amp;action=edit" class="new" title="Netezza">Netezza</a></li>
+<li><a href="http://en.wikipedia.org/w/index.php?title=ThinkSQL&amp;action=edit" class="new" title="ThinkSQL">ThinkSQL</a></li>
+</ul>
+<p>공부해야 할 것 :  <a href="http://en.wikipedia.org/wiki/Snapshot_isolation" title="Snapshot isolation">snapshot isolation</a>, <a href="http://en.wikipedia.org/wiki/Serializability" title="Serializability">serializability</a></p>

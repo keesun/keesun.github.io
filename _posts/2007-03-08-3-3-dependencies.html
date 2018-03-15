@@ -1,0 +1,115 @@
+---
+layout: post
+title: 3.3. Dependencies
+date: 2007-03-08 02:36:49.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Bean dependency
+- Spring Reference 3장
+- 종속성
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322980107'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">3.3.1. Injecting dependencies</span></p>
+<p>DI(Dependency Injection)이 적용되면 클래스들간의 관계에 고도의 디커플링을 유지할 수 있고  코드가 훨씬 깨끗해 집니다. 주로 setter injection과 constructor injection으로 나뉩니다.<br /><a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/ServiceLocator.html" target="_blank"><br />Service Locater 패턴</a> 참조.<br /><a href="../../../../531">Setter Injection &amp; Constructor Injection</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.2. Constructor Argument Resolution</span></p>
+<p>생성자의 인자를 구분 할 필요가 있는 경우에 인자의 type 또는 index로 구분할 수 있습니다.</p>
+<p><a href="../../../../535">Constructor Injection 할 때 인자 구분</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.3. Bean properties and constructor arguments detailed</span></p>
+<p>&lt;property /&gt; 태그(=엘리먼트)와 &lt;constructor-arg /&gt; 태그는 종속성을 가지는 대상에 따라 사용할 수 있는 하위 태그들이 여러개 있습니다. ex. &lt;value /&gt; &lt;idref /&gt; &lt;ref /&gt; &lt;bean /&gt;[footnote]inner bean[/footnote] &lt;list /&gt; &lt;set /&gt; &lt;map /&gt; &lt;props /&gt; &lt;null /&gt;</p>
+<p><a href="../../../../536">idref 엘리먼트</a><br /><a href="../../../../537">Inner beans</a><br /><a href="../../../../541">Collections - &lt;list /&gt;</a><br /><a href="../../../../542">Collection Merging</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.4. Using <span style="color: rgb(0, 0, 255);">depends-on</span></span></p>
+<p>&lt;bean /&gt; 태그의 depends-on 속성에 bean의 id를 적어주면 현재 bean을 초기화하기 전에 depends-on 속성에 적어준 bean들을 먼저 초기화 합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="beanOne" class="ExampleBean" depends-on="manager"/&gt;</p>
+<p>&lt;bean id="manager" class="ManagerBean" /&gt;</p></div>
+<p>위와 같이 설정 한다면 beanOne을 초기화 하기 전에 manager bean을 먼저 초기화 합니다.</p>
+<p>만약 여러개의 bean에 종속성을 가지고 그 bean들이 먼저 초기화 되길 바란다면 아래 처럼 여러개를 적을 수 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="beanOne" class="ExampleBean" depends-on="manager,accountDao"&gt;<br />&nbsp; &lt;property name="manager" ref="manager" /&gt;<br />&lt;/bean&gt;</p>
+<p>&lt;bean id="manager" class="ManagerBean" /&gt;<br />&lt;bean id="accountDao" class="x.y.jdbc.JdbcAccountDao" /&gt;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.5. Lazily-instantiating beans</span></p>
+<p>ApplicationContext를 구현한 container들은 모든 bean들을 기본적으로 singleton scope의 bean들을 pre-instantiation(초기 생성?) 합니다. [footnote]pre-instantiation은 container의 초기화 과정에서 객체를 생성하고 종속성을 설정하게 되는 것을 말합니다.[/footnote] 그렇게 함으로써 초기에 설정이나 기타 환경에 대한 에러들을 초기에 발견할 수 있습니다.</p>
+<p>하지만~ 초기에 모든 bean들을 만들어 내기 싫을 수가 있는데요. 그럴 때는 &lt;bean /&gt; 태그에 lazy-init="true" 를 추가하여 하나의 bean이 초기화 지연 기법을 사용할 수 있으며... <br />container의 기본 설정을 바꾸려면 configuration metadata의 최상위 엘리먼트인 &lt;beans /&gt; 태그에 default-lazy-init="true" 를 추가하면 됩니다.</p>
+<p>주의 : pre-instantiation bean이 lazy bean에 종속성을 가진다면..먼저 만들어야 할 bean 때문에 나중에 만들 bean도 먼저 만들게 됩니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.6. Autowiring collaborators</span></p>
+<p>bean들 간의 종속성을 자동으로 맺어 줄 수 있는 기능이 있습니다. 장단점을 알아봐야겠습니다.</p>
+<p><a href="../../../../543">Autowiring</a></p>
+<p><span style="font-weight: bold;">3.3.7. Checking for dependencies</span></p>
+<p>bean에 있는 모든 property들이 잘 세팅이 되었는지 확인하고 싶을 때 사용할 수 있습니다. &lt;bean /&gt; 태그에 dependency-check 속성에 네가지 모드 값 중에 하나를 선택에서 넣어주면 됩니다.</p>
+<table summary="Dependency checking modes" border="1">
+<thead>
+<tr>
+<th>Mode</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>none</td>
+<td>
+<p>No dependency checking. Properties of the bean which<br />
+                                have no value specified for them are simply not set.</p>
+</td>
+</tr>
+<tr>
+<td>simple</td>
+<td>
+<p>Dependency checking is performed for primitive types<br />
+                                and collections (everything except collaborators, i.e. other<br />
+                                beans)</p>
+</td>
+</tr>
+<tr>
+<td>object</td>
+<td>
+<p>Dependency checking is performed for collaborators only</p>
+</td>
+</tr>
+<tr>
+<td>all</td>
+<td>
+<p>Dependency checking is done for collaborators, primitive types<br />
+                                and collections</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">3.3.8. Method Injection</span></p>
+<p>singlton bean(매번 같은 객체) A가 non-singleton bean(매번 다른 객체) B를 사용하게 된다면(종속성을 가지면)...B는 의도 했던 바와는 다르게.. 매번 같은 객체만 사용될 것입니다.<br />&nbsp;<br />이 문제를 해결 하는 방법으로는.. A가 BeanFactoryAware 인터페이스를 구현해서 B를 요구할 때마다 getBean("B")를 이용하는 방법이 있긴 한데...</p>
+<p>이러면 A라는 클래스가 BeanFactoryAware라는 Spring Framework의 코드에 종속되기 때문에 Method Injection이라는 것을 사용해서 좀 더 깔끔하게 이 문제를 해결 할 수 있다고 합니다.</p>

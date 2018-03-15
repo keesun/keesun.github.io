@@ -1,0 +1,71 @@
+---
+layout: post
+title: Intercepting requests 예제
+date: 2007-05-17 03:36:40.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- Intercepting requests
+- Spring Reference 13장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322483235'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>어떤 서비스를 로그인 한 유저에게만 제공하고 싶다면...</p>
+<p>request를 처리하는 메소드 내에서 </p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">if (request.getSession.getAttribute("user") != null)<br />&nbsp; &nbsp; throw LoginRequiredException();</div>
+<p>이런식으로 예외를 발생시키고 이 예외가 발생할 때마다 로그인 페이지로 이동 시키게 할 수 있습니다.</p>
+<p>하지만 저런 코드가 여러 부분에서 필요하게 될 것이고 이것을 AOP를 적용하여 Aspect로 빼내고 싶어지는 것이 당연합니다.</p>
+<p>그런데 Spring AOP가 조금 복잡하자나열(2.0 에서는 많이 나아졌지만)...pointcut 정의 해줘야 하는데 문법도 좀 희한하고 advice 종류도 다양한데 특정 인자를 받아와야 하는 방법을 써야 하니까 args 표현식을 써야 하고.. 등등 복잡합니다.</p>
+<p>그래서.. 간단하게 HadlerMapping과 HandlerInterceptor 를 사용해서 AOP를 적용할 수 있습니다. 요녀석을 사용하면 HttpRequest와 HttpResponse를 인자로 받는 Around Advice를 적용하는 기분이 들 것입니다.</p>
+<p><span style="font-weight: bold;">1. Handler Mapping 등록하기</span><br />- Handler Mapping을 여러 개 사용할 수 있습니다. 그리고 그 들간의 순서를 order 속성을 사용하여 지정해 줄 수 있습니다. viewResolver를 여러 개 등록하는 거랑 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; &lt;bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="order" value="2" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>기존에 사용하던 HandlerMapping은 BeanNameUrlHandlerMapping으로 암묵적으로[footnote]명시적으로 handleMapping을 등록하지 않으면 DispacherSevlet이 알아서 이녀석을 만들어서 사용하기 떄문이빈다.[/footnote] 사용하고 있었습니다.</p>
+<p>이 녀석을 위에 보시다시피 명시적으로 표기해 주고 순서를 두 번째로 지정합니다. 다음으로는 User를 체크해야 할 request를 처리할 HandlerMapping을 등록합니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="userCheckHandlerMapping"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="order" value="1" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="interceptors"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;ref bean="<span style="color: rgb(255, 0, 0);">memberCheckInterceptor</span>"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="mappings"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 102, 153);">&nbsp; &nbsp;&nbsp; /board/createArticle.html = createArticleController</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /board/createReply.html = createReplyController</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /createAuction.html = createLPAuctionController</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /auction/insertAuctionReply.html = insertAuctionReplyController</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /fileUpload.html = uploadFileController</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>SimpleUrlHandlerMapping을 사용하여 다섯개의 request를 처리할 것입니다. 저 request 들은 모두 memberCheckInterceptor를 거쳐가게 되어있습니다.</p>
+<p>따라서 이제 memberCheckInterceptor만 구현해 주면 구현이 끝납니다.</p>
+<p><span style="font-weight: bold;">2. Interceptor 만들기</span></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberCheckInterceptor extends HandlerInterceptorAdapter {</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; if(request.getSession().getAttribute("user") != null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return true;<br />&nbsp; &nbsp; &nbsp; &nbsp; else {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; response.sendRedirect("http://localhost:8080/classicMania/login.html");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return false;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }<br />}</div>
+<p>와.. 간단합니다. user라는 이름의 객체가 세션에 있으면 계속 request를 처리하고 아니면 login 페이지로 넘어가도록 합니다. true는 계속 처리 false는 처리 안하게 합니다. Around Advice에서 해당 메소드를 실행 할지 말지 선택할 수 있었던 것과 유사하지 않나효.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. 실행</span></p>
+<p><img src="{{ site.baseurl }}/assets/dl187.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cm212.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/dl188.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cm213.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/dl186.jpg" class="aligncenter" width="400" /><br />로그인 안 한 상태에서 파일 업로드 페이지로 가려고 하면 =&gt; 로그인 페이지로 이동<br />로그인 한 상태라에서 파일 업로드 페이지로 가려고 하면 =&gt; 파일 업로드 페이지 요청을 처리합니다.</p>

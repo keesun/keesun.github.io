@@ -1,0 +1,33 @@
+<h1>Package Metadata</h1>
+<ul>
+<li>it's enabled with a file named package-info.java in a particular package directory</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>애노테이션 글로벌 설정</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@org.hibernate.annotations.TypeDefs( {<br />		@org.hibernate.annotations.TypeDef(name = <span class="code-quote">"monetary_amount_usd"</span>, typeClass = <br />MonetaryAmountType.class, parameters = { @Parameter(name = <span class="code-quote">"convertTo"</span>, value = <span class="code-quote">"USD"</span>) }),<br />		@org.hibernate.annotations.TypeDef(name = <span class="code-quote">"monetary_amount_eur"</span>, typeClass = <br />MonetaryAmountType.class, parameters = { @Parameter(name = <span class="code-quote">"convertTo"</span>, value = <span class="code-quote">"EUR"</span>) }) })<br />@org.hibernate.annotations.NamedQueries( { @org.hibernate.annotations.NamedQuery(name = <br /><span class="code-quote">"findItemsOrderByPrice"</span>, query = <span class="code-quote">"select i from Item i order by i.initialPrice)"</span>) })<br /><span class="code-keyword">package</span> auction.persistence.types;</pre>
+</div>
+</div>
+<ul>
+<li>declares two Hibernate type converters</li>
+</ul>
+<ul>
+<li>같은 방법으로 쿼리를 외부화 시키거나 전역 식별자 생성기를 정의할 수 있다.</li>
+</ul>
+<ul>
+<li>JPA 애노테이션은 package-info.java 파일 안에서 사용할 수 없다.</li>
+</ul>
+<ul>
+<li>If you need portable global Java Persistence metadata, put it in an orm.xml file.</li>
+</ul>
+<ul>
+<li>Global annotations (Hibernate and JPA) can also be placed in<br />
+the source code of a particular class, right after the import section.</li>
+</ul>
+<h1>모르는 것</h1>
+<ul>
+<li>package-info.java는 '-' 문자 때문에 에러나는데.. 흠;; 어쩌라는 거지?</li>
+</ul>
+<ul>
+<li>Global 애노테이션을 아무곳에나 놓을 수 있다고? 그럼 package-info.java 파일은 뭐지;; 왜 거기에 넣으라고 한거지?</li>
+</ul>

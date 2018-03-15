@@ -1,0 +1,109 @@
+<p>죄송합니다. 낚시입니다. 1 + 2N select 문제 같은건 없습니다. ;-)</p>
+<p>1+n select 문제라는 것이 있고 이것을 해결하는 여러 fetching 방법(batch, subselect , join)을 하이버네이트가 제공해줍니다.</p>
+<div style="border: 1px dashed rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+1+n select 문제가 무엇이냐면, Study에서 1 대 다 관계로 Meeting을 참조한다고 했을 때, Study가 가지고 있는 Meeting 컬렉션은 기본값으로 Lazy 로딩이 적용됩니다. 즉, Study를 가져올 때 Meeting 컬렉션을 가져오지 않았다가.. 나중에 필요해지는 순간에 Meeting 목록을 가져옵니다. </p>
+<p>이때, Study 전체 목록을 가져온 다음 각각의 Study에 들어있는 Meeting 목록도 가져와서 화면에 보여준다고 해보죠. OSIV 필터를 적용해뒀기 때문에 컨트롤러에서는 단순히 Study 목록만 넘겨줬지만, 화면에서는 c:foreach 구문으로 study.getMeetings()를 호출할 때 lazy 로딩을 하게 되어있습니다.</p>
+<p>어떻게 될까요?</p>
+<p>스터디 목록이 2개라고 해보죠.<br />
+- 전체 스터디 목록을 가져오는 쿼리를 날립니다.(컨트롤러에서)<br />
+- 첫번째 스터디의 전체 모임 목록을 가져오는 쿼리를 날립니다.(뷰에서)<br />
+- 두번째 스터디의 전체 모임 목록을 가져오는 쿼리를 날립니다.(뷰에서)</p>
+<p>스터디 목록이 3개라고 해보죠.<br />
+- 전체 스터디 목록을 가져오는 쿼리를 날립니다.(컨트롤러에서)<br />
+- 첫번째 스터디의 전체 모임 목록을 가져오는 쿼리를 날립니다.(뷰에서)<br />
+- 두번째 스터디의 전체 모임 목록을 가져오는 쿼리를 날립니다.(뷰에서)<br />
+- 세번째 스터디의 전체 모임 목록을 가져오는 쿼리를 날립니다.(뷰에서)</p>
+<p>이래서 1+n 문제라고 하는 겁니다. 그럼 이걸 어떻게 해결할 수 있을까요?<br />
+1. 처음으로 어떤 스터디의 모임 목록을 가져올 때, 특정 갯수 만큼의 스터디와 연관되어 있는 목록을 다 가져옵니다. =&gt; prefatching data in batches, @BatchSize<br />
+2. 처음으로 어떤 스터디의 모임 목록을 가져올 때, 로딩되어 있는 모든 스터디와 연관되어 있는 모든 모임 목록을 다 가져옵니다. =&gt; subselect fatchting, @Fetch(SUBSELECT)<br />
+3. 스터디를 가져올 때, 해당 스터디와 관련된 모임 목록도 미리 전부 가져옵니다. =&gt; eager fetching, @OneToMany(fetch=FetchType.EAGER)
+</div>
+<p>
+이정도까지가 기본적인 하이버네이트 패칭 이야기이고, 제가 지금 겪고 있는 문제는 다음과 같습니다. 사실 이제부터가 본론이죠.</p>
+<p>1+2N 문제가 어떻게 발생했냐면...</p>
+<p>모든 스터디 목록을 가져오는데, 그 때 각 스터디에 참여한 회원수와 총 모임수를 가져와야 합니다.<br />
+- 모든 스터디 목록 select<br />
+- 모든 회원 수 or 목록 select<br />
+- 모든 모임 수 or 목록 select</p>
+<p>스터디 모델에 memeberCount나 meetingCount 같은 속성은 없습니다. 스터디 목록 갯수가 20개가 된다면 select 문은 41개가 됩니다. 끔찍한 상황이죠. 갈 수록 성능이 안 좋아질 겁니다. 대책이 필요합니다. 위에서 살펴봤던 패칭 전략 중 어떤 것을 적용해 볼까요?</p>
+<p><span style="font-weight: bold;">1. subselect fetching</span></p>
+<p>어차피 모든 스터디가 가지고 있는 모든 멤버와 모임 목록을 가져와야 한다면, 굳이 배치 사이즈를 줘서 일부만 가져올 필요가 없어보입니다. 이럴 바엔 그냥 subselect fetching을 하는게 좋겠습니다.</p>
+<p>...<br />
+&nbsp;&nbsp;&nbsp; @ManyToMany<br />
+&nbsp;&nbsp;&nbsp; @Fetch(FetchMode.SUBSELECT)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Member&gt; members;<br />
+&nbsp;&nbsp;&nbsp; @OneToMany(cascade={CascadeType.ALL}, mappedBy="study")<br />
+&nbsp;&nbsp;&nbsp; @Fetch(FetchMode.SUBSELECT)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Meeting&gt; meetings;<br />
+...</p>
+<p>스터디 도메인에 위와같이 subselect fetching을 적용했습니다. 제가 원하는 결과는 다음과 같습니다.<br />
+1.  모든 스터디 가져오는 select<br />
+2. 모든 스터디에 대한 모든 사용자 select<br />
+3. 모든 스터디에 대한 모든 모임 select<br />
+이렇게 세 줄만 나오는 겁니다. 1+2n 에서 3으로 쿼리가 줄어들어야 합니다.</p>
+<p>하지만, 무슨 이유에선지 제대로 동작하지 않습니다.</p>
+<p>구글링을 해보니 subselect가 되지 않는다는 글들이 검색되는데 해결책은 마땅히 보이지가 않습니다. JPWH책을 다시 뒤젹여 봐도 설정은 위에서 추가한 애노테이션 하나 밖에 없습니다.</p>
+<p>이게 뭔가.. @_@.. 흠 그렇다면 batch fetching을 해보지뭐..</p>
+<p><span style="font-weight: bold;">2. batch fetching</span></p>
+<p>...&nbsp; <br />
+&nbsp; &nbsp; @ManyToMany<br />
+&nbsp;&nbsp;&nbsp; @BatchSize(size=10)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Member&gt; members;<br />
+&nbsp;&nbsp;&nbsp; @OneToMany(cascade={CascadeType.ALL}, mappedBy="study")<br />
+&nbsp;&nbsp;&nbsp; @BatchSize(size=10)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Meeting&gt; meetings;<br />
+...</p>
+<p>자 이렇게 설정해뒀습니다. 정확한 쿼리 갯수는 BatchSize와 전체 row수와 하이버네이트의 batch-fetching d알고리즘에 따라 달라지겠지만 쿼리 갯수는 위와 비슷하거나 조금 더 많아 질 겁니다.<br />
+1.  모든 스터디 가져오는 select<br />
+2. 일부 스터디에 대한 모든 사용자 select<br />
+3. 일부 스터디에 대한 모든 모임 select<br />
+4. 일부 스터디에 대한 모든 사용자 select<br />
+5. 일부 스터디에 대한 모든 모임 select</p>
+<p>대략 3 + 2n/10 정도로 줄어들 것으로 예상됩니다.</p>
+<p>오예! 잘 동작합니다. 배치 사이즈 때문인지 딱 세 줄의 select로 이전에 보여주던 화면을 그대로 보여줬습니다. 다시 한 번 클릭했을 때는 어제 Study에 적용해둔 2차 캐쉬 때문에 두 번의 select가 날아갔습니다. 그 두 녀석에도 read-write로 캐쉬를 적용하면 이제 두 번째로 스터디 화면을 보여줄 때 커밋된 것이 없다면 아무런 쿼리도 날아가지 않을 겁니다. 일단은 논외기 때문에 패칭 정리를 끝낸 다음에 해보도록 하죠.</p>
+<p><span style="font-weight: bold;">3. eager fetching</span></p>
+<p>쿼리 세 줄도 아깝다!! 애초에 모든 스터디 목록으르 가져올 때, 멤버과 모임 목록도 같이 가져오도록 하고 싶다면 eager fetching을 써야겠죠.</p>
+<p>1. 모든 스터디 목록을 가져올 때 모든 모임과 멤버 목록까지 select</p>
+<p>1+2n이 1로 줄어듭니다. 최고네요.</p>
+<p>...<br />
+&nbsp;&nbsp;&nbsp; @ManyToMany(fetch=FetchType.EAGER)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Member&gt; members;<br />
+&nbsp;&nbsp;&nbsp; @OneToMany(cascade={CascadeType.ALL}, mappedBy="study", fetch=FetchType.EAGER)<br />
+&nbsp;&nbsp;&nbsp; private Set&lt;Meeting&gt; meetings;<br />
+...</p>
+<p>오.. 원하던대로 쿼리가 하나만 날아갔습니다. 그런데!!! left outer join으로 인해서 study 목록이 원하던 것 보다 훨씬 많아졌습니다. study만 보자면 중복 데이터입니다.</p>
+<p>못쓰겠네요. 지금까지 해본결과 두 번째에 시도한 batch fetching이 제일 적당히 잘 동작했습니다. subselect fetching이 제대로 동작해 줬다면 더 좋았을텐데 조금 아쉽네요.</p>
+<p><span style="font-weight: bold;">4. 모델 고치기</span></p>
+<p>저는 사실 패칭을 적용해보기 전에 날아가는 쿼리를 보고서 스터디 목록을 뿌리는데 모임하고 멤버는 왜 가져오는걸까;; 하면서 컨트롤러를 봤더니 스터디 목록만 줍니다. 뭐지? 그럼 어디서 쿼리가 날아가는거야??;; 뷰인가? 하고 봤더니 빙고.. OSIV 때문에 잘 보이지 않는곳(뷰)에서 쿼리가 날아가고 있었던 겁니다. 왜그런가 봤더니 바로 모임 총 갯수와 멤버 총 수를.. </p>
+<p>study.getMembers().size();<br />
+study.getMeetings().size();</p>
+<p>이런식으로 가져오고 있었습니다. getM~~s()를 할 때 마다 뷰에서 쿼리가 날아가고 있었던 거죠. 필요한건 size인데 굳이 저렇게 멤버와 모임 목록을 가져올 필요가 있을까 싶었습니다. 그렇다고 member와 meeting의 count를 가져오자니.. 그것도 역시 SQL 한줄씩이니까 1+2n이 쿼리만 바뀔 뿐이지 여전히 1+2n이구나.. @_@..<br />
+모델을 고치자.</p>
+<p>Study에 memberCount와 meetingCount를 추가하고<br />
+각각 스터디에 참가신청/탈퇴할 때 memberCount를 증가/감소 시키고<br />
+모임이 추가/삭제 될 때 마다 meetingCount을 증가/감소 시키자.</p>
+<p>그러면 화면에서는</p>
+<p>study.getMemeberCount();<br />
+study.getMeetingCount();</p>
+<p>이렇게 호출하면 되니까 연관관계 탈 것도 없고, Lazy 로딩할 것도 없고.. 쿼리도 안날아가고..</p>
+<p>1+2n에서 1로 줄일 수 있겠구나.. 하고 생각했었습니다. 그런데....</p>
+<p><span style="font-weight: bold;">5. 생짜 SQL</span></p>
+<p>봄싹에서 화면 디자이너겸 SQL 튜닝 전문가이자 스프링 개발자로 활약중인 성윤군이 이를 보다 못해 SQL 하나를 직접 작성해 주었습니다.</p>
+<p>1. 모든 스터디 정보와 모임 갯수, 멤버 수를 같이 서머리 해옵니다.</p>
+<p>select<br />
+study.id, study.studyname, study.status,<br />
+(select count(*) from<br />
+study_member as sm where sm.studies_id = study.id) as<br />
+member_cnt,<br />
+study.maximum,<br />
+(select count(*) from meeting as meeting where<br />
+meeting.study_id = study.id) as<br />
+meeting_cnt,<br />
+study.startday,study.endday<br />
+from study as study</p>
+<p>오호.. 무척 간단했군요. 이것도 역시 1+2n을 1로 줄여주는 방법이고, 모델을 수정하지 않아도 됩니다. <br />
+대신 DTO가 하나 필요합니다. 단순히 Study 정보만 담고 있는것이 아니라 Study 도메인 객체 리스트로 화면에 넘겨줄수가 없습니다.</p>
+<p>결국은 "DTO가 하나 늘어난다 VS 모델을 수정한다" 이 것이 고민입니다. 패칭이 적절한 경우였다면 패칭으로 해결했을 텐데 지금 여기서는 count만 하면 되지 실제로 모임과 멤버 목록을 다 가져올 필요는 없거든요.</p>
+<p>일단은 SQL도 짜준 성윤이를 생각해서 마지막 방법을 적용해봐야겠습니다. 대신 이 쿼리를 그대로 하이버네이트로 날려도 되지만 좀 더 객체지향 적인 형태로 Criteria나 HQL을 써서 표현해볼까 합니다.</p>
+<p>과연~ 도메인 모델에 속성 두 개 추가하고 모임 추가/삭제, 멤버 가입/탈퇴 할 때 코드를 조금 수정하는 것보다 편할 것인가~~</p>
+<p></p>

@@ -1,0 +1,57 @@
+---
+layout: post
+title: 텍스트박스에서 엔터키 누르면 ~~~하기
+date: 2008-07-23 07:41:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- DotNet
+tags:
+- 닷넷
+- 엔터키
+- 이벤트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323144612'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. Key Down 이벤트 설정.</p>
+<p><img src="{{ site.baseurl }}/assets/jk31.jpg" class="aligncenter" width="600" height="480" alt="사용자 삽입 이미지" /><br />2. 이벤트 핸들러에 구현하기.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">if (e.KeyCode.Equals(Keys.Return))<br />{<br />&nbsp; &nbsp; &nbsp;&nbsp; MessageBox.Show("하이");<br />&nbsp; &nbsp; &nbsp; &nbsp; processlogin();<br />}</div>
+<p>Keys라는 Enum 스타일 클래스가 왠지 있을 것 같아서 그냥 입력해 봤더니, 역시나 있었습니다.ㅋㅋ 키 코드 모음인가본데, Enter키가 Enter가 아니라 Return이라서 삽질을 또 좀 했습니다. 닷넷 삽질은 이번 주 만 하고 빨리 끝내야지 슬슬 지겨워집니다.</p>

@@ -1,0 +1,15 @@
+<p><a title="[http://aeternum.egloos.com/1160846]로 이동합니다." target="_blank" href="http://aeternum.egloos.com/1160846"> </a><a title="[http://aeternum.egloos.com/1160846]로 이동합니다." target="_blank" href="http://aeternum.egloos.com/1160846">http://aeternum.egloos.com/1160846 </a>이 글을 참조하세요. 아래 내용은 권해드리지 않는 내용입니다.</p>
+<p><a href="http://truthiness.pe.kr/blog/archives/323" target="_blank"></a>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251); text-decoration: line-through;" class="txc-textbox">
+<a href="http://truthiness.pe.kr/blog/archives/323" target="_blank">나도 DDD 하고싶어 모델링 적용기</a><br />
+<a href="http://chanwook.tistory.com/551" target="_blank">Repository Pattern vs. Transparent Persistence</a></p>
+<p>위 두 개의 글의 공통점은 DAO와 Repository의 차이에 대한 고민입니다. 저도 잘 모릅니다. 저는 사실 찬욱군이 쓴 글에 있는 링크를 따라가보지도 않았으며, 얇은 DDD책(DDD Quickly)도 다 읽지 못 했고, 그나마 읽었던 부분들도 잊혀져가고 있습니다.(다시 읽으려고 마음먹었습니다.)</p>
+<p>그래도.. 나름대로 생각해 봤습니다. 어차피 작명의 문제이고 누군가 어떤 의도를 가지고 작명을 했을테니 그 뜻은 분명 단어 속에 숨어있겠죠.</p>
+<p>DAO는 Data Access Object의 약자로 데이터(베이스)에 접근하는 객체를 나타냅니다. DB 접근하는 일을 분리해 냈습니다. SRP 객체지향 원칙의 사례로 등장했었던 적이 있었는데 어떤 글인지는 모르겠습니다.</p>
+<p>Repository는 저장소입니다. 어떤 객체들을 저장하는 장소를 뜻할 것이며, 아마도 DB 자체를 또는 Table 자체 또는 '영속성이 보장되는 저장소'를 객체화한 표현이 아닐까 생각해봅니다. 이것이 필요한 객체는 바로 도메인 객체겠죠.</p>
+<p>이정도 정보를 가지고 이 둘의 차이를 살펴보기엔 정말 막연합니다. 그래서 Finder라는 녀석까지 같이 보겠습니다. Finder는 findByXXX 류의 메소드들을 가진 클레스로 이 녀석 역시 DB나 영속성을 보장하는 어떠한 저장소에 접근을 합니다.</p>
+<p>기존의 DAO에는 Finder가 하는 일까지 같이 포함하고 있었습니다. 그리고 DDD를 구현한(건지.. 구현 하도록 돕는 건지.. Anyway) ROO 라는 프레임워크에서는 Repository와 Finder로 분리해 두었습니다. 조금 더 세밀하게 SRP를 적용했다고 볼 수 있습니다.</p>
+<p>따라서 저는 이렇게 결론을 냈습니다.</p>
+<p><img src="/assets/gk10.png" class="aligncenter" width="600" height="187" alt="사용자 삽입 이미지" /><br />
+그럼 DAO와 Finder를 동시에 두면 어떻게 되는걸까? 라는 생각을 해볼 수 있는데요. DAO는 위에서도 언급했다시피, 데이터에 접근하는 객체입니다. Finder는 무언가를 찾아주는 녀석이죠. 그럼 무언가를 찾아주는 녀석이 매번 데이터에 접근해서 찾아야 하는데 결국 Finder도 DAO라고 볼 수 있지 않을까요? 그럴 때는 가능하다면, 기존의 DAO 이름을 Repository로 변경하는 것이... 좋을 것 같다는 생각을 해봅니다.</div>
+<p></p>

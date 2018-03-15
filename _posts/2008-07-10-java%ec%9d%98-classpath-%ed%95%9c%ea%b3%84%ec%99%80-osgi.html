@@ -1,0 +1,58 @@
+---
+layout: post
+title: Java의 Classpath 한계와 OSGi
+date: 2008-07-10 13:28:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- Java Classpath
+- OSGi
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322754288'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>자바에서 기본으로 제공하는 "모듈 시스템"이라고 할 수 있는 건 JAR 파일들을 모아둔 클래스패스 덩어리다. 이게 구린 이유는 의존성 관리를 하지 않기 때문이다. 그냥 암묵적으로 어떤 환경에서 실행되리라고 가정해버린다. 클래스패스에 필요한 것들이 있는지를 알 수도 없고 어떤게 필요한지도 알 수 없다. 따라서, 필요한 JAR 파일을 클래스패스에 추가하지 않고 애플리케이션을 실행하면 Runtime 시에 ClassNotFoundException이나 NoClassDefinitionFound 와 같은 에러를 종종 만나게 되고, 어떤 JAR가 빠졌는지 찾으면서 허송세월을 보낸다.</p>
+<p>OSGi는 그럼 뭐가 다를까? OSGi는 명시적이며(Explicit), 선언적이고(Declarative) 버전을 적용해서(Versioned) 의존성들을 관리한다.</p>
+<p>Explicite<br />- 번들이 필요로 하는 패키지 또는 서비스와 번들이 공개할 패키지나 서비스를 명시적으로 설정한다.</p>
+<p>Declaritve<br />- 의존성을 기술하는 방법이 매우 간단한 텍스트 형식이다. 따라서 도구를 사용해서 쉽게 의존성을 기술하는 파일을 만들어 낼 수도 있다.</p>
+<p>Versioned<br />- 라이브러리는 계속 변하기 마련이다. 따라서 같은 라이브러리라 하더라도 분명 차이가 있을 것이다. 따라서 OSGi는 모든 번들 의존성 사이에 버전 범위를 기술하도록 했다. 그래서 같은 라이브러리라 하더라도 여러 개의 버전이 동시에 사용될 수 있다.</p>
+<p>참조 : <a href="http://neilbartlett.name/blog/osgibook/" target="_blank">http://neilbartlett.name/blog/osgibook/</a></p>

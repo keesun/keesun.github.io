@@ -1,0 +1,35 @@
+<p><a title="[http://www.eclipse.org/aspectj/doc/released/progguide/semantics-declare.html#extension-and-implementation]로 이동합니다." target="_blank" href="http://www.eclipse.org/aspectj/doc/released/progguide/semantics-declare.html#extension-and-implementation">http://www.eclipse.org/aspectj/doc/released/progguide/semantics-declare.html#extension-and-implementation</a></p>
+<p>&nbsp;&nbsp;&nbsp; declare parents: EmpDao extends GenericDao&lt;Emp, EmpParams&gt;;<br />
+&nbsp;&nbsp;&nbsp; declare parents: EmpDaoImpl extends HibernateGenericDao&lt;Emp, EmpParams&gt;;<br />
+&nbsp;&nbsp;&nbsp; declare @type: EmpDaoImpl: @org.springframework.stereotype.Repository;</p>
+<p>EmpDao 클래스가 GenericDao 클래스를 상속 받도록 설정.<br />
+EmpDaoImpl 클래스가 HibernateGenericDao 클래스를 상속 받도록 설정.<br />
+EmpDaoImpl 클래스에 @Repository 애노테이션 추가.</p>
+<p>문법이 복잡해 보였는데 막상 사용해보니 간단 간단 하네요.</p>
+<p>public interface EmpDao {</p>
+<p>}</p>
+<p>public class EmpDaoImpl implements EmpDao {</p>
+<p>}</p>
+<p>이런 기초적인 코드만 존재하지만..</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(locations={"/applicationContext.xml", "/applicationContext-datasource.xml"})<br />
+@Transactional<br />
+public class EmpDaoImplTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; EmpDaoImpl daoImpl;</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void daoInterface() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertNotNull(daoImpl);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; daoImpl = new EmpDaoImpl();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; GenericDao&lt;Emp, EmpParams&gt; gdao = daoImpl;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; HibernateGenericDao&lt;Emp, EmpParams&gt; hgdao = daoImpl;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void crud() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Emp emp = new Emp();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; daoImpl.add(emp);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; daoImpl.flush();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertEquals(1, daoImpl.getAll().size());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>이런 테스트를 돌릴 수 있다는거...</p>

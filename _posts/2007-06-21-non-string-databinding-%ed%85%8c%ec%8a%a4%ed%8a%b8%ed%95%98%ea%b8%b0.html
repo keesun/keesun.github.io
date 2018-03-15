@@ -1,0 +1,74 @@
+---
+layout: post
+title: Non-String DataBinding 테스트하기
+date: 2007-06-21 04:25:40.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 06장 Controller
+tags:
+- DataBinding 테스트
+- PropertyEditor
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323160566'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : Spring MVC</p>
+<p>객체가 속성으로 String 타입이 아닌 속성을 가지고 있을 때 데이터 바인딩을 하려면 별도의 조취가 취해져야 합니다. request에 담고 있는 데이터는 모두 문자열이기 때문에 이전 글에서 살펴보았던 간단한 DataBinding일 경우에는 정말 간단하게 바인딩을 할 수 있었습니다. 하지만 이번 경우에는 PropertyEditor의 도움을 받아서 역시 간단하게 문자열을 특정 타입으로 변환하여 바인딩 해줍니다.</p>
+<p>다음의 표는 ServletRequestDataBinder가 기본으로 사용하는 PropertyEditor들 입니다.<br /><img src="{{ site.baseurl }}/assets/cm265.png" class="aligncenter" width="600" height="576" alt="사용자 삽입 이미지" />따라서 위 표의 Result에 있는 타입들은 별도의 PropertyEditor를 바인더에 등록하지 않더라도 알아서 문자열을 해당 타입으로 변환하여 바인딩해줍니다.</p>
+<p>간단한 클래스 작성<br />[#M_ more.. | less.. | public class DefaultPropertyClass {</p>
+<p>&nbsp;&nbsp; &nbsp;private int intProperty;<br />&nbsp;&nbsp; &nbsp;private Integer integerProperty;<br />&nbsp;&nbsp; &nbsp;private Class classProperty;<br />&nbsp;&nbsp; &nbsp;private URL urlProperty;<br />&nbsp;&nbsp; &nbsp;private String[] strings = new String[10];</p>
+<p>&nbsp;&nbsp; &nbsp;public Class getClassProperty() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return classProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void setClassProperty(Class classProperty) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.classProperty = classProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public Integer getIntegerProperty() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return integerProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void setIntegerProperty(Integer integerProperty) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.integerProperty = integerProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public int getIntProperty() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return intProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void setIntProperty(int intProperty) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.intProperty = intProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public URL getUrlProperty() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return urlProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void setUrlProperty(URL urlProperty) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.urlProperty = urlProperty;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public String[] getStrings() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return strings;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void setStrings(String[] strings) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.strings = strings;<br />&nbsp;&nbsp; &nbsp;}<br />}_M#]<br />테스트 클래스 작성<br />[#M_ more.. | less.. | public class DefaultPropertyClassTest {</p>
+<p>&nbsp;&nbsp; &nbsp;private DefaultPropertyClass propertyClass;</p>
+<p>&nbsp;&nbsp; &nbsp;private MockHttpServletRequest request;</p>
+<p>&nbsp;&nbsp; &nbsp;private ServletRequestDataBinder binder;</p>
+<p>&nbsp;&nbsp; &nbsp;@Before<br />&nbsp;&nbsp; &nbsp;public void setUp() {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;propertyClass = new DefaultPropertyClass();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request = new MockHttpServletRequest();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;binder = new ServletRequestDataBinder(propertyClass);<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@Test<br />&nbsp;&nbsp; &nbsp;public void testBinding() throws MalformedURLException {</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request.addParameter("intProperty", "34");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request.addParameter("integerProperty", "200");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request.addParameter("classProperty", "java.lang.String");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request.addParameter("urlProperty", "http://www.example.com/");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;request.addParameter("strings[1]", "a, b, c");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;binder.bind(request);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertEquals(34, propertyClass.getIntProperty());<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertEquals(new Integer(200), propertyClass.getIntegerProperty());<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertEquals(String.class, propertyClass.getClassProperty());<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertEquals(new URL("http://www.example.com/"), propertyClass.getUrlProperty());<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertEquals("a, b, c", propertyClass.getStrings()[1]);</p>
+<p>&nbsp;&nbsp; &nbsp;}<br />}_M#]</p>

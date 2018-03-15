@@ -1,0 +1,8 @@
+<p>참조 : <a href="http://www.springframework.org/osgi/demos" target="_blank">http://www.springframework.org/osgi/demos</a></p>
+<p>한 시간 정도면 따라하실 수 있습니다. 스크린 캐스팅한 다음에 편집을 정말 잘 한 것 같습니다. 스크린 캐스팅에도 노하우가 필요할 것 같습니다. 어쨋거나.. </p>
+<p>Part1은 Integration Test 환경을 마련하는 과정입니다. 스프링이 자동으로 Menifest를 작성해주기 때문에 상당히 편하게 통합 테스트를 작성하실 수 있습니다.</p>
+<p>OSGi 통합 테스트를 작성하는 이유는 Bundle이 실제로 서비스 레지스트리에서 서비스를 가져오는지 패키지를 import했는지 등을 확인하려면 일단 OSGi 플랫폼에 올라가야겠죠. 그래서 통합 테스트가 필요합니다. 스프링은 그런 테스트를 편하게 할 수 있도록 유용한 API를 제공하고 이 동영상은 그 API들을 사용하는 방법을 보여주고 있습니다. Eclipse와 Maven 그리고 Spring DM의 조합으로 말이죠.</p>
+<p>문제는 동영상을 그대로 따라하면 분명히 잘 되지 않으실 겁니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">1. Maven에서 이클립스 프로젝트를 만든다해고 Maven 로컬 저장소를 Eclipse에 알려주지 않으면 라이브러리 못찾아서 프로젝트에 에러뜹니다.<br />2. pom.xml와 log4j.properties파일에 오타를 입력할 가능성이 농후합니다. 화면 보고 따라서 쳐야하는데.. 눈아프죠.<br />3. pom.xml에 누락된 설정이 있습니다. 화면에는 빠져있는 설정이 있는데 그걸 찾아서 넣어줘야 합니다.<br />4. 콘솔에서 mvn eclipse:eclipse를 실행한 다음에는 반드시 프로젝트를 리프래쉬 해야합니다.(F5)<br />5. src/test에 log4j 프로퍼티 파일을 넣기만 해서는 이클립스가 읽지 않습니다.</div>
+<p>Part2는 스프링의 application context에 bean 설정을 사용해서 서비스를 가져오는 테스트를 합니다. Part1의 문제들을 해결하고 진행하셨다면 무난하게 따라하실 수 있는데 딱 한가지 어려운게 있다면 역시나 xml 파일 root 엘리먼트 작성할 때 오타를 입력할 가능성이 농후하며 지루하다는 것입니다.</p>
+<p>매우 좋은 동영상이고 편집도 잘되어 있습니다. 마치 장애물 달리기를 하는 기분으로 예제를 실습해 볼 수 있어서 재미있었습니다.</p>

@@ -1,0 +1,94 @@
+---
+layout: post
+title: "[스프링 3.0] @Async 사용하기"
+date: 2009-12-10 04:59:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.0'
+tags:
+- "@Async"
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322998923'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch25s05.html#scheduling-annotation-support-async]로 이동합니다." target="_blank" href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch25s05.html#scheduling-annotation-support-async">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch25s05.html#scheduling-annotation-support-async</a></p>
+<p>봄싹 사이트에서 스터디 개설/변경, 모임 개설/변경 시에 알림 서비스로 이메일, 구글 메신저, 트위터로 알림 메시지를 전송합니다. 그런데, 사용자가 많아지다보니 해당 작업을 완료하는데 걸리는 시간이 너무 길어졌습니다. 불편해졌죠. 사실 관리자 권한이 있는 사람들만 만드는거라, 스터디 참여자 입장에서는 그런 불편을 알 수가 없을테지만, 저희는 내부적으로 좀 불편해 하고 있었습니다.</p>
+<p>그러던 중 보게 된 것이 바로 @Async.. 딱 원하던 기능입니다.</p>
+<p>필요한 빈 설정은</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- ============================================================= --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;!--&nbsp; Spring 3.0 @Task @Async&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;!-- ============================================================= --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;task:annotation-driven executor="myExecutor" scheduler="myScheduler"/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;task:executor id="myExecutor" /&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;task:scheduler id="myScheduler" /&gt;</p>
+<p>적용하려면, 원래 작업을 별도의 클래스로 빼내고 그것을 참조하도록 수정하는 것이 좋겠습니다. 안그럼 동작하질 않더라구요,</p>
+<p>@Service<br />
+public class BeanService {</p>
+<p>&nbsp;&nbsp;&nbsp; public void normal(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("===========================");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(Thread.currentThread());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("===========================");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("do it");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.more();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Async<br />
+&nbsp;&nbsp;&nbsp; public void more() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("===========================");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(Thread.currentThread());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("===========================");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("more");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>예를 들어, 위와 같은 경우 normal() 내부에서 more()를 호출할 경우에는 @Async가 적용되지 않습니다.<br />
+more()를 직접 호출할 떄는 적용됩니다.</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration<br />
+public class AsyncAnnoTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired BeanService beanService;</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void async(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(beanService, is(notNullValue()));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; beanService.normal();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; beanService.more();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>대충 만든 테스트로 돌려보면 다음과 같은 결과를 볼 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile24.uf.140360044B2080156820C1.jpg" class="aligncenter" width="600" height="206" alt="" filename="1.jpg" filemime="image/jpeg" /></p>

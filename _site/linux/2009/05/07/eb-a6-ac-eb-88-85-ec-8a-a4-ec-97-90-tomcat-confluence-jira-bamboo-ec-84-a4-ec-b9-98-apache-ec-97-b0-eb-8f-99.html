@@ -1,0 +1,60 @@
+<p>오늘은 드뎌 프로젝트 시작이라 서버 세팅을 시작했습니다. 제가 공부를 안하면 재미있는 건 사부님이 다 하고 재미없는 거랑 노가다만 시키신다고 하셨기 때문에, 빨리하고 공부를 하고 싶었는데 너무 오래 걸렸습니다. 그나마도 예전에 정리해 놓은 블로그 글들 때문에 오늘 안에 무사히 마칠 수 있었던 것 같습니다.</p>
+<p>전달 받은 사항은 이렇습니다. 현재 confluence, jira, bamboo를 백업하고, 새 버전으로 설치하는데 URL을 wiki.whiteship.me, jira.whiteship.me 형태가 아니라. www.whiteship.me/wiki, www.whiteship.me/jira 형태로 하고, WAR 배포를 하라는 것이었습니다.</p>
+<p>백업부터 시작했습니다. 위 제품들은 백업 기능을 제공하기 때문에 수월했습니다. DB와 DB의 인코딩도 확인했습니다. 해보고 나서 안 사실이지만, 이 제품들은 DB는 달라도 괜찮은데 인코딩이 다르면 좀 골치아픈 것 같습니다.</p>
+<p>다음 제품 설치를 시작했습니다. 먼저 톰캣부터 새로 설치했습니다.</p>
+<div style="border: 3px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+<span style="font-weight: bold;">톰캣 설치</span></p>
+<p>http://tomcat.apache.org/download-60.cgi</p>
+<p>wget 사용해서 다운로드.</p>
+<p>tar xvzf 사용해서 압축 풀기.</p>
+<p>rm -rf 사용해서 다운 받은 파일 삭제.</p>
+<p>vi 사용해서 conf/server.xml에서 포트 수정.</p>
+<p>vi 사용해서 bin/run.sh 파일 작성.</p>
+<p>export CATALINA_HOME=/app/webapp/slt/server/apache-tomcat-6.0.18<br />
+./startup.sh</div>
+<p>간단했습니다. 그냥 다운받아서 압축 풀고, 다른 것과 겹치지 않게 포트를 변경해주고, 간단한 실행 스크립트 하나를 작성했습니다.</p>
+<p>다음은 <a title="[http://www.google.co.kr/url?q=http://www.atlassian.com/software/confluence/&amp;ei=IZYCSqHsHpXktAPdmrCCAg&amp;sa=X&amp;oi=smap&amp;resnum=1&amp;ct=result&amp;cd=1&amp;usg=AFQjCNFIC_jMr9O41UxncCWf0Gs3RGPptQ]로 이동합니다." target="_blank" href="http://www.atlassian.com/software/confluence/">컨플루언스</a>를 설치했습니다. </p>
+<div style="border: 3px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+<span style="font-weight: bold;">컨플루언스 설치</span></p>
+<p>wget 사용해서 atlassian에서 다운로드.</p>
+<p>tar xvzf 사용해서 압축 풀기.</p>
+<p>mysql DB 만들기.</p>
+<p>mysql -u root -p<br />
+create database db이름 DEFAULT CHARACTER SET utf8 collate utf8_general_ci<br />
+show databases;</p>
+<p> /confluence/WEB-INF/classes로 이동하기.</p>
+<p>vi confluence~ 하여 data 폴더 설정하기</p>
+<p>/app/webapp/slt/index/confulence로 설정하였음.</p>
+<p>build.sh 사용하여 confuluence war 파일 빌드하기.</p>
+<p>dist 폴더에 생성된 war 파일명을 confluence.war로 변경한 다음 톰캣 webapp 폴더에 배포하기.</p>
+<p>http://~~/confluence 로 접속하여 컨플루언스 설정하기.</p></div>
+<p>
+컨플루언스는 조금 복잡한데요, 전체적으로 봤을 때는 빌드 해서 WAR 파일을 만든 다음에 톰캣에 배포하는 겁니다. 다만, WAR 파일을 만들기 전에 DB를 만든다던가, 빌드에 필요한 환경 설정을 하는 부분이 추가되어 있습니다.</p>
+<p>다음은 설치가 상당히 까다로운 Jira 설치입니다. 이번에도 어김없이 세번 실수를 하고 네번째에서야 제대로 설치했습니다. </p>
+<div style="border: 3px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+<span style="font-weight: bold;">Jira 설치</span><br style="font-weight: bold;" /><br />
+<br />
+이전에 작성한 글 참조<br />
+<a tip="" href="http://whiteship.me/1862">톰캣에 Jira ear/war 버전 설치하기</a></p>
+<p>설치 뒤에 반드시 할 일: 톰캣 메모리 늘려주기</p>
+<p>톰캣/bin 폴더에 setenv.sh 파일을 만들고 다음과 같이 작성합니다.</p>
+<p>export JAVA_OPTS="-server -XX:+UseParallelGC -Xmx768m -XX:MaxPermSize=160m -Djava.awt.headless=true"</p>
+<p>export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true"
+</div>
+<p>
+지라는 컨플루언스와 설치 방법이 약간 다릅니다. WAR 빌드에 필요한 정보들을 설정하고 WAR 빌드를 하는 것 까지는 동일합니다. 하지만, 그 뒤부터는 좀 다릅니다. 컨텍스트 정보를 담고 있는 jira.xml 파일을 서버의 /conf/Catalina/localhost에 복사하고, 해당 파일을 편집하여 데이터소스 정보를 환경에 맞게 수정해 줘야 합니다. 이부분에서 DB에 따라 설정이 제각각이기 때문에 실수가 빈번하게 발생합니다. 그리고 톰캣/lib 폴더에도 지라에 필요한 라이브러리를 추가해줘야 하죠. 여간 깐깐한 녀석이 아닙니다.</p>
+<p>이제 마지막 제품 밤부가 남았습니다.</p>
+<div style="border: 3px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+<span style="font-weight: bold;">Bamboo 설치</span></p>
+<p>단순 WAR 파일 배포.</p>
+<p>설정 파일 변경.
+</div>
+<p>
+이 녀석은 아예 WAR 파일로 다운로드를 제공합니다. 따라서 해당 WAR 파일을 톰캣/webapp에 넣은 다음 실행하면, 어떤 설정 파일을 수정해서 밤부 홈을 설정하라는 에러 메시지를 보여주는데 그렇게 시키는대로 하고 서버를 재기동하면 잘 동작합니다. 위에 것들에 비하면 상당히 편리한 설치입니다.</p>
+<p>제품 설치는 끝났고 이제 아파치/톰캣 연동이 남았습니다.</p>
+<div style="border: 3px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+<span style="font-weight: bold;">아파치/톰캣 연동하기</span></p>
+<p>이전 글 참조<br />
+<a href="http://whiteship.me/1874">아파치 톰캣 연동 </a></div>
+<p><a href="http://whiteship.me/1874"></a><br />
+이 중에서도 VirtualHost 설정에서 가장 중요한 부분은 JkMount 입니다.</p>

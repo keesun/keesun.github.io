@@ -1,0 +1,36 @@
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void calcTotalAttendanceRate() throws Exception {<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Member member = new Member();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Study study1 = new Study();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting1 = new Meeting();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting2 = new Meeting();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting3 = new Meeting();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Study study2 = new Study();</span><br style="font-weight: bold;" /><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; study1.addMeeting(meeting1);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; study1.addMeeting(meeting2);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; study2.addMeeting(meeting3);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; member.addJoinedStudy(study1);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; member.addJoinedStudy(study2);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; member.applyAttendance(meeting1);</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; member.applyAttendance(meeting2);</span><br style="font-weight: bold;" /><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int attendanceSize = member.getAttendances().size();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(attendanceSize, is(2));</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(member.getStudies().size(), is(2));</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(study1.getMeetingCount(), is(2));</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(study2.getMeetingCount(), is(1));</span><br style="font-weight: bold;" /><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; when(mockStudyRepository.getConfirmedAttendanceCountOf(member)).thenReturn(1);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; when(mockStudyRepository.getTotalAttandanceCountOf(member)).thenReturn(attendanceSize);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; memberService.calcRatesOf(member);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(member.getTotalAttendanceRate(), is(33));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(member.getTotalTrustRate(), is(50));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이 테스트에서 절반 이상이 테스트 데이터를 만들고 그 부분을 검증하는 코드입니다. 이 부분을 다음과 같이 바꿀 수 있다면.. 좋을까요? 안 좋을까요?</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting1 = Builder.Create(Meeting.class).Build();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting2 = Builder.Create(Meeting.class).Build();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Meeting meeting3 = Builder.Create(Meeting.class).Build();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Builder.Create(Member.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addStudy(Builder.Create(Study.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addMeeting(meeting1)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addMeeting(meeting2)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .Build())<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addStudy(Builder.Create(Study.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addMeeting(meeting3)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .Build())<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addAttendance(Builder.Create(Attendance.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addMeeting(meeting1)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .Build())<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addAttendance(Builder.Create(Attendance.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addMeeting(meeting2)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .Build())<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .Build();</p>
+<p>Object Mother에 대한 글을 찾아 보다가 Test Data Builder에 대한 글과 거기에 달린 댓글을 통해 닷넷에서 사용하는 NBuilder라는 것까지 대충 살펴봤는데.. 이거 뭐.. 해보지 않고서는 어떨지 잘 상상이 안 되네요.</p>
+<p><a title="[http://martinfowler.com/bliki/ObjectMother.html]로 이동합니다." target="_blank" href="http://martinfowler.com/bliki/ObjectMother.html">http://martinfowler.com/bliki/ObjectMother.html</a><br />
+<a title="[http://c2.com/cgi/wiki?ObjectMother]로 이동합니다." target="_blank" href="http://c2.com/cgi/wiki?ObjectMother">http://c2.com/cgi/wiki?ObjectMother</a><br />
+<a title="[http://geekswithblogs.net/Podwysocki/archive/2008/01/08/118362.aspx]로 이동합니다." target="_blank" href="http://geekswithblogs.net/Podwysocki/archive/2008/01/08/118362.aspx">http://geekswithblogs.net/Podwysocki/archive/2008/01/08/118362.aspx</a><br />
+<a title="[http://www.nbuilder.org/]로 이동합니다." target="_blank" href="http://www.nbuilder.org/">http://www.nbuilder.org/</a></p>
+<p>그래서 일단은 위와 같이 상상 코딩을 해보았는데.. 어떨런지요.. 흠..</p>

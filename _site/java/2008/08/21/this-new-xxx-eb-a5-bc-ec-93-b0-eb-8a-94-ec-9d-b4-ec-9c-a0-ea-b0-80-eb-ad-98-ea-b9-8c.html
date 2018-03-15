@@ -1,0 +1,14 @@
+<p>Foo.java
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">package innerclass;</p>
+<p>public class Foo {</p>
+<p>&nbsp;&nbsp; &nbsp;class Bar{<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;void say(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println("Foo-Bar");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void test(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;new Bar().say();<br />&nbsp;&nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;public static void main(String[] args) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;new Foo().test();<br />&nbsp;&nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;<br />}</div>
+<p>Bar.java
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">package innerclass;</p>
+<p>public class Bar {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; void say(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Bar");<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>흠.. 저 상황에서 java Foo 를 실행하면 어떤 결과가 출력될까요? SCJP 문제 같네요.ㅋㅋ 답은 Foo-Bar 입니다. 자기 내부에 있는 클래스랑 같은 이름의 클래스가 같은 패키지 안에 있을 경우. 내부 클래스가 우선시 됩니다.</p>
+<p>만약에 Foo.java 클래스가 덩치가 좀 커서 inner class인 Bar 클래스가 잘 안 보인다면, 밖에 있는 Bar 클래스의 객체라고 착각할 수도 있겠죠?</p>
+<p>그래서 inner class의 객체를 만들 떄는 반드시 this.을 앞에 붙여주는게 좋겠습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; <span style="font-weight: bold;">this.new Foo().test();</span><br />&nbsp;&nbsp; &nbsp;}</div>
+<p>요렇게 말이죠.</p>

@@ -1,0 +1,58 @@
+---
+layout: post
+title: EJ2E 14. public 클래스에서는 접근 메소드를 사용하지 public 필드를 사용하지 마라.
+date: 2008-12-21 10:57:23.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- effective java
+- Item 14
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322958443'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: Effective Java 2nd Edition. Item 14: In public classes, use accessor methods, not public fields</p>
+<p>그런 클래스에 있는 데이터 필드에 바로 접근하면 캡슐화(Item 13) 장점을 제공하지 못하게 된다. <br />1. 내부를 변경하면 API까지 바뀐다.&nbsp; <br />2. 필드를 읽을 떄 어떤 보조 행위를 추가하지 못한다.<br />3. 불변성을 보장할 수 없다.</p>
+<p>따라서 private 필드를 사용하고 public 접근 메소드(getter)와 (가변 클래스인 경우) setter를 제공하라.</p>
+<p>패키지 밖에서 해당 클래스에 접근이 필요한 경우에 접근 메소드를 제공하라. 자바 플랫폼 라이브러리중에 Dimension과 Point 클래스(java.awt 패키지)가 이를 위반하고 있다.(흠.. 뭔가 대체할 만한 클래스가 있겠죠?)</p>
+<p>불변값에 직접 전근하게 하는건 그리 나쁘지 않다. 1과 2는 어쩔 수 없는데 불변경은 보장할 수 있다.</p>
+<p>예제코드 hour와 minute 이라는 int 타입 final 필드를 public으로 제공하고, 해당 클래스의 생성자에서 int 값 두개를 인자로 받아서 해당 final 필드에 세팅을 해줌.</p>

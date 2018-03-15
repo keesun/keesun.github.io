@@ -1,0 +1,176 @@
+---
+layout: post
+title: "[Spring Wev Flow(2.0.8)] SecurityFlowExecutionListener 패치 for Spring Security
+  3.X"
+date: 2009-10-22 08:35:29.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 스프링 웹 플로우
+- 패치
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322868667'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 시큐리티 3.0 RC1이 나온지가 언젠데 스프링 웹 플로우는 아직도 시큐리티 2점대 기준이더군요. 스프링 웹 플로우 때문에 시큐리티 버전을 낮출수도 없는 노릇이고, 안 돌아가는 클래스 소스를 가져다 스프링 시큐리티 3.X에서 돌아가도록 수정했습니다.</p>
+<p>웹 플로우 2.X는 아직 자바 5 기능을 도입하지 않았더군요. 스프링 플젝만 자바 5 기준으로 변경한건지.. 흠.. 그래서 고치는 김에 자바5 Generic을 도입해서 타입 세이프티를 보장하게 코드를 아주 약간만 손 봤습니다.</p>
+<p>필요하신 분은 쓰세요~</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+/*<br />
+&nbsp;* Copyright 2004-2009 the original author or authors.<br />
+&nbsp;*<br />
+&nbsp;* Licensed under the Apache License, Version 2.0 (the "License");<br />
+&nbsp;* you may not use this file except in compliance with the License.<br />
+&nbsp;* You may obtain a copy of the License at<br />
+&nbsp;*<br />
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; http://www.apache.org/licenses/LICENSE-2.0<br />
+&nbsp;*<br />
+&nbsp;* Unless required by applicable law or agreed to in writing, software<br />
+&nbsp;* distributed under the License is distributed on an "AS IS" BASIS,<br />
+&nbsp;* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br />
+&nbsp;* See the License for the specific language governing permissions and<br />
+&nbsp;* limitations under the License.<br />
+&nbsp;* <br />
+&nbsp;*/<br />
+package springsprout.common.webflow;</p>
+<p>import java.util.ArrayList;<br />
+import java.util.Iterator;<br />
+import java.util.List;</p>
+<p>import org.springframework.security.access.AccessDecisionManager;<br />
+import org.springframework.security.access.AccessDecisionVoter;<br />
+import org.springframework.security.access.ConfigAttribute;<br />
+import org.springframework.security.access.SecurityConfig;<br />
+import org.springframework.security.access.vote.AbstractAccessDecisionManager;<br />
+import org.springframework.security.access.vote.AffirmativeBased;<br />
+import org.springframework.security.access.vote.RoleVoter;<br />
+import org.springframework.security.access.vote.UnanimousBased;<br />
+import org.springframework.security.core.Authentication;<br />
+import org.springframework.security.core.context.SecurityContextHolder;<br />
+import org.springframework.webflow.definition.FlowDefinition;<br />
+import org.springframework.webflow.definition.StateDefinition;<br />
+import org.springframework.webflow.definition.TransitionDefinition;<br />
+import org.springframework.webflow.execution.EnterStateVetoException;<br />
+import org.springframework.webflow.execution.FlowExecutionListenerAdapter;<br />
+import org.springframework.webflow.execution.RequestContext;<br />
+import org.springframework.webflow.security.SecurityRule;</p>
+<p>/**<br />
+&nbsp;* Flow security integration with Spring Security<br />
+&nbsp;* <br />
+&nbsp;* @author Scott Andrews<br />
+&nbsp;* @author Keesun Baik(Whiteship)<br />
+&nbsp;*/<br />
+public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter {</p>
+<p>&nbsp;&nbsp;&nbsp; private AccessDecisionManager accessDecisionManager;</p>
+<p>&nbsp;&nbsp;&nbsp; /**<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* Get the access decision manager that makes flow authorization decisions.<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @return the decision manager<br />
+&nbsp;&nbsp;&nbsp; &nbsp;*/<br />
+&nbsp;&nbsp;&nbsp; public AccessDecisionManager getAccessDecisionManager() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return accessDecisionManager;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; /**<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* Set the access decision manager that makes flow authorization decisions.<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @param accessDecisionManager the decision manager to user<br />
+&nbsp;&nbsp;&nbsp; &nbsp;*/<br />
+&nbsp;&nbsp;&nbsp; public void setAccessDecisionManager(AccessDecisionManager accessDecisionManager) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.accessDecisionManager = accessDecisionManager;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public void sessionCreating(RequestContext context, FlowDefinition definition) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SecurityRule rule = (SecurityRule) definition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (rule != null) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; decide(rule, definition);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SecurityRule rule = (SecurityRule) state.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (rule != null) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; decide(rule, state);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public void transitionExecuting(RequestContext context, TransitionDefinition transition) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SecurityRule rule = (SecurityRule) transition.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (rule != null) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; decide(rule, transition);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; /**<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* Performs a Spring Security authorization decision. Decision will use the provided AccessDecisionManager. If no<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* AccessDecisionManager is provided a role based manager will be selected according to the comparison type of the<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* rule.<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @param rule the rule to base the decision<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @param object the execution listener phase<br />
+&nbsp;&nbsp;&nbsp; &nbsp;*/<br />
+&nbsp;&nbsp;&nbsp; protected void decide(SecurityRule rule, Object object) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Authentication authentication = SecurityContextHolder.getContext().getAuthentication();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; List&lt;ConfigAttribute&gt; configAttrs = getConfigAttributes(rule);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (accessDecisionManager != null) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; accessDecisionManager.decide(authentication, object, configAttrs);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AbstractAccessDecisionManager abstractAccessDecisionManager;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; List&lt;AccessDecisionVoter&gt; voters = new ArrayList&lt;AccessDecisionVoter&gt;();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; voters.add(new RoleVoter());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; abstractAccessDecisionManager = new AffirmativeBased();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else if (rule.getComparisonType() == SecurityRule.COMPARISON_ALL) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; abstractAccessDecisionManager = new UnanimousBased();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; abstractAccessDecisionManager.setDecisionVoters(voters);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; abstractAccessDecisionManager.decide(authentication, object, configAttrs);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; /**<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* Convert SecurityRule into a form understood by Spring Security<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @param rule the rule to convert<br />
+&nbsp;&nbsp;&nbsp; &nbsp;* @return list of ConfigAttributes for Spring Security<br />
+&nbsp;&nbsp;&nbsp; &nbsp;*/<br />
+&nbsp;&nbsp;&nbsp; protected List&lt;ConfigAttribute&gt; getConfigAttributes(SecurityRule rule) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; List&lt;ConfigAttribute&gt; configAttributes = new ArrayList&lt;ConfigAttribute&gt;();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Iterator&lt;String&gt; attributeIt = rule.getAttributes().iterator();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; while (attributeIt.hasNext()) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; configAttributes.add(new SecurityConfig(attributeIt.next()));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return configAttributes;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</div>
+<p>ps: 스프링 소스 직원님들.. 웹 플로우도 빨랑 3.0으로 올려줘요. 한 달에 이슈 한 개 처리하는건 너무 심한거 아니삼..?? </p>

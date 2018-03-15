@@ -1,0 +1,57 @@
+---
+layout: post
+title: list.jsp를 태그 파일 사용하여 개선하라.
+date: 2007-03-23 04:47:26.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- ToDo
+tags:
+- 태그파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322827801'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>일종의 API를 만드는 것으로 사용자가 무척 쉽게 사용할 수 있도록 설계를 해야 합니다.<br />참조 : <a href="http://younghoe.info/490" target="_blank">프레임워크의 인터페이스(API)</a></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&lt;ajn:page&gt;<br />&nbsp; &nbsp; &lt;ajn:table&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &lt;ajn:thead&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &lt;ajn:th title="순번" /&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &lt;ajn:th title="책" /&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &lt;ajn:th title="신청자" /&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &lt;ajn:thead&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;ajn:tbody&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &lt;ajn:bookOrderColumn num="1", title="~~", link="~~", owners="~~" /&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &lt;ajn:bookOrderColumn num="1", title="~~", link="~~", owners="~~" /&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &lt;ajn:bookOrderColumn num="1", title="~~", link="~~", owners="~~" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/ajn:tbody&gt;<br />&nbsp; &nbsp; &lt;/ajn:table&gt;<br />&lt;/ajn:page&gt;</div>
+<p>태그 파일 사용해서 코드 줄여 보겠다고 만든 원본이 위와 같았습니다. 태그가..page, table, thead, th, tbody, bookOrderColumn 무려 6개.. 기능이 엄청나게 많아서 어쩔 수 없이 복잡한 인터페이스라면 모를까... 기껏 해야 테이블하나 보여줄 뿐인데 말이죠.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&lt;ajn:page title="구매 대행 신청 도서 목록"&gt;<br />&nbsp; &nbsp; &lt;ajn:table is="list" <span style="color: rgb(255, 0, 0);">of="order"</span>&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ajn:column property="<span style="color: rgb(255, 0, 0);">${order.</span>num<span style="color: rgb(255, 0, 0);">}</span>" title="순번" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ajn:column property="<span style="color: rgb(255, 0, 0);">${order.</span>bookName<span style="color: rgb(255, 0, 0);">}</span>" linkProperty="${order.link}" title="책이름"&nbsp; /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;ajn:column property="<span style="color: rgb(255, 0, 0);">${order.</span>owners<span style="color: rgb(255, 0, 0);">}</span>" title="신청자" /&gt;<br />&nbsp; &nbsp; &lt;/ajn:table&gt;<br />&lt;/ajn:page&gt;</div>
+<p>지금은 이렇게 바꼈습니다. 태그는 page, table, column 이렇게 세개로 줄었습니다. 대신 태그 파일들의 내부는 이전보다 복잡해 졌지만 그건 태그의 사용자가 고려할 사항이 아니죠.</p>
+<p>ps : EL태그 안에 EL태그가 먹힌다면(ex. ${order.${property}})&nbsp; 개선한 코드에서 색칠된 부분을 뺄 수 있습니다.</p>

@@ -1,0 +1,62 @@
+---
+layout: post
+title: 스프링의 Assert 클래스 활용하기
+date: 2011-11-17 13:05:18.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- assert
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323151043'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>보통 코딩을 하다 보면 어떤 매개변수가 필수적으로 필요한 속성이 있거나, 반드시 어떤 조건을 만족해야 하는 경우가 있다.</p>
+<p>그런 경우에 나는 보통 이렇게 코딩을 한다.<br />
+[java]if(key == null) {<br />
+throw new IllegalArgumentException(&quot;The key must be set.&quot;);<br />
+}[/java]<br />
+스프링의 Assert 유틸을 사용하면 이런 코드를 한 줄로 줄일 수 있다.<br />
+[java]Assert.isNotNull(key);[/java]<br />
+이밖에도 다양한 메서드가 있지만 그 중에서도 만능 메서드는 isTrue(boolean, String) 이게 아닌가 싶다.</p>
+<p>사실 이 클래스는 스프링 소스 코드 여기 저기서 볼 수 있는 코드인데 이제서야 써먹어 본다. 쳇…</p>

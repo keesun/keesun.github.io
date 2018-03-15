@@ -1,0 +1,62 @@
+<p>참고: Expert One-on-One J2EE Design and Development 9장</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;"><span style="font-size: 14pt;">데이터 접근 기술 선택</span></span></span></p>
+<p>J2EE 애플리케이션에서 사용할 수 있는 데이터 접근 기술 들을 두 개의 카테고리로 분류할 수 있다. SQL 기반과 O/R 맵핑 기반이다.</p>
+<p><span style="font-size: 10pt; font-weight: bold; color: rgb(0, 0, 0);"><span style="font-size: 11pt;">SQL 기반 기술</span></span></p>
+<p><span style="font-weight: bold;">JDBC</span></p>
+<p>JDBC는 SQL을 기반으로 한다. 저장 프로시저, 커스텀 쿼리, RDBMS에 특화된 기능들을 사용할 때 적절하다. </p>
+<p>중<br />
+요한 것은 우리가 JDBC를 어떻게 사용하느냐이다. 나이브한(안일한) 접근 방법은 애플리케이션 코드에서 JDBC 코드와<br />
+SQL문을 사용하는 것인데 이것은 큰 재앙을 가져올 것이다. 전체 애플리케이션을 특정 영속화 전략에 묶어버려서, 데이터 스키마가<br />
+바뀔 때 문제가 생길 것이다. 하지만 다음의 가이드라인만 지킨다면 애플리케이션 코드에서 JDBC를 효율적으로 사용할 수 있다.</p>
+<p>- JDBC 접근 코드를  비즈니스 로직에서 최대한 분리하라. JDBC 코드는 오직 DAO에만 있어야 한다.<br />
+-<br />
+JDBC API를 직접 사용하는 저수준(쌩짜) JDBC 코드를 기피하라. JDBC 에러 처리는 생산성을 심각하게 저하할 정도로<br />
+난잡하다. 에러 처리같은 저수준의 구체적인 내용들은 도우미 클래스로 빼버리고 고수준 API를 사용하라. SQL 제어권에 지장없이<br />
+그렇게 하는 것이 가능하다.</p>
+<p>JDBC를 쓰는 것에 대해서는 아무 문제가 없다 다면, 세션 EJB같은 비즈니스 객체나 DAO에서 조차 JDBC를 직접 사용하지는 말자. 비즈니스 컴포넌트를 저수준 JDBC에서 분리할 수 있는 추상화 계층을 사용하라.</p>
+<p><span style="font-weight: bold;">SQLJ </span></p>
+<p>생략</p>
+<p>O/R 맵핑 기술</p>
+<p>O/R 맵핑 기술은 JDBC나 SQLJ 같은 API와는 전혀 다른 프로그래밍 모델이다. 이것을 사용해서도 J2EE 애플리케이션에서 DAO를 구현할 수 있다.</p>
+<p>기업 수준에서 사용할만한 O/R 맵핑 솔루션을 제공하는 오픈 소스 제품이 없다.(로드 존슨이 이 책을 쓸 당시 하이버네이트가 없었거나.. 그리 알려지지 않았었나 봅니다.),&nbsp; </p>
+<p><span style="font-weight: bold;">상용 제품</span></p>
+<p>생략</p>
+<p><span style="font-weight: bold;"><span style="font-size: 8pt;">TopLink</span></span></p>
+<p>생략</p>
+<p><span style="font-weight: bold;"><span style="font-size: 8pt;">CoCoBase</span></span></p>
+<p>생략</p>
+<p><span style="font-weight: bold;">JDO</span></p>
+<p>JDO는 J2EE에 중요한 기술이지만, 미션-크리티컬한 엔터프라이즈 애플리케이션에서 사용하기에는 아직 성숙도가 증명되지 않았다.(역시 책이 쓰여진 시점을 신경쓰며 읽으셔야겠죠)</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">샘플 애플리케이션에서 사용할 데이터 접근 기술 선택하기</span></span></p>
+<p>(어찌저찌해서 JDBC 선택! 캐싱할 껀덕지도 별로 없고 저장 프로시저도 효율적으로 사용해야 하기 때문이라고 하는군요.)</p>
+<p><span style="font-weight: bold;"><span style="font-size: 14pt;">JDBC 자세히 보기</span></span></p>
+<p>그간의 경험을 통해 심각한 문제를 야기할 수 있는 J2EE 애플리케이션에서 sloppy(지져분한, 더러운, 진흙물이 튄것 같은) JDBC 코드를 보았다. </p>
+<p>*에러 처리를 제대로 못한 예제 코드*<br />
+(대부분의 JDBC 코드와 con.close(); 까지 하나의 try-catch 문으로 묶여있습니다.)</p>
+<p>이렇게 코딩을 하면 전체 애플리케이션이 깨지거나 데이터베이스가 뻗을 수 있다. con.close()까지 가기 전에 SQLException이 발생하면, 커넥션을 반환하지 못할 것이기 때문이다.</p>
+<p>*에러 처리를 제대로 한 예제 코드*<br />
+(con.close();를 finally 블럭에서 null 체크를 한 다음에 수행하면서 try-catch로 묶어줬습니다.)</p>
+<p>이렇게 하는것이 좀 더 견고하지만 너무 장황하다. 가장 간단한 JDBC 기능을 하나 수행하는데 39줄의 코드가 필요하다. 자.. 이제 JDBC API를 직접 쓰는것 말고 더 좋은 어떤 방법이 필요하다는 것을 분명히 알 수 있다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">SQLException에서 정보 축출하기</span></span></p>
+<p>JDBC 예외 처리에서 또 다른 중요한 것은 SQLExcpetion에서 최대한 정보를 뽑아내는 것이다. 불행히도 JDBC는 이 걸 매우 복잡하게 만든다.</p>
+<p>java.sql.SQLException은 getNextException() 메서드로 다음 SQLException을 받아올 수<br />
+있다. JDBC는 모든 예외 상황에 대해 오직 한 개의 예외 클래스만 사용하고 있다. 또한 벤더 코드와 SQLState 코드를<br />
+포함하고 있다.</p>
+<p>벤더코드는 getErrorCode() 메서드가 반환하는 int 값이다. 그 이름이 암시하듯이 벤더 코드는 벤더마다 다를 수 있다. 따라서 이 코드에 의존하는 것은 이식성을 저해한다.</p>
+<p>getSQLState() 메서드는 5자리 문자열을 반환한다. 이론적으로는 이식이 가능한 에러 코드다. 처음 두 자리는 고수준의 정보를 담고 있고 다음 세자리는 보다 상세한 정보를 담고 있다.</p>
+<p>불행히도 SQLState 코드는 모든 데이터베이스에서 지원하지 않으며 문제에 대해 충분한 정보를 제공해주지도 못한다. 때에따라<br />
+벤더 코드가 구체적인 정보를 얻을 수 있는 유일한 방법이 된다. 대부분의 데이터베이스는 SQLState 코드보다 훨씬 많은 벤더<br />
+코드를 제공하며 더 잘 정리된 문서를 제공하고 있다.</p>
+<p>java.sql.SQLWarning 예외도 SQLException 만큼이나 잘 이해할 필요가 있다. SQLException처럼<br />
+검증형 예외(checked exception)지만, JDBC API가 실제로 던지지는 않는다. 치명적이지 않은 SQL 에러로<br />
+여기고 그 내용을 ResultSet, Statement, Connection에 덭 붙여준다. 이런 JDBC API에<br />
+getWarnings() 메서드를 호출해서 가져올 수 있다.</p>
+<p>이런 Warning이 JDBC를 직접사용하면 좋치않은 이유 중 하나다. JDBC를 직접사용하는 코드에서 Warging을 확인하는 과정을 추가하면 111줄의 코드가 더 추가된다. 실제로 하기엔 너무 많다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">PreparedStatement 질문</span></span></p>
+<p>java.sql.PreparedStatement 인터페이스와 java.sql.Statement 인터페이스의 차이를 이해하는 것이<br />
+중요하다. prepared statent는 변수들을 바인딩할 위치와 각각의 위치에 매개변수를 설정할 수 있는 기능을 제공한다.</p>
+<p>SQL에 적합한 문자 형태로 바꿔주는 역할을 해준다.</p>
+<p>문자열 보다 더 효율적이다. 처음 prepared statement를 실행하면 파싱되고 데이터베이스에 의해 컴파일 되며<br />
+statement 캐시에 저장될 수 있다. 반면, 일반적인 SQL 문자열은 매번 변수 값이 달라질 경우 이렇게 캐시를 할 수가<br />
+없다. </p>
+<p>JDBC 2.0은 prepared statement 캐싱을 필수로 하지 않았지만, 3.0에서는 표준으로 정했다.</p>

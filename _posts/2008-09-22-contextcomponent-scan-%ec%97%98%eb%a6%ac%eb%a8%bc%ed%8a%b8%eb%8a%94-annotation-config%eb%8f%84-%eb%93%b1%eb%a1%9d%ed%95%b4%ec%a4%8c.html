@@ -1,0 +1,68 @@
+---
+layout: post
+title: context:component-scan 엘리먼트는 annotation-config도 등록해줌.
+date: 2008-09-22 09:43:29.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- annotation-config
+- component-scan
+- javadoc
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323174222'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/48d7674d11f908S.jpg" class="aligncenter" width="600" height="431" alt="" filename="1.jpg" filemime="" /><br />
+이클립스에서 F2를 이용해서 읽어봤습니다.</p>
+<p>Scans the classpath for annotated components that will be auto-registered as <br />
+&nbsp;Spring beans. By default, the Spring-provided @Component, @Repository, <br />
+&nbsp;@Service, and @Controller stereotypes will be detected. Note: <span style="font-weight: bold;">This tag implies the </span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;effects of the 'annotation-config' tag</span>, activating @Required, @Autowired, <br />
+&nbsp;@PostConstruct, @PreDestroy, @Resource, @PersistenceContext and <br />
+&nbsp;@PersistenceUnit annotations in the component classes, which is usually desired <br />
+&nbsp;for autodetected components (without external configuration). <span style="font-weight: bold;">Turn off the </span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;'annotation-config' attribute to deactivate this default behavior, for example in order </span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;to use custom BeanPostProcessor definitions for handling those annotations.</span> Note: <br />
+&nbsp;You may use placeholders in package paths, but only resolved against system <br />
+&nbsp;properties (analogous to resource paths). A component scan results in new bean <br />
+&nbsp;definition being registered; <span style="font-weight: bold;">Spring's PropertyPlaceholderConfigurer will apply to </span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;those bean definitions just like to regular bean definitions, but it won't apply to the </span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;component scan settings themselves.</span></p>
+<p>Content Model : (include-filter*, exclude-filter*)</p>
+<p>수확이 있었군, 스프링 공부할 때 살펴볼 클래스가 하나 등장했다. <span style="font-weight: bold;">PropertyPlaceholderConfigurer<br />
+</span>설정 파일 읽어서 BeanDefinition 객체로 만든다는것 까진 알고 있었는데, 어디서 누가 하는진 몰랐는데 저 녀석이 하고 있었나 봅니다. 캬오~ JavaDoc 귿이야..</p>

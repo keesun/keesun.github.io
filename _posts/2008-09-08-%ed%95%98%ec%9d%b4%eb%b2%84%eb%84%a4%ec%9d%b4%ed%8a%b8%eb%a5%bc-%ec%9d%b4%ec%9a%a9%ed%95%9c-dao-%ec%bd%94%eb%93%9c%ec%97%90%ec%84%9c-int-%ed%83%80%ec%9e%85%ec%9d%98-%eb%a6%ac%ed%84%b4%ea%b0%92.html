@@ -1,0 +1,58 @@
+---
+layout: post
+title: 하이버네이트를 이용한 DAO 코드에서 int 타입의 리턴값과 SQLException은 무슨 의미가 있을까...
+date: 2008-09-08 02:12:26.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- DAO API
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322738222'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>JDBC로만 코딩을 해오신 분에게 하이버네이트를 사용하여 만들 DAO에 필요한 메소드들을 정의해서 커밋해달라고 부탁했습니다. 그리고 다음과 같은 코드를 받았습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">public int update(final Task task) throws SQLException {<br />..<br />}</p>
+<p>public int delete(final Task task) throws SQLException {<br />...<br />}</div>
+<p>객체와 레코드가 맵핑되어 있는데 그 수를 셀 필요가 있을까요?</p>
+<p>이 코드는 하이버네이트가 그 동안 저에게 얼마나 많은 도움을 줬는지 알게 해주는 코드였습니다. 상대방과 위에서 정의한 리턴값의 용도와 의도를 물어보고, 하이버네이트의 update와 JDBC update 개념이 다르다는 것과 하이버네이트 최신 버전은 모두 RuntimeException을 던진다는 이야기를 해줬습니다. 자세한 내용은 생략하겠습니다. 이미 이전에 하이버네이트의 update에 대해 장문의 글을 쓴적도 있고, RuntimeException에 대해서는 말할 필요도 없을테니까요. </p>
+<p>성실한 누군가를 교육한다는건 정말 재밌는 일입니다. 기회가 되면 스크린캐스팅을 해서 올리고 싶은데, 실제 나가는 진도에 비해 공백이 너무 커서 스크랜캐스팅 편집도 해야 되는데 도무지 그럴 짬은 안나네요 ㅋ</p>

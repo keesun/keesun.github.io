@@ -1,0 +1,60 @@
+---
+layout: post
+title: JavaMail - HTML 메일 보내기
+date: 2008-08-07 00:25:57.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- HTML
+- javamail
+- SMTP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322987988'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이전 코드에서 getMessage부분에서 한 줄만 바꾸면 됨.</p>
+<p>message.setText()로 보냈었는데, 이번에는 setContent("내용", "메일타입"); 형태로 보냄.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; private MimeMessage getMimeMessage(Session session, String title,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String contents, String to) {<br />&nbsp; &nbsp; &nbsp; &nbsp; MimeMessage message = new MimeMessage(session);<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; message.setSubject(title);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; message.setContent("&lt;h1&gt;Hello world&lt;/h1&gt;", "text/html");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; message.setRecipient(RecipientType.TO, new InternetAddress(to));<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (MessagingException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; e.printStackTrace();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; return message;<br />&nbsp; &nbsp; }</div>
+<p>아직도 수정하지 않고 있는 예외 잡아먹는 코드.. 저 한 줄 고치는게 왜이리 귀찮을까; 말나온김에 고치기..</p>
+<p><img src="{{ site.baseurl }}/assets/hk120000000000.jpg" class="aligncenter" width="275" height="354" alt="사용자 삽입 이미지" />끝.</p>
+<p>다음은 HTML에 이미지 동봉하기..</p>
+<p></p>

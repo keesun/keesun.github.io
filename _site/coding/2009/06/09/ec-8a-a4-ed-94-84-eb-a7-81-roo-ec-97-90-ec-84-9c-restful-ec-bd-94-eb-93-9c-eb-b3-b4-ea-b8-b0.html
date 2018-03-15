@@ -1,0 +1,29 @@
+<p>vote.roo 예제에서 ChoiceController_Roo_Controller 애스팩트에서 URL 맵핑과 뷰 맵핑 정보를 위주로 살펴보겠습니다.</p>
+<p>/choice, POST =&gt; create =&gt; "choice/create" or "redirect:/choice/" + choice.getId();<br />
+/choice/form, GET =&gt; createForm =&gt; "choice/create"<br />
+/choice/{id}, GET =&gt; show =&gt; "choice/show"<br />
+/choice, GET =&gt; list =&gt; "choice/list"<br />
+PUT =&gt; update =&gt; "choice/update" or "redirect:/choice/" + choice.getId();<br />
+/choice/{id}/form, GET =&gt; updateForm =&gt; "choice/update"<br />
+/choice/{id}, DELETE =&gt; delete =&gt; "redirect:/choice"</p>
+<p>이 정보들이 개인적으로 제일 궁금했었기 때문에, 이렇게 간추려서 정리해봤습니다. 이 정보들을 보다가 뷰에서 요청을 보내는 방법이 궁금했습니다. 흠.. GET은 알겠고, POST는 폼에서 보냈을 테고 DELETE는 어케 보냈을까나... 하면서 /choice/list.jsp 파일을 열어 보았습니다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;td&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:form action="/vote/choice/${choice.id}" method="GET"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input alt="Show choice" src="/vote/static/images/show.png" title="Show choice" type="image" value="Show choice"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form:form&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/td&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;td&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:form action="/vote/choice/${choice.id}/form" method="GET"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input alt="Update choice" src="/vote/static/images/update.png" title="Update choice" type="image" value="Update choice"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form:form&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/td&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;td&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form:form action="/vote/choice/${choice.id}" method="DELETE"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input alt="Delete choice" src="/vote/static/images/delete.png" title="Delete choice" type="image" value="Delete choice"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/form:form&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/td&gt;</p>
+<p>헛 글쿠나.. 걍 폼에서 method를 명시해 줬구나.. @_@ 설정은 별로도 해줘야 할 거 없으려나..하고 web.xml과 vote-servlet.xml을 살펴봤지만 별다른 건 없더군요 아.. web.xml에 urlrewriter 필터를 적용했던데 스프링에서 사용하는 녀석이니 한 번 봐봐야겠습니다. </p>
+<p>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</p>
+<p>vote-servlet.xml에 있던 설정은 간단했습니다. internalResourceViewResolver에 prefix suffix 줘서 뷰이름으로 jsp 뷰 찾아가도록 빈을 등록했고, 파일 업로드를 하는지 머티파트 머시기 빈을 하나 등록했고, 발생한 예외에 따라 보여줄 뷰 이름을 등록한 예외처리뷰도 보이고 컴포넌트 스캔까지 네 개가 명시적으로 등록되어 있습니다.</p>
+<p>REST 적용 간단해 보이네요~</p>
+<p>참고자료: <a title="[http://www.ibm.com/developerworks/kr/library/tutorial/j-rest/?S_TACT=105AGX55&amp;S_CMP=EDU]로 이동합니다." target="_blank" href="http://www.ibm.com/developerworks/kr/library/tutorial/j-rest/?S_TACT=105AGX55&amp;S_CMP=EDU">RESTful한 웹 서비스 만들기</a></p>

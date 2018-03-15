@@ -1,0 +1,27 @@
+---
+layout: post
+title: 스프링 HandlerInterceptor로 구현해본 CORS 구현체
+date: 2012-03-30 06:45:28.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AJAX/JavaScript
+tags:
+- CORS
+- CORS 구현체
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>[gist id=2245179]</p>
+<p>이 인터셉터는 어제 정리해둔 CORS를 스프링의 HandlerInterceptor를 이용해서 처리하는 코드를 작성해본 것입니다. 하지만... 테스트는 하지 않았으니.. 반드시 테스트 해보시고 사용하시기 바랍니다. 흠....</p>
+<p>simple 방식과 preflight 방식 모두 지원하도록 만들었습니다.</p>
+<p>매우 단순하게 구현해본 구현체라서 확장성을 고려하려면 설정 방식을 여기에 코딩한 것처럼 단일값으로 적어주는게 아니라.. 특정 URL 패턴마다 지원할 Methods나 Headers를 따로 정의하고.. 요청에 들어온 헤더 정보와 비교해서.. 지원할 Methods와 Headers의 값으로 응답 헤더를 지정해 주는 것이 더 좋을 것 같다.</p>

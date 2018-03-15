@@ -1,0 +1,68 @@
+<p>간단한 테스트 코드를 작성해 봤습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">@Test public void resource(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Resource resource = context.<span style="color: rgb(255, 0, 0);">getResource("resourceTest.txt");</span><br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(resource.exists());<br />&nbsp; &nbsp; }</div>
+<p>ApplicationContext를 ResourceLoader로 사용할 수도 있기 때문에 getResource를 통해서 Resource객체를 받을 수 있습니다.</p>
+<p><img src="/assets/dk99.jpg" class="aligncenter" width="280" height="153" alt="사용자 삽입 이미지" />resourceTest.txt 파일의 위치가 위 와 같을 때.. 위의 테스트 코드는 빨간불이 들어옵니다. 대시 file: 이라는 prefix를 붙여 주면 녹색 불이 들어옵니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test public void resource(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Resource resource = context.<span style="color: rgb(255, 0, 0);">getResource("file:resourceTest.txt");</span><br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(resource.exists());<br />&nbsp; &nbsp; }</div>
+<p>getResource의 인자로 넘기는 문자열 값에 붙일 수 있는 prefix에는 다음과 같은 것들이 있습니다.</p>
+<table summary="Resource strings" border="1" width="100%">
+<thead>
+<tr>
+<th align="center">Prefix</th>
+<th align="center">Example</th>
+<th align="center">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">
+<p>classpath:</p>
+</td>
+<td>
+<p> <tt class="literal">classpath:com/myapp/config.xml</tt>
+            </p>
+</td>
+<td>
+<p>Loaded from the classpath.</p>
+</td>
+</tr>
+<tr>
+<td align="left">
+<p>file:</p>
+</td>
+<td>
+<p> <tt class="literal">file:/data/config.xml</tt>
+            </p>
+</td>
+<td>
+<p> Loaded as a <tt class="classname">URL</tt>, from the<br />
+            filesystem. <sup>[<a name="d0e6333" href="http://static.springframework.org/spring/docs/2.0.x/reference/resources.html#ftn.d0e6333">a</a>]</sup> </p>
+</td>
+</tr>
+<tr>
+<td align="left">
+<p>http:</p>
+</td>
+<td>
+<p> <tt class="literal">http://myserver/logo.png</tt>
+            </p>
+</td>
+<td>
+<p>Loaded as a<br />
+            <tt class="classname">URL</tt>.</p>
+</td>
+</tr>
+<tr>
+<td align="left">
+<p>(none)</p>
+</td>
+<td>
+<p> <tt class="literal">/data/config.xml</tt> </p>
+</td>
+<td>
+<p> Depends on the underlying<br />
+            <tt class="interfacename">ApplicationContext</tt>. </p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>아무것도 안붙인 상태에서 에러가 발생한 이유는 현재 사용중인 ApplicationContext가 ClassPathXmlApplicationContext 이녀석이기 때문에 classpath: 를 붙인 것 처럼 동작했기 때문입니다.</p>

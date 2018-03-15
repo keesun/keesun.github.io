@@ -1,0 +1,9 @@
+<p><span style="font-weight: bold;">참조한 글</span><br style="font-weight: bold;" /><a href="http://www.bywoong.com/blog_v2/1378">Oracle Tablespace 생성 - Fedora Release 7</a><br /><a href="http://www.bywoong.com/blog_v2/1379">Oracle Tablespace에 계정추가 및 관리</a>
+<div class="head_title articleHead"><a href="http://oraclestudy.tistory.com/entry/%EC%98%A4%EB%9D%BC%ED%81%B4-TABLESPACE-%EA%B0%9C%EB%85%90">오라클 TABLESPACE 개념</a></div>
+<p><a href="http://vsbabu.org/oracle/sect03.html" target="_blank"><br />
+              Tablespace Information</a></p>
+<p><span style="font-weight: bold;">테이블 스페이스 만들기</span><br />create tablespace [테이블 스페이스 이름]<br />datafile '[데이타 파일명]' size 400k<br />Autoextend on next 400k maxsize 10m;</p>
+<p><span style="font-weight: bold;">사용자 생성하면서 테이블 스페이스 지정해주기</span><br />create user [사용자 이름] IDENTIFIED BY [비번]<br />DEFAULT TABLESPACE [테이블 스페이스 이름]<br />TEMPORARY TABLESPACE temp;</p>
+<p><span style="font-weight: bold;">테이블 스페이스 확인</span><br />select *<br />from dba_data_files;</p>
+<p><span style="font-weight: bold;">사용자의 테이블 스페이스 확인하기</span><br />select &nbsp; &nbsp; USERNAME,<br />&nbsp; &nbsp; CREATED,<br />&nbsp; &nbsp; PROFILE,<br />&nbsp; &nbsp; DEFAULT_TABLESPACE,<br />&nbsp; &nbsp; TEMPORARY_TABLESPACE<br />from &nbsp; &nbsp; dba_users<br />order &nbsp; &nbsp; by USERNAME<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">테이블 스페이스 삭제</span><br />drop tablespace [테이블 스페이스 이름]</p>
+<p><span style="font-weight: bold;">사용자 삭제</span><br />drop user [사용자 이름]</p>

@@ -1,0 +1,57 @@
+<p>현재 어플리케이션에서 XML파일에 있는 SQL문들 중에서 find관련 SQL문들 입니다.<br />
+[#M_ more.. | less.. | <br />
+ &nbsp;&nbsp; &lt;!-- find --&gt;<br />
+ &nbsp;&nbsp; &lt;select id="findByName" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE name = #name#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="findByMessengerId" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE messengerId = #messengerId#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="findByEmail" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE email = #email#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="findByBlugAddress" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE blugAddress = #blugAddress#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="findByPhone" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE phone = #phone#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;<br />
+_M#]<br />
+얼핏보면 전부 같아 보이지만 다들 매~우 조금씩 다릅니다. 좀더 세련되게 고치기 위해서 다음과 같이 코드를 수정합니다.<br />
+[#M_ more.. | less.. | <br />
+ &nbsp;&nbsp; &lt;select id="find" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="phone"&gt;phone = #phone#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="blugAddress"&gt;blugAddress = #blugAddress#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="email"&gt;email = #email#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="messengerId"&gt;messengerId = #messengerId#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="name"&gt;name = #name#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &lt;/select&gt;<br />
+_M#]<br />
+그리고 SqlmapMemberDao 클래스의 코드를 다음과 같이 맵을 사용하도록 수정합니다.<br />
+[#M_ more.. | less.. | <br />
+public List&lt;Member&gt; findByPhone(String phone) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Map&lt;String, Object&gt; params = new HashMap&lt;String, Object&gt;();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; params.put("phone", phone);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return getSqlMapClientTemplate().queryForList<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">("Member.find", params);</span><br />
+}<br />
+_M#]<br />
+이전의 SqlmapMemberDao 클래스에 있던 코드는 다음과 같았습니다.<br />
+[#M_ more.. | less.. | <br />
+public List&lt;Member&gt; findByPhone(String phone) {<br />
+ &nbsp;&nbsp; &nbsp;&nbsp; return getSqlMapClientTemplate().queryForList<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">("Member.findByPhone", phone);</span><br />
+}<br />
+_M#]<br />
+코드에서의 차이는 각 메소드마다 구체적인 findByXXX와 같은 SQL문을 부르다가 좀더 추상적인 find라는 SQL을 부르게 바뀌었습니다. 이것도 이 전에 썼던 <a href="http://whiteship.tistory.com/232">메소드 추상화</a>와 비슷한 특징이 있는 것 아닌가 생각해봅니다.</p>

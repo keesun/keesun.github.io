@@ -1,0 +1,23 @@
+<h1>특징</h1>
+<ul>
+<li>Hibernate doesn't quote table and column names in the generated SQL.</li>
+</ul>
+<ul>
+<li>대소문자를 구분하거나, 특수 문자를 사용하는 기존 DB의 경우 하이버네이트가 자동으로 생성하는 컬럼이나 테이블이름을 인식하지 못할 수도 있다.</li>
+</ul>
+<h1>설정하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>역따옴표 사용하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-xml">&lt;property name=<span class="code-quote">"description"</span><br />column=<span class="code-quote">"`DESCRIPTION`"</span>/&gt;</pre>
+</div>
+</div>
+<ul>
+<li>If you quote a table or column name with backticks in the<br />
+mapping document, Hibernate always quotes this identifier in the<br />
+generated SQL.</li>
+</ul>
+<ul>
+<li>애노테이션에서도 설정할 수 있으나, 하이버네이트 <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/mapping/Column.html" target="_blank">@Column</a> 애노테이션을 사용하야 한다. JPA에서는 지원하지 않는다.</li>
+</ul>
+<h1></h1>

@@ -1,0 +1,90 @@
+---
+layout: post
+title: 3.4.3. The other scopes
+date: 2007-04-28 15:44:30.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- "&lt;aop:scoped-proxy/&gt;"
+- Global Scope
+- Request Scope
+- Session Scope
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168309'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>2.0에 새로 추가 된 Bean의 Scope들로 request, session, global session이 있습니다. 그리고 이 Scope들은 웹에서 사용하도록 만들어진 것이기 때문에 web-based applicationContext에서만 사용할 수 있습니다. 안그러면 IllegalStateException 이게 발생합니다.<br /><br style="color: rgb(255, 0, 0);" />
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"><span style="color: rgb(255, 0, 0);">web-based applicationContext 란?</span><br />WebApplicationContext 인터페이스를 구현한 클래스들로 다음과 같습니다.
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/AbstractRefreshablePortletApplicationContext.html" title="class in org.springframework.web.portlet.context">AbstractRefreshablePortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/AbstractRefreshableWebApplicationContext.html" title="class in org.springframework.web.context.support">AbstractRefreshableWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/GenericWebApplicationContext.html" title="class in org.springframework.web.context.support">GenericWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/StaticPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">StaticPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/StaticWebApplicationContext.html" title="class in org.springframework.web.context.support">StaticWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/XmlPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">XmlPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/XmlWebApplicationContext.html" title="class in org.springframework.web.context.support">XmlWebApplicationContext</a></dd>
+</dl>
+<p> 물론 위에서 abstract와 generic(여러 확장 포인트를 제공하기 위해 만든 클래스들)과 static(테스트 용도로 만들어둔 클래스들)을 제외 하면 사실상 XmlPortletApplicationContext, XmlWebApplicationContext 이 두 개가 남습니다.</p></div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.3.1. Initial web configuration</span></p>
+<p>새로 추가된 웹 어플리케이션을 위한 scope들을 사용하려면 web.xml에 리스너 or 필터를 등록해야 합니다.</p>
+<p>Sevlet 2.4 이상의 버젼을 사용할 때는 아래 처럼 리스너를 등록합니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;web-app&gt;<br />&nbsp; ...<br /><span style="color: rgb(255, 0, 0);">&nbsp; &lt;listener&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &lt;listener-class&gt;org.springframework.web.context.request.RequestContextListener&lt;/listener-class&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &lt;/listener&gt;</span><br />&nbsp; ...<br />&lt;/web-app&gt;</div>
+<p>Servlet 2.4 미만의 버젼을 사용할 때는 아래 처럼 필터를 등록합니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;web-app&gt;<br />&nbsp; ..<br />&nbsp;<span style="color: rgb(255, 0, 0);"> &lt;filter&gt; </span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;filter-name&gt;requestContextFilter&lt;/filter-name&gt; </span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;filter-class&gt;org.springframework.web.filter.RequestContextFilter&lt;/filter-class&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &lt;/filter&gt; </span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &lt;filter-mapping&gt; </span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;filter-name&gt;requestContextFilter&lt;/filter-name&gt; </span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &lt;/filter-mapping&gt;</span><br />&nbsp; ...<br />&lt;/web-app&gt;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.3.2. The request scope</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="loginAction" class="com.foo.LoginAction" scope="request"/&gt;</div>
+<p>매 요청 마다 해당 객체를 사용할 수 있으며 각각의 요청은 서로 다른 객체를 가지게 됩니다. 그리고 요청에 대한 처리가 끝나면(컨트롤러에서 해당 메소드가 종료 되면) 더 이상 사용할 수 없습니다.</p>
+<p><span style="font-weight: bold;">3.4.3.3. The session scope</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="userPreferences" class="com.foo.UserPreferences" scope="session"/&gt;</div>
+<p>매 세션 마다 해당 객체를 사용할 수 있으며 각각의 세션은 서로 다른 객체를 가지게 됩니다. 그리고 세션이 닫히면(브라우저를 끄거나 타임오버가 되면) 더 이상 사용할 수 없습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.3.4. The global session scope</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="userPreferences" class="com.foo.UserPreferences" scope="globalSession"/&gt;</div>
+<p>위에서 설명한 session Scope과 동일하며 단지 포틀릿 어플리케이션에서만 사용할 수 있다는 차이가 있습니다. 포틀릿 어플리케이션이 뭔지 모르기 때문에 pass..</p>
+<p><span style="font-weight: bold;">3.4.3.5. Scoped beans as dependencies</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; xmlns:aop="http://www.springframework.org/schema/aop"</span><br />&nbsp; &nbsp; &nbsp;&nbsp; xsi:schemaLocation="<br />http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd<br /><span style="color: rgb(255, 0, 0);">http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;</span></p>
+<p>&nbsp; &nbsp; &lt;!-- a HTTP Session-scoped bean exposed as a proxy --&gt;<br />&nbsp; &nbsp; &lt;bean id="userPreferences" class="com.foo.UserPreferences"<span style="color: rgb(255, 0, 0);"> scope="session"</span>&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- this next element effects the proxying of the surrounding bean --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> &lt;aop:scoped-proxy/&gt;</span><br />&nbsp; &nbsp; &lt;/bean&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &lt;!-- a singleton-scoped bean injected with a proxy to the above bean --&gt;<br />&nbsp; &nbsp; &lt;bean id="userService" class="com.foo.SimpleUserService"&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- a reference to the proxied 'userPreferences' bean --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="userPreferences" ref="userPreferences"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;/bean&gt;<br />&lt;/beans&gt;</div>
+<p>위와 같이 &lt;aop:scoped-proxy/&gt;를 항상 request, session, globalsession 빈을 만들 때 넣어줘야 합니다. </p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"><span style="color: rgb(255, 0, 0);">왜?</span><br />보통은 아래 처럼 DI하는 것을 생각할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="userPreferences" class="com.foo.UserPreferences" scope="session"/&gt;</p>
+<p>&lt;bean id="userManager" class="com.foo.UserManager"&gt;<br />&nbsp; &nbsp; &lt;property name="userPreferences" ref="userPreferences"/&gt;<br />&lt;/bean&gt;</div>
+<p>하지만 이때 userPreferences 빈은 scope이 session이지만 userManager의 scope이 singletone(default가 singleton이죠.)이기 때문에 문제가 발생합니다. 매 세션 마다 새로운 객체를 만들어 줘야 하지만 저 세션 객체를 사용하는 빈의 생성을 한 번 밖에 안하기 때문에 원하던 대로 동작하지 못합니다.<br />따라서 매 세션 마다 새로운 객체를 만들어서 줄 프록시를 만들기 위해서 &lt;aop:scoped-proxy/&gt;를 사용합니다.</div>
+<p><span style="font-weight: bold;">3.4.3.5.1. Choosing the type of proxy created</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;!-- DefaultUserPreferences implements the UserPreferences interface --&gt;<br />&lt;bean id="userPreferences" class="com.foo.DefaultUserPreferences" scope="session"&gt;<br />&nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> &lt;aop:scoped-proxy proxy-target-class="false"/&gt;</span><br />&lt;/bean&gt;</p>
+<p>&lt;bean id="userManager" class="com.foo.UserManager"&gt;<br />&nbsp; &nbsp; &lt;property name="userPreferences" ref="userPreferences"/&gt;<br />&lt;/bean&gt;</div>
+<p>Spring AOP는 프록시 기반이며 프록시를 만들 때 인터페이스를 기반으로 만들 거라면 JDK의 API를 사용하고 클래스 기반으로 만들 때에는 CGLib을 사용합니다.</p>
+<p>위에서도 Spring AOP를 사용하고 있고 기본적으로 CGLib을 사용하여 프록시를 만들도록 설정되어 있습니다.</p>
+<p>대상이 되는 객체가 어떤 인터페이스를 기반으로 만들어 졌고 JDK의 프록시 API를 사용하고 싶다면 위의 예제 코드 처럼 proxy-target-class 속성의 값에 false 를 넣어 주면 됩니다.</p>

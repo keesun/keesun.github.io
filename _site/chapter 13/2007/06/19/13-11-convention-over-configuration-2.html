@@ -1,0 +1,15 @@
+<p>이번에는 MVC중에서 M 즉 모델에 적용할 수 있는 Convention을 살펴보겠습니다.</p>
+<p>Spring의 컨트롤러에서 모델을 넘겨줄 때 ModelAndView 객체를 사용합니다. 보통은 다음과 같이 사용합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public ModelAndView list(HttpServletRequest request, HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("issue/list", "issueList", issueService.getAll());<br />&nbsp; &nbsp; }</div>
+<p>또는 뷰와 모델을 명확하게 구분하기 위해 다음과 같이 사용합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public ModelAndView list(HttpServletRequest request, HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("issue/list")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 0, 255);">.addObject("issueList", issueService.getAll());</span><br />&nbsp; &nbsp; }</div>
+<p>갑자기 기억나는 이야기지만 객체의 이름은 ModelAndView인데 View먼저 등록하니까 이름을 ViewAndModel로 해야하는 것 아니였나.. 라는 글이 생각납니다.</p>
+<p>Anyway addObject 메소드가 오버로딩으로 또 다른 메소드 하나가 더 존재합니다. 그것을 사용하면 코드를 다음과 같이 변경 할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public ModelAndView list(HttpServletRequest request, HttpServletResponse response){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("issue/list")<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 0, 255);"> .addObject(issueService.getAll());</span><br />&nbsp; &nbsp; }</div>
+<p>모델의 이름이 생략됐습니다.</p>
+<p>바로 이겁니다. 모델의 이름을 생략할 수 있습니다. 생략하고 보내면 View에서는 그럼 이 모델을 어떤 이름으로 찾게 될 것인가?</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">if(객체타입 == List || Set || 배열){<br />&nbsp; &nbsp; 객체의 camel-case 맨 뒤에 List를 붙인 이름을 가지게 됩니다.<br />} else {<br />&nbsp; &nbsp; 객체의 camel-case 이름을 가지게 됩니다.<br />}</div>
+<p>샘플<br />x.y.Foo 타입의 객체는 foo 라는 이름을 가지게 됩니다.<br />x.y.z.FooBar 타입의 객체는 fooBar 라는 이름을 가지게 됩니다.<br />List&lt;Foo&gt; 타입의 객체는 fooList 라는 이름을 가지게 됩니다.<br />FooBar[] 타입의 객체는 fooBarList 라는 이름을 가지게 됩니다.</p>
+<p>이 메소드를 사용할 때 한 가지 주의할 것이 있습니다.
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">Note: <span style="color: rgb(255, 0, 0); font-weight: bold;">Empty Collections are not added to the model when using this method because we cannot correctly determine the true convention name. View code should check for null rather than for empty collections as is already done by JSTL tags.</span></div>
+<p>비어있는 콜렉션을 추가할 수 없다는 군요.</p>

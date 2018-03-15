@@ -1,0 +1,11 @@
+<p>와 세상에 이렇게 간단하다니;;; 정말 RoR 장난아니네요.<br />- <a href="http://www.onlamp.com/pub/a/onlamp/2006/12/14/revisiting-ruby-on-rails-revisited.html" target="_blank">Rolling with Ruby on Rails Revisited</a>, <a href="http://network.hanb.co.kr/view.php?bi_id=1349" target="_blank">번역 기사</a><br />- <a href="http://www.onlamp.com/pub/a/onlamp/2007/01/05/revisiting-ruby-on-rails-revisited-2.html?page=1" target="_blank">Rolling with Ruby on Rails Revisited2</a>, <a href="http://network.hanb.co.kr/view.php?bi_id=1350" target="_blank">번역 기사</a><br />위 글 두개를 참조 하며 따라해 보았습니다. 번역 기사에 오타(특히 코드 주변)[footnote]Reflection을 반사라고 번역한 부분이 꽤 인상적이였습니다.[/footnote]가 있긴 하지만 화면 캡쳐 한 걸 보면 쉽게 따라하실 수 있습니다.</p>
+<p>그 전에 설치와 서버 구동에 관한 부분은 위 글과 달리 <a href="http://www.rubyonrails.org/down" target="_blank">http://www.rubyonrails.org/down</a> 이 글을 참조 했습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">프로젝트 만드는 방법</span><br />rails 프로젝트 패키지명<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">DB 이름 convention</span><br />프로젝트 홈 이름_development</p>
+<p><span style="font-weight: bold;">DB 설정</span><br />비번 없는 root 계정에 위의 DB 이름을 defalut로 사용하기 때문에 별다른 설정이 필요 없을 수도 있습니다.<br />프로젝트홈/config/database.yml</p>
+<p><span style="font-weight: bold;">Scaffold로 기본적인 CRUD를 위한 모델, 컨트롤러, 뷰 생성하기</span><br />ruby script/generate scaffold 모델명 컨트롤러명</p>
+<p><span style="font-weight: bold;">서버 구동 하기</span><br />
+ruby script/server</p>
+<p><span style="font-weight: bold;">서버 접속하기</span><br />http://localhost:3000</p>
+<p><span style="font-weight: bold;">서버 멈추기</span><br />
+Ctrl + c, Ctrl + z, Ctrl + x 셋을 번갈아 가며 눌러보다 보면 멈추게 됩니다. [footnote]콘솔창이 느리게 반응해서 어떤 키로 멈췄는지 모르겠네요;; 아마도 c 일듯.[/footnote]<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">프로젝트 구조</span><br />- 프로젝트 홈<br /><img src="/assets/cm224.jpg" class="aligncenter" width="500" height="348" alt="사용자 삽입 이미지" /><br />- app<br /><img src="/assets/cm223.jpg" class="aligncenter" width="500" height="168" alt="사용자 삽입 이미지" /><br />와 이걸로 게시판 만들면 정말 5분만에 만들겠네요. 예제 따라하면서 자동으로 만들어 주는 화면과 컨틀롤러들이 동작하는 걸 보고 깜짝 놀랐습니다. 아직 화면을 바꾸고 컨트롤러의 동작을 바꾸지는 못하지만 이런 기본 포맷만 만들어서 보여주기에는 더없이 좋은 것 같습니다.</p>
+<p>좀 더 공부해서 화면과 컨트롤러와 모델을 내 맘대로 수정할 수만 있으면 지금 Spring, Hibernate로 하고 있는 학교 프로젝트들을 좀 더 쉽게 만들 수 있을 것 같다는 느낌이 듭니다.</p>
+<p>과연 내 맘대로 주무룰수 있을 때 까지 공부하는게 얼마나 힘들지 모르겠지만 좋은 번역서들과 책들이 나오고 있기 때문에 재밌게 공부할 수 있을 것 같네요. RoR 멋져효~</p>

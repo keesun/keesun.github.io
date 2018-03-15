@@ -1,0 +1,61 @@
+---
+layout: post
+title: Commonclipse
+date: 2007-10-15 11:05:31.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Commonclipse
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323191785'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Common-lang 패키지에 있는 hashcode, equals, toString 메소드 생성을 편하게 할 수 있는 클래스를 소개한 적이 있습니다.</p>
+<p>그런데 예전 영회형 블로그를 뒤지다가 멋진 툴을 발견했습니다. 바로 그 패키지를 사용해서 명시적으로 메소드를 작성해 주는 Eclipse 플러그인입니다.</p>
+<p>2005년에 마일스톤6에서 개발이 중단 된 플러그인으로 보여집니다.<br />업데이트 사이트 URL은 <span style="font-weight: bold;">http://commonclipse.sourceforge.net</span> 입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/co407.jpg" class="aligncenter" width="600" height="418" alt="사용자 삽입 이미지" />위에 보이는 것과 같이 설치하면 compareTo() 메소드와 Object 클래스에 있는 것들 중에 종종 오버라이딩하여 구현해야 할 녀석들을 만들어주는 메뉴가 보입니다.</p>
+<p>다음은 username과 password만 가지고 있는 Member 클래스에서 위의 메뉴를 사용하여 생성한 메소드들 입니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; /**<br />&nbsp; &nbsp; &nbsp;* @see java.lang.Object#equals(Object)<br />&nbsp; &nbsp; &nbsp;*/<br />&nbsp; &nbsp; public boolean equals(Object object) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (!(object instanceof Member)) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return false;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; Member rhs = (Member) object;<br />&nbsp; &nbsp; &nbsp; &nbsp; return new EqualsBuilder().appendSuper(super.equals(object)).append(this.username, rhs.username).append(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.password, rhs.password).isEquals();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp; &nbsp;* @see java.lang.Object#hashCode()<br />&nbsp; &nbsp; &nbsp;*/<br />&nbsp; &nbsp; public int hashCode() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new HashCodeBuilder(2057170459, -1661316787).appendSuper(super.hashCode()).append(this.username).append(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.password).toHashCode();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp; &nbsp;* @see java.lang.Comparable#compareTo(Object)<br />&nbsp; &nbsp; &nbsp;*/<br />&nbsp; &nbsp; public int compareTo(Object object) {<br />&nbsp; &nbsp; &nbsp; &nbsp; Member myClass = (Member) object;<br />&nbsp; &nbsp; &nbsp; &nbsp; return new CompareToBuilder().append(this.username, myClass.username).append(this.password, myClass.password)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .toComparison();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; /**<br />&nbsp; &nbsp; &nbsp;* @see java.lang.Object#toString()<br />&nbsp; &nbsp; &nbsp;*/<br />&nbsp; &nbsp; public String toString() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ToStringBuilder(this).append("password", this.password).append("username", this.username).toString();<br />&nbsp; &nbsp; }</div>
+<p>관련글<br /><a href="/1170">2007/09/27 - [모하니?/Coding] - commons.lang.builder 패키지</a></p>

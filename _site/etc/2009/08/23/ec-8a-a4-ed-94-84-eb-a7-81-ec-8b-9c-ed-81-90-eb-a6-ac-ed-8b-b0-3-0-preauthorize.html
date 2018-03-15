@@ -1,0 +1,16 @@
+<p>&nbsp;&nbsp;&nbsp; &lt;global-method-security secured-annotations="enabled"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; jsr250-annotations="enabled" <span style="font-weight: bold;">pre-post-annotations="enabled"</span> /&gt;</p>
+<p>시큐리티 설정 파일에 위와 같이 설정하면 @PreAuthorize, @PostAuthorize, @PreFilter, @PostFilter를 사용할 수 있습니다.</p>
+<p>이들 애노테이션에서는 스프링 EL을 사용해서 현재 사용자 정보에 접근하거나, (pre 인 경우)메서드의 인자값 또는 (post 인 경우)메서드의 반환값의 정보에 접근할 수 있습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @PreAuthorize("(#study.manager.email == principal.Username) or hasRole('ROLE_ADMIN')")<br />
+&nbsp;&nbsp;&nbsp; public void updateStudy(Study study) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; repository.update(study);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>위 예제는 다음 주에 오픈 할 봄싹 프로젝트에서 사용하고 있는 코드입니다. Study를 수정하려는 사람이 관리자이거나, 스터디를 만든 사람인지 확인한 뒤에 메서드를 실행합니다. 만약 해당 EL이 false로 판단되면 Access Dinied 에러를 던져줍니다.</p>
+<p>애노테이션을 메서드에만 붙이지 않고 클래스에도 붙여서 클래스에 정의한 모든 메서드에 적용할 수도 있습니다. 이런식으로요.</p>
+<p>@Service<br />
+@Transactional<br />
+@PreAuthorize("hasRole('ROLE_USER')")<br />
+public class StudyService {</p>
+<p>...</p>
+<p>}</p>

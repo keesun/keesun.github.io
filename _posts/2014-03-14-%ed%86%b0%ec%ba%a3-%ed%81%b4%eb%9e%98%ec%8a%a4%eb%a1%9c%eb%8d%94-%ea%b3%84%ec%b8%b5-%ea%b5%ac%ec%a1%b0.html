@@ -1,0 +1,48 @@
+---
+layout: post
+title: 톰캣 클래스로더 계층 구조
+date: 2014-03-14 09:21:39.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>서블릿 안에다가</p>
+<p>ClassLoader contextCL = Thread.currentThread().getContextClassLoader();<br />
+System.out.println("=============== Thread ClassLoader ================");<br />
+System.out.println("ContextClassLoader: " + contextCL);<br />
+System.out.println("Parent Of ContextClassLaoder: " + contextCL.getParent());<br />
+System.out.println("GrandParent Of ContextClassLaoder: " + contextCL.getParent().getParent());</p>
+<p>System.out.println("=============== System ClassLoader ================");<br />
+ClassLoader parentCL = ClassLoader.getSystemClassLoader();<br />
+System.out.println("SystemClassLoader: " + parentCL);<br />
+System.out.println("Parent Of SystemClassLoader: " + parentCL.getParent());<br />
+System.out.println("GrandParent Of SystemClassLoader: " + parentCL.getParent().getParent());</p>
+<p>이렇게 찍었다. 역시 최고의 디버깅은 sout이지.</p>
+<p>결과는..</p>
+<p>=============== Thread ClassLoader ================<br />
+ContextClassLoader: WebappClassLoader<br />
+context:<br />
+delegate: false<br />
+repositories:<br />
+/WEB-INF/classes/<br />
+----------&gt; Parent Classloader:<br />
+org.apache.catalina.loader.StandardClassLoader@28d47c65</p>
+<p>Parent Of ContextClassLaoder: org.apache.catalina.loader.StandardClassLoader@28d47c65<br />
+GrandParent Of ContextClassLaoder: sun.misc.Launcher$AppClassLoader@247973e4<br />
+=============== System ClassLoader ================<br />
+SystemClassLoader: sun.misc.Launcher$AppClassLoader@247973e4<br />
+Parent Of SystemClassLoader: sun.misc.Launcher$ExtClassLoader@21a79071<br />
+GrandParent Of SystemClassLoader: null</p>
+<p>그러하다. 자세한 설명은 생략.</p>

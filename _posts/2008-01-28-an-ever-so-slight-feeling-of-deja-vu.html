@@ -1,0 +1,113 @@
+---
+layout: post
+title: An Ever So Slight Feeling of Dèjà Vu
+date: 2008-01-28 08:17:16.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- vs Java
+tags:
+- c#
+- Java VS C#
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323124402'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">1. Nested classes</span></p>
+<p>- Java의 inner9(non static) class와 같은 개념은 C#에 없지만 static nested class 와 같은 것은 있다.<br />- 따라서 안쪽 클래스에서 감싸고 있는 클래스의 static 멤버에만 접근할 수 있다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">public class Car<br />{<br />&nbsp; &nbsp; private Engine engine;</p>
+<p>&nbsp; &nbsp; private static string name = "람보르기니";</p>
+<p>&nbsp; &nbsp; private class Engine<br />&nbsp; &nbsp; {<br />&nbsp; &nbsp; &nbsp; &nbsp; string make;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; public static void Main()<br />&nbsp; &nbsp; &nbsp; &nbsp; {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Console.WriteLine(name);<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }<br />}</div>
+<p>- Java에서는 anonymous inner class로 method 안에 클래스를 정의할 수 있는데, C#에서는 안 된다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. Threads and Volatile Members</span></p>
+<p>- System.Threading.Thread 객체를 만들어서 System.Threading.ThreadStart 객체를 전달한다.<br />- Delegates를 사용하기 때문에, 어떤 메소드든 멀티쓰레드로 실행할 수 있다.<br />- System.Threading.Monitor 클래스의 Wait(), Pulse(), PulseAll()와 Thread.Sleep()로 쓰레드를 제어한다.</p>
+<p>Thread t = new Thread(new ThreadStart(wt.PerformTask));<br />t.Start();</p>
+<p>- C# and Java have the concept of the volatile keyword which is used to tell the language runtime that reordering instructions related to accessing such fields is prohibited.(어렵다. volatile)<br />- Java에서 더블 체크드 롹킹 안 되는 이유<br />&nbsp; &nbsp; 1. Currently the Java Memory Model does not<br />
+        prevent reordering of writes to volatile variables with writes<br />
+        to other variables so it is possible that the new object is<br />
+        constructed before the helper reference is made to point at the<br />
+        newly created object meaning that two objects are created.(이건 몰랐는데 복잡하네..)<br />&nbsp; &nbsp; 2. Also<br />
+        it is possible that the helper reference is made to point at a<br />
+        block of memory while the object is still being created meaning<br />
+        that a reference to an incomplete object will be returned.<br />- C#에서의 volatile은 저런 문제를 막아 준다.(왜냐면, reads and writes cannot be<br />
+        moved backward or forward across a volatile write.)<br />- C#,<br />
+        being marked as <code>volatile</code> also prevents the Just In<br />
+        Time compiler from placing the variable in a register and also<br />
+        ensures that the variable is stored in global memory on<br />
+        multiprocessor systems.<br />=&gt; Anyway, C#에서는 volatile을 사용해서 더블 체크드 롹킹을 사용할 수 있다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. Operator Overloading</span></p>
+<p>- 쌩뚱맞게 쓰면 안 된다. 직관적으로Intuitively 이해할수 있을 만한 경우에 사용하는 것이 좋다.<br />- C++과는 다르게 new, ( ),&nbsp; ||, &amp;&amp;, = 나 +=, -=, 같은 복합 타입을 재정의 할 수는 없다. 그러나.. 재정의 된 연산자를 복합하여 사용할 수는 있다. 예를 들어, + 를 재정의 한 다음에 += 을 사용한다는 식의..</p>
+<p><span style="font-weight: bold;">4. switch Statment</span></p>
+<p>- C#에서는 string 타입도 지원한다.<br />- statement를 아예 한 줄도 적지 않으면, fall throght 하는데, 그렇지 않을 경우 무조건 beak; 문을 추가해야 함.(안그러면 컴파일 에러)<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">5. Assemblies</span></p>
+<p>- .Net 프레임워크에서 코드 패키징 하는 유닛이다. Java의 JAR랑 비슷.<br />- 어샘블리는 EXE나 DDL 형태로 저장된다.</p>
+<p><span style="font-weight: bold;">6. Collections</span></p>
+<p>- System.Collections 네임스페이스에서 IList, IEnumerable, IDictionary, ICollection 과 CollectionBase 같은 인터페이스와 이들의 구현체로 ArrayList, Stack, Queue, HashTable 과 SortedList를 제공한다.<br />- System.Collections.Generic 네임스페이스에는 List&lt;T&gt;, Stack&lt;T&gt;,Queue&lt;T&gt;, Dictionary&lt;K,T&gt; 와SortedDictionary&lt;K,T&gt; 같은 제네릭 타입을 제공한다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7. goto (no longer considered harmful)</span></p>
+<p>- 가독성을 높이고 코드 중복을 줄이기 위해 사용한다.<br />-  secondary usage of the <code>goto</code><br />
+        statement is the ability to mimic resumeable exceptions like<br />
+        those in Smalltalk(???)<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">8. Virtual Methods (and final ones too)</span></p>
+<p>- 자바의 기본적으로 모든 메소드는 virual method로써, 재정의가 가능하다. 단, final을 붙이면 재정의 할 수 없다. 같은 시그너처를 가진 메소드를 하위 클래스에 정의할 수 없다.<br />- C#에서는 virtual 키워드를 사용해서 재정의 할 수 있는 메소드를 상위 클래스에 정의 할 수 있다. 그리고 하위 클래스에서는 override 키워드를 사용해서 재정의 한다. 이렇게 해야만 다형성이 적용된다.<br />- C#에서는 virtual 키워드를 붙이지 않으면, 모두 final 메소드 처럼 동작하지만, 같은 시그너처를 가진 메소드를 정의할 수 있다. 다형성은 적용되지 않는다. 또는 new 키워드를 하위 클래스의 메소드에 붙여준다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">9. File I/O</span></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">using System;<br />using System.IO; </p>
+<p>public class FileIOTest {</p>
+<p>&nbsp; &nbsp; public static void Main(string[] args){</p>
+<p>&nbsp; &nbsp; FileStream inputFile&nbsp; = new FileStream("input.txt", FileMode.Open);<br />&nbsp; &nbsp; FileStream outputFile = new FileStream("output.txt", FileMode.Open);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; StreamReader sr &nbsp; &nbsp; = new StreamReader(inputFile);<br />&nbsp; &nbsp; &nbsp; &nbsp; StreamWriter sw &nbsp; &nbsp; = new StreamWriter(outputFile);</p>
+<p>&nbsp; &nbsp; String str;</p>
+<p>&nbsp; &nbsp; while((str = sr.ReadLine())!= null)<br />&nbsp; &nbsp; &nbsp; &nbsp; sw.Write(str);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; sr.Close();<br />&nbsp; &nbsp; &nbsp; &nbsp; sw.Close();<br />&nbsp; &nbsp; }</p>
+<p>}//FileIOTest</p></div>
+<p>- 한글은 깨지던데, 역시 한글은 어려워..인코딩 신경써야 함.</p>
+<p><span style="font-weight: bold;">10. Object Serialization</span></p>
+<p>- C#에서는 직렬화를 XML 형태로도 할 수 있다. 바이너리 형태도 가능. 커스텀 방식을 사용할 수 도 있다.<br />- Java의 Serializable 인터페이스 -&gt;&nbsp; C#의 [Serializable]<br />- Java의 transient -&gt; C#의 [NonSerialized]</p>
+<p><span style="font-weight: bold;">11. Documentation Generation from Source Code Comments</span></p>
+<p>- html 문서가 아니라 XML 문서를 만들어 준다. javadoc 같이 주석에 적어둔 XML을 HTML로 만들어 주는 툴은 없다.</p>
+<p>///&lt;summary&gt;Calculates the square of a number.&lt;/summary&gt;<br />///&lt;param name="num"&gt;The number to calculate.&lt;/param&gt;<br />///&lt;return&gt;The square of the number. &lt;/return&gt;<br />///&lt;exception&gt;NumberTooBigException - this occurs if the square of the number <br />///is too big to be stored in an int. &lt;/exception&gt;<br />&nbsp;public static int square(int num){}</p>
+<p><span style="font-weight: bold;">12. Multiple Classes in a Single File</span></p>
+<p>- 파일 하나에 public class가 여러 개여도 상관없으며, 파일 이름과 클래스 이름이 달라도 상관없음.</p>
+<p><span style="font-weight: bold;">13. Importing Libraries</span><br style="font-weight: bold;" /><br />- using 키워드 사용하기<br />- /r 로 컴파일러한테 Assembly 위치 알려주기.</p>
+<p><span style="font-weight: bold;">14. Events</span></p>
+<p>- C#은 delegate 키워드 를 사용한다.<br />- 이벤트는&nbsp; System.EventArgs 를 상속한 클래스. 이 클래스는 독립적으로 생성할 수 있는 생성자를 가지고 있다. 그래서 new YourEventArgs(inits) 이런 형태로 넘겨질 수 있어야 한다.<br />- 퍼블리셔는 On 으로 시작하는 protected 메소드를 가지고 있다. 이 메소드들은 특정 이벤트가 발생할 때에 자동으로 호출 된다. 그럼 이 녀석은 발생한 지점 source와 이벤트 EventArgs 객체를 delegate를 호출하면서 넘겨준다.<br />- 구독자는 이벤트 델리게이트와 동일한 리턴 타입과 아규먼트를 가지고 있는 메소드다.<br />- 이벤트 델리케이트는 보통 void 타입의 리턴 타입이고, 아규먼트는 두 개를 가지고 있다. 한 개는 소스, 한 개는 EventArgs.<br />- "event" is used to automatically specify that a field within a subscriber is a delegate that will be used as a callback during an event-driven situation. <br />- +=, -= 을 컴파일러가 핸들러로 추가 삭제 하는 것으로 인식해준다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; &nbsp; &nbsp; public delegate void EvenNumberSeenHandler(object sende, EventArgs e);&nbsp; // 1</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; public event EvenNumberSeenHandler EvenNumHandler; // 2</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; protected void OnEvenNumberSeen(int num) // 3<br />&nbsp; &nbsp; &nbsp; &nbsp; {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (EvenNumHandler != null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; EvenNumHandler(this, new EvenNumberEvent(num));<br />&nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<p>1. delegate 타입 설정. delegate가 가져야 할 메소드 인자 타입을 정의 =&gt; 어떤 타입의 이벤트를 처리할 지 정의.<br />2. 이벤트 핸들러 설정. =&gt; 이벤트가 발생할 때, 호출할 핸들러들을 정의 =&gt; 핸들러의 타입은 위에서 정의한 delegate 타입을 사용.<br />3. 이벤트 발생 시키기. =&gt; 위에 정의한 핸들러를 필요한 인자들과 함께 호출해주기.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">pub.EvenNumHandler += new Publisher.EvenNumberSeenHandler(EventHandler2);<br />pub.RunNumbers();<br />pub.EvenNumHandler -= new Publisher.EvenNumberSeenHandler(EventHandler);</div>
+<p>- 아 복잡하다.</p>
+<p><span style="font-weight: bold;">15. Cross Language Interoperability</span></p>
+<p>- Java는 Java Native Interface를 사용해서&nbsp; C나 C++ 어샘블리를 사용할 수 있다.<br />- C#은 CRL을 사용해서 다른 언어를 사용할 수 있다. <br />- COM 객체를 C#에서 사용할 수 있다. 반대도 가능.<br />- C# programs can also call almost any function in any DLL using a combination of the extern keyword and the DllImport attribute on the method declaration.</p>
+<p>- 역시 복잡하다.</p>

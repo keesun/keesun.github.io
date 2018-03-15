@@ -1,0 +1,68 @@
+---
+layout: post
+title: Timestamp-based concurrency control
+date: 2007-04-25 08:13:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 개념
+tags:
+- non-lock concurrency control
+- Timestamp-based concurrency control
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322810213'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://en.wikipedia.org/wiki/Timestamp-based_concurrency_control" target="_blank">http://en.wikipedia.org/wiki/Timestamp-based_concurrency_control</a></p>
+<p>또 다른 non-lock concurrency control 방법 중 하나입니다. 다음과 같이 정의하고 있습니다.<br />
+<blockquote>timestamp-based concurrency control is a <span style="color: rgb(255, 0, 0); font-weight: bold;">non-lock concurrency control</span> method, used in relational databases to safely handle transactions, <span style="color: rgb(255, 0, 0); font-weight: bold;">using timestamps.</span></p></blockquote>
+<p>모든 트랜잭션이 시작할 때 timestamp를 가지게 되며 이 값은 고유하며 나중에 시작한 트랜잭션이 더 큰수의 timestamp를 자기게 됩니다.</p>
+<p>따라서 두 개의 트랜잭션 내의 어떤 작업들이 충돌 했을 때 해당 작업이 속해있는 트랜잭션의 타임스팸프로 어떤 작업이 먼저 수행되야 하는 지 알 수 있습니다.</p>
+<p>또 한 데이타 베이스에 있는 데이타들은 각각 Read Time Stamp와 Write Time Stamp를 가지고 있습니다. RTS는 해당 데이타를 누군가 읽을 때 마다 갱신 됩니다. WTS는 해당 데이타를 쓸 떄마다 업데이트 됩니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">따라서 어떤 트랜잭션이 어떤 데이타를 읽고 싶을 때...</p>
+<p>1. 읽고자 하는 데이타의 WTS 보다  해당 트랜잭션의 TS(타임스탬프)가 작다면( == 트랜잭션이 시작 된 후에 데이타가 변경되었다.) 트랜잭션은 취소되고 다시 실행 합니다.</p>
+<p>2. 읽고자 하는 데이타의 WTS 보다 해당 트랜잭션의 TS가 크다면( == 트랜잭션이 시작하기 전에 테이타의 변경이 완료됐다.) 트랜잭션을 완료하며 이때 만약 데이타의 RTS가 해당 트랜잭션 보다 작다면( == 트랜잭션이 해당 데이타를 가장 마지막( == 최신 )에 읽고 있다. ) 해당 트랜잭션 TS로 갱신합니다.</p>
+<p>어떤 트랜잭션이 어떤 데이타를 쓰고 싶을 때...</p>
+<p>1. 읽고자 하는 데이타의 RTS 보다 해당 트랜잭션의 TS가 작다면( == 트랜잭션이 시작 된 후에 누군가 데이타를 읽고 있다.) 반복된 Select 문에도 같은 값을 보여 주기 위해서[footnote]엇!! 이 부분은 isolation level이랑 관련이 있어 보입니다.[/footnote] 트랜잭션을 취소하고 다시 실행합니다.</p>
+<p>2. 읽고자 하는 데이타의 WTS 보다 해당 트랜잭션의 TS가 작다면( == 트랜잭션이 시작 된 후에 누군가 데이타를 갱신했다.) 이땐 <a href="http://en.wikipedia.org/wiki/Thomas_Write_Rule" target="_blank">Thomas write rule</a>[footnote]여기서 만약 재시작하여 써버리게 되면 그 새 갱신했던 데이타를 볼 수가 없기 때문이라는 것 같습니다.[/footnote]에 따라 트랜잭션을 취소하고 재시작 할 필요가 없다고 합니다.</p>
+<p>3. 위의 경우에 해당하지 않으면 트랜잭션을 처리하고 해당 데이타의 WTS를 갱신합니다.</p></div>
+<p>단점</p>
+<p>1. 다른 시간에 만든 트랜잭션 임에도 불구하고 같은 TImeStamp를 갖게 될 수도 있습니다.(시간을 1초 마다 찍는 기계가 있는데 1초 사이에 두 개의 작업을 시작하면 두 개의 작업은 같은 TS를 가지겠죠.)</p>
+<p>2. 모든 데이타의 WTS와 RTS를 관리하는데 초과 비용이 발생합니다.</p>

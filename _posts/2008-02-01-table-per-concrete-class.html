@@ -1,0 +1,106 @@
+---
+layout: post
+title: Table per concrete class
+date: 2008-02-01 12:37:56.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- 상속 구조 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323155161'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>상위 클래스에 하위 클래스들을 Union으로 포함하여 가지고 있게 설정한다.</li>
+</ul>
+<ul>
+<li>JPA에서 TABLE_PER_CLASS는 필수 구현사항이 아니다. 따라서 밴더마다 다를 수 있다.</li>
+</ul>
+<ul>
+<li>Hibernate의 polymorphic loader engine이 쿼리의 성능 걱정을 덜어 줄 것이다.</li>
+</ul>
+<ul>
+<li>하위 클래스들이 상위 클래스에 정의한 하나의 주키를 공유한다.</li>
+</ul>
+<ul>
+<li>주키 생성 타입을 identity로 하면 안 된다. AUTO로 설정했을 때 주의할 것. 안 그러면<br />
+Cannot use identity column key generation with &lt;union-subclass&gt;<br />
+mapping. 이 에러를 만나게 될 것이다.</li>
+</ul>
+<h1>장점</h1>
+<ul>
+<li>다형적인 관계를 다룰 수 있다. UNION 쿼리를 사용해서 단일 테이블을 관계 맵핑 처럼 사용할 것이다.(?? 7.3 참조)</li>
+</ul>
+<ul>
+<li>지금까지는 SQL 스키마는 전혀 상속을 위한 추가 설정이 필요하지 않았다. 정규화도 잘 되었고 추가적인 외례키를 필요도 하지도 않았다.</li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>상위 클래스</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-sql">@Entity<br />@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)<br />public abstract class BillingDetails {<br /><br />	@Id<br />	@GeneratedValue(strategy=GenerationType.SEQUENCE)<br />	@Column(name = <span class="code-quote">"BILLING_DETAILS_ID"</span>)<br />	private Long id = null;<br /><br />	@Column(name = <span class="code-quote">"OWNER"</span>, nullable = false)<br />	private String owner;</pre>
+</div>
+</div>
+<ul>
+<li>하위 클래스</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@Table(name=<span class="code-quote">"CREDIT_CARD"</span>)<br /><span class="code-keyword">public</span> class CreditCard <span class="code-keyword">extends</span> BillingDetails {<br /><br />	@Column(name = <span class="code-quote">"NUMBER"</span>, nullable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">String</span> number;</pre>
+</div>
+</div>
+<h1>쿼리 분석</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">select BILLING_DETAILS_ID, OWNER, ACCOUNT, NUMBER, clazz_<br />from <br />( select OWNER, ACCOUNT, <span class="code-keyword">null</span> as NUMBER, BILLING_DETAILS_ID, 1 as clazz_ from BANK_ACCOUNT <br />	union <br />select OWNER, <span class="code-keyword">null</span> as ACCOUNT, NUMBER, BILLING_DETAILS_ID, 2 as clazz_ from CREDIT_CARD )</pre>
+</div>
+</div>
+<ul>
+<li>clazz_ 컬럼: 컬렉션에서 하위 타입의 객체를 만들 때 구분하기 위해서 사용.</li>
+</ul>
+<ul>
+<li>null 인 컬럼들(BANK_ACCOUNT의 NUMBER, CREDIT_CARD의 ACCOUNT): UNION을 사용하기 위해서는 같은 컬럼을 가지고 있어야 한다.</li>
+</ul>

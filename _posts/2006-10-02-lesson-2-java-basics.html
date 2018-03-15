@@ -1,0 +1,96 @@
+---
+layout: post
+title: Lesson 2. Java Basics
+date: 2006-10-02 22:55:31.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322640509'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font style="color: rgb(255, 0, 0); font-family: verdana,arial,helvetica,sans-serif" size="6">Lesson 2. Java Basics</font></p>
+<p>이번장에서 배우게 될 내용은:</p>
+<ul>
+<li>학생수를 세기 위한 int 형 변수 사용하기</li>
+<li>여러 학생을 저장하기 위한 ArrayList 사용하기</li>
+<li>기본 생성자 이해하기</li>
+<li>ArrayList를 어떻게 사용하는지 이해하기 위해 J2SE API를 어떻게 사용하는지 배우기</li>
+<li>Student 객체만을 담기 위해 ArrayList를 제약하기</li>
+<li>여러 class를 test하기 위한 TestSuite 만들기</li>
+<li>패키지를 이해하고 import문을 배우기</li>
+<li>상수를 정의하는 방법과 사용</li>
+<li>시스템 라이브러리의 date와 calandar 클래스 사용하기</li>
+<li>Java가 허용하는 다양한 주석문 배우기</li>
+<li>javadoc을 사용하여 API 문서 생성하기</li>
+</ul>
+<p>
+<font style="color: rgb(255, 118, 53); font-family: verdana,arial,helvetica,sans-serif" size="6">int</font></p>
+<p>The <tt>int</tt> type allows variables to be created that store integer values from -2,147,483,648 to 2,147,483,647.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">Numbers in Java are not objects</span> like String literals are. You cannot send messages to numbers, although numbers can be passed as parameters along with messages just like Strings can. Basic arithmetic support in Java is provided syntactically; for many other operations, support is provided by system libraries. You will learn about similar non-object types later in Agile Java. As a whole, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">these non-object types are known as <em><a class="docLink" href="app01.html#app01gloss01entry178">primitive types</a></em>.</span></p>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif" size="6"><span style="color: rgb(255, 118, 53)">Initialization</span></font></p>
+<p>you have two ways to initialize fields: <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">You can initialize at the field level</span> or <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">you can initialize in a constructor.</span></p>
+<p>There is no hard-and-fast rule about where to initialize. I prefer initializing at the field level when possiblehaving the initialization and declaration in one place makes it easier to follow the code. Also, as you will learn later in this lesson, you can have more than one constructor; initializing at the field level saves you from duplicate initialization code in each constructor.</p>
+<p><font style="color: rgb(255, 118, 53); font-family: verdana,arial,helvetica,sans-serif" size="6">Default Constructor</font></p>
+<p>If you do not define any constructors in a class, Java provides a default, no-argument constructor.</p>
+<p>The use of default constructors also implies that Java views <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">constructors as essential elements to a class.</span> A constructor is required in order for Java to initialize a class, even if the constructor contains no additional initialization code. If you don't supply a constructor, the Java compiler puts it there for you.</p>
+<p><font style="color: rgb(255, 118, 53); font-family: verdana,arial,helvetica,sans-serif" size="6">Suites</font></p>
+<p>여러 클래스들을 한꺼번에 테스트하고 싶을 때 다음과 같이 suite을 생성하여 추가합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1054381750.jpg" class="aligncenter" width="430" height="149" alt="" /><br />
+위 그림은 JUnit 3.8 대의 사용 법.<br />
+아래 그림은 JUnit 4.1에서 annotation을 사용 하는 방법.<br />
+<img src="{{ site.baseurl }}/assets/1007885331.jpg" class="aligncenter" width="478" height="324" alt="" /><br />
+<font style="font-family: verdana,arial,helvetica,sans-serif" size="6"><span style="color: rgb(255, 118, 53)">The SDK and java.util.ArrayList</span></font></p>
+<pre><span class="docEmphStrong">java.util.ArrayList&lt;Student&gt; allStudents = session.getAllStudents();</span></pre>
+<p>A type appearing in this forma class name followed by a parameter type within angle brackets (<tt>&lt;</tt> and <tt>&gt;</tt>) is known as a <em><a class="docLink" href="app01.html#app01gloss01entry169">parameterized type</a></em>. In the example, the parameter Student of java.util.ArrayList indicates that the java.util.ArrayList is <em><a class="docLink" href="app01.html#app01gloss01entry24">bound</a></em> such that it can only contain Student objects.</p>
+<p>The class java.util.ArrayList is one of thousands available as part of the Java SDK class library.</p>
+<p><img src="{{ site.baseurl }}/assets/1331939171.jpg" class="aligncenter" width="640" height="465" alt="" />왼쪽 상당은 패키지, 왼쪽 하단은 해당 패키지에 속한 클래스들 오른쪽은 하나의 클래스에 대한 설명을 보여주는 3단 구조로 되어있다.</p>
+<p><font style="color: rgb(255, 118, 53); font-family: verdana,arial,helvetica,sans-serif" size="6">Objects In Memory</font></p>
+<p><img src="{{ site.baseurl }}/assets/1133934844.jpg" class="aligncenter" width="522" height="386" alt="" /><br />
+사실 "Cain DiVoe" 같은 문자열도 메모리 어딘가를 참조하는 변수 일 텐데 그것은 그림에 빠져있다.</p>
+<p><font style="color: rgb(255, 118, 53); font-family: verdana,arial,helvetica,sans-serif" size="6">Packages and the import Statement</font></p>
+<p class="docText">Packages provide a way for developers to group related classes. They can serve several needs: First, grouping classes into packages can make it considerably easier on developers, saving them from having to <span style="color: rgb(255, 118, 53)"><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">navigate</span></span> dozens, hundreds, or even thousands of classes at a time. Second, classes can be grouped into packages for distribution purposes, perhaps to <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)"><span style="color: rgb(255, 118, 53)">allow easier reuse</span></span> of modules or subsystems of code.</p>
+<p>Third, packages<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)"><span style="color: rgb(255, 118, 53)">provide </span><em style="color: rgb(255, 118, 53)"><a class="docLink" href="app01.html#app01gloss01entry153">namespaces</a></em> </span>in Java. 서로 다른 패키지 안에 있다면 클래스의 이름이 같아도 상관없다.</p>
+<p class="docText">Typing java.util.ArrayList throughout code can begin to get tedious, and it clutters the code as well. Java provides a keyword<tt> import </tt>that allows identification of fully qualified class names and/or packages at the source file level. Use of <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)"><tt>import</tt> statements allows you to specify simple class names throughout the remainder of the source file.</span></p>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif" size="6"><span style="color: rgb(255, 118, 53)">The java.lang Package</span></font></p>
+<p class="docText">The Java library contains classes so fundamental to Java programming that they are needed in many, if not all, classes. The classes String and Object are two such classes. The ubiquitous nature of these classes is such that the designers of Java wanted to save you from the nuisance of having to specify an <tt>import</tt> statement for them everywhere.</p>
+<p class="docText"></p>

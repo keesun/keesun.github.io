@@ -1,0 +1,66 @@
+<p>어제에 이어 오늘도 물고 늘어진다. 이번에 해결한 문제는, DB에 저장할 값을 int 타입 뿐만이 아니라 String 타입을 사용해도 무방하도록 코드를 수정했다.</p>
+<p>public enum UserCate implements PersistentEnum {<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; ADMIN("admina", "관리자"), STAFF("staff", "직원"), SUPP("supp", "협력업체");<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private final String value;<br />
+&nbsp;&nbsp;&nbsp; private final String descr;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private UserCate(String value, String descr) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.value = value;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.descr = descr;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public String getValue() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return value;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; public String getDescr() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return descr;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+...</p>
+<p>}</p>
+<p>이건 DB에 저장할 값으로 String 값을 사용할 enum 이고..</p>
+<p>public enum CodeCate implements PersistentEnum {</p>
+<p>&nbsp;&nbsp;&nbsp; COLOR(10, "색상"), SIZE(20, "사이즈"), PAYTERM(30, "지불조건"), SHIPVIA(40, "운송방식");<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private final Integer value;<br />
+&nbsp;&nbsp;&nbsp; private final String descr;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private CodeCate(Integer value, String descr) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.value = value;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; this.descr = descr;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public int getValue() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return value;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; public String getDescr() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return descr;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>...</p>
+<p>}</p>
+<p>이건 DB에 저장할 값으로 int 값을 사용할 enum이다. </p>
+<p>하이버네이트가 필요로 하는 UserType을 만들어 보자.</p>
+<p>public class CodeCateType extends <span style="font-weight: bold; color: rgb(92, 127, 176);">GenericEnumUserType&lt;CodeCate&gt;</span>{</p>
+<p><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; public CodeCateType() {</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; super(CodeCate.class);</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; }</span><br />
+&nbsp;&nbsp;&nbsp; <br />
+}</p>
+<p>public class UserCateType extends <span style="color: rgb(92, 127, 176); font-weight: bold;">GenericEnumUserType&lt;UserCate&gt;</span>{</p>
+<p><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; public UserCateType() {</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; super(UserCate.class);</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; }</span><br />
+&nbsp;&nbsp;&nbsp; <br />
+}</p>
+<p>끝이다. 도메인 객체 타입에 설정해보자. 구현에 필요한 코드만 파란색으로 강조를 했다. 생성자 만드는 부분까지 없앨 수 있을 것 같다. 3차 구현에서 해보자.</p>
+<p>Code.java</p>
+<p>&nbsp;&nbsp;&nbsp; @Column<br />
+&nbsp;&nbsp;&nbsp; @Type(type="koma.domain.usertype.CodeCateType")<br />
+&nbsp;&nbsp;&nbsp; CodeCate codeCate;</p>
+<p>User.java</p>
+<p>&nbsp;&nbsp;&nbsp; @Column<br />
+&nbsp;&nbsp;&nbsp; @Type(type="koma.domain.usertype.UserCateType")<br />
+&nbsp;&nbsp;&nbsp; UserCate userCate;</p>
+<p>자.. 이러면 하이버네이트가 CodeCate는 Integet SQL 타입 컬럼을 만들어 주고 UserCate는 String SQL 타입(varchar)를 만들어 줄 것이다.</p>
+<p>스프링 MVC에서 바인딩 할 때 사용할 PropertyEditor는 어떨까? 한 줄 씩이다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; binder.registerCustomEditor(CodeCate.class, <span style="font-weight: bold; color: rgb(92, 127, 176);">new GenericEnumPropertyEditor&lt;CodeCate&gt;(CodeCate.class)</span>);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; binder.registerCustomEditor(UserCate.class, <span style="font-weight: bold; color: rgb(92, 127, 176);">new GenericEnumPropertyEditor&lt;UserCate&gt;(UserCate.class)</span>);</p>
+<p>끝인가?? 글쎄.. 모르곘다. Charater를 추가하는 것도 별 문제 없을 듯 하다. 해보자. 이러다가 모든 타입을 지원해야 하는건 아니겠지?? Char까지만 해보자. 여기서도 생성자에 클래스를 주고 있는데 3차에서는 저 코드를 없앨 수 있게 구현해보자.</p>
+<p>자.. 하이버, 스프링에서 자바 enum 사용 간편화 3차 구현 ㄱㄱㅆ</p>

@@ -1,0 +1,12 @@
+<p style="clear: both;">밤부 독립버전은 뭔가 좀 달라서 시간이 좀 걸렸네요.</p>
+<p style="clear: both;"><a href="http://confluence.atlassian.com/display/BAMBOO/Getting+Bamboo+Standalone+to+use+the+jetty.xml+file">http://confluence.atlassian.com/display/BAMBOO/Getting+Bamboo+Standalone+to+use+the+jetty.xml+file</a></p>
+<p style="clear: both;">1. 우선 밤부 압축 푼 홈디렉토리에 있는 bamboo.sh 파일을 열고 RUN_CMD 라는 부분을 jetty.xml 설정을 사용하도록 수정합니다.</p>
+<p style="clear: both;">안그러면 아무리 jetty.xml 파일을 수정해도 원하는 포트에서 실행되지 않고 8085에서 동작하게 됩니다.</p>
+<p style="clear: both;">2. jetty-ajp JAR 파일 추가</p>
+<p style="clear: both;">제티에 AJP 연동을 하려면 라이브러리가 필요한데 해당 라이브러리를 밤부홈/webapp/WEB-INF/lib에 넣어줍니다.</p>
+<p style="clear: both;"><a href="http://confluence.atlassian.com/display/BAMKB/Enable+AJP+Support+in+Bamboo+Standalone">http://confluence.atlassian.com/display/BAMKB/Enable+AJP+Support+in+Bamboo+Standalone</a></p>
+<p style="clear: both;">위 링크에 설명이 있는데 제치 버전에 따라 라이브러리 버전도 맞춰줘야 합니다. 따라서 설치하는 밤부가 무슨 버전의 제티를 사용하는지 알아본뒤 해당 버전에 맞는 제티-AJP 라이브러리를 넣어줘야하는데.. 그냥;; 아틀라샨 사이트에서 검색하는게 좋을듯 싶네요. 다운로드 링크가 달려있으니...</p>
+<p style="clear: both;">3. AJP 설정하기</p>
+<p style="clear: both;">설정 방법도 위 링크에 들어있습니다. 간단하오니.. 고고.</p>
+<p style="clear: both;">
+<p><br class="final-break" style="clear: both;" /></p>

@@ -1,0 +1,34 @@
+<h1>트랜잭션 없이 쿼리를 날릴 수 있는가?</h1>
+<ul>
+<li>트랜잭션 범위 밖에서 DB와 뭔가를 할 수가 없다. 불가능하다. 어떤 SQL 문도 DB 트랜잭션 밖에서 날릴 수는 없다.</li>
+<li>nontransactional은 명시적인 트랜잭션 경계가 없다는 것이다. 시스템 트랜잭션이 없다는 것이다. 그렇게 하면 데이터에 접근할 때 autocommit 모드로 실행된다.</li>
+</ul>
+<h1>성능 향상</h1>
+<ul>
+<li>잘 생각해봐야한다. 모든 SQL 문마다 트랜잭션을 열고 닫고 할 텐데 아마도 성능이 떨어질 것이다.</li>
+</ul>
+<h1>애플레이션 확장성 증가</h1>
+<ul>
+<li>잘 생각해봐야한다. DB 트랜잭션이 길어지면 분명 락을 가지고 있는 시간이 길어지니까 확장성이 안 좋을 수<br />
+있다. 하지만 하이버네이트의 persistence context와 write-behind 특징을 생각해보면 모든 쓰기 락들은<br />
+매우 짧은 기간 동안만 가지고 있게 된다. isolation level을 높였을 때 사용하게 되는 읽기 락의 비용은 무시해도<br />
+좋은 수준이다. 아니면 아예 읽기 락이 아닌 multiversion concurrency를 지원하는 DB(오라클,<br />
+PostgreSQL, Infomix, Firebird)를 사용하면 된다.</li>
+</ul>
+<h1>포기해야 하는 것들</h1>
+<ul>
+<li>SQL 문장들을 그룹핑하여 원자성을 보장하는 것이 불가능.</li>
+</ul>
+<ul>
+<li>데이터가 병렬적으로 수정될 때 isolation level이 낮아진다. repeatable read가 불가능하다.</li>
+</ul>
+<h1>Data Access Type</h1>
+<ul>
+<li>보통의 트랜잭션</li>
+</ul>
+<ul>
+<li>Read-only 트랜잭션</li>
+</ul>
+<ul>
+<li>Nontransactional</li>
+</ul>

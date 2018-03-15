@@ -1,0 +1,62 @@
+---
+layout: post
+title: 13.10. Handling exceptions
+date: 2007-05-21 02:35:50.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- Handling exceptions
+- Spring Reference 13장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323003942'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>특정 예외가 발생했을 때 특정 페이지로 이동 시킬 수 있습니다.</p>
+<p>먼저 컨트롤러든 서비스 단이든 벨리데이션 할 때든 에러를 발생시킵니다. 예외 처리 할 것도 없기 때문에 RuntimeException이 좋겠네요.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; public void add(MemberInfo memberInfo) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if(memberInfo.getConfirmMember().equals("ajnapaqj")){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String email = memberInfo.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(memberInfoDao.findByEmail(email) == null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfoDao.insert(memberInfo);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new AlreadyExistEmailException();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; else<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new InvalidMemberCodeException();<br />&nbsp; &nbsp; }</div>
+<p>저는 서비스 단에 구현했습니다. 사실 고민이 됩니다. 이런 거는 벨리데이터에 넣어야 필드 값 검사할 때 같이 하면 좋을 것 같은데 아직 벨리데이터를 만들지 않았기 때문에 간단하게 서비스 단에 구현해 뒀습니다. 나중에 옮겨야 벨리데이터 만들고 옮겨야 겠습니다.</p>
+<p>그리고 사용자 예외를 만들어 줍니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class AlreadyExistEmailException extends RuntimeException {}<br />public class InvalidMemberCodeException extends RuntimeException {}</div>
+<p>그리고 Spring의 ExceptionResolver를 등록해줍니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;!-- Exception Resolver --&gt;<br />&nbsp; &nbsp; &lt;bean id="exceptionMapping"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="exceptionMappings"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="InvalidMemberCodeException"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /exception/joinFailedByMemberCode<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="AlreadyExistEmailException"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /exception/joinFailedByExistingEmail<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>이런식으로 Exception과 view 이름을 매핑 시켜 주면 view 리졸버에 의해 view를 찾게 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cm216.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/dl192.jpg" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cm215.jpg" class="aligncenter" width="400" /></p>

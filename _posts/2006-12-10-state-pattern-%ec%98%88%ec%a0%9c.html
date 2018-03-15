@@ -1,0 +1,57 @@
+---
+layout: post
+title: State Pattern 예제
+date: 2006-12-10 01:42:17.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Design Pattern
+tags:
+- design pattern
+- State Pattern
+- 기말고사
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323001393'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>문제 : 2) [30점]&nbsp; State pattern에서 공짜 알맹이 당첨 기능을 추가 하고 반응이 좋아 다른 한 가지 변경을 다하고자 한다. 현제의 기계에서는 한 번에 하나의 동전만 넣을 수 있다. 다른 뽑기 기계에서와 같이 한꺼번에 2개, 3개, 혹은 원하면 더 많은 동전을 넣을 수 있도록 하는 기능을 추가 해 달라는 요청이다. <br /> &nbsp;&nbsp; a. [10점] 확장된 state diagram을 그려라.<br /> &nbsp;&nbsp; b. [10점] State Pattern을 적용하지 않은 경우를 구현하라. <br /> &nbsp;&nbsp; c. [10점] State Pattern을 적용한 시스템을 구현하고, 패턴을 적용하지 않은경우와 비교해서 확장이 얼마나 쉬워 졌는지 설명하라.</p>
+<p>A.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk12.bmp" class="aligncenter" width="500" height="459" alt="사용자 삽입 이미지">bk12.bmp</a><br />B. 각각의 상태를 flag로 두고 각 메소드 안에서 if-else문을 엄청나게 사용하여 구현을 해보라는 것인 것 같군요.</p>
+<p>C. 새로운 상태(동전이 여러개인 상태)를 동전 있슴 State의 하위 클래스로 상속을 사용한 뒤 필요한 메소드를 오버라이딩 하면 될 것 같습니다.</p>
+<p>자~ 이제 코딩하자 기선아.</p>

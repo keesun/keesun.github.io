@@ -1,0 +1,67 @@
+---
+layout: post
+title: OSGi에서 SessionFactory(Hibenate) 사용하기
+date: 2008-08-25 05:59:23.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- hibernate
+- OSGi
+- SessionFactory
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323092142'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <br /><a href="http://www.osgi.org/blog/2007/06/osgi-and-hibernate.html" target="_blank">http://www.osgi.org/blog/2007/06/osgi-and-hibernate.html</a><br /><a href="http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/" target="_blank">http://notehive.com/wp/2008/07/23/osgi-hibernate-spring-dm-sample/</a></p>
+<p>번들 세 개만 살펴보겠습니다.</p>
+<p>1. hibernate-class<br />2. hibernate-session<br />3. model-a<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1. hibernate-class</span></p>
+<p>이 녀석은 하이버네이트 라이브러리를 묶어놓은 번들입니다. 얘가 담고 있는 라이브러리는 다음과 같습니다.<br /><img src="{{ site.baseurl }}/assets/hk180000000000.jpg" class="aligncenter" width="600" height="187" alt="사용자 삽입 이미지" /><br />이렇게 묶어놓은거 말고 스프링 번들 저장소에서 다운로드해서 일일히 설치해도 되야 할 것 같은데, 저번에도 해봤고, 오늘도 다시 시도 해봤는데, 똑같은 문제가 발생하고 있어서 실패했습니다. 아무래도 스프링 DM 지라에 올리던가 포럼에 올려서 물어봐야 할 것 같네요.</p>
+<p><span style="font-weight: bold;">2. hibernate-session</span></p>
+<p>이 녀석이 하는 일은 많습니다. 테스트 DB를 만들고, 하이버네이트 애노테이션을 사용한 도메인 클래스들도 있고, SessionFactory도 만듭니다. 단, SessionFactory를 만들 때 좀 특이하게 com.notehive.osgi.hibernate_samples.session.DynamicConfiguration 클래스를 사용하여 생성합니다. 실질적으로 SessionFactory를 만들어 내는 클래스입니다. 이 클래스의 핵심 메소드인 createNewSessionFactory() 메소드에서 JDK Proxy 클래스를 사용해서 프록시 객체를 생성하고 있습니다.</p>
+<p>OSGi 서비스로 com.notehive.osgi.hibernate_samples.session.DynamicConfiguration를 공개하고 있습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. model-a</span></p>
+<p>이 번들에는 하이버네이트 애노테이션을 사용한 모델과, DAO 구현체가 들어있습니다. SessionFactory와 TransactionManager를 내부에서 빈으로 정의하고 있는데, SessionFactory를 만들 때 위에서 살펴본 hibernate-session 번들이 공개한 com.notehive.osgi.hibernate_samples.session.DynamicConfiguration 서비스를 사용합니다. SessionFactory를 빈 설정만 보면, hibernate-session이나 model-a나 동일합니다.</p>
+<p>단, 이 빈은 com.notehive.osgi.hibernate_samples.session.DynamicConfiguration 서비스를 가져옵니다. 그리고 DAO에서는 해당 서비스를 사용해서 만든 SessionFactory를 사용하죠. </p>
+<p>그리고 DynamicConfigurationListener 라는 빈을 등록해서 DynamicConfiguration 이 객체에다가 하이버네이트 애노테이션이 붙어있는 클래스를 추가하거나, 제거하는 코드를 넣어뒀습니다.</p>
+<p>마지막으로 주목할 것은 osgi.bnd 파일의 설정인데..</p>
+<p>Hibernate-Contribution: default; \<br />&nbsp; &nbsp; classes="com.notehive.osgi.hibernate_samples.model.a.A1"</p>
+<p>이런식으로 속성/값을 추가해뒀고, 이 값을 hibernate-session 번들의 BundleTracker가 읽고 DynamicConfiguration에 애노테이션이 붙은 클래스를 추가/제거 합니다. 그 뒤엔 당근 새로운 SessionFactory를 만들어 가지게 됩니다.</p>
+<p>캬...이제야 OSAF를 돌릴 수 있는(정확하겐 하이버네이트 App를 돌릴 수 있는) 플랫폼을 구성하는 실마리를 찾은 것 같습니다.</p>

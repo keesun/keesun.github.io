@@ -1,0 +1,56 @@
+---
+layout: post
+title: 4. Role Separation with Custom Tags
+date: 2007-06-01 04:11:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- Custom Tag
+- JSP Foundation
+- Simple Tag
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322743179'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">Using Custom Tags</span><br />- Sevlet Container가 custom tag를 다루는 과정<br />1. 페이지 처리 도중에 custom tag를 만나면 제어권을 해당 페이지에서 태크 핸들러에게 넘깁니다. 태그 핸들러에서 필요한 처리를 하고나서 다시 페이지로 제어권을 넘깁니다.<br />2. Servlet Container는 이런 태그 핸들러 들의 객체를 생성하여 풀에서 관리합니다.<br />- 태그 핸들러를 taglib 지시자를 사용하여 jsp에 포함시킬 수 있습니다.<br />ex) &lt;%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %&gt;<br />- taglib의 uri는 web.xml에 정의되어 있으며 web.xml에서는 해당 uri를 특정 TLD 파일과 매칭시킵니다.<br />- TLD 파일에는 태그 핸들러 클레스의 위치와 해당 태그에서 사용할 수 있는 속성들의 정보를 가지고 있습니다.<br />- 태그 핸들러는 자바 클레스 입니다.<br />1. 태그 만들기 :: TagSupport 클레스 상속<br />2. Body가 있는 태그 만들기 :: BodyTagSupport 클레스 상속<br />- 태그 만들기 예제<br />참조 : <a href="http://www.javastudy.co.kr/docs/lec_javaweb/jsp/chapter5.pdf" target="_blank">http://www.javastudy.co.kr/docs/lec_javaweb/jsp/chapter5.pdf</a></p>
+<p><span style="font-weight: bold;">Introducing Simple Tag</span><br />- JSP2.0 에 새로 추가된 기능<br />- WEB-INF/tag 밑에 태그를 만들어서 사용하면 됩니다.<br />- 사용 예)&lt;%@ taglib tagdir="/WEB-INF/tags" prefix="tags" %&gt;<br />- 심플 태그 만들기 예제<br />참조 : <a href="http://whiteship.tistory.com/470" target="_blank">http://whiteship.tistory.com/470</a></p>
+<p></p>

@@ -1,0 +1,131 @@
+<h1>폼을 구성하는 방법</h1>
+<h2>&lt;table&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-html"><span class="code-tag">&lt;form action=<span class="code-quote">"/path/to/script"</span> method=<span class="code-quote">"post"</span>&gt;</span><br /><br />  <span class="code-tag">&lt;table&gt;</span><br /><br />    <span class="code-tag">&lt;tr&gt;</span><br /><br />      <span class="code-tag">&lt;th&gt;</span>Name:<span class="code-tag">&lt;/th&gt;</span><br /><br />      <span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"name"</span> /&gt;</span><span class="code-tag">&lt;/td&gt;</span><br /><br />    <span class="code-tag">&lt;/tr&gt;</span><br /><br />    <span class="code-tag">&lt;tr&gt;</span><br /><br />      <span class="code-tag">&lt;th&gt;</span>Email:<span class="code-tag">&lt;/th&gt;</span><br /><br />      <span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"email"</span> /&gt;</span><span class="code-tag">&lt;/td&gt;</span><br /><br />    <span class="code-tag">&lt;/tr&gt;</span><br /><br />    <span class="code-tag">&lt;tr&gt;</span><br /><br />      <span class="code-tag">&lt;th&gt;</span>&amp;nbsp;<span class="code-tag">&lt;/th&gt;</span><br /><br />      <span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> /&gt;</span><span class="code-tag">&lt;/td&gt;</span><br /><br />    <span class="code-tag">&lt;/tr&gt;</span><br /><br />  <span class="code-tag">&lt;/table&gt;</span><br /><br /><span class="code-tag">&lt;/form&gt;</span></pre>
+</div>
+</div>
+<ul>
+<li>복잡한 폼을 표현할 때에 유용하다.</li>
+</ul>
+<h2>&lt;br/&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"/path/to/script"</span> method=<span class="code-quote">"post"</span>&gt;<br />  &lt;p&gt;<br /><br />    Name: &lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"name"</span> /&gt;&lt;br /&gt;<br /><br />    Email: &lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"email"</span> /&gt;&lt;br /&gt;<br /><br />    &lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> /&gt;<br /><br />  &lt;/p&gt;<br />&lt;/form&gt;</pre>
+</div>
+</div>
+<ul>
+<li>&lt;br/&gt; 간격이 좀 좁다.</li>
+</ul>
+<ul>
+<li>줄도 좀 안 맞는다.</li>
+</ul>
+<ul>
+<li>CSS로 margin을 줘서 해결할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">input {<br /><br />  margin: 6px 0;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>input 컴포넌트의 위와 아래에 6px의 간격을 준다.</li>
+</ul>
+<h2>&lt;p&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"/path/to/script"</span> id=<span class="code-quote">"thisform"</span> method=<span class="code-quote">"post"</span>&gt;<br /><br />  &lt;p&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"name"</span>&gt;Name:&lt;/label&gt;&lt;br /&gt;<br /><br />  &lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"name"</span> name=<span class="code-quote">"name"</span> /&gt;&lt;/p&gt;<br /><br />  &lt;p&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"email"</span>&gt;Email:&lt;/label&gt;&lt;br /&gt;<br /><br />  &lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"email"</span> name=<span class="code-quote">"email"</span> /&gt;&lt;/p&gt;<br /><br />  &lt;p&gt;&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> /&gt;&lt;/p&gt;<br /><br />&lt;/form&gt;</pre>
+</div>
+</div>
+<ul>
+<li>각각의 컴포넌트를 &lt;p&gt;로 묶었다.</li>
+</ul>
+<ul>
+<li>margin은 CSS로 처리할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">#thisform p {<br /><br />  margin: 6px 0;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>&lt;label&gt;의 for 속성과 &lt;input&gt;의 id에 같은 값을 설정하여 둘을 묶을 수 있다.</li>
+</ul>
+<ul>
+<li>그렇게 하면, 해당하는 컴포넌트와 label같의 구조적인 의미를 묶을 수 있고, label을 클릭하여 해당 컴포넌트에 영향을 줄 수 있어서 클릭이 가능한 범위가 늘어난다.</li>
+</ul>
+<h2>Form 정의하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"/path/to/script"</span> id=<span class="code-quote">"thisform"</span> method=<span class="code-quote">"post"</span>&gt;<br /><br />  &lt;dl&gt;<br /><br />    &lt;dt&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"name"</span>&gt;Name:&lt;/label&gt;&lt;/dt&gt;<br /><br />    &lt;dd&gt;&lt;input type=<span class="code-quote">"text"</span> id<span class="code-quote">"name"</span> name=<span class="code-quote">"name"</span> /&gt;&lt;/dd&gt;<br /><br />    &lt;dt&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"email"</span>&gt;Email:&lt;/label&gt;&lt;/dt&gt;<br /><br />    &lt;dd&gt;&lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"email"</span> name=<span class="code-quote">"email"</span> /&gt;&lt;/dd&gt;<br /><br />    &lt;dt&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"remember"</span>&gt;Remember <span class="code-keyword">this</span> info?&lt;/label&gt;&lt;/dt&gt;<br /><br />    &lt;dd&gt;&lt;input type=<span class="code-quote">"checkbox"</span> id=<span class="code-quote">"remember"</span> name=<span class="code-quote">"remember"</span> /&gt;&lt;/dd&gt;<br /><br />    &lt;dt&gt;&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> /&gt;&lt;/dt&gt;<br /><br />  &lt;/dl&gt;<br /><br />&lt;/form&gt;</pre>
+</div>
+</div>
+<ul>
+<li>&lt;dl&gt;: definition list 사용하기. chapter8에서 자세히 다룬다.</li>
+</ul>
+<ul>
+<li>label은 &lt;dt&gt;로 감싸고 컴포넌트는 &lt;dd&gt;로 감싼다. 스타일 적용하지 않으면 &lt;dd&gt;들은 기본으로 들여쓰기 해준다. 따라서 어긋나 있다. CSS없이 못 쓰겟다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">form dd {<br /><br />  margin: 0;<br /><br />  }<br /><br /><br /><br />form dt {<br /><br />  <span class="code-object">float</span>: left;<br /><br />  padding-right: 10px;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>&lt;dt&gt;와 &lt;dd&gt;가 같은 줄에 놓이게 된다. &lt;dt&gt; 오른쪽으로 10px 간격을 주고 &lt;dd&gt;가 자리를 잡는다.</li>
+</ul>
+<h1>Extra Credit</h1>
+<h2>&lt;input&gt;의 tabindex 속성 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-html"><span class="code-tag">&lt;form action=<span class="code-quote">"/path/to/script"</span> id=<span class="code-quote">"thisform"</span> method=<span class="code-quote">"post"</span>&gt;</span><br /><br />  <span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;label for=<span class="code-quote">"name"</span>&gt;</span>Name:<span class="code-tag">&lt;/label&gt;</span><span class="code-tag">&lt;br /&gt;</span><br /><br />  <span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"name"</span> name=<span class="code-quote">"name"</span> tabindex=<span class="code-quote">"1"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span><br /><br />  <span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;label for=<span class="code-quote">"email"</span>&gt;</span>Email:<span class="code-tag">&lt;/label&gt;</span><span class="code-tag">&lt;br /&gt;</span><br /><br />  <span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"email"</span> name=<span class="code-quote">"email"</span> tabindex=<span class="code-quote">"2"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span><br /><br />  <span class="code-tag">&lt;p&gt;</span>&lt;input type=<span class="code-quote">"checkbox"</span> id=<span class="code-quote">"remember"</span> name=<span class="code-quote">"remember"</span><br /><br />  tabindex=<span class="code-quote">"3"</span> /&gt;<br /><br />  <span class="code-tag">&lt;label for=<span class="code-quote">"remember"</span>&gt;</span>Remember this info?<span class="code-tag">&lt;/label&gt;</span><span class="code-tag">&lt;/p&gt;</span><br /><br />  <span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> tabindex=<span class="code-quote">"4"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span><br /><br /><span class="code-tag">&lt;/form&gt;</span></pre>
+</div>
+</div>
+<ul>
+<li>tab키를 눌러서 컴포넌트 순회하는 순서를 설정할 수 있다.</li>
+</ul>
+<h2>&lt;label&gt;의 accesskey 속성 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"/path/to/script"</span> id=<span class="code-quote">"thisform"</span> method=<span class="code-quote">"post"</span>&gt;<br /><br />  &lt;p&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"name"</span> accesskey=<span class="code-quote">"9"</span> &gt;Name:&lt;/label&gt;&lt;br /&gt;<br /><br />  &lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"name"</span> name=<span class="code-quote">"name"</span> tabindex=<span class="code-quote">"1"</span> /&gt;&lt;/p&gt;<br /><br />  &lt;p&gt;&lt;label <span class="code-keyword">for</span>=<span class="code-quote">"email"</span>&gt;Email:&lt;/label&gt;&lt;br /&gt;<br /><br />  &lt;input type=<span class="code-quote">"text"</span> id=<span class="code-quote">"email"</span> name=<span class="code-quote">"email"</span> tabindex=<span class="code-quote">"2"</span> /&gt;&lt;/p&gt;<br /><br />  &lt;p&gt;&lt;input type=<span class="code-quote">"checkbox"</span> id=<span class="code-quote">"remember"</span> name=<span class="code-quote">"remember"</span><br /><br />  tabindex=<span class="code-quote">"3"</span> /&gt;<br /><br />  &lt;label <span class="code-keyword">for</span>=<span class="code-quote">"remember"</span>&gt;Remember <span class="code-keyword">this</span> info?&lt;/label&gt;&lt;/p&gt;<br /><br />  &lt;p&gt;&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"submit"</span> tabindex=<span class="code-quote">"4"</span> /&gt;&lt;/p&gt;<br /><br />&lt;/form&gt;</pre>
+</div>
+</div>
+<ul>
+<li>label의 accesskey에 설정한 번호를 누르면 해당 label과 묶여있는 컴포넌트로 커서가 이동한다.</li>
+</ul>
+<ul>
+<li>검색창 같이 자주 사용하는 컴포넌트에 달아두면 유용하다.</li>
+</ul>
+<ul>
+<li>윈도우에서는 ALT + 숫자, Mac에서는 Command + 숫자를 눌려야 한다.</li>
+</ul>
+<h2>스타일</h2>
+<ul>
+<li>폼 내부의 모든 엘리먼트에 공통으로 적용할 것과 그 중 일부에만 적용할 스타일을 구분하여 설정 한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">#thisform {<br /><br />  font-family: Georgia, serif;<br /><br />  font-size: 12px;<br /><br />  color: #999;<br /><br />  }<br /><br /><br /><br />#thisform label {<br /><br />  font-family: Verdana, sans-serif;<br /><br />  font-weight: bold;<br /><br />  color: #660000;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>thisform id를 가진 form안에 있는 label들은 font-size: 12px; 속성을 상속받는다. color는 재정의해서 #660000; 값을 사용한다.</li>
+</ul>
+<h2>&lt;fieldset&gt; 사용하기</h2>
+<ul>
+<li>필드들을 그룹핑 할 수 있다.</li>
+</ul>
+<ul>
+<li>&lt;legend&gt;를 사용해서 그룹핑 박스에 이름을 설정할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">#thisform fieldset {<br /><br />  border: 1px solid #ccc;<br /><br />  padding: 0 20px;<br /><br />  }<br /><br />#thisform legend {<br /><br />  font-family: arial, sans-serif;<br /><br />  font-weight: bold;<br /><br />  font-size: 90%;<br /><br />  color: #666;<br /><br />  background: #eee;<br /><br />  border: 1px solid #ccc;<br /><br />  border-bottom-color: #999;<br /><br />  border-right-color: #999;<br /><br />  padding: 4px 8px;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>이미 form에 있는 &lt;p&gt;에서 충분히 padding을 설정했기 때문에, filedset의 위와 아래의 padding을 0으로 설장하고, 오른쪽과 왼쪽은 20px로 설정한다.</li>
+</ul>
+<ul>
+<li>legend의 fond-size는 thisform에서 설정한 fond-size 크기에 비례하도록 %를 사용해서 설정한다.</li>
+</ul>

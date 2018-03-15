@@ -1,0 +1,59 @@
+---
+layout: post
+title: Concurrency and OSGi
+date: 2008-09-25 01:25:50.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- OSGi
+tags:
+- Concurrency
+- OSGi
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323132480'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://neilbartlett.name/blog/osgibook/" target="_blank">http://neilbartlett.name/blog/osgibook/</a></p>
+<p>J2EE 같은 무거운(heavyweight) 프레임워크에 비해, OSGi는 쓰레드를 포함한 JVM의 모든 리소스를 제어하려 들지 않는다. J2EE에선 직접 쓰레드를 만들거나 명시적인 동기화(synchronization)를 하는 코드를 작성하는 것을 금하고, 대신에 제한적인 "작업 관리" 프레임워크를 제공한다. OSGi는 여러분이 직접 애플리케이션에서 쓰레드를 만들고 스케쥴링을 할 수 있다. 그렇게 하려면 OSGi 라이브러리들은 쓰레드 세이프해야 하며 어떤 쓰레드에서도 호출할 수 있어야 한다.</p>
+<p>=&gt; 즉, OSGi에서는 쓰레드를 직접 다루는 코드를 작성할 수도 있으니, 쓰레드 세이프한 라이브러리를 만드는 것이 중요하다는 뜻인듯..</p>
+<p>하지만, 이런 자유에는 댓가가 따르듯이, 우리가 만들 번들에서 쓰레드를 생성하여 사용하는것이 가능하듯이, 우리가 만들 번들이 단일 쓰레드 환경에서만 사용되리라는 보장은 못한다. OSGi는 암묵적으로 멀티 쓰레드다. 따라서 반드시 작성하는 코드가 쓰레드 세이프해야 하며, 특히 이벤트나 콜백을 다른 프레임워크 또는 번들에서 받아올 때 주의해야 한다.</p>
+<p>=&gt; 흠. 당연한 말씀.</p>
+<p>Brian Goetz의 "Java Concurrency in Practice"에서 자바 동시성에 대해 자세히 다루고 있으니, 프로페셔널 자바 프로그래머라면 항상 이 책을 가까이 하라.</p>
+<p>=&gt; 넵.</p>

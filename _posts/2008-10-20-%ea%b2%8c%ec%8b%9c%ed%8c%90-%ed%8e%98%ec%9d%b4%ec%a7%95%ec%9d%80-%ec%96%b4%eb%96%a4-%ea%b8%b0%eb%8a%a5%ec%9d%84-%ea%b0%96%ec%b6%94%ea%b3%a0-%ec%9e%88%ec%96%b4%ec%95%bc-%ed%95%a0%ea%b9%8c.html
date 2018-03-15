@@ -1,0 +1,68 @@
+---
+layout: post
+title: 게시판 페이징은 어떤 기능을 갖추고 있어야 할까?
+date: 2008-10-20 15:03:11.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 봄싹게시판
+tags:
+- 게시판 구현
+- 페이징
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323161527'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a title="[http://springstudyclub.tistory.com/]로 이동합니다." target="_blank" href="http://springstudyclub.tistory.com/">봄싹 스터디</a>에서 게시판을 구현하기로 했습니다. 간단한 CRUD와 페이징처리가 주 목적이며, 저를 포함한 대, 여섯 명의 개발자 분들이 자기 나름대로 구현해온 코드를 서로 보여주고 피드백을 받는 방식으로 진행될 예정입니다. 이를 통해 스프링을 실제 프로젝트에 적용하는 방법은 물론이거니와, 게시판 구현 방법에 대한 고민도 나눌 수 있을 것 같고, 개발 전반에 좋은 코드, 좋은 개발 방법 및 현재 자신에게 필요한 학습은 무엇인가에 대한 고민까지도 해볼 수 있는 좋은 스터디로 생각하고 있습니다.</p>
+<p>Anyway, 기존 애플리케이션들의 UI를 보면서 페이지 네비게이션을 어떻게 구현하면 좋을지 고민해봤습니다.</p>
+<p>Gmail</p>
+<p><img src="{{ site.baseurl }}/assets/pk0.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/nk1.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/lk0.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/lk1.png" class="aligncenter" width="400" /><br />
+- 처음은 일단 가장 최신 글(메일)을 보여주고, "이전" 과 "처음"이 있군요.<br />
+- "이전"을 클릭하면 "이전" 과 "처음"은 그대로 있고, "다음"이 추가됩니다.<br />
+- 또 한 번 "이전"을 클릭하면 "이전"과 "처음", "다음"은 그대로 있고, "최근"이 추가됩니다.</p>
+<p>두 번째에서 "다음"만 추가한 건 "다음"이 곧 "최근"이기 때문이죠. 이런 페이징의 단점은 중간으로 이동할 수가 없다는 겁니다. "다음"만 10번 눌렀다가 세 번째 페이지로 이동하고 싶을 땐 어떻게 하죠?? 바로 이동할 수 있는 방법은 없습니다. "최근"으로 갔다가 "이전"을 세 번 클릭하는 수밖에..</p>
+<p>한 페이지에 보이는 목록의 갯수 설정은 환경 설정에서 할 수 있습니다. 기본으로 50개씩 보여주는데, 이 설정을 별도의 페이지로 옮겨둔건 좋은 것 같습니다. 자주 바꾸는 설정도 아닐텐데 자꾸 눈에 들어오면 괜히 한 번 해보고싶고, 그럼 괜히 불필요한 요청만 늘어날 뿐이니까요. 이런 경우에는 대신 모델 설계가 좀 달라질 것 같습니다. 게시판에 대한 설정을 담고 있는 별도의 모델이 있고 그 모델의 속성으로 한 페이지당 목록 갯수가 들어있을 것 같습니다. 반대로, 만약 페이지와 한 페이지에 대한 목록 갯수가 같이 따라 다닌다면, 페이징 관련 모델에 한 페이지 목록 갯수가 속성으로 들어있겠죠?</p>
+<p>Forum</p>
+<p><img src="{{ site.baseurl }}/assets/lk2.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/pk1.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/mk1.png" class="aligncenter" width="400" /><br />
+KSUG 포럼 게시판의 페이징을 봤습니다. 처음 모습 그대로를 유지하고, 버튼의 색으로 현재 페이지를 구분하고 있습니다. 일단 위에서 언급했던 중간 페이지로의 이동이 가능해졌습니다. 대신, 여기서도 한 페이지당 갯수 설정 화면은 보이지 않습니다. 어딘가 게시판 설정 페이지에 있을 것 같습니다. 포럼과 Gmail과의 공통점은 둘 다 거의 한 페이지의 내용이 브라우저 범위를 벗어나서 스크롤리 필요하다는 겁니다. 그래서인지, 페이지 네비게이션이 화면의 가장 상단과 가장 하단 두 곳에 모두 위치하고 있습니다. 이런 UI가 사용자에 편하다는 반증으로 생각됩니다. 따라서 화면을 만들 때 네비게이션 부분을 컴포넌트화 해야겠다는 생각이 듭니다. 그래야 코드 중복도 최소화 하고 관리하기 쉬울테니까요.</p>
+<p>게시판</p>
+<p><img src="{{ site.baseurl }}/assets/lk3.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/pk2.png" class="aligncenter" width="400" /><br />
+제가 자주가는 어떤 사이트의 게시판에 있는 페이지 네비게이션 부분을 봤습니다. 고정이라는 측면에선 포럼과 동일했습니다만, 게시물 갯수에 대한 정보는 없었습니다. 게시물 목록에서 해당 게시물의 번호를 가지고 있는데 그 번호가 그런 정보를 줄테니 굳이 필요 없었던 것 같습니다. 다만, 게시물 번호가 그다지 사실상 사용자에게 그리 의미가 있는지는 모르겠습니다. 게시물을 어떤 URL로 접근하는 것과, 게시물의 번호로 게시물에 접근하는 것의 차이는 좀 크다고 봅니다. 개인적으로는 URL로 게시물에 접근하는게 더 타당해 보이니, 번호는 사실 필요 없다는 생각입니다. 그리고 이 게시판은 한 페이지 목록 수가 작아서 네비게이션을 자주 해야 합니다. 대신에 네비게이션 바는 화면의 맨 하단에 하나만 위치하고 있습니다. 한 화면에 전부 눈에 들어오기 때문에 위의 두 경우처럼 위, 아래 두 곳에 네비게이션 바를 둘 필요는 없다고 생각했을지도 모르는데.. 뭐 타당해 보입니다. 여기서도 한 페이지당 목록 수를 설정하는 화면은 보이지 않습니다.</p>
+<p>하아~~ 페이징 어떻게 구현할까나..</p>

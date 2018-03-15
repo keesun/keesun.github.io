@@ -1,0 +1,183 @@
+---
+layout: post
+title: "[IBM DW] HTML5 navigator"
+date: 2010-07-06 11:41:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- HTML/CSS
+tags:
+- HTML5
+- navigator
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322953009'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.ibm.com/developerworks/opensource/library/x-html5mobile1/index.html" target="_blank" title="[http://www.ibm.com/developerworks/opensource/library/x-html5mobile1/index.html]로 이동합니다.">http://www.ibm.com/developerworks/opensource/library/x-html5mobile1/index.html</a>
+<div>
+<a href="http://www.ibm.com/developerworks/kr/library/x-html5mobile1/" target="_blank" title="[http://www.ibm.com/developerworks/kr/library/x-html5mobile1/]로 이동합니다.">http://www.ibm.com/developerworks/kr/library/x-html5mobile1/</a> (번역)</div>
+<div>
+</div>
+<div>
+HTML5에 대해 궁금하던 찰나 무심코 IBM DW에 들어가봤더니.. 역시나 좋은 글들이 마구 쏟아지고 있었다.&nbsp;</div>
+<div>
+</div>
+<div>
+이 글에서 소개하는 &nbsp;내용은 흔히 GPS라 부르는 기능에 관한 것이다. 그것만 보면 심심할까봐 트위터 API랑 연동해서 접속한 사람 근방의 트위터글을 검색해 주는 애플리케이션을 소개하고 있다.</div>
+<div>
+</div>
+<div>
+<span style="font-size: 12pt; ">현재 위치 알아내기</span></div>
+<div>
+</div>
+<div>
+<div></div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;var gps = <b>navigator.geolocation</b>;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (gps) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;alert("gps enabled");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>gps.getCurrentPosition(searchTwitter,</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;function(error) {</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;alert("Got an error, code: " + error.code + " message: " +</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;error.message);</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;});</b></div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;searchTwitter();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div>
+첫번째 인자는 성공시 실행할 콜백, 두번째 인자는 실패시 실행할 콜백, 세번째는 옵션인데 생략했군요.</div>
+<div>
+</div>
+<div>
+성공시 실행할 콜백에 전달되는 인자는 position</div>
+<div>
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;function searchTwitter(position) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;alert("searchTwitter position=" + position);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;var query = "http://search.twitter.com/search.json?callback=showResults&amp;q=";</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;query += $("kwBox").value;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if (position) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;var lat = position.coords.latitude;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;var long = position.coords.longitude;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;query += "&amp;geocode=" + escape(lat + "," + long + ",50mi");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;alert("query=" + query);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;var script = document.createElement("script");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;script.src = query;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;document.getElementsByTagName("head")[0].appendChild(script);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div>
+저기서 꺼내서 사용할 값은 주로 coords의 latitude(위도)와 longitude(경도). 여기서 잠깐... 위도 경도가 뭐더라.. 어떤게 가로인지 세로인지 햇갈린다. 적도를 기준으로 상하 각도를 위도. 북극과 남극은 그래서 위도 90. 경도는 영국 그리니치 천문대를 기준으로 좌우 각도. &nbsp;서울은 북위 37도, 동경 126도.</div>
+<div>
+</div>
+<div>
+<span style="font-size: 12pt; ">위치 추적하기</span></div>
+<div>
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+trackerId = <b>gps</b>.<b>watchPosition</b>(function(pos){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>var latLng = new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude);</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>map.setCenter(latLng);</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>theUser.setPosition(latLng);</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>showLocation(pos);</div>
+<div>});</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div>
+watchPosition을 사용하면 계속해서 좌표 받아옴.</div>
+<div>
+</div>
+<div>
+<div><span class="Apple-tab-span" style="white-space:pre"></span></div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>function stopTracking(){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>if (trackerId){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">			</span><b>navigator.geolocation.clearWatch(trackerId);</b></div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>}</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div>
+trackerId를 clearWatch에 넘겨줘숴 종료한다.</div>
+<div>
+</div>
+<div>
+트위터 API랑 구글맵 API 사용법도 나오는데... 생략~</div>
+<div style="">
+</div>
+<div>
+</div>
+<div>
+</div>
+<div>
+</div>

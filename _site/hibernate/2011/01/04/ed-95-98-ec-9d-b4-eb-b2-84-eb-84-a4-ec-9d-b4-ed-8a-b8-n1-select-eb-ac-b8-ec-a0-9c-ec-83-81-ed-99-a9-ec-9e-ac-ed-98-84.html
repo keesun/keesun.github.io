@@ -1,0 +1,52 @@
+<p style="clear: both;">하이버네이트 매핑 기본값은 Collection을 Lazy Fetching하게 되어 있다. 이걸 Lazy Collection Fetching이라고 하는데 일반적인 경우에는 매우 유용한 방법이다.</p>
+<p style="clear: both;">A -&gt; C</p>
+<p style="clear: both;">A라는 클래스에서 B 타입의 Collection을 가지고 있다는 것을 이렇게 표기하겠다.</p>
+<p style="clear: both;">Member -&gt; C Member -&gt; C Member -&gt; C</p>
+<p style="clear: both;">Member가 여러 컬렉션을 가지고 있다고 할 때 만약 하이버네이트나 다른 ORM 기술을 사용해 Member 객체를 읽어올 때 Member가 연관 관계를 맺고 있는 모든 컬렉션까지 전부 다 가져온다고 생각해보자.</p>
+<p style="clear: both;">메모리와 실행 시간이 엄청 오래 걸릴 것이다. 잘하면(?) 데이터베이스에 들어있는 모든 데이터를 한방에 메모리로 올리는 상황도 연출될 수 있다.</p>
+<p style="clear: both;">그래서 Lazy Collection Fetching같은게 필요하다. 딱 Member 객체만 가져오고 C, C, C 같은건 실제 해당 컬렉션에 접근할 때 쿼리가 발생한다.</p>
+<p style="clear: both;">문제 상황을 연출해봤다.</p>
+<p>[java]<br />
+public void generateTestData() {<br />
+    List&lt;Integer&gt; idList = new ArrayList&lt;Integer&gt;();</p>
+<p>    for (int i = 0; i &lt; 100; i++) {<br />
+        Member member = new Member();<br />
+        member.setName(i + &quot;keesun&quot;);<br />
+        member.setEmail(&quot;keesun&quot; + i + &quot;@mail.com&quot;);<br />
+        getSession().save(member);<br />
+        idList.add(member.getId());<br />
+    }</p>
+<p>    for (int j = 0; j &lt; 10000; j++) {<br />
+        Item item = new Item();<br />
+        item.setName(j + &quot;items&quot;);</p>
+<p>        int randomId = (int) (Math.random() * 100);<br />
+        Member owner = (Member) getSession().load(Member.class, idList.get(randomId));</p>
+<p>        item.setOwner(owner);<br />
+        getSession().save(item);<br />
+    }<br />
+}<br />
+[/java]</p>
+<p style="clear: both;">랜덤으로 Member 객체 100개와 Item 객체 10000개를 조합했다.</p>
+<p style="clear: both;">이제 Item을 가장 많이 가지고 있는 Member 정보와 해당 Item의 갯수를 알고 싶다고 해보자.</p>
+<p>[java]<br />
+    @Test<br />
+    public void membeItemWithNPlus1UsingCriteria(){<br />
+        int mostItemCount = 0;<br />
+        Member mostItemOwner = null;</p>
+<p>        List&lt;Member&gt; memberList = getSession().createCriteria(Member.class).list();<br />
+        for (Member thisMember : memberList) {<br />
+            Set&lt;Item&gt; memberItems = thisMember.getItems();<br />
+            if(mostItemCount &lt; memberItems.size()) {<br />
+                mostItemCount = memberItems.size();<br />
+                mostItemOwner = thisMember;<br />
+            }<br />
+        }</p>
+<p>        System.out.println(mostItemCount);<br />
+        System.out.println(mostItemOwner);<br />
+    }<br />
+[/java]</p>
+<p style="clear: both;">이때 발생한 쿼리는 다음과 같다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/Spring_-_SpringSource_Tool_Suite_-__Users_whiteship2000_springsource_workspace.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Spring_-_SpringSource_Tool_Suite_-__Users_whiteship2000_springsource_workspace-thumb1.jpg" alt="" width="380" height="231" /></a></p>
+<p style="clear: both;">Criteria를 사용한 아주 간단한 쿼리로 모든 Member 객체를 가져온 다음 Memebr를 순회하며 각 Member의 C 크기를 비교하고 있다. 첫번째 쿼리는 Member를 가져올 때 발생하고 그 다음 N번의 쿼리는 member.getItems()를 호출할 때 발생하게 된다. 이 방법은 select 문이 너무 많이 발생하기 때문에 DB에 부하를 줄 수 있어 보통 N+1 Select Problem이라고 한다.</p>
+<p style="clear: both;">보통 하이버네이트를 사용했을 때 뭔가 무척 느리다고 느껴진다면 이런 현상이 발생하는 부분이 없는지 확인해봐야 한다. 그리고 해결책을 적용하면 된다. 하이버네이트는 이미 N+1 Select 문제를 해결할 수 있는 여러가지 방법을 제공한다. 앞으로 그것들을 하나씩 살펴볼 계획이다.</p>
+<p><br class="final-break" style="clear: both;" /></p>

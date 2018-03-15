@@ -1,0 +1,12 @@
+<p>아파치 톰캣 매니저를 랩핑한 녀석인데 아주 편리합니다.</p>
+<p>TomcatManager manager;<br />
+manager = new TomcatManager(new URL("http://localhost:8080/manager/"));<br />
+manager.deploy("/springsprout", new URL("file:target/springsprout.war"), true);<br />
+manager.undeploy("/springsprout");</p>
+<p>이런식으로 사용할 수 있습니다.</p>
+<p>이슈 1.</p>
+<p>Cargo와 관련 된 것이 아니지만, 한 가지 이슈 사항은 undeploy를 했을 때 해당 webapp에서 path에 해당하는 폴더가 지워지지 않으면 그 다음에 같은 폴더로 deploy를 하면, 톰캣은 제대로 배포가 됐다고 생각을 하는데, 실제로는 그렇치 않습니다. 접속해보면 404가 뜨죠.</p>
+<p>derby.jar 파일이 지워지지 않고 lib폴더에 남아있는 경우였는데, deploy할 때 무슨 이유에서든가 webapp 밑을 이 파일만은 유독 지워지지 않고 남아서 이 다음 deploy를 방해하고 있었습니다. @_@ 필요도 없는 라이브러리였는데 들어가서 말썽을 부리더군요.</p>
+<p>이슈 2.</p>
+<p>두 번째는 Cargo에서 제공하는 TomcatManager말고 여러 Deployer들이 있는데, 그 녀석들을 사용하여 deploy는 할 수 있었지만, 그 외의 메서드 redeploy(), undeploy() 등은 Not Supported 예외를 발생시킵니다. 메이븐으로 연동하였을 때도 마찬가지로 cargo:undeploy 등은 not support 에러가 나고 제대로 동작하지 않았습니다. 물론 제가 뭔가 잘못했을 수도 있습니다. @_@ 하지만, TomcatManager 설정이 Deployer 보다 더 간단하고 잘 동작하기 때문에 다시 Deployer를 시도해보진 않을 것 같습니다.</p>
+<p></p>

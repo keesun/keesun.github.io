@@ -1,0 +1,110 @@
+---
+layout: post
+title: POJO 관계 구현하기
+date: 2008-01-09 07:43:03.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 03
+tags:
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322766057'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>Scaffolding code</h1>
+<ul>
+<li>연관을 맺기 위해 필요한 필드와 메소드.</li>
+</ul>
+<h1>1:다 관계</h1>
+<ul>
+<li>다수를 가질 경우, Hibernate requires interfaces for collection-typed attributes</li>
+</ul>
+<ul>
+<li>양방향일 경우, 해당 타입의 속성이 필요함.</li>
+</ul>
+<ul>
+<li>연결하기: 두 가지 행위가 필요함.</li>
+</ul>
+<ul>
+<li>Hibernate doesn't manage persistent associations. If you<br />
+want to manipulate an association, you must write exactly the same code<br />
+you would write without Hibernate.</li>
+</ul>
+<ul>
+<li>Convenient Method 도입하기:</li>
+</ul>
+<div class="code panel" style="border-style: solid; border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px; border-bottom-style: solid;"><b>1:다 관계</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> void addChildCategory(Category childCategory) {<br />    <span class="code-keyword">if</span> (childCategory == <span class="code-keyword">null</span>)<br />        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> IllegalArgumentException(<span class="code-quote">"Null child category!"</span>);<br />    <span class="code-keyword">if</span> (childCategory.getParentCategory() != <span class="code-keyword">null</span>)<br />        childCategory.getParentCategory().getChildCategories().remove(childCategory);<br />    childCategory.setParentCategory(<span class="code-keyword">this</span>);<br />    childCategories.add(childCategory);<br />}</pre>
+</div>
+</div>
+<ul>
+<li>
+<ul>
+<li>reduces the lines of code</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<ul>
+<li>enforces the cardinality of the association</li>
+</ul>
+</li>
+</ul>
+<h1>다:다 관계</h1>
+<ul>
+<li>both sides are implemented with collection-valued attributes.</li>
+</ul>
+<ul>
+<li>Convenient Method</li>
+</ul>
+<div class="code panel" style="border-style: solid; border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px; border-bottom-style: solid;"><b>다:다 관계</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> void addCategory(Category category) {<br />    <span class="code-keyword">if</span> (category == <span class="code-keyword">null</span>)<br />        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> IllegalArgumentException(<span class="code-quote">"Null category"</span>);<br />    category.getItems().add(<span class="code-keyword">this</span>);<br />    categories.add(category);<br />}</pre>
+</div>
+</div>
+<ul>
+<li>You can also add logic to your accessor methods.</li>
+</ul>
+<p>참조 : <a href="http://www.amazon.com/Java-Persistence-Hibernate-Christian-Bauer/dp/1932394885/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1199863766&amp;sr=8-1" target="_blank">Java Persistence With Hibernate</a></p>

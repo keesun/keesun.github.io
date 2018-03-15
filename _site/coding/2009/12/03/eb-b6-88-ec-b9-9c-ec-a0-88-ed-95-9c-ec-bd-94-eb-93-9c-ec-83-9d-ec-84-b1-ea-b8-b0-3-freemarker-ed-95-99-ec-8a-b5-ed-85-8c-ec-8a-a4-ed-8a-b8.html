@@ -1,0 +1,31 @@
+<p>참조: <a title="[http://freemarker.org/docs/pgui_quickstart_all.html]로 이동합니다." target="_blank" href="http://freemarker.org/docs/pgui_quickstart_all.html">http://freemarker.org/docs/pgui_quickstart_all.html</a></p>
+<p>프로젝트의 sandbox에 패키지를 하나 만들고, main 메서드로 학습 테스트를 작성할 클래스 하나와 프리마커 템플릿 하나를 만듭니다. 그리고 위 참조 링크에서 코드를 가져다가 살짝 바꿔서 테스트 해봅니다.</p>
+<p>템플릿 파일은 매우 간단하게;;</p>
+<p>${message}</p>
+<p>main 메서드에 들어갈 코드는 위 링크에서 복사해서 가져온 다음에 File은 스프링의 ClassPathResource를 이용해서 바꾸고, 템플릿 파일 이름은 위에서 만든 템플릿 파일이름으로, Map에는 message에 들어가야 할 것만 넣어 봅니다.</p>
+<p>public class SimpleExample {</p>
+<p>&nbsp;&nbsp;&nbsp; public static void main(String[] args) throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* ------------------------------------------------------------------- */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* You should do this ONLY ONCE in the whole application life-cycle:&nbsp;&nbsp; */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Create and adjust the configuration */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Configuration cfg = new Configuration();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cfg.setObjectWrapper(new DefaultObjectWrapper());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cfg.setDirectoryForTemplateLoading(new ClassPathResource("/sandbox/freemarker").getFile());</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* ------------------------------------------------------------------- */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* You usually do these for many times in the application life-cycle:&nbsp; */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Get or create a template */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Template temp = cfg.getTemplate("testTemplate.ftl");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Create a data-model */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map root = new HashMap();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root.put("message", "Hello Freemarker");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Merge data-model with template */<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Writer out = new OutputStreamWriter(System.out);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; temp.process(root, out);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out.flush();<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>결과는 그냥 눈으로 확인합니다.</p>
+<p>Hello Freemarker<br />
+Process finished with exit code 0</p>
+<p>끝! </p>
+<p>이제 Configuration, Template, Map의 관계를 알았으니 본격적으로 코드 생성기를 작성해 보겠습니다.</p>

@@ -1,0 +1,89 @@
+---
+layout: post
+title: BundleManager 0.1 번들 소스 코드
+date: 2008-07-03 05:36:16.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- BundleContext
+- BundleManager
+- FileFilter
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323094178'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>BundleManager가 할 일<br />- 특정 폴더에 jar 파일을 집어 넣으면 그 녀석을 설치해야 한다.<br />- 이미 해당 jar 파일이 설치되어 있다면 설치하지 않는다.</p>
+<p>BundleDirectoryManager.java
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package whiteship;</p>
+<p>import java.io.File;</p>
+<p>import org.osgi.framework.Bundle;<br />import org.osgi.framework.BundleActivator;<br />import org.osgi.framework.BundleContext;<br />import org.osgi.framework.BundleException;</p>
+<p>public class BundleDirectoryManager implements BundleActivator {</p>
+<p>&nbsp;&nbsp; &nbsp;private static final long INTERBAL = 1000;<br />&nbsp;&nbsp; &nbsp;private static String BUNDLE_DIRECTORY = "E:\\bundles";<br />&nbsp;&nbsp; &nbsp;private volatile BundleContext context;</p>
+<p>&nbsp;&nbsp; &nbsp;private final Thread thread = new BundleManager(BUNDLE_DIRECTORY);</p>
+<p>&nbsp;&nbsp; &nbsp;public void start(BundleContext context) throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; this.context = context;<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; thread.start();<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void stop(BundleContext context) throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; thread.interrupt();<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;protected Bundle findBundleByLocation(String location) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Bundle[] bundles = context.getBundles();<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; for (int i = 0; i &lt; bundles.length; i++) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; if (bundles[i].getLocation().equals(location)) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return bundles[i];<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; }<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; }<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; return null;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;private class BundleManager extends Thread {</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; private File bundleLocation;</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; public BundleManager() {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; //TODO I need CoC<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; public BundleManager(String location) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; bundleLocation = new File(location);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; public void run() {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; if (!bundleLocation.isDirectory())<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(bundleLocation.getPath()<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; + " is not directory.");</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; try {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; while (!Thread.currentThread().isInterrupted()) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Thread.sleep(INTERBAL);</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (File file : bundleLocation.listFiles(new JarFileFilter())) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String bundleLocation = "file:" + file.getAbsolutePath();<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(findBundleByLocation(bundleLocation) == null)<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; context.installBundle(bundleLocation);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; } catch (InterruptedException e) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("I'm going out");<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; } catch (BundleException e) {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Error installing bundle");<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(e);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; }<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; &nbsp;}<br />}</div>
+<p>번들을 시작시키면 위의 클래스에 있는 start()가 실행되고, 주기적으로(현재 1초) 특정 폴더(현재 E:\bundles)를 확인해서 그 안에 들어있는 JAR 파일들을 찾아서 설치한다. 이 때 만약 이미 OSGi 플랫폼에 설치되어 있는 번들은 설치하지 않는다.</p>
+<p>JarFileFilter.java
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package whiteship;</p>
+<p>import java.io.File;<br />import java.io.FileFilter;</p>
+<p>public class JarFileFilter implements FileFilter {</p>
+<p>&nbsp; &nbsp; public boolean accept(File f) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if(f.isDirectory())<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return false;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; String extenstion = getExtension(f);<br />&nbsp; &nbsp; &nbsp; &nbsp; if(extenstion != null &amp;&amp; extenstion.equals("jar"))<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return true;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; return false;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp;public String getExtension(File f) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String ext = null;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String s = f.getName();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int i = s.lastIndexOf('.');</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (i &gt; 0 &amp;&amp;&nbsp; i &lt; s.length() - 1) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ext = s.substring(i+1).toLowerCase();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return ext;<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>}</div>
+<p>파일 필터로. 특정 폴더 안에 들어있는 파일들 중에 확장자가 jar 인 파일들만 가져오기 위해서 만들었음.</p>
+<p>bnd파일
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);"># bundleManager.bnd<br />Private-Package: whiteship<br />Bundle-Activator: whiteship.BundleDirectoryManager</div>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/hk23.jar" class="aligncenter">hk23.jar</a></p>
+<p>개선하거나 생각해볼 것<br />- 스프링 DM 번들로 변경하자.<br />- 시간이랑 폴더는 DI가 가능하도록 변경하자.(기본 값 유지)<br />- jar 뿐만 아니라 war로 설치를 시도하게 하자. 스프링 DM 웹 번들일 수도 있으니까.<br />- getExtension() 메소드는 별도의 Util 클래스로 빼내기.<br />- 예외처리 RuntimeException으로 처리하기.</p>
+<p>0.2<br />- 해당 폴더에서 jar 파일이 삭제되면, 해당 번들을 uninstall 시킨다.</p>
+<p>0.3<br />- 만약 해당 폴더에 있는 jar 파일이 변경되면, 해당 번들을 update 시킨다.</p>
+<p>참조: <a href="http://neilbartlett.name/blog/osgibook/" target="_blank">http://neilbartlett.name/blog/osgibook/</a></p>

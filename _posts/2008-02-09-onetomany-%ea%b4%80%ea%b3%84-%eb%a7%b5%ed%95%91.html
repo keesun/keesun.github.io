@@ -1,0 +1,155 @@
+---
+layout: post
+title: OneToMany 관계 맵핑
+date: 2008-02-09 01:18:16.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- OneToMany 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323155432'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>Bag으로 맵핑하기</h1>
+<ul>
+<li><a href="http://whiteship.tistory.com/1456" target="_blank">1대다 관계 맵핑하기</a>에서는 Set으로 양방향 관계를 맵핑했었다.</li>
+</ul>
+<ul>
+<li>Bag은 1대다 양방향 관계를 맵핑하는 가장 효율적인 콜렉션이다. 왜? index도 없고, 중복도 허용하기 때문에, 그냥 넣기만 하면 된다.</li>
+</ul>
+<ul>
+<li>그러나 2개의 bag 타입 콜렉션을 동시에 eaget-fetching 할 수 없다.(13장에서 다룬다.)</li>
+</ul>
+<ul>
+<li>Bag 타입을 사용하려면 변수의 타입은 Collection, 구현체는 ArrayList를 사용한다.</li>
+</ul>
+<ul>
+<li>중복 데이터를 넣는 일은 코딩을 잘 해서 방지하면 되지만, 어차피 mappedby 속성(inverse)를<br />
+Collection에 걸어두었기 때문에, 여러번 추가해도 SQL은 실행되지 않는다.(그래도.. 메모리 상에서는 콜렉션에<br />
+들어갈텐데, 이러면, 안 되지 않을까.. 흠)</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Item.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@OneToMany(mappedBy = <span class="code-quote">"item"</span>)<br /><span class="code-keyword">private</span> Collection&lt;Bid&gt; bids = <span class="code-keyword">new</span> ArrayList&lt;Bid&gt;();</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Bidjava</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToOne<br /><span class="code-keyword">private</span> Item item;</pre>
+</div>
+</div>
+<h1>List로 맵핑하기</h1>
+<ul>
+<li>콜렉션에 있는 Entity들의 index가 필요하다면, List로 맵핑하면 된다.</li>
+</ul>
+<ul>
+<li>콜렉션을 맵핑할 때, 콜렉션의 엔티티는 index를 가지고 있을 추가적인 컬럼을 설정한다.(@IndexColumn)</li>
+</ul>
+<ul>
+<li>양방향 설정할 때, 콜렉션에 index가 있는 경우(List, Map, 배열)에는 One쪽을 무시(inverse)한다.</li>
+</ul>
+<ul>
+<li>왜? 콜렉션이 DB를 수정할 때 필요로 하는 정보(index)를 가지고 있기 때문에, 콜렉션을 기준으로<br />
+DB를 수정해야 한다. -&gt; Bid테이블에 Bid_Index 컬럼이 있는데, 이 안에 넣을 값은 Item에 있는<br />
+List&lt;Bid&gt; 콜렉션에 넣어야 알 수 있자나. 그러니까 Bid를 기준으로 SQL을 만들 수 없지. 콜렉션에 넣을<br />
+때(item.getBids().add(bid)) Bid_Index에 넣을 값을 알 수 있으니까, 콜렉션을 기준으로 SQL을<br />
+생성하고, 그 반대쪽 SQL은 발생하지 않도록 inverse 해줘야 해.</li>
+</ul>
+<ul>
+<li>따라서 Item과 Bid의 관계에서 Bid쪽의 변화를 무시해야 하는데, @ManyToOne에는 mappedBy 속성이 없다. 그래서 꼼수가 필요하다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Item.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@OneToMany<br />@JoinColumn(name=<span class="code-quote">"ITEM_ID"</span>, nullable = <span class="code-keyword">false</span>)<br />@IndexColumn(name = <span class="code-quote">"BID_POSITION"</span>)<br /><span class="code-keyword">private</span> List&lt;Bid&gt; bids = <span class="code-keyword">new</span> ArrayList&lt;Bid&gt;();</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Bid.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToOne<br />@JoinColumn(name=<span class="code-quote">"ITEM_ID"</span>, updatable=<span class="code-keyword">false</span>, insertable=<span class="code-keyword">false</span>)<br /><span class="code-keyword">private</span> Item item;</pre>
+</div>
+</div>
+<ul>
+<li>item.getBids().add(bid); 이렇게 할 때 SQL(update Bid set ITEM_ID=?, BID_POSITION=? where id=?)을 날린다.</li>
+</ul>
+<ul>
+<li>Bid 와 Item에 설정한 JoinColumn은 같은 이름이어야 한다. 둘 다 Many쪽(여기서는 Bid)에 있는 외례키 컬럼을 나타낸다.</li>
+</ul>
+<ul>
+<li>JPA는 indexed list를 지원하지 않기 때문에, 하이버네이트의 @IndexColumn 애노테이션을 사용한다.</li>
+</ul>
+<h1>Join Table로 맵핑하기</h1>
+<ul>
+<li>OneToMany관계가 optional인 경우에 사용하면 좋다. 그러지 않고, 외례키 컬럼이 Null을 허용하도록 해도 되긴 되지만 비추한다.</li>
+</ul>
+<ul>
+<li>OneToOne관계를 Join Table로 맵핑한 것과 비슷하지만, 그 때는 두 개의 키를 모두<br />
+unique로 설정했지만, 이번에는 Many쪽의 주키만 unique로 설정한다. 왜? Join Table에서 One쪽의 주키값은<br />
+여러 번 등장할 수 있고, Many쪽의 주키값은 한 번만 등장할 수 있다. 그래야 OneToMany 관계가 되니까.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Item.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@ManyToOne<br />@JoinTable(<br />	name=<span class="code-quote">"ITEM_USER"</span>,<br />	joinColumns=@JoinColumn(name=<span class="code-quote">"ITEM_ID"</span>),<br />	inverseJoinColumns=@JoinColumn(name=<span class="code-quote">"USER_ID"</span>)<br />)<br /><span class="code-keyword">private</span> User user;</pre>
+</div>
+</div>
+<ul>
+<li>양방향으로 설정할 때는 User에 Item의 콜렉션을 추가한다.</li>
+</ul>
+<ul>
+<li>ITEM_USER라는 연관 테이블을 만들고, 그 테이블에 ITEM_ID라는 컬럼과 USER_ID 컬럼을 만든다.</li>
+</ul>
+<ul>
+<li>ITEM_USER 테이블과 Item 테이블과의 연관을 맺을 컬럼은 USER_ID 컬럼이다. 즉 이 컬럼이 Item 테이블에 생긴다.(InverseJoinColumns)</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@OneToMany(mappedBy = <span class="code-quote">"user"</span>)<br /><span class="code-keyword">private</span> Set&lt;Item&gt; items = <span class="code-keyword">new</span> HashSet&lt;Item&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>콜렉션의 변화는 무시한다.</li>
+</ul>

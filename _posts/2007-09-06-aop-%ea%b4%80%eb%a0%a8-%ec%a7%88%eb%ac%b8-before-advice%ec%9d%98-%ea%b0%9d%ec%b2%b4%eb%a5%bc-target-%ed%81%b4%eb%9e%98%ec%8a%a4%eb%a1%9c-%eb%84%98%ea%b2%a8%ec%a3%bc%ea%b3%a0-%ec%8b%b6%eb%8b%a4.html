@@ -1,0 +1,63 @@
+---
+layout: post
+title: 'AOP 관련 질문 :: Before Advice의 객체를 Target 클래스로 넘겨주고 싶다.'
+date: 2007-09-06 04:37:17.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 04. Advising beans
+tags:
+- 적당한 Advice의 사용
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323127424'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>메일을 받았습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">"<span class="q"><a href="http://whiteship.tistory.com/361" target="_blank">XML을 사용하는 초간단 예제</a>에 대한 질문인데요.<br />만약에 before메서드에서 생성한 객체를 target클래스에 넘겨야할땐 어떻게 해야되는지요.<br />방법이 있나요?"</span></div>
+<p><span class="q"><br />답변은 다음과 같이 해드렸습니다.</p>
+<p></span>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);"><span class="q">"</span>before메서드에서 생성한 객체를 target클래스에 넘겨야할땐"가 구체적으로 어떤 경우인지를 설명해주시면 더 좋겠습니다.</p>
+<p>일<br />
+단은 Before Advice에서 target이 되는 클래스의 대상 메소드로 값을 넘기려면, Target이 되는 클래스에서<br />
+Before Advice를 가지고 있는 Aspect를 알아야 합니다. 그 말은 Aspect에 종속성이 생기게 된다는 것입니다.</p>
+<p>제 생각에는 그런 경우가 발생한다면, Before Adivce보다는 Around Adivce를 사용하는 것을<br />
+추천하고 싶습니다. Around Advice를 사용하시면 대상이 되는 메소드에 넘겨줄 인자 들이나, 메소드의 반환 값등을<br />
+마음대로 바꿀 수 있으며, 심지어 대상이 되는 메소드를 실행하지 않을 수도 있습니다.</p>
+<p>제 답변이 도움이 되셨으면 좋겠습니다."</p></div>

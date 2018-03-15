@@ -1,0 +1,141 @@
+---
+layout: post
+title: "[스프링 3.0] 클래스-메서드 레벨 @RequestMapping 퀴즈"
+date: 2010-07-13 03:12:59.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.0'
+tags:
+- "@RequestMapping"
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323144450'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이미 2.5부터 추가된 기능이고 가장 자주 사용하고 있는 애노테이션 @ReqeustMapping.. 과연 얼마나 알고 있을까?&nbsp;
+<div>
+
+<div>
+<div>public class Book2Controller {</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping("/book2/add")</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>public String book2Add(Model model){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book2 add");</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div>
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping("/book2/get")</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>public String book2Get(Model model){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book2 get");</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div>}</div>
+</div>
+<div>
+</div>
+<div id="">1. 이 클래스를 &lt;bean /&gt;을 사용해서 빈으로 등록하면 /book2/add 이나 /book2/get 요청 핸들러가 동작할까?</div>
+<div>
+</div>
+</div>
+<div id="">2. 만약 1번에서 false를 선택했다면 위 코드의 @RM이 동작하게 만드는 방법 두가지는 무엇일까?</div>
+<div>
+</div>
+<div>
+<div>@Controller</div>
+<div id="">@RequestMapping("/book3")</div>
+<div>public class Book3Controller {</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>public String add(Model model){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book3 add");</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div>
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>public String get(Model model){</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book3 get");</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div>}</div>
+</div>
+<div>
+</div>
+<div>3. 이렇게 매핑 했을 때 /book3/add 와 /book3/get은 동작할까?</div>
+<div>
+</div>
+<div>
+4. 만약 3번에서 false를 선택했다면 Book3Controller의 @RequestMapping 설정을 어떻게 고치면 동작하게 할 수 있을까? (역시 두가지)</div>
+<div>
+</div>
+<div id="">
+<div id="">@Controller</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">@RequestMapping("/book3/*")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class Book3Controller {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>public String add(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book3 add");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>@RequestMapping</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>public String get(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>model.addAttribute("message", "book3 get");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>return "/WEB-INF/views/hello.jsp";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div>
+</div>
+</div>
+<div>5. 위와 같이 설정했을 때 /book3/a/b/c/add 는 동작할까 안할까?</div>
+<div>
+</div>
+<div>
+6. 만약 5번에서 동작하지 않는다고 대답했다면.. Book3Controller의 @RM 설정을 어떻게 고치면 동작하게 될지 적어보자.</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+정답은.. 토비님 책 또는 이번주 강의에서...</div>

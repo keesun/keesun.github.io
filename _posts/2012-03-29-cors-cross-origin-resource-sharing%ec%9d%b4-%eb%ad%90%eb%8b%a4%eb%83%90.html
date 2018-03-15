@@ -1,0 +1,51 @@
+---
+layout: post
+title: CORS, Cross-Origin Resource Sharing이 뭐다냐...
+date: 2012-03-29 16:15:23.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AJAX/JavaScript
+tags:
+- CORS
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>흠냐...</p>
+<p>1. <a href="http://www.bennadel.com/blog/2327-Cross-Origin-Resource-Sharing-CORS-AJAX-Requests-Between-jQuery-And-Node-js.htm" target="_blank">http://www.bennadel.com/blog/2327-Cross-Origin-Resource-Sharing-CORS-AJAX-Requests-Between-jQuery-And-Node-js.htm</a></p>
+<p>여기가면 두 개의 링크가 있는데 그 두개의 링크는..</p>
+<p>2. <a href="http://www.nczonline.net/blog/2010/05/25/cross-domain-ajax-with-cross-origin-resource-sharing/" target="_blank">http://www.nczonline.net/blog/2010/05/25/cross-domain-ajax-with-cross-origin-resource-sharing/</a></p>
+<p>3. <a href="http://remysharp.com/2011/04/21/getting-cors-working/" target="_blank">http://remysharp.com/2011/04/21/getting-cors-working/</a></p>
+<p>이 중에서 윗글(2번 링크) 마지막에 CORS  예제 링크가 있습니다.</p>
+<p>4. <a href="http://arunranga.com/examples/access-control/" target="_blank">http://arunranga.com/examples/access-control/</a></p>
+<p>이곳은 예제 모음이고.. 여기에 세부적인 예외 페이지 링크가 걸려있습니다. 크롬이나 파폭 인스팩터로 구경할 수 있습니다.</p>
+<p>CORS는 최신 브라우저만 지원됩니다.</p>
+<p>* 지원 브라우저 (두번째 링크에 잘 설명되어있습니다.)</p>
+<ul>
+<li>파폭 3.5+</li>
+<li>IE8+</li>
+<li>사파리 4+</li>
+<li>크롬</li>
+</ul>
+<p>* CORS 지원 브라우저중에서 IE와 비IE 브라우저의 차이점 (두번째 링크에 잘 설명되어있습니다.)</p>
+<ul>
+<li>다른 브라우저는 XmlHttpRequest를 그대로 사용하지만 IE는 XDomainRequest라는 걸 사용해야 합니다.</li>
+<li>CORS의 추가적인 헤더 정보를 활용해서 Preflighted 요청이라는 걸 보낼 수 있지만 IE8은 그럴 수 없습니다.</li>
+</ul>
+<p>=&gt; 결국 IE는 CORS를 적용할 수 있는 버전이 제한적이며 적용할 수 있는 버전도 다른 브라우저오는 다른 형태로 처리해주어야 합니다.</p>
+<p>* 쉬운 방법의 CORS와 preflighted 요청을 이용한 CROS</p>
+<p>- 쉬운 방법의 CORS는 다른 도메인에 있는 리소스를 그냥 XmlHttpRequest로 요청하면 됩니다. 그냥... 그렇게 하면 CORS를 지원한느 브라우저가 알아서 부가적으로 ORIGIN이라는 헤더를 붙여서 상대방 도메인의 서버로 요청을 보내고... 그럼 그 서버가 만약에 크로스 도메인을 지원할꺼면.. 응답의 헤더에 Access-Control-Allow-Origin이라는 곳에 요청에 들어온 도메인을 그대로 적어 보내주거나 퍼블릭한 데이터면 *를 적어 보내주면 됩니다.</p>
+<p>단순하죠...</p>
+<p>그냥 요청하면 -&gt; 브러우저가 ORIGIN 헤더 붙여서 전송... ----&gt; 그럼 처리해줄 서버가 응답에 Access-Control-Allow-Origin 헤더 붙여서 응답.</p>
+<p>- preflighted 요청을 사용하는 경우는 다릅니다. 사전답사를 한다고 해야할까. 다른 도메인으로 요청을 보내려고 하면.. 부가적인 헤더 정보를 가지고 먼저 OPTIONS 메서드 요청을 보냅니다. 그럼 서버에서 특정 헤더 정보를 가지고 응답을 해줘야하죠. 그 응답을 가지고 다른 도메인에 요청을 보내도 되는지 확인이 되면... 그때 본래 요청을 보내고 응답을 받게 됩니다.</p>
+<p>그냥 요청하면 -&gt; preflighted 요청이 날아감 ----&gt; 서버가 OPTIONS 요청 처리 ----&gt; 본래 요청 날림 ----&gt; 서버가 본래 요청 처리해서 응답.</p>
+<p>이때 주고받는 요청/응답 헤더 정보는 세번째 글에 잘 설명이 되어있습니다.</p>

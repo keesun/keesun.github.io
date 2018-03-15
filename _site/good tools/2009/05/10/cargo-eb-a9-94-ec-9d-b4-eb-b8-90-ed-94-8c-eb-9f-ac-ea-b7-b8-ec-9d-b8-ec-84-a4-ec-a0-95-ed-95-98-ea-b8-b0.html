@@ -1,0 +1,23 @@
+<p>참조: <a title="[http://cargo.codehaus.org/Maven2+plugin]로 이동합니다." target="_blank" href="http://cargo.codehaus.org/Maven2+plugin">http://cargo.codehaus.org/Maven2+plugin</a></p>
+<p>상당히 간단하지만, 그 결과는 그다지 간단하지 않은 것 같습니다. 일단 설정은 이렇게 했습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;plugin&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.codehaus.cargo&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;cargo-maven2-plugin&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;configuration&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;container&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;containerId&gt;tomcat6x&lt;/containerId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;home&gt;/apps/apache-tomcat-6.0.18&lt;/home&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/container&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/configuration&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/plugin&gt;</p>
+<p>이렇게 하고, cargo:start 골을 실행하면 톰캣 서버를 메이븐에서 실행할 수 있습니다. mvn cargo:start 이런식으로요.</p>
+<p>테스트 진행은 다음 순서대로 할 겁니다.</p>
+<p>WAR 파일 패키징 -&gt; cargo를 사용하여 톰캣 서버 실행 -&gt; 웹 (통합) 테스트 -&gt; cargo를 사용한 톰캣 서버 정지</p>
+<p>이 것을 그대로 메이븐 골로 옮겨 적으면 다음과 같습니다.</p>
+<p>mvn package cargo:start test cargo:stop</p>
+<p>그러나 이건 예상대로 동작하지 않습니다. 일단, 단위 테스트와 통합 테스트가 분리되어야 합니다. 단위 테스트를 실행하는데 굳이 카고를 이용하여 테스트 서버를 실행할 필요는 없기 때문이죠.</p>
+<p>두 번째로 cargo:start를 실행하는 순간, 해당 커맨드 창은 이용할 수가 없습니다. 서버 로그가 뜨고 Ctrl+C를 눌러 서버 실행을 멈추기 전까지는 해당 커맨드 창이 먹통이나 다릅없습니다. 또 다른 콘솔을 띄우고 그 곳에서 테스트를 진행 한 다음 cargo:stop으로 서버 실행을 멈출 수 있습니다.</p>
+<p>이 두 가지를 생각해 봤을 때 빌드가 2단으로 구성되어야 할 것 같습니다.</p>
+<p>1단에서 할 일은 clean package(이 안에 complie, test 포함) cargo:start<br />
+2단에서 할 일은 integration-test, cargo:stop</p>
+<p>궁금한 건 이러한 2단 빌드를 제공하는 CI 툴이 있느냐 하는 것과 메이븐으로 이런 구성을 하는 방법입니다. 후자는 금방 찾을 것 같은데 전자는 잘 모르겠네요. 기존 CI 툴의 plan을 잘 짜서 여러 plan끼리 의존성을 주며 실행하도록 할 수 있다면 가능할지도 모르겠고, 아예 하나의 plan으로 이러한 2단 빌드를 구성할 수 있게 해준다면 편리할 것 같습니다.</p>

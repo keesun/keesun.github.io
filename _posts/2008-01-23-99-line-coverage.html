@@ -1,0 +1,57 @@
+---
+layout: post
+title: 99% Line Coverage
+date: 2008-01-23 07:55:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- 볼링게임
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322761065'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>몇일전 기록한 <a href="http://whiteship.tistory.com/1411" target="_blank">98% Line Coverage</a> 기록을 깨습니다. 이제 남은 건 100% Line Coverage 뿐이군요.</p>
+<p><img src="{{ site.baseurl }}/assets/gk38.png" class="aligncenter" width="600" height="319" alt="사용자 삽입 이미지" /><br />볼링 게임을 구현한 것인데, 완성하는데 하루가 걸렸습니다. 아 어제 이맘때부터 계속 머릿속을 괴롭히던 녀석을 처리하니 피곤이 몰려오는 것 같습니다.</p>
+<p>볼링 게임이 매우 간단한 것 같은데, Stike, Spare 점수 계산 그리고 마지막 프레임의 특이함 때문에 코드가 금방 지져분해집니다.</p>
+<p>만들면서 느낌점을 요약했는데, 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">느낀점.<br />- 어떤 테스트를 통과Pass 하게 만들려다가 그 전에 먼저 작성해야 할 메소드가 생긴다.<br />&nbsp; &nbsp; - 이 때는 지금 하던 걸 멈추고 사전에 먼저 작성해야 할 것 부터 만들자.<br />&nbsp; &nbsp; - @Ignore<br />- 테스트를 잘못 작성하면 구멍이 생긴다.<br />&nbsp; &nbsp; - 테스트를 작게 잘 작성하자. 하나의 Task가 5분을 넘기지 말아야 한다.<br />&nbsp; &nbsp; - 어떻게 하면 구멍이 생기지 않는 테스트를 작성할 수 있을까?<br />- 객체 지향 기본 원칙 지키며 코딩하는게 정말 어렵다.<br />&nbsp; &nbsp; - 코딩하다보면, 어느새 객체 지향 원칙은 안중에도 없어 진다. 사실 잘 발견을 못한다.<br />&nbsp; &nbsp; - 변하는 부분과 변하지 않는 부분을 분리하라.<br />&nbsp; &nbsp; - 어떻게 하면 자연스럽게 패턴이 튀어나올까?</div>

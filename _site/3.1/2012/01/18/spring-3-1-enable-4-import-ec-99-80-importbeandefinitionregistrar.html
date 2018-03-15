@@ -1,0 +1,9 @@
+<p>이번에는 옵션에 따라 조금 더 복잡한 빈 조합이 필요한 경우라고 가정하겠습니다. 이런 경우 일일히 모든 경우에 해당하는 @Configuration을 만들기가 힘들기 때문에, 오히려 직접 코딩으로 옵션에 따라 빈을 등록하는 방법이 유용할 수도 있습니다.</p>
+<p>이때는 ImportBeanDefinitionRegistrar 구현체를 만들고 이 구현체를 @Import에 설정하면됩니다.</p>
+<p>[gist id=1633483 file=HeloIBDR.java]</p>
+<p>이제는 type 같은 속성이 필요없으며, @Import에는 이 IBDR 구현체를 설정해주면 됩니다.</p>
+<p>[gist id=1633483 file=EnableHello.java]</p>
+<p>BeanDefinition을 만드는 API가 그렇게 아름답진 않은데, 빌더 패턴으로 BD를 만드는 API는 없는지 궁금해지네요. 없으면 만들어서 기증해볼까나.</p>
+<p>옵션에 따라 등록해야 하는 빈이 매우 복잡하게 달라질 경우에 유용한 방법이 될 수 있겠습니다.</p>
+<p>다시 조금 뒤로 돌아가서... 특정 빈 설정을 재사용할 때 그 빈 속성을 확장 가능한 형태로 만들고 싶다면 @Bean 메서드 오버라이딩이나, 템플릿 메서드 패턴을 이용하는 방법을 사용할 수 있었는데, '상속'을 이용하기 때문에 치명적인 단점(한가지 @Configuration 밖에 상속하지 못한다, @Overriding으로 주요 로직이 변경될 여지가 생긴다.)이 있었다.</p>
+<p>그래서 @Import와 ImportAware, ImportSelector, ImportBeanDefinitionRegistrar를 활용하는 방법으로 빈 설정이나 속성을 확장하는 방법을 살펴봤는데, 이 방법 말고도 Configurer 패턴이라는 방법이 있다.</p>

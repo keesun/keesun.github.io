@@ -1,0 +1,54 @@
+<p style="clear: both;">이 방법도 역시 간단하다. 지난번까지 사용했었던 배치 패칭 설정은 지우고 다음과 같이 설정한다.</p>
+<p style="clear: both;">@OneToMany(mappedBy="owner", <strong>fetch=FetchType.EAGER</strong>)<br />
+@BatchSize(size=30)<br />
+private Set items;</p>
+<p style="clear: both;">이렇게 설정하면 Member 클래스를 Criteria나 Session.get(), load()로 읽어올 때 C도 같이 로딩해온다. 그래서 eager다. Lazy Collection Fetching과 정반대다.</p>
+<p style="clear: both;">주의 할 것이 있는데, 이 설정은 HQL에선 먹히지 않는다. 확인해보자.</p>
+<p>[java]<br />
+    @Test<br />
+    public void eagerFetchingByCriteria(){<br />
+        int mostItemCount = 0;<br />
+        Member mostItemOwner = null;</p>
+<p>        List&lt;Member&gt; memberList = getSession().createCriteria(Member.class).list();<br />
+        for (Member thisMember : memberList) {<br />
+            Set&lt;Item&gt; memberItems = thisMember.getItems();<br />
+            if(mostItemCount &lt; memberItems.size()) {<br />
+                mostItemCount = memberItems.size();<br />
+                mostItemOwner = thisMember;<br />
+            }<br />
+        }</p>
+<p>        System.out.println(mostItemCount);<br />
+        System.out.println(mostItemOwner);<br />
+    }<br />
+[/java]</p>
+<p style="clear: both;">이렇게 Criteria를 사용하면 다음과 같이 Member를 가져올때 left outer join으로 Member가 가지고 있는 모든 Item을 다 가져온다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.1.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.1.jpg" alt="" width="380" height="290" /></a></p>
+<p>[java]<br />
+    @Test<br />
+    public void eagerFetchingByHQL(){<br />
+        int mostItemCount = 0;<br />
+        Member mostItemOwner = null;</p>
+<p>        List&lt;Member&gt; memberList = getSession().createQuery(&quot;from Member&quot;).list();<br />
+        for (Member thisMember : memberList) {<br />
+            Set&lt;Item&gt; memberItems = thisMember.getItems();<br />
+            if(mostItemCount &lt; memberItems.size()) {<br />
+                mostItemCount = memberItems.size();<br />
+                mostItemOwner = thisMember;<br />
+            }<br />
+        }</p>
+<p>        System.out.println(mostItemCount);<br />
+        System.out.println(mostItemOwner);<br />
+    }<br />
+[/java]</p>
+<p style="clear: both;">하지만 이렇게 HQL을 사용하면 N+1 Select 문제가 여전히 발생한다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.3.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.3.jpg" alt="" width="380" height="288" /></a><br />
+이런 경우를 대비해 @BatchSize를 다시 붙여 놓는게 좋을 거 같기는 하다.</p>
+<p>[java]<br />
+    @OneToMany(mappedBy = &quot;owner&quot;, fetch = FetchType.EAGER)<br />
+    @BatchSize(size=30)<br />
+    private Set&lt;Item&gt; items;<br />
+[/java]<br />
+이렇게 배치 패칭을 설정해 두면 그래도 완벽하진 않지만 HQL을 사용하는 경우를 대비해서, 어느정도 성능을 개선할 수는 있다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2011/01/hiber36_-___workspace_hiber36__-__Hiber36__-_..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.4.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/hiber36_-___workspace_hiber36__-__Hiber36__-_-thumb..._test_whiteship_domain_EagerFetchingSolutionTest.java_-_IntelliJ_IDEA_10.0.4.jpg" alt="" width="380" height="290" /></a>자 이렇게 Eager 패칭을 사용하는 방법을 알아봤지만, 이 방법에는 큰 문제가 하나 있다. 매핑 정보에서 패칭 전략을 Eager로 설정했기 때문에 앞으로 Session.get(), load()로 어떤 Member 객체 하나를 읽어간다고 하도 해당 Member의 List까지 매번 같이 가져가게 된다. 매번 필요한 정보라면 그렇게 하는게 맞겠지만 필요없는 경우라면 오히려 불필요한 메모리 소비와 성능만 소비하게 되는 꼴이다.</p>
+<p style="clear: both;">하지만 분명히 이 방법이 유용한 경우도 있겠다.</p>
+<p><br class="final-break" style="clear: both;" /></p>

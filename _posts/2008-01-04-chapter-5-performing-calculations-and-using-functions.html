@@ -1,0 +1,99 @@
+---
+layout: post
+title: 'Chapter 5: Performing Calculations and using Functions'
+date: 2008-01-04 09:04:29.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SQL
+tags:
+- SQL
+- 오라클
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322881618'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a></p>
+<ul>
+<li>사칙연산/비트연산/괄호 사용법 모두 자바와 동일</li>
+<li>SELECT 절의 조건은 컬럼 이거나 어떤 값들이든지 될 수 있다.</li>
+<li>WHERE 절의 조건은 Boolean 형태여야 한다.</li>
+<li>숫자 다루기 (오라클)</li>
+<ul>
+<li>내림 FLOOR()</li>
+<li>올린 CEIL()</li>
+<li>반올림 ROUND(컬럼, 자릿수)</li>
+</ul>
+<li>문자 다루기 (오라클)</li>
+<ul>
+<li>SUBSTR(컬럼, x, y) : x는 시작 인덱스, y는 길이. y를 빼면, x부터 끝까지 잘라옴.</li>
+<li>INSTR(원문, 검색어) : 원문에서 검색어가 시작하는 인덱스를 반환해 줌.</li>
+<li>LENGTH(컬럼)</li>
+<li>UPPER(컬럼)</li>
+<li>LOWER(컬럼)</li>
+</ul>
+<li>날짜/시간 다루기(오라클)</li>
+<ul>
+<li>DATE TIME TIMESTAMP 를 시간이나 날짜를 나타내는 문자열 앞에 붙여야 한다.</li>
+<li>DATE '2003-05-02'</li>
+<li>CURRENT_DATE 으로 현재 날짜/시간을 가져올 수 있다.</li>
+</ul>
+<li>데이터 타입 변환하기(오라클)</li>
+<ul>
+<li>문자열로 변환하기</li>
+<ul>
+<li>TO_CHAR(DATE '2003-05-23', 'DD MONTH YYYY')</li>
+</ul>
+<li>숫자로 변환하기</li>
+<ul>
+<li>TO_NUMBER('$5,102.25', '$9,999.99') -- Returns 5102.25</li>
+</ul>
+<li>일반적인 형변환</li>
+<ul>
+<li>CAST('3.521' AS DECIMAL(3,2)) -- Returns 3.52</li>
+</ul>
+</ul>
+<li>사용자 정의 함수(UDF) 만들기</li>
+<ul>
+<li>CREATE [OR REPLACE] FUNCTION function_name<br />(parameter_list)<br />RETURN data_type<br />IS<br />variable_list<br />BEGIN<br />&nbsp;&nbsp; [&lt;SQL statements&gt;]<br />&nbsp;&nbsp; RETURN expression;<br />END;<br />/</li>
+<li>Baik Keesun 이라는 값을 Keesun, Baik로 변환해주는 함수</li>
+<li>CREATE OR REPLACE FUNCTION FormatName(FullName IN varchar)<br />RETURN varchar<br />IS<br />FormattedName varchar(50);<br />BEGIN<br />&nbsp;&nbsp; FormattedName :=<br />&nbsp; &nbsp; &nbsp; SUBSTR(FullName, INSTR(FullName, ' ') + 1) || ', ' ||<br />&nbsp; &nbsp; &nbsp; SUBSTR(FullName, 1, INSTR(FullName, ' ') - 1);<br />&nbsp;&nbsp; RETURN(FormattedName);<br />END;<br />/</li>
+</ul>
+</ul>

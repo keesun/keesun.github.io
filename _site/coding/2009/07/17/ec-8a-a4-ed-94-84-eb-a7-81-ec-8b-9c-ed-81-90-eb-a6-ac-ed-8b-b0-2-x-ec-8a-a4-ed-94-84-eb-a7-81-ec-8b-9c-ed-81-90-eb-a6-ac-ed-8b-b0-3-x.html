@@ -1,0 +1,34 @@
+<p>하루동안 시큐리티를 두 번 각각 다른 버전으로 적용해보니 차이점이 보입니다.</p>
+<p>시큐리티를 확장할 수 있는 포인트가 하두 여러 가지라 그만큼 확장하는 방법도 다양하겠지만, 저는 톱님 코드를 보고 그대로 적용해 봤습니다.</p>
+<p>적용하는 방법은 별도의 UserDetailsService와 UserDetails를 구현하는 방법입니다. 그리고 여기서 구현한 UserDetailsService를 빈으로 등록해 주는 거죠.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;http&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/admin/**" access="ROLE_ADMIN" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;form-login login-page="/login.do"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; authentication-failure-url="/login.do?login_error=t"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; default-target-url="/main.do" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;logout logout-success-url="/main.do" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold; color: rgb(92, 127, 176);">&lt;anonymous/&gt;</span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;remember-me /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/http&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">&lt;authentication-provider user-service-ref="customUserDetailsService" /&gt;</span></p>
+<p>&nbsp;&nbsp;&nbsp; &lt;global-method-security secured-annotations="enabled"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; jsr250-annotations="enabled" /&gt;</p>
+<p>설정은 이렇게 간단해졌지만, 내부에서 해주는 일은 여전히 필터체인프록시 와 여러 개의 필터, 프로바이더, 엔트리포인트 등이 수고 해 줍니다.</p>
+<p>일단 위 설정은 2.X 대의 설정인데, 왜냐면, &lt;anonymuos /&gt;가 있기 때문입니다. 이 녀석은 익명사용자를 나타내는&nbsp; IS_AUTHENTICATED_ANONYMOUSLY를 쓸 때 필요한데, 3.X에서는 이 엘리먼트를 사용하지 못합니다. 하지만 IS_AUTHENTICATED_ANONYMOUSLY는 기본으로 쓸 수 있습니다. 클래스가 없어졌거나 패키지 이동을 했을 겁니다.</p>
+<p>패키지가 바꼈습니다. 확장해야 할 인터페이스 2개</p>
+<p>import org.springframework.security.userdetails.UserDetails;<br />
+import org.springframework.security.userdetails.UserDetailsService;</p>
+<p>이 녀석들이 3.X에서는</p>
+<p>import org.springframework.security.core.userdetails.UserDetails;<br />
+import org.springframework.security.core.userdetails.UserDetailsService;</p>
+<p>이쪽으로 옮겨갔습니다. 이밖에도 </p>
+<p>import org.springframework.security.core.userdetails.UsernameNotFoundException;<br />
+import org.springframework.security.core.GrantedAuthority;<br />
+import org.springframework.security.core.authority.GrantedAuthorityImpl;</p>
+<p>이 녀석들도 같이 이동했습니다. 다행히 클래스 이름이 같기 때문에 마이그레이션 할 때 별 어려움은 없을 것입니다.</p>
+<p>마지막으로 인터페이스가 바뀐 녀석이 있습니다. UserDetails는 2.X에서 </p>
+<p>public GrantedAuthority[] getAuthorities()</p>
+<p>이런 인터페이스를 가지고 있었는데. 3.X에서는 List 타입을 반환하도록 바꼈습니다. 배열을 채워줄때는 배열 사이즈를 미리 알아야 하기 때문에 불편한 코딩이 조금 추가되는데, 3.X에서는 사이즈 상관없이 그냥 add만 해주면 되니까 조금 더 간편해 졌다고 느껴지네요.</p>
+<p>(톱님 따라 저도) 오늘의 결론<br />
+- 시큐리티 2.X에서 3.X로 넘어가는 길이 아주 편한건 아니지만, 그리 불편하지도 않네요.</p>

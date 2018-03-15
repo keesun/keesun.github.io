@@ -1,0 +1,124 @@
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+... 윗부분 생략&nbsp;</div>
+<div id="">
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyIn = invInDao.getQtyOf(today, item, location);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 금일 출고량 조사</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyOut = invOutDao.getQtyOf(today, item, location);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 금일 재고량 계산</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;double qtyEnd = qtyStart + qtyIn - qtyOut;</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if(isEmpty(qtyStart, qtyIn)){</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;continue;</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;InvDailyClosing invDailyClosing = new InvDailyClosing();</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setDate(today);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setLocation(location);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setItem(item);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyStart(qtyStart);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyIn(qtyIn);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyOut(qtyOut);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyEnd(qtyEnd);</div>
+<div id="">
+...아래도 생략</div>
+</div>
+<div id="">
+</div>
+<div>
+
+</div>
+<div id="">
+쓰고나서 생각하니 약간 위험한 글을 썼다는 생각에 괜히 불안했는데.. &nbsp;아니나 다를까... 대용량 데이터베이스를 공부하고, 자바 코드로 치우져서 보는거 아니냐, 벽을 세워놓고 한쪽만 보는건 좋치 않다. 라는 글이 달렸었는데 사라졌다.</div>
+<div>
+
+</div>
+<div id="">
+하아.. 본문에도 적었지만 사실 내가 대용량 DB를 다루는 SQL을 잘 못하는건 사실이다. 근데 어쩌겠는가.. SQL을 하고 싶지 않아서 안하는게 아니라 SQL을 작성할 일이 별로 없는데다, 대용량 데이터는 내가 만지고 싶다고 만질 수 있는 것도 아니다. 난 이럴 때 마다 떠올리며 나를 위로하는 문구가 있는데.. 켄트벡이 쓴 "테스트 주도 개발" 뒷부분 어딘가 보면 그런 말이 있다. 아.. 이런.. 문제의 크기와 해결방법에 관한 거였는데.. 까먹었다. 암튼 0과 1을 떠올리게 하는거였는데 ㅠ.ㅠ</div>
+<div id="">
+
+</div>
+<div id="">
+생각해보니, 재고 마감 데이터가 입고와 출고 수량만 들고 있는게 아니라, 해당 마감 데이터에 해당하는 입고 목록과 출고 목록을 들고 있는게 더 유용하겠다는 생각이 들었다. 그렇게 해야 "재고 마감 뷰"에서 해당 마감에 대한 입고 내역과 출고 내역을 보여주기 편할 것 같다. 아니면 마감 데이터를 가지고 해당 마감에 해당하는 입고목록과 출고 목록을 가져오는 기능을 입고DAO와 출고DAO에 추가해줘야 하는데... 글쎄... 흠냐.. 그거 만들기 귀찮아서 기능을 고치고 있는 기분도 들지만, 왠지.. 설계상으론 더 객체 지향적이고 멋진 것 같다.</div>
+<div id="">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이런 로직을 반영하려면 숫자보다 객체를 들고 있게 하는게 편하고.. SQL 보다.. 위와 같은 자바 코드를 수정하는게 더 편한데...그건 내가 그렇다는 것이고... &nbsp;사람에 따라, 상황에 따라, 대용량인지 아닌지에 따라.. 달라질 수 있겠다..</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>List&lt;InvIn&gt; invInList = invInDao.listOf(today, item, location);</b></div>
+<div id="">
+<b id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; List&lt;InvOut&gt; invOutList = invOutDao.listOf(today, item. location);</b></div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if(isEmpty(qtyStart, invInList)){</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;continue;</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;InvDailyClosing invDailyClosing = new InvDailyClosing();</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setDate(today);</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setLocation(location);</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setItem(item);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyStart(qtyStart);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.<b>setInvInList</b>(invInList);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.<b>setInvOutList</b>(invOutList);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.<b>closing</b>();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dao.add(invDailyClosing);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+결국은 이렇게 바뀔 것 같다. InvDailyClosing 도메인 객체의 closing() 메소드에서 입고 목록, 출고 목록, 전날 재고를 가지고 금일 재고를 계산하도록...말이다. 물론.. 이정도 쯤이야. SQL로도 간단하게 할 수 있겠다(?). 난 잘 모르겠지만..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+</div>

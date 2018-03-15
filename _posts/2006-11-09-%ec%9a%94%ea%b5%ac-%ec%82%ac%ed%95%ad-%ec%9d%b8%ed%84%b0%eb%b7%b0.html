@@ -1,0 +1,122 @@
+---
+layout: post
+title: 요구 사항 인터뷰
+date: 2006-11-09 06:15:12.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322843594'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring으로 무언가 만들어 보며 공부를 해야겠다는 생각을 했었는데 영회형이 도와 주셔서 방향을 잡을 수 있게 되었습니다. 과연 잘 해낼 수 있을지.. 먼저 요구 사항 인터뷰에 해당하는 대화를 올려 봅니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">[永會] 님의 말:<br />
+spring으로<br />
+Dilemma님의 말:<br />
+흠..<br />
+Dilemma님의 말:<br />
+기다리고 있었습니다.<br />
+[永會] 님의 말:<br />
+주소록 항목은 엑셀을 보면 됙<br />
+[永會] 님의 말:<br />
+일단 웹은 무시하고<br />
+[永會] 님의 말:<br />
+MemberRepository 라는<br />
+[永會] 님의 말:<br />
+객체를 만들어서<br />
+Dilemma님의 말:<br />
+DB없이<br />
+Dilemma님의 말:<br />
+그냥 객체에 저장하는 형태로요 <br />
+[永會] 님의 말:<br />
+DB가 있어&nbsp; 하겠지<br />
+Dilemma님의 말:<br />
+네<br />
+[永會] 님의 말:<br />
+Mysql이 좋겠다.<br />
+[永會] 님의 말:<br />
+우리 서버에 깔린 버전을 확인해보고<br />
+[永會] 님의 말:<br />
+똑같은 버전 쓰는게 좋겠지<br />
+Dilemma님의 말:<br />
+네<br />
+[永會] 님의 말:<br />
+서버에 깔 생각으로 만드는거니까<br />
+[永會] 님의 말:<br />
+MR.getMember(id)<br />
+[永會] 님의 말:<br />
+이렇게 하면.. 일단.. 주소록에 id가 없지만<br />
+[永會] 님의 말:<br />
+아무렇게나 id를 부여하고<br />
+[永會] 님의 말:<br />
+해당 id에 맞는..<br />
+[永會] 님의 말:<br />
+Member 객체가 오게 하면 되는거지<br />
+Dilemma님의 말:<br />
+네<br />
+[永會] 님의 말:<br />
+그래서.. 조회가 끝나면..<br />
+[永會] 님의 말:<br />
+수정/삭제를 추가하고<br />
+Dilemma님의 말:<br />
+헤헷<br />
+Dilemma님의 말:<br />
+재밌겠는데요<br />
+[永會] 님의 말:<br />
+중간중간 히스토리를 기록해두고<br />
+[永會] 님의 말:<br />
+니가.. 스터디때 발표해라<br />
+Dilemma님의 말:<br />
+네<br />
+[永會] 님의 말:<br />
+방금.. 내가.. 얘기한 내용이<br />
+[永會] 님의 말:<br />
+바로 요구사항 인터뷰 <br />
+Dilemma님의 말:<br />
+오호..</div>
+<p>여기까지 입니다. 이하는 생략 했습니다. <a href="http://younghoe.info/">영회 형</a>에게 글로 게시하겠다는 동의를 구하지 않아서 혼날까봐 불안하지만 이메일 주소를 삭제 해주는 센스는 발휘 했으니.. 조금은 덜 혼나겠죠? :)</p>
+<p>정리하자면<br />
+1. DB는 MySQL(구체적으로 서버에 깔려있는 버젼으로 해볼 것).<br />
+2. 주소록에서 관리할 데이터 항목은 EXEL 파일에 있는 항목.<br />
+3. id로 Member를 불러 올 수 있는 기능을 만들고<br />
+4. 그 후 수정/삭제 등의 기능을 구현 해 보고<br />
+5. 중간 중간 정리하여 발표 할 것.</p>

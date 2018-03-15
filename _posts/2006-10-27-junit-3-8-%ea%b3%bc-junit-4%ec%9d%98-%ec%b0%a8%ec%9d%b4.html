@@ -1,0 +1,65 @@
+---
+layout: post
+title: JUnit 3.8 과 JUnit 4의 차이
+date: 2006-10-27 12:24:18.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- JUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322984721'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.devx.com/Java/Article/31983/1954?pf=true">http://www.devx.com/Java/Article/31983/1954?pf=true</a></p>
+<p>위 링크에 아주 잘 나와있네요.</p>
+<p>suit을 사용법을 제대로 몰랐는데 보니깐 매우 간단하네요.</p>
+<pre><div style="padding: 10px; background-color: rgb(201, 237, 255)"><code>import org.junit.runner.RunWith;<br />
+import org.junit.runners.Suite;<br />
+<br />
+@RunWith(Suite.class)<br />
+@Suite.SuiteClasses({<br />
+        </code><div style="padding: 10px; background-color: rgb(255, 218, 237)">CalculatorTest.class, SquareTest.class</div><br />
+        })<br />
+public class AllCalculatorTests {<br />
+}</div></pre>
+<p>
+위에서 분홍색에 해당하는 부분만 자신이 테스트 하고 싶은 테스트 클래스들을 추가해주면 됩니다.</p>

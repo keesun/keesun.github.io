@@ -1,0 +1,59 @@
+<p style="clear: both;"><a href="http://blog.martinfjordvald.com/2010/07/nginx-primer/">http://blog.martinfjordvald.com/2010/07/nginx-primer/</a></p>
+<p style="clear: both;">Nginx는 우선 리버스 프록시이고 그 다음이 HTTP 서버라는 점이 중요하다.</p>
+<p style="clear: both;">Nginx 설정에 있어서 가장 먼저 알아야 할 것은 설정 파일의 계층 구조다. 상위 블럭의 설정이 하위 블럭의 기본값으로 사용된다. 물론 하위 설정에서 재정의 할 수도 있다.</p>
+<p style="clear: both;">보통 3 블럭으로 나뉜다.</p>
+<ul style="clear: both;">
+<li>HTTP 블럭</li>
+<li>server 블럭</li>
+<li>location 블럭</li>
+</ul>
+<p style="clear: both;">http{</p>
+<p style="clear: both;">server {</p>
+<p style="clear: both;">location {</p>
+<p>}<br />
+}</p>
+<p style="clear: both;">}</p>
+<p style="clear: both;">event 블럭과 root 블럭(event 블럭과 HTTP 블럭을 포함하는 블럭)도 있지만 이 둘은 잘 다루지 않는다. 주로 위의 세가지 블럭을 다룬다.</p>
+<p style="clear: both;">server 블럭은 아파치의 virtual host로 볼 수 있있고, location 블럭은 URI로 볼 수 있다.</p>
+<p style="clear: both;">Virtual Hosts</p>
+<p style="clear: both;">가장 눈여겨 볼 설정은 server_name과 root다. HOST 헤더가 server_name에 대응하면 해당 server 블럭을 사용하라고 지시하는것이고, root는 파일을 찾을 루트를 지정한다.</p>
+<p>server {<br />
+listen          80;<br />
+server_name     domain.com *.domain.com;<br />
+rewrite ^       http://www.domain.com$request_uri permanent;<br />
+}</p>
+<p>server {<br />
+listen          80;<br />
+server_name     www.domain.com;</p>
+<p>index           index.html;<br />
+root            /home/domain.com<br />
+}virtual host 두 개를 설정했다. 첫번째 설정은 domain.com또는 www를 제외한 domain.com의 서브 도메인에 해당하는 server 블럭 설정이다. Nginx는 가장 구체적으로 대응하는 것을 선택하기 때문에 www.domain.com은 두번째 블럭에 대응한다.</p>
+<p>server {<br />
+listen          80 default_server;<br />
+server_name     _;</p>
+<p>index           index.html;<br />
+root            /var/www/default<br />
+}</p>
+<p style="clear: both;">이 설정은 default virtual server를 설정한 것이다. default_server 플래그를 추가하면 HOST 헤더가 없거나 server 블럭 중 대응하는 것이 없을 때 이 곳으로 오게된다. server_name에 설정한 _; 값은 nothing에 해당한다. 아무것도 대응하지 않도록 할 때 사용할 수 있는데 server_name을 아에 정의하지 않을 수도 있다.</p>
+<p style="clear: both;">Locations</p>
+<p style="clear: both;">Nginx에서는 보통 복잡한 rewrites 대신 location을 사용한다.</p>
+<p style="clear: both;"><a href="http://wiki.nginx.org/NginxHttpCoreModule#location">http://wiki.nginx.org/NginxHttpCoreModule#location</a></p>
+<p>server {<br />
+listen          80 default;<br />
+server_name     www.domain.com;</p>
+<p>root            /home/domain.com</p>
+<p># This will match any URI beginning with /forum<br />
+location /forum {<br />
+# We capture the URI and redirect it to the subdomain.<br />
+rewrite forum(.*) http://forum.domain.com$1 permanent;<br />
+}<br />
+}</p>
+<p>server {<br />
+listen          80;<br />
+server_name     forum.domain.com;</p>
+<p>index           index.php;<br />
+root            /home/domain.com/forum;<br />
+}</p>
+<p style="clear: both;">/forum으로 요청이 오면 새로운 서브 도메인으로 보낸다.</p>
+<p style="clear: both;">나머지 생략</p>
+<p><br class="final-break" style="clear: both;" /></p>

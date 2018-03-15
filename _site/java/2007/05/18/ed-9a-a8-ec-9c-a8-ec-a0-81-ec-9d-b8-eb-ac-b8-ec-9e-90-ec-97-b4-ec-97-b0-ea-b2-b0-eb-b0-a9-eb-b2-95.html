@@ -1,0 +1,40 @@
+<p>자바에서 문자열을 연결하는 방법을 살펴보고 각각의 효율성을 비교해 봅니다.</p>
+<p>문자열을 연결하는 방법<br />1. + 연산자 이용<br />2. String 클레스의 concat 메소드 사용<br />3. StringBuffer의 append 사용<br />4. StringBuilder의 append 사용</p>
+<p>네가지 경우에 대해 테스트를 작성합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ConcatTest {</p>
+<p>&nbsp; &nbsp; private String s1;<br />&nbsp; &nbsp; private String s2;</p>
+<p>&nbsp; &nbsp; @Before<br />&nbsp; &nbsp; public void setUp(){<br />&nbsp; &nbsp; &nbsp; &nbsp; s1 = "Hibernate";<br />&nbsp; &nbsp; &nbsp; &nbsp; s2 = "Spring";<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void plusOperator() {<br />&nbsp; &nbsp; &nbsp; &nbsp; Long start = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; for(int i = 0 ; i &lt; 5000 ; i++){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; s1 = s1 + s2;<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Long end = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("Operator : " + (end - start));<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void concatMethod() {<br />&nbsp; &nbsp; &nbsp; &nbsp; Long start = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; for(int i = 0 ; i &lt; 5000 ; i++){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; s1 = s1.concat(s2);<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Long end = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("ConcatMethod : " + (end - start));<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void stringBuffer() {<br />&nbsp; &nbsp; &nbsp; &nbsp; Long start = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; StringBuffer buffer1 = new StringBuffer(s1);<br />&nbsp; &nbsp; &nbsp; &nbsp; StringBuffer buffer2 = new StringBuffer(s2);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; for(int i = 0 ; i &lt; 5000 ; i++){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; buffer1.append(buffer2);<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; String result = buffer1.toString();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Long end = Calendar.getInstance().getTimeInMillis();<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StringBuffer : " + (end - start));<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void stringBuilder() {<br />&nbsp; &nbsp; &nbsp; &nbsp; Long start = Calendar.getInstance().getTimeInMillis();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; StringBuilder builder1 = new StringBuilder(s1);<br />&nbsp; &nbsp; &nbsp; &nbsp; StringBuilder builder2 = new StringBuilder(s2);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; for(int i = 0 ; i &lt; 5000 ; i++){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder1.append(builder2);<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; String result = builder1.toString();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Long end = Calendar.getInstance().getTimeInMillis();<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("StringBuilder : " + (end - start));<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>결과는 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Operator : 1078<br />ConcatMethod : 500<br />StringBuffer : 15<br />StringBuilder : 0</p>
+<p>Operator : 1062<br />ConcatMethod : 438<br />StringBuffer : 0<br />StringBuilder : 15</p>
+<p>Operator : 1532<br />ConcatMethod : 453<br />StringBuffer : 0<br />StringBuilder : 16</p>
+<p>Operator : 1172<br />ConcatMethod : 453<br />StringBuffer : 0<br />StringBuilder : 16</p>
+<p>Operator : 1281<br />ConcatMethod : 453<br />StringBuffer : 16<br />StringBuilder : 16</p>
+<p>Operator : 1171<br />ConcatMethod : 500<br />StringBuffer : 0<br />StringBuilder : 0</p>
+<p>Operator : 1187<br />ConcatMethod : 454<br />StringBuffer : 0<br />StringBuilder : 16</div>
+<p>흠.. 이상하네요. 예전에 영회형이 <a href="http://agilejava.net/tt/74" target="_blank">간단하게 정리 했었던 글</a>과 정반대의 결과가 나왔습니다.<br />테스트는 Java 6.0을 사용했습니다.</p>
+<p>StringBuffer와 StringBuilder 가 String 클레스에 있는 concat 메소드나 연산자에 비해 엄청나게 빠른것을 확인할 수 있습니다.</p>
+<p>원인은 String의 immutable한 특징 때문입니다. API를 보시면 concat 메소드에 다음과 같이 적혀 있습니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">If the length of the argument string is 0, then this String object is returned. Otherwise, a new String object is created, representing a character sequence that is the concatenation of the character sequence represented by this String object and the character sequence represented by the argument string.</div>
+<p>즉 매번 새로운 String 객체를 만들게 되기 때문에 추가적인 비용이 많이 발생하는 것 같습니다. 하지만 그렇다 하더라도.. + 연산자 사용하는 것 보단 훨씬 낳습니다.</p>
+<p>s1 = s1 + s2; 라는 한 문장이 두 개의 연산(더하기 연산과 대입 연산)을 포함하고 있기 때문에 저런 결과가 나왔다고 생각됩니다. 그렇다고 s1 + s2; 이렇게 표현할 수도 없고(컴파일에러) 참 난감하네요. :)</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">결론은 String이 Immutable한 특징 때문에 StringBuilder나 StringBuffer를 사용하여 문자열을 이어 붙이는 것이 String 객체를 그냥 사용하는 것 보다 굉장히 효율적이라는 것입니다.</div>

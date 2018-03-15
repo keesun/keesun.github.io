@@ -1,0 +1,40 @@
+<p>결국 어디선가는 룩업을 해야합니다. 그냥 주입해서 될 일이 아닙니다. getter injection을 사용할 수도 있지만 AOP, Proxy 등 다소 장황해집니다. 룩업은 하되 가장 표준적이면서, 편리하고, 써드파티 라이브러리 의존성을 낮추는 방법을 얼마전 <a title="[http://toby.epril.com/?p=971]로 이동합니다." target="_blank" href="http://toby.epril.com/?p=971">사부님 블로그를</a> 통해 알게 되었습니다. 그 방법은 바로 구글 쥬스에 있던 걸 표준화 한 JSR-330의 Provider. </p>
+<p>먼저 빈 설정입니다. 빈 두개. White는 싱글톤, Ship은 프로토타입 스코프로 설정합니다.</p>
+<p>@Configuration</p>
+<p>public class ProviderTestAppConfig {</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean White getWhite(){</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new White();</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Bean @Scope("prototype") Ship getShip(){</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new Ship();</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>다음은 위에 등록한 실제 빈 클래스들..</p>
+<p>public class Ship {<br />
+}</p>
+<p>public class White {<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+&nbsp;&nbsp;&nbsp; @Autowired</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+&nbsp;&nbsp;&nbsp; private Provider&lt;Ship&gt; shipProvider;</span></p>
+<p>&nbsp;&nbsp;&nbsp; public void hi(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(<span style="font-weight: bold;">shipProvider.get()</span>);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>바로 이 부분이 가장 눈여겨 봐야 할 코드입니다. @Autowired 대신에 @Inject를 써도 됩니다. 그게 중요한게 아니라 스프링이 Provider 인터페이스 구현체를 자동으로 만들어 주입해준다는 것이 중요합니다. 어떤 클래스가 어떻게 해주는지는 귀찮아서 찾아보지 않았습니다. 사부님 책에는 자세한 설명이 나올지도?!  +_+ </p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(loader = AnnotationContextLoader.class)<br />
+public class ProviderTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired White white;</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void get(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; white.hi();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; white.hi();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; white.hi();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; white.hi();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p><img src="/assets/cfile5.uf.1816CE0E4B4C76CA9B297C.png" class="aligncenter" width="600" height="130" alt="" filename="그림 2.png" filemime="image/png" /><br />
+이건 뭐 기본적으로 자바5는 사용한다는 전제하에 제공되는 것이기 때문에 자바5 도입이 불가능하거나 거부감이 있으신 분들은 스프링의 ObjectFactroy나 ServiceLocatorFactoryBean를 검토해보시는게 좋겠습니다.</p>
+<p>ps1: 빈 설정에서 @Scope("prototype")을 때어내도 같은 결과가 나오지 않을까 궁금하다는 생각을 하신 분이 계신가요?? 정답은... 안갈챠드려요. 직접 해보세요. 캬캬캬캬. </p>
+<p>ps2: AnnotationContextLoader 이 클래스는 저랑 성윤이가 만든거고 스프링에 없습니다. <a title="[http://jira.springframework.org/browse/SPR-6567]로 이동합니다." target="_blank" href="http://jira.springframework.org/browse/SPR-6567">http://jira.springframework.org/browse/SPR-6567</a> 여기서 소스 및 테스트를 받으실 수 있답니다. vote 좀;;</p>
+<p>ps3: 근데 이런 글에 누가 관심이나 있나요.. 싱글톤만 쓰는데;; @_@; 싱글톤이 아닌 빈을 어떻게 왜 써먹는걸까요..? 논의는 봄싹 그룹스에서. 음하핫</p>

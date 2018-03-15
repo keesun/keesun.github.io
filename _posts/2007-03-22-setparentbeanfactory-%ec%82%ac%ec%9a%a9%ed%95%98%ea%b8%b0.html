@@ -1,0 +1,63 @@
+---
+layout: post
+title: setParentBeanFactory 사용하기
+date: 2007-03-22 17:33:56.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Parent Configuration
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323188650'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Configuration 간에도 Parent와 Child를 사용할 수 있다는 걸 얼핏 보고 거의 사용하지 않는 다는 문구를 보고 그냥 지나갔었는데 그걸 활용 할 방법을 생각하신 <a href="younghoe.info" target="_blank">선배님</a>은 정말 엄청난 Spring 매니아 이십니다.</p>
+<p>소스코드를 보다가 멋칫 한 건..</p>
+<p>1. setParentBeanFactory 라는 메소드를 처음 봤기 때문이였고..<br />2. 혹시 getFactoryFromClassPath 이것도 이미 존재하는 메소드 인가..<br />3. ProxyFactoryBean이 자주 쓰이는 구나.. 공부해야겠네..</p>
+<p>였습니다.</p>
+<p>1. AbstractBeanFactory에 있는 구현 되어 있는 메소드로 ConfigurableBeanFactory 인터페이스에 선언되어 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">//ConfigurableBeanFactory <br />void setParentBeanFactory(BeanFactory parentBeanFactory) throws IllegalStateException;</p>
+<p>//AbstractBeanFactory<br />public void setParentBeanFactory(BeanFactory parentBeanFactory) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (this.parentBeanFactory != null &amp;&amp; this.parentBeanFactory != parentBeanFactory) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new IllegalStateException("Already associated with parent BeanFactory: " + this.parentBeanFactory);<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; this.parentBeanFactory = parentBeanFactory;<br />&nbsp; &nbsp; }</div>
+<p>2. 만들어 줘야 하더군요. 훔,,근데 여기서 궁금증이 생겼습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; private BeanFactory getFactoryFromClassPath(String resource) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ClassPathXmlApplicationContext(resource);<br />&nbsp; &nbsp; }</div>
+<p>왜 이건 안되고.. 아래 것은 될까요..
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; private BeanFactory getFactoryFromClassPath(String resource) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new XmlBeanFactory(new ClassPathResource(resource));<br />&nbsp; &nbsp; }</div>
+<p>&nbsp;<br />3. 은.. 벌써 시간이 2시 30분인 관계로.. 내일로 미룹니다.. 어차피 오늘이지만.ㅋ.</p>

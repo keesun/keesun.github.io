@@ -1,0 +1,130 @@
+<p><a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/appendix-namespace.html#nsa-http-attributes">http://static.springsource.org/spring-security/site/docs/3.0.x/reference/appendix-namespace.html#nsa-http-attributes</a>
+<div>
+
+</div>
+<div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+&lt;filter&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-name&gt;<b>securityFilterChain</b>&lt;/filter-name&gt;</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;</div>
+<div>
+&lt;/filter&gt;</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &lt;filter-mapping&gt;</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &lt;filter-name&gt;<b>securityFilterChain</b>&lt;/filter-name&gt;</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="">
+&nbsp;&nbsp; &lt;/filter-mapping&gt;</div>
+</div>
+<div id="">
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;</div>
+</div>
+<div>
+
+</div>
+<div>
+자 이렇게 필터를 설정하고&nbsp;</div>
+<div>
+
+</div>
+<div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre"></span></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;http&gt;</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;intercept-url pattern="/base/color/mgt" access="ROLE_USER" /&gt;</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" /&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;form-login login-page="/login" /&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;logout logout-success-url="/index" /&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;remember-me /&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/http&gt;</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;&lt;beans:bean id="smdisUserDetailsService" class="smdis.common.security.SmdisUserDetailsService"/&gt;</div>
+<div>
+
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;authentication-manager alias="authenticationManager"&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;authentication-provider user-service-ref="smdisUserDetailsService"/&gt;</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/authentication-manager&gt;</div>
+<div>
+
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;global-method-security secured-annotations="enabled"</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">		</span>jsr250-annotations="enabled" pre-post-annotations="enabled" /&gt;</div>
+</div>
+<div id="">
+</div>
+</div>
+<div>
+
+</div>
+<div>
+이렇게 시큐리티 설정을 했다.</div>
+<div>
+
+</div>
+<div id="">
+잘 돌아갈까?? 안 돌아간다.. 시큐리티 네임스페이스를 사용해서 &lt;http&gt;를 등록하면 FileChainProxy 빈 이름은 항상 springSecurityFilterChain이 된다. 그래서 필터 이름을 springSecurityFilterChain으로 설정해줘야 한다.</div>
+<div id="">
+
+</div>
+<div id="">
+뭐..&nbsp;DelegatingFilterProxy 필터 자체에&nbsp;<span class="Apple-style-span" style="font-family: Verdana, Arial, Helvetica, 'Bitstream Vera Sans', sans-serif; line-height: normal; ">targetBeanName 속성을 사용해서 연결할 빈 이름을 설정할 수도 있지만 기본적으로 이 이름은 필터 이름을 따르게 된다. 필터 이름을 바꾸고 targetBeanName을 또 설정해 주느니 그냥 필터 이름을 springSecurityFileterChain으로 하는게 좋겠다.</span></div>
+<div id="">
+<span class="Apple-style-span" style="font-family: Verdana, Arial, Helvetica, 'Bitstream Vera Sans', sans-serif; line-height: normal; "><br />
+</span></div>
+<div id="">
+<font class="Apple-style-span" face="Verdana, Arial, Helvetica, 'Bitstream Vera Sans', sans-serif"><span class="Apple-style-span" style="line-height: normal;">
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre"></span></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;<b>springSecurityFilterChain</b>&lt;/filter-name&gt;</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;filter-name&gt;<b>springSecurityFilterChain</b>&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;/filter-mapping&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<p></span></font></div>

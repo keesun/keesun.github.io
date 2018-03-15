@@ -1,0 +1,58 @@
+---
+layout: post
+title: JUnit 4.3 릴리즈 됐습니다.
+date: 2007-03-22 23:46:10.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- JUnit 4.3
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323154593'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.junit.org/index.htm" target="_blank">http://www.junit.org/index.htm</a><br />여기서 다운 받으실 수 있습니다.</p>
+<p><a href="http://www.artima.com/forums/flat.jsp?forum=276&amp;thread=199779" target="_blank">JUnit 4.3 Released</a><br />관련 포스트가 올라와서 알 수 있었네요.</p>
+<p>1. 배열의 동일함을 비교하기 위한 메소드 assertEqulas(배열, 배열)이 디프리케이티드 됐습니다. 대신에 가독성이 훨씬 좋은 Assert.assertArrayEquals 를 사용하면 된다는 군요.</p>
+<p>2. @Ignore 어노테이션을 클래스에도 붙일 수 있게 됐습니다.</p>
+<p>3. 원래는 @RunWith(AllTests.class)를 클래스에 붙여주면 3쩜 대의 suite()을 4쩜 대의 러너로 실행할 수 있었는데 이젠 그럴 필요가 없다네요. 하지만 예외가 있는듯..</p>
+<p>4. 배열 비교 할 때 에러 메시징이 향상 됐습니다.</p>
+<p>5. 그리고 다음의 버그들을 고쳤다네요.<br />&nbsp; &nbsp; * Bug fix: Inaccessible base class is caught at test construction time.<br />&nbsp; &nbsp; * Bug fix: Circular suites are caught at test construction time.<br />&nbsp; &nbsp; * Bug fix: Test constructors that throw exceptions are reported correctly.<br />&nbsp; &nbsp; * For committers and extenders<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o Sources now are in a separate "src" directory (this means a big break in the CVS history)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; o Improved documentation in Request, RunWith </p>

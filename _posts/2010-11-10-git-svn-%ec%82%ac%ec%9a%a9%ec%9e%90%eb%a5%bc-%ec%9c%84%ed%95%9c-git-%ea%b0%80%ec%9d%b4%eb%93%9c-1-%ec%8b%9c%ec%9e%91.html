@@ -1,0 +1,95 @@
+---
+layout: post
+title: "[Git] SVN 사용자를 위한 Git 가이드 1. 시작"
+date: 2010-11-10 08:21:32.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags: []
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323162895'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both">원문 및 참조: <a href="https://git.wiki.kernel.org/index.php/GitSvnCrashCourse">https://git.wiki.kernel.org/index.php/GitSvnCrashCourse</a></p>
+<p style="clear: both">자주 사용하는 키워드는 <a href="https://git.wiki.kernel.org/index.php/GitCheatSheet">Git 치트키</a> 참조.</p>
+<p style="clear: both"><a href="http://whiteship.me/wp-content/uploads/2010/11/git-cheat-sheet-medium.png" class="image-link"><img class="linked-to-original" src="{{ site.baseurl }}/assets/git-cheat-sheet-medium-thumb.png" height="294" width="380" style=" text-align: center; display: block; margin: 0 auto 10px;" /></a><a href="http://git-scm.com/documentation">SVN과 관련없는 기능에 대한 가이드</a> 참조. </p>
+<p style="clear: both">당장 급한 사용자를 위한 가이드</p>
+<ul style="clear: both">
+<li>svn checkout url -> git clone url</li>
+<li>svn update -> git pull</li>
+<li>svn commit -> git commit -a && git push</li>
+</ul>
+<p style="clear: both">SVN에서 Git로 옮기기</p>
+<ul style="clear: both">
+<li>svn ckehckout url -> git svn clone -stdlayout url</li>
+<li>svn update -> git svn rebase</li>
+<li>svn commit -> git commit -a && git svn dcomit</li>
+</ul>
+<p style="clear: both"><strong>시작하기에 앞서</strong></p>
+<p style="clear: both">SVN은 CVS라는 버전 관리 시스템을 기반으로 하고 있다. SVN 설계자는 '고민되면 일단 CVS처럼'이라는 원식을 사용한 반면, Git도 역시 CVS에 영감을 받아 만들었지만 설계자는 '고민되면 일반 CVS와 반대로'라는 원칙을 사용했다. 그런 대립되는 접근 방법으로 다양한 기술 혁신을 이뤘지만 그로인해 Git로 전향하려는 개발자들 골치를 아프게 하고 있다. 그점을 경고하는 바이다.</p>
+<p style="clear: both"><strong>기트 설정하기</strong></p>
+<p style="clear: both">기트를 사용하기 전에 실제 이름과 이메일 주소를 설정한다.</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>git config --global user.name "Your Name"</li>
+<li>git config --global user.email "you@yourdomain.com"</li>
+</ul>
+<p style="clear: both">git option 커맨드를 사용해서 옵션을 설정할 수 있다.</p>
+<p style="clear: both">
+<ul style="clear: both">
+<li>'git diff' 명령어에 컬러사용 -> git config --global color diff auto</li>
+<li>'git status' 명령어에 컬러사용 -> git config --global color status auto</li>
+<li>'git branch' 명령어에 컬러사용 -> git config --global color branch auto</li>
+<li>'git status'를 단축형 'git st' 사용 켬 -> git config --global alias st status</li>
+<li>모든 설정 옵션 보기 -> git config -l (엘)</li>
+</ul>
+<p style="clear: both"><strong>이건 알아두자</strong></p>
+<p style="clear: both">기트를 이해하는데 필요한 개념을 알아두자. 급하면 이 부분을 생략하고 나중에 햇갈리면 그때 와서 읽어도 된다.</p>
+<p style="clear: both"><strong>체크아웃과 저장소</strong></p>
+<p style="clear: both">각 Subversion 프로젝트는 <strong>한개</strong>의 중앙 저장소에 모든것을 기록한다. 모든 사용자가 이 한곳에 커밋하고 업데이트한다. Git 프로젝트는 각자에게 <strong>개인 저장소</strong>를 제공한다. 그리고 각 저장소간에 pull과 push를 할 수 있고 (각 개인 저장소 내에서는 SVN처럼 커밋과 업데이트를 할 수 있다.) Git 프로젝트에서는 보통 SVN 저장소 같은 역할을 하는 "공식" 저장소를 하나 지정해 사용한다.</p>
+<p style="clear: both"><strong>URL과 경로</strong></p>
+<p style="clear: both">Subversion에서 URL은 저장소 위치를 나타내며 저장소 내부의 경로는 branch나 tag를 나타낸다. 따라서 svn://svn.sample.com/trunk은 truck 브랜치에 대한 URL이다. Git에서도 URL은 저장소를 나타내지만 branch와 tag는 기트 커맨드로 접근할 수 있는 레이블이다. 그래서 git://git.example.com/은 전체 Git 저장소를 나타내는 URL이다.</p>
+<p style="clear: both"><strong>Visuablize</strong></p>
+<p style="clear: both">깃 버전 기록은 복잡해질 수 있다. 특히 큰 프로젝트에서 그렇다. gitk 뷰어같은 것을 사용해서 어떻게 진행되고 있는 것인지 파악하는게 좋다.</p>
+<p style="clear: both"><strong>Revisions</strong></p>
+<p style="clear: both">서브버전은 1부터 시작하는 숫자로 버전을 식별하고 각 버전 마다 1씩 증가시킨다. 중앙 저장소 하나가 모든 숫자를 관리할 때 그렇게 해도 괜찮지만 모두가 각자 저장소를 가지고 있다면 다음 리비전 번호를 누가 결정해야 할까? 기트는 그런 리비전 번호 대신 SHA-1 해시를 사용한 40자의 유일 식별자를 사용한다. 이런 식별자가 해시 코드라 좀 무시무시하게 보일테지만 이 번호를 직접 사용할 일은 거의 없으니 걱정하지 않아도 된다. 기트는 커밋할 때 마다 닉네임을 줄 수 있으며, 현재 버전 기준으로 이동할 수 있고, 기트 식별자의 앞글자 6자만 입력할 수 있다. 예를 들어 현재 커밋이 HEAD라면 현재 커밋 이전 버전은 HEAD^ 그리고 그 이전은 HEAD^^로 참조할 수 있다. 커밋이 abc123def456aljksljslj430u340f이라면 abc123으로 참조할 수 있다. (abc123^ 나 abc123^^도 사용할 수 있다.) </p>
+<p><br class="final-break" style="clear: both" /></p>

@@ -1,0 +1,15 @@
+<p><a href="http://rails.homelinux.org/" target="_blank">RoR 4일 완성</a>이라는 40페이지? 정도의 책(무료로 다운 가능합니다.)이 있길래 그 책을 보며 RoR 맛을 보려고 합니다.(일본어랑, 중국어로 된 번역본은 있는데 한글판은 없네요.ㅠ.ㅠ)</p>
+<p><img src="/assets/dm205.jpg" class="aligncenter" width="400" /><img src="/assets/cm227.jpg" class="aligncenter" width="400" /><img src="/assets/cm226.jpg" class="aligncenter" width="400" />흠.. 테이블을 잘 못 만들어서 중복 된 값이 들어가게 되었네요. 테이블을 수정해서 중복된 이름의 category를 못만들게 하면 scaffold로 생성한 뷰에서 에러가 발생합니다.</p>
+<p>이런 에러 로그를 보여주는 대신 validation 에러 메시지를 보여주도록 모델에 간단하게 validation 로직을 추가할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">class Category &lt; ActiveRecord::Base<br />&nbsp; <span style="color: rgb(255, 0, 0);">validates_length_of :category, :within =&gt; 1..20</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; validates_uniqueness_of :category, :message =&gt; "already exists"</span><br />end</div>
+<p>코드가 엄청나게 직관적이기 때문에 어떤 내용인지 짐작할 수 있을 것입니다.</p>
+<p>이렇게 코드를 추가해주고 서버를 껐다 다시 돌릴 필요도 없이 그냥 계속 작업을 합니다. <br /><img src="/assets/dm206.jpg" class="aligncenter" width="500" height="408" alt="사용자 삽입 이미지" />이미 등록되어 있는 Category인 스터디를 입력하면...</p>
+<p><img src="/assets/cm228.jpg" class="aligncenter" width="500" height="523" alt="사용자 삽입 이미지" />흠.. 정말 놀랍도록 간단하고 영리한 프레임워크입니다.</p>
+<p>뷰 코드를 보면 제일 상단에 이미 에러 객체의 내용을 출력하는 것으로 보이는 코드가 들어있습니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="color: rgb(255, 0, 0);">&lt;%= error_messages_for 'category' %&gt;</span></p>
+<p>&lt;!--[form:category]--&gt;<br />&lt;p&gt;&lt;label for="category_category"&gt;Category&lt;/label&gt;&lt;br/&gt;<br />&lt;%= text_field 'category', 'category'&nbsp; %&gt;&lt;/p&gt;</p>
+<p>&lt;p&gt;&lt;label for="category_created_on"&gt;Created on&lt;/label&gt;&lt;br/&gt;<br />&lt;%= datetime_select 'category', 'created_on'&nbsp; %&gt;&lt;/p&gt;</p>
+<p>&lt;p&gt;&lt;label for="category_updated_on"&gt;Updated on&lt;/label&gt;&lt;br/&gt;<br />&lt;%= datetime_select 'category', 'updated_on'&nbsp; %&gt;&lt;/p&gt;<br />&lt;!--[eoform:category]--&gt;</div>
+<p>그리고 컨트롤러에서 create 메소드를 보겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; def create<br />&nbsp; &nbsp; @category = Category.new(params[:category])<br />&nbsp; &nbsp; if <span style="color: rgb(255, 0, 0);">@category.save</span><br />&nbsp; &nbsp; &nbsp; flash[:notice] = 'Category was successfully created.'<br />&nbsp; &nbsp; &nbsp; redirect_to :action =&gt; 'list'<br />&nbsp; &nbsp; else<br />&nbsp; &nbsp; &nbsp; render :action =&gt; 'new'<br />&nbsp; &nbsp; end<br />&nbsp; end</div>
+<p>흠.. 이건 좀 모르겠네요. 분명 여기서 Category 모델을 사용자가 폼에서 입력하는 데이터를 바인딩하고(Category.new(params[:category]))나서.. 저장할 때(@category.save) Validation을 걸리게 되고 else문에 걸려서 계속해서 "new" 즉 생성하는 페이지를 다시 로딩 할 때 위에서 봤던 뷰 코드가 다시 읽히게 되고 그 때 에러의 내용을 출력(&lt;%= error_messages_for 'category' %&gt;)해주는 것 같은데. 대체 Dao 역할을 하는 코드(@category.save의 실체)는 어디에 있는거지??</p>

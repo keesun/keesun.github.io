@@ -1,0 +1,57 @@
+---
+layout: post
+title: Maven 같지 않은 Maven 프로젝트 만들기
+date: 2008-10-21 06:28:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- 디렉토리 설정
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323107544'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/pk3.png" class="aligncenter" width="307" height="411" alt="사용자 삽입 이미지" /><br />위 프로젝트는 일반적인 이클립스의 웹 프로젝트와 다름 없이 src와 test 소스 폴더를 가지고 있고, 웹 폴더도 루트바로 밑에 webapp를 사용하고 있습니다. 하지만, 이 녀석은 메이븐 프로젝트 입니다. 맨 아래에 pom.xml 보이시죠?</p>
+<p>사부님이 전에 작성하셨던 <a href="http://toby.epril.com/?p=414" target="_blank">메이븐 기본 디렉터리 설정 방법</a>과 Arawn님의 <a href="http://arawn.tistory.com/37" target="_blank">메이븐 웹 폴더 설정 플러긴 사용방법</a>을 조합하면 위와 같은 프로젝트를 만들 수 있습니다.</p>
+<p>둘 다 pom.xml의 build 엘리먼트 내부에 적절하게 넣어주면 됩니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;build&gt;<br />...<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;sourceDirectory&gt;${project.basedir}/src&lt;/sourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;scriptSourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${project.basedir}/scripts<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/scriptSourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;testSourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${project.basedir}/test<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/testSourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;resources&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;resource&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;directory&gt;${project.basedir}/src&lt;/directory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;excludes&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;exclude&gt;**/*.java&lt;/exclude&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/excludes&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/resource&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/resources&gt;<br />...<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;plugins&gt;<br />...<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;2.1-alpha-2&lt;/version&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;warSourceDirectory&gt;webapp&lt;/warSourceDirectory&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/plugin&gt;<br />...<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/plugins&gt;<br />&lt;build&gt;</div>
+<p>설정 내용은 엘리먼트 이름을 보면 대충 알 수 있으면 자세한 설명은 사부님과 Arawn님의 블로그에 가셔서 보시면 되겠습니다. ㅋㅋ</p>

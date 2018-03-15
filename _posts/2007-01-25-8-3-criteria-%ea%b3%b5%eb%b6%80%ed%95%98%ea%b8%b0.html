@@ -1,0 +1,63 @@
+---
+layout: post
+title: 8.3. Criteria 공부하기
+date: 2007-01-25 11:17:28.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- Criteria
+- Criterion
+- Dynamic Query
+- Restrictions
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323165895'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>특정 Member의 검색을 할 때 이름만 입력할 수도 있고 이메일만 입력할 수도 있습니다. 입력 할 수 있는 곳이 여러 곳이면 둘 다 입력하거나 둘 다 입력하지 않을 수도 있습니다. 이럴 때 입력을 하느냐 안하느냐에 따라 쿼리가 달라지는데요. 이런것을 Dynamic Query라고 하는것 같습니다. </p>
+<p>HQL을 이용해서 이러한 쿼리를 다음과 같이 작성할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; public void testDynamicQueryByHQL(){<br />&nbsp; &nbsp; &nbsp; &nbsp; insertDatas();<br />&nbsp; &nbsp; &nbsp; &nbsp; String name = "s";<br />&nbsp; &nbsp; &nbsp; &nbsp; String email = null;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 153, 102);">StringBuffer sb = new StringBuffer("from k_Member m where 1=1");</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(name)) sb.append(" and m.name like :name");</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(email)) sb.append(" and m.email like :email");</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">q = s.createQuery(sb.toString());</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(name)) <span style="color: rgb(255, 0, 0);">q.setParameter("name", "%" + name + "%");</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(email)) <span style="color: rgb(255, 0, 0);">q.setParameter("email", "%" + email + "%");</span></span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(2, q.list().size());<br />&nbsp; &nbsp; }</div>
+<p>위와 같은 내용의 쿼리를 Criteria를 사용해서 작성하면 다음과 같이 간결해 집니다. 그리고 @Entity의 name속성에 지정해 준 값을 사용하는 것이 아니라 진짜 클래스 명을 사용해야 합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; public void testDynamicQueryByCriteria(){<br />&nbsp; &nbsp; &nbsp; &nbsp; insertDatas();<br />&nbsp; &nbsp; &nbsp; &nbsp; String name = "s";<br />&nbsp; &nbsp; &nbsp; &nbsp; String email = "keesun@os.net";</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">Criteria c = s.createCriteria(KMember.class);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(email)) <span style="color: rgb(255, 0, 0);">c.add(Restrictions.eq("email", email));</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; if(!StringUtils.isEmpty(name)) <span style="color: rgb(255, 0, 0);">c.add(Restrictions.like("name", "%" + name + "%"));</span></span><br style="color: rgb(255, 0, 0);" /><br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(1, c.list().size());<br />&nbsp; &nbsp; }</div>
+<p><a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/Criteria.html" target="_blank">Criteria</a>의 add 메소드는 인자로 <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/criterion/Criterion.html" target="_blank">Criterion</a>을 넘겨 주어야 하는데요. <a href="http://www.hibernate.org/hib_docs/v3/api/org/hibernate/criterion/Restrictions.html" target="_blank">Restrictions</a>라는 팩토리를 사용해서 Criterion을 받아 오게 됩니다. Restrictions 클래스에는 쿼리에 덧붙일 수 있는 여러 메소드들이 있습니다.</p>

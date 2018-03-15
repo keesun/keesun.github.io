@@ -1,0 +1,23 @@
+<p><a href="http://whiteship.tistory.com/69">이 전 글</a>을 보시면 새로운 첨가물이 추가 될 때마다 Beverage class가 변하게 됩니다. 구체적으로 cost() 메소드가 변하게 되는 거죠. 이 말은 다시 새로운 Class가 추가될 때 마다 기존 Class가 변하게 되고 따라서 다시 컴파일 -&gt; 배포 과정을 거쳐야 한다는 것인데.. 이러면 상당히 불편합니다. 새로운 class를 추가하면서도 기존의 class가 변하지 않을 그런 방법 없을까요? 이것과 관련된 원칙이 하나 있습니다.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">OCP(Open-Closed Principle)</span>는 가장 중요한 디자인 원칙 중 하나라고 합니다.</p>
+<blockquote><p>디자인 원칙6<br />
+클래스는 확장에 대해서는 열려 있어야 하지만 코드 변경에 대해서는 닫혀 있어야 한다.</p></blockquote>
+<p>
+<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">기존 코드는 변경에 닫혀 있어야 하고 새로운 행동을 마음 껏 추가할 수 있어야 한다</span>는 말인데요. 자칫 모순 같아 보이지만 상황이나 문맥을 잘 살펴보시면 분명 모순되는 말은 아닙니다.</p>
+<p>그리고 이것과 관련된 <a href="http://www.zdnet.co.kr/builder/dev/modeling/0,39031637,39134727,00.htm">ZDnet의 글</a>도 있는데요. 읽어봤는데 H.F보다 더 많은 내용(H.F.는 2페이지, 저 글은 13페이지)을 적어 놓은 듯하네요. </p>
+<p>이제 OCP를 달성하게 해주는 디자인 패턴 들 중에 하나로 Decorator Pattern을 배워 봅시다. 이름에서도 벌써 어떤 패턴일지 대강 감이 오시지 않나요.</p>
+<p>객체를 장식(실제로는 감싸는 wrapping(?)이라고 생각하시면 쉬울 듯 합니다.)하고 또 다시 그 객체를 장식하고..그러한 식으로 구성하는 것이 가능하도록 해주는 패턴입니다.</p>
+<p><img src="/assets/1297551091.jpg" class="aligncenter" width="142" height="95" alt="" />여기 DartRoast 객체가 있습니다. 이 객체는 Beverage를 상속 받은 음료 수 중 하나죠. 따라서 cost() 메소드를 가지고있을 것입니다. 이 객체에 Mocha(첨가물 중 하나입니다.)를 얻으면 가격이 추가되겠죠. 이 때 이 첨가물로 DarkRoast를 감싸는 것입니다.<br />
+<img src="/assets/1391394941.jpg" class="aligncenter" width="237" height="148" alt="" /><br />
+이렇게 Mocha로 DarkRoast를 감싼 뒤 가격을 구하고 있다면 Mocha에 있는 cost()를 호출하는 거죠. 그러면 그 메소드 안에서는 Mocha가 가지고 있는 DarkRoast의 cost()를 호출 한 뒤에 거기에 자신의 가격(모카가격)을 더하면 되겠습니다. 즉 여기서 Mocha가 DarkRoast를 감싼 다는 것이 Mocha가 DarkRoast를 멤버로 가지고 있다고 생각하시면 되겠습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1168709859.bmp" class="aligncenter" width="380" height="178" alt="">1168709859.bmp</a>이러한 순으로 가격 계산하는 과정이 진행됩니다.</p>
+<p>이제 데코레이터 패턴의 정의를 살펴봅시다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)">데코레이터 패턴에서는 객체에 추가적인 요건을 동적으로 첨가한다. 데코레이터는 서브클래스를 만드는 것을 통해서 기능을 유연하게 확장할 수 있는 방법을 제공한다. </div>
+<p>하지만 단순이 상속을 통해서만 그렇게 자유로워 지는 것은 아니고 컴포지션도 한몫합니다. 결국 상속과 컴포지션의 합작품이지요.</p>
+<p>클래스 다이어그램으로 살펴 봅시다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1207741458.bmp" class="aligncenter" width="345" height="373" alt="">1207741458.bmp</a><br />
+wikipidia에 있는 그림입니다. 새로 그리기가 귀찮아서요 ^^;;. 저는 이 다이어그램을 보고 처음에 굉장히 놀랬었습니다. 왜냐면 상속과 컴포지션을 동시에 사용했기 때문이지요. 클래스를 재사용하는 방법 중에 가장 먼저 떠오르는 두가지 방법을 그것도 동시에 두 클래스 사이에 모두 사용한 것이 제 사고의 편협함을 꼬집어 주더군요. 상속하든가.. 컴포지션 하든가.. 이런 생각을 가지고 있던 저는 마치 흑백논리에 빠져있었던 사람 같은 기분이였습니다.</p>
+<p>위 다이어그램을 보시면 Decorator가 Component를 상속하면서 동시에 컴포지션으로 상위 클래스 타입의 멤버를 가지고 있습니다. 이 말은 상위 클래스의 모든 하위 클래스들을 Decorator에서 멤버 변수로 가지고 있을 수 있다는 뜻인데요. Decorator 자신도 또한 Component의 하위 클래스 이므로.. 자기 자신을 멤버 변수로 가지고 있을 수 있다는 것입니다. 물론 ConcreteComponent들도 Decorator의 들이 멤버 변수로 가지고 있을 수 있겠죠.</p>
+<p>이 놀라움을 감상하며 잠시 시간을 보낸 뒤 다음에는 스타버즈 커피숍의 문제에 적용해보도록 하겠습니다.</p>
+<p>
+ps : 여기서 궁금한 것은 데코레이터 패턴이 확장에 열려있게 된 것은 알 수 있었습니다. 하지만 변화에는 어떻게 닫혀 있다는 것일까요.. 이 패턴을 사용함으로 써 더이상 cost() 메소드에 변화가 가지 않게 되어 변화에 닫히게 되었다는 것일까요?.. ZDnet의 글을 보신 분들은 interface를 사용하여 변화에 닫히고 확장에 열리는 설계를 보셨을것입니다. 여기서는 interface가 보이지 않는데.. 어떻게 된 일일까요.. 좀더 생각히 필요하네요..</p>

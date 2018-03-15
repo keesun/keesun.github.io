@@ -1,0 +1,5 @@
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; if '':<br /><span style="background-color: rgb(193, 193, 193);">... &nbsp; &nbsp; print "True"</span><br />... else:<br /><span style="background-color: rgb(193, 193, 193);">... &nbsp; &nbsp; print "False"</span><br />...<br />False</div>
+<p>이렇게 들여쓰기를 해주면 잘 동작합니다. 하지만 조금 귀찮아서 들여쓰기를 안해주면 아래처럼 에러가 발생합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; if '':<br /><span style="background-color: rgb(193, 193, 193);">... print "True"</span><br />&nbsp; File "&lt;stdin&gt;", line 2<br />&nbsp; &nbsp; print "True"<br />&nbsp; &nbsp; &nbsp; &nbsp; ^<br />IndentationError: expected an indented block</div>
+<p>블럭 구분을 괄호로 하지 않고 들여쓰기로 하는 것 같습니다. ()이거는 터플, [] 이거는 배열, {} 이거는 딕셔너리로 사용하기 때문에 블럭을 구분하려면 들여쓰기를 잘해야 겠네요.</p>
+<p>{}; 이런거에 눈이 익숙해져 있는데 블럭이 없는 코드에 눈이 익숙해져야겠습니다.</p>

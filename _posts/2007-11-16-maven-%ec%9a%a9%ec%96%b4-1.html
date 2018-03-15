@@ -1,0 +1,66 @@
+---
+layout: post
+title: Maven 용어 1
+date: 2007-11-16 07:49:42.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- goal
+- maven
+- Phase
+- plugin
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323136150'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<ul>
+<li>Plugin</li>
+<li>Goal</li>
+<li>Phase</li>
+</ul>
+<p>위 세개가 매우 비슷해 보이면서 다른 듯 해서 햇갈립니다. <a href="../../1263">Maven으로 프로젝트 생성하기</a>에서 사용했었던 명령어는 다음과 같이 두 개 밖에 없습니다.</p>
+<p>mvn archetype:create 와 mvn package 였습니다.</p>
+<p>archetype은 Plugin, create는 Goal, package는 Phase입니다.</p>
+<p>Goal은 Plugin에 포함되어 있고, 하나의 Plugin은 여러개의 Goal을 가지고 있습니다. 즉 archetype이라는 Plugin에 create라는 Goal을 가지고 있고, 그것을 실행하여 프로젝트를 생성한 것입니다.<br /><img src="{{ site.baseurl }}/assets/ck130000000004.png" class="aligncenter" width="406" height="160" alt="사용자 삽입 이미지" />Maven의 Goal은 Ant의 Task와 비슷합니다. 그럼 Ant의 Target과 비슷한 것도 있을 것입니다. 네 비슷한 것이 Maven에도 있는데, 이것은 조금 햇갈립니다. Plugin과 비슷한건지.. Phase와 비슷한건지...</p>
+<p>Phase는 Maven의 Build Lifecycle의 한 부분을 가리키는 용어 입니다. 이 단어를 사용하여 mvn을 실행하면 Build Lilfecycle을 실행하게 되며, 실행을 하다가 인자로 준 Phase까지 수행하고 멈추게 됩니다. 어떻게 보면, Ant의 Target하고도 비슷하지만.. 많이 다릅니다.</p>
+<p>먼저 Maven의 Build Lifecycle 중에 일부를 보면 다음과 같습니다.<br /><img src="{{ site.baseurl }}/assets/dk120000000002.png" class="aligncenter" width="249" height="581" alt="사용자 삽입 이미지" />각각의 Phase는 어떤 일을 할지 정의하지 않고 어떤 Goal을 실행할지 설정해 두었을 것입니다. Goal을 Phase에 바인딩해 두었다고 생각하면 되겠습니다. package Phase의 경우 jar:jar 라는 goal로 바인딩되어 있습니다.<br /><img src="{{ site.baseurl }}/assets/ck130000000005.png" class="aligncenter" width="296" height="91" alt="사용자 삽입 이미지" />위의 빌드 라이프사이클 중에 하나의 Phase를 인자로 넘겨주면, 처음부터 해당 Phase까지에 바인딩되어 있는 모든 Goal들을 실행합니다. 따라서 mvn package같은 경우 다음과 같은 goal들이 실행됩니다.<br /><img src="{{ site.baseurl }}/assets/dk120000000003.png" class="aligncenter" width="389" height="595" alt="사용자 삽입 이미지" />따라서 mvn package 대신에 mvn resources:resources compiler:compile resources:testResources compiler:testCompile surefire:test jar:jar라고 입력해도 같은 결과를 볼 수 있습니다.</p>
+<p>Phase는 Ant의 Target, Goal은 Ant의 Task, Plugin는 Goal들을 묶어놓은 것으로 생각할 수 있겠습니다.</p>

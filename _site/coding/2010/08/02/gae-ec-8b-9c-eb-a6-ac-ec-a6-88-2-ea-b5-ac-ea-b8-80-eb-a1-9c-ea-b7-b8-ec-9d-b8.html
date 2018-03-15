@@ -1,0 +1,43 @@
+<p><a href="http://code.google.com/intl/ko-KR/appengine/docs/java/gettingstarted/usingusers.html" target="_blank" title="[http://code.google.com/intl/ko-KR/appengine/docs/java/gettingstarted/usingusers.html]로 이동합니다.">http://code.google.com/intl/ko-KR/appengine/docs/java/gettingstarted/usingusers.html</a>
+<div>
+</div>
+<div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>UserService userService = UserServiceFactory.getUserService();</b></div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>User user = userService.getCurrentUser();</b></div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(user != null) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;resp.setContentType("text/plain");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;resp.getWriter().println("Hello, " + user.getNickname());</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} else {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));</b></div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div>
+이 코드가 핵심인데.. 많은 것들을 해준다.</div>
+<div>
+</div>
+<div>
+1. 우선 무척이나 간단하다. 이렇게 쉽게 구글 로그인을 연동할 수 있다니... API도 직관적이라 어떤 일을 하는지 쉽게 알 수 있다. 마지막 줄의 코드가 로그인 한 다음 바로 로그인을 요청한 페이지로 이동하기 위한 API 인데 흠.. 괜찮은 것 같다. 권한 관리는 어떻게 하는지.. &nbsp;실제론 스프링 시큐리티랑 연동해서 쓰는지 아님 구글에서 제공하는 인증/권한 관리 API가 있는 것인지.. 있다면 권한 관리 설정은 편리한지 궁금하다.</div>
+<div>
+</div>
+<div>
+2. 로그인 화면 자동생성. 로그인이 필요할 때 guestbook 예제에서 봤던 로그인 화면이 등장하는데 나는 그런 JSP 파일을 만든적도 없는데 알아서 만들어줬다. 편리하다.</div>
+<div>
+</div>
+<div>
+3. 간편할 뿐 아니라 이 코드는 개발 환경과 배포 환경에 따라 동작 방식이 바뀐다. 오.. 놀라워라; 즉 개발환경에서는 아무런 아이디만 넣어도 로그인이 되고, 관리로 로그인하기 체크 박스가 존재한다. 하지만 GAE에 배포하는 순간 실제 구글 계정으로 로그인 한단다. 아직 GAE에 배포는 안해봤다. 그런데.. 개발할 때 실제 구글 계정으로 테스트해보고 싶으면 어쩌지??&nbsp;</div>
+<div>
+</div>
+<div>
+4. 로그아웃 URL로 제공한다. userService.createLogoutURL()을 사용하면 된다.</div>
+<div>
+</div>
+<div>
+</div>

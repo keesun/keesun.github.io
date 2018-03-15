@@ -1,0 +1,56 @@
+---
+layout: post
+title: 2. 레일스는 어떻게 동작하는가?
+date: 2007-06-13 15:33:04.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- for Rails
+tags:
+- RoR
+- RoR MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322981822'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://book.interpark.com/product/BookDisplay.do?_method=Detail&amp;sc.shopNo=0000400000&amp;sc.dispNo=&amp;sc.prdNo=200666398" target="_blank">레일스를 위한 루비</a></p>
+<p><span style="font-weight: bold;">-애플리케이션 개발 과정</span><br />1. 모델 구현<br />2. 컨트롤러 구현<br />3. 뷰 구현<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">-레일즈의 MVC</span><br />모델: ActiveRecord - actionpack에 속함<br />뷰: ActionVIew - actionpack에 속함<br />컨트롤러: ActionController - activerecord에 속함</p>
+<p>gems 폴더 아래에 위치 합니다.<br /><img src="{{ site.baseurl }}/assets/dm232.png" class="aligncenter" width="442" height="420" alt="사용자 삽입 이미지" /><br /><span style="font-weight: bold;">- Rails 샘플 애플리케이션 개발하기</span><br />1. 모델 구현<br />&nbsp; &nbsp; - 테이블의 이름은 복수형<br />&nbsp; &nbsp; - id라는 필드가 있어야 함<br />&nbsp; &nbsp; - y가 x에 속하면 y테이블에 x_id가 있어야 함<br />&nbsp; &nbsp; - SQL로 테이블을 만들어도 되고<br />&nbsp; &nbsp; - 레일즈의 마이그레이션을 사용해도 된다.<br />&nbsp; &nbsp; - 모델사이의 연관 설정하기<br />&nbsp; &nbsp; &nbsp;&nbsp;  - 속한다. belong_to<br />&nbsp; &nbsp; &nbsp;&nbsp; - 가지고 있다. has_many<br />2. 컨트롤러 구현<br />&nbsp; &nbsp; - 액션 구현<br />&nbsp; &nbsp; - 전체 컨트롤러를 나타내는 ApplicationController<br />3. 뷰 구현<br />&nbsp; &nbsp; - layout "레이아웃 파일 이름" :: 레이아웃 설정<br />&nbsp; &nbsp; - 레이아웃의 컨텐츠가 들어갈 위치에 &lt;%= @content_for_layout %&gt; 삽입<br />&nbsp; &nbsp; - &lt;% @composer.each do |composer| %&gt; :: JSTL의 &lt;c:forEach /&gt; 와 비슷한 것<br />4. 접속하기<br />&nbsp; &nbsp; - 첫 페이지 변경하기 :: conflg/routes.rb 파일에서 설정<br />&nbsp; &nbsp; - 예) map.connect '', :controller =&gt; "main", :action =&gt; "welcome"</p>
+<p><span style="font-weight: bold;">- 래일즈 애플리케이션 생명주기</span><br />1. 클라이언트가 서버로 요청을 보냄<br />2. 디스패처가 요청 받아서 담당할 컨트롤러 찾음<br />3. 요청을 처리하고 해당 액션과 연결되어 있는 뷰로 결과를 랜더링<br />4. ERb가 루비 코드를 변환해서 HTML 완성후 응답을 돌려줌<br />5. 클라이언트에서 HTML 확인</p>

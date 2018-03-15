@@ -1,0 +1,205 @@
+<h1>클래스 구현하기.</h1>
+<ul>
+<li>EnhancedUserType와 ParameterizedType 인터페이스를 구현한다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">private</span> <span class="code-object">Class</span>&lt;Enum&gt; enumClass;
+    
+    <span class="code-keyword">public</span> void setParameterValues(Properties parameters) {
+        <span class="code-object">String</span> enumClassName =
+            parameters.getProperty(<span class="code-quote">"enumClassname"</span>);
+        <span class="code-keyword">try</span> {
+            enumClass = ReflectHelper.classForName(enumClassName);
+        } <span class="code-keyword">catch</span> (ClassNotFoundException cnfe) {
+            <span class="code-keyword">throw</span> <span class="code-keyword">new</span>
+              HibernateException(<span class="code-quote">"Enum class not found"</span>, cnfe);
+        }
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">Class</span> returnedClass() {
+        <span class="code-keyword">return</span> enumClass;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> fromXMLString(<span class="code-object">String</span> xmlValue) {
+        <span class="code-keyword">return</span> Enum.valueOf(enumClass, xmlValue);
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> objectToSQLString(<span class="code-object">Object</span> value) {
+        <span class="code-keyword">return</span> '
+</div>
+</div>
+<ul>
+<li>setParameterValues()는 클래스 이름 가져와서 Class 변수에 세팅한다. </li>
+</ul>
+<ul>
+<li>fromXMLString(), objectToSQLString(), toXMLString()는 XML과 Enum의 value를 맵핑한다. </li>
+</ul>
+<ul>
+<li>nullSafeGet()는 DB에서 value를 읽은 다음 Enum으로 반환한다. </li>
+</ul>
+<ul>
+<li>nullSafeSet()는 Enum에서 DB로 저장할 value를 뽑아낸다. </li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>JPA의 경우 커스텀 타입 클래스 만들지 않고도 String으로 저장하거나, 선택된 Enum의 value를 저장할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Comment {
+    ...
+    @Enumerated(EnumType.STRING)
+    @Column(name = <span class="code-quote">"RATING"</span>, nullable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)
+    <span class="code-keyword">private</span> Rating rating;
+    ...
+}</pre>
+</div>
+</div>
+<h1>쿼리 작성하기</h1>
+<ul>
+<li>다음과 같이 쿼리를 작성할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">Query q =
+    session.createQuery(
+      <span class="code-quote">"from Comment c where c.rating = auction.model.Rating.BAD"</span>
+    );</pre>
+</div>
+</div>
+<ul>
+<li>c.rating의 rating은 DB 컬럼의 이름이 아니라 객체의 속성이름이다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-quote">"from Member m where m.memberType = '"</span> + MemberType.ADMIN + <span class="code-quote">"'"</span>
+<span class="code-quote">"from Member m where m.memberType = chapter5.customType.example.MemberType.ADMIN"</span></pre>
+</div>
+</div>
+' + ( (Enum) value ).name() + '
+</div>
+</div>
+<ul>
+<li>setParameterValues()는 클래스 이름 가져와서 Class 변수에 세팅한다. </li>
+</ul>
+<ul>
+<li>fromXMLString(), objectToSQLString(), toXMLString()는 XML과 Enum의 value를 맵핑한다. </li>
+</ul>
+<ul>
+<li>nullSafeGet()는 DB에서 value를 읽은 다음 Enum으로 반환한다. </li>
+</ul>
+<ul>
+<li>nullSafeSet()는 Enum에서 DB로 저장할 value를 뽑아낸다. </li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>JPA의 경우 커스텀 타입 클래스 만들지 않고도 String으로 저장하거나, 선택된 Enum의 value를 저장할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Comment {
+    ...
+    @Enumerated(EnumType.STRING)
+    @Column(name = <span class="code-quote">"RATING"</span>, nullable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)
+    <span class="code-keyword">private</span> Rating rating;
+    ...
+}</pre>
+</div>
+</div>
+<h1>쿼리 작성하기</h1>
+<ul>
+<li>다음과 같이 쿼리를 작성할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">Query q =
+    session.createQuery(
+      <span class="code-quote">"from Comment c where c.rating = auction.model.Rating.BAD"</span>
+    );</pre>
+</div>
+</div>
+<ul>
+<li>c.rating의 rating은 DB 컬럼의 이름이 아니라 객체의 속성이름이다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-quote">"from Member m where m.memberType = '"</span> + MemberType.ADMIN + <span class="code-quote">"'"</span>
+<span class="code-quote">"from Member m where m.memberType = chapter5.customType.example.MemberType.ADMIN"</span></pre>
+</div>
+</div>
+';
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> toXMLString(<span class="code-object">Object</span> value) {
+        <span class="code-keyword">return</span> ( (Enum) value ).name();
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> nullSafeGet(ResultSet rs,
+                              <span class="code-object">String</span>[] names,
+                              <span class="code-object">Object</span> owner)
+            <span class="code-keyword">throws</span> SQLException {
+        <span class="code-object">String</span> name = rs.getString( names[0] );
+        <span class="code-keyword">return</span> rs.wasNull() ? <span class="code-keyword">null</span> : Enum.valueOf(enumClass, name);
+    }
+
+    <span class="code-keyword">public</span> void nullSafeSet(PreparedStatement st,
+                            <span class="code-object">Object</span> value,
+                            <span class="code-object">int</span> index)
+            <span class="code-keyword">throws</span> SQLException {
+        <span class="code-keyword">if</span> (value == <span class="code-keyword">null</span>) {
+            st.setNull(index, Hibernate.STRING.sqlType());
+        } <span class="code-keyword">else</span> {
+            st.setString( index, ( (Enum) value ).name() );
+        }
+    }</pre>
+</div>
+</div>
+<ul>
+<li>setParameterValues()는 클래스 이름 가져와서 Class 변수에 세팅한다. </li>
+</ul>
+<ul>
+<li>fromXMLString(), objectToSQLString(), toXMLString()는 XML과 Enum의 value를 맵핑한다. </li>
+</ul>
+<ul>
+<li>nullSafeGet()는 DB에서 value를 읽은 다음 Enum으로 반환한다. </li>
+</ul>
+<ul>
+<li>nullSafeSet()는 Enum에서 DB로 저장할 value를 뽑아낸다. </li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>JPA의 경우 커스텀 타입 클래스 만들지 않고도 String으로 저장하거나, 선택된 Enum의 value를 저장할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Comment {
+    ...
+    @Enumerated(EnumType.STRING)
+    @Column(name = <span class="code-quote">"RATING"</span>, nullable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)
+    <span class="code-keyword">private</span> Rating rating;
+    ...
+}</pre>
+</div>
+</div>
+<h1>쿼리 작성하기</h1>
+<ul>
+<li>다음과 같이 쿼리를 작성할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">Query q =
+    session.createQuery(
+      <span class="code-quote">"from Comment c where c.rating = auction.model.Rating.BAD"</span>
+    );</pre>
+</div>
+</div>
+<ul>
+<li>c.rating의 rating은 DB 컬럼의 이름이 아니라 객체의 속성이름이다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-quote">"from Member m where m.memberType = '"</span> + MemberType.ADMIN + <span class="code-quote">"'"</span>
+<span class="code-quote">"from Member m where m.memberType = chapter5.customType.example.MemberType.ADMIN"</span></pre>
+</div>
+</div>

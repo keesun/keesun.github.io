@@ -1,0 +1,97 @@
+---
+layout: post
+title: "[Spring Security] Method Security Test"
+date: 2010-03-19 12:15:49.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 스프링 시큐리티
+- 테스트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322810190'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding: 10px;" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; @PreAuthorize("hasRole('ROLE_MEMBER')")<br />
+&nbsp;&nbsp;&nbsp; public boolean write(String contents) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (graffitiRepository.getTotalRowCount() &gt;= GRAFFITI_LIMIT_COUNT) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; graffitiRepository.deleteFirstGraffiti();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Graffiti graffiti = new Graffiti(contents, securityService.getCurrentMember());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; graffitiRepository.add(graffiti);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return true;<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>위 코드는 봄싹 낙서장 서비스의 코드이다. 봄싹 메인 화면에 있는 낙서장은 최대 100개를 유지하며 ROLE_MEMBER 권한을 가지고 있는 사용자(이메일 인증 절차를 거친 기본 회원)라면 누구나 낙서를 추가할 수 있다.</p>
+<p>이 코드의 내용 대부분은 단위 테스트로 커버가 가능하다. 하지만 스프링 시큐리티 애노테이션이 제대로 동작하는지는 어떻게 테스트 할 것인가?</p>
+<div style="border: 1px solid rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding: 10px;" class="txc-textbox">
+@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(locations = {"/testContext.xml", "/<span style="font-weight: bold; color: rgb(92, 127, 176);">testContext-security.xml</span>"})<br />
+@<span style="font-weight: bold; color: rgb(92, 127, 176);">Transactional</span><br />
+public class MethodSecurityTest extends DBUnitSupport{</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired GraffitiService graffitiService;<br />
+&nbsp;&nbsp;&nbsp; @Autowired GraffitiRepository graffitiRepository;</p>
+<p>&nbsp;&nbsp;&nbsp; @Before<br />
+&nbsp;&nbsp;&nbsp; public void login() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: rgb(92, 127, 176); font-weight: bold;">insertXmlData("testData.xml");</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SecurityContext securityContext = new SecurityContextImpl();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authentication authentication = new UsernamePasswordAuthenticationToken("whiteship@email.com", "passwd");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; securityContext.setAuthentication(authentication);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SecurityContextHolder.setContext(securityContext);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void methodAuth(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(graffitiRepository.getAll().size(), is(0));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">graffitiService.write("hi");</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(graffitiRepository.getAll().size(), is(1));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @After<br />
+&nbsp;&nbsp;&nbsp; public void after(){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SecurityContextHolder.clearContext();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>이런식으로 테스트 할 수 있다. </p>
+<p>1. 시큐리티 설정 파일을 테스트에서 만들 AC(ApplicationContext)용 설정에 추가한다.<br />
+2. DB에 xml로 작성한 가짜 사용자, 권한 정보를 넣어야 하니까 DBUnit을 편하게 사용할 수 있게 해주는 클래스를 이용한다.<br />
+3. 테스트 실행하기 전에 로그인 한다. (SecurityContextHolder에 SecurityContext를 넣는다.)<br />
+4. 테스트 실행한 뒤에 로그오프 한다. (SecurityContextHolder를 비워버린다.)</p>
+<p></p>

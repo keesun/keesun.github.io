@@ -1,0 +1,126 @@
+---
+layout: post
+title: 스프링 트랜잭션 주의할 것
+date: 2009-02-07 11:46:24.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 스프링 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323170423'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.ibm.com/developerworks/java/library/j-ts1.html?ca=dgr-jw22SafeJavaTrans&amp;S_TACT=105AGX59&amp;S_CMP=grsitejw22" target="_blank">Transaction strategies: Understanding transaction pitfalls</a></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(255, 255, 255);">
+@Transactional(readOnly = true, propagation=Propagation.REQUIRED)<br />
+public long insertTrade(TradeData trade) throws Exception {<br />
+&nbsp;&nbsp; // 어떤 코드<br />
+}</p>
+<p>위 코드에 있는 insertTrade를 실행행하면 어떤 결과가 발생할까요?</p>
+<p>A. read-only connection 예외가 발생한다.<br />
+B. 데이터를 추가하고 커밋한다.<br />
+C. read-only가 true라서 아무것도 하지 않는다.</p>
+<p>당연히 A일 것 같은데... // 어떤 코드 부분이 JDBC 코드일 경우이고 JPA나 하이버네이트 같은 ORM 코드면 propagation 설정 REQUIRED가 모든 것을 재정의해서 새로운 트랜잭션을 시작하고 read-only 플래그가 없는 것 처럼 동작하게 된다네요... @_@</p>
+<p><span style="text-decoration: line-through;">지금은 넘 졸려서 낼 자세히 읽어봐야겠습니다.</span></p>
+<p>따라서 읽기 전용 매서드의 경우 다음과 같이 SUPPORTS 프로퍼게이션 모드를 사용하는게 타당하다고 합니다. 왜냐면 보통 다음과 같이 읽기 전용 매서드를 설정하는데..</p>
+<p>@Transactional(readOnly = true)<br />
+public TradeData getTrade(long tradeId) throws Exception {<br />
+&nbsp;&nbsp; return em.find(TradeData.class, tradeId);<br />
+}</p>
+<p>이 때 기본 프로퍼게이션이 REQUIRED 모드기 때문에 매번 새로운 트랜잭션을 만들어 사용하고 사용하는 DB에 따라서는 불필요한 읽기 롹까지 사용해서 데드락을 발생시킬 수도 있다고 하기 때문입니다. 따라서..</p>
+<p>@Transactional(readOnly = true, propagation=Propagation.SUPPORTS)<br />
+public TradeData getTrade(long tradeId) throws Exception {<br />
+&nbsp;&nbsp; return em.find(TradeData.class, tradeId);<br />
+}</p>
+<p>이렇게 SUPPORTS로 변경하여 기존 트랜잭션이 있으면 사용하고 없으면 사용하지 않도록 하거나..</p>
+<p>public TradeData getTrade(long tradeId) throws Exception {<br />
+&nbsp;&nbsp; return em.find(TradeData.class, tradeId);<br />
+} </p>
+<p>요렇게 읽기 전용인 경우에는 아예 @Transactional 애노테이션을 아예 사용하지 않는게 나아보입니다. 굳이 원자화 할 것도 없고~ Isolation level만 적당선에서 타협한다면 롹을 걸 일도 없고~
+</div>
+<p></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(255, 255, 255);">
+<br />
+REQUIRES_NEW&nbsp; 사용시 주의 할 것.</p>
+<p>@Transactional(propagation=Propagation.REQUIRES_NEW)<br />
+public long insertTrade(TradeData trade) throws Exception {...}</p>
+<p>@Transactional(propagation=Propagation.REQUIRES_NEW)<br />
+public void updateAcct(TradeData trade) throws Exception {...}</p>
+<p>이런 매서드와 트랜잭션 설정이 있을 때</p>
+<p>@Transactional(propagation=Propagation.REQUIRES_NEW)<br />
+public long insertTrade(TradeData trade) throws Exception {<br />
+&nbsp;&nbsp; em.persist(trade);<br />
+&nbsp;&nbsp; updateAcct(trade);<br />
+&nbsp;&nbsp; //exception occurs here! Trade rolled back but account update is not!<br />
+&nbsp;&nbsp; ...<br />
+}</p>
+<p>이런 식으로 코딩하면... updateAcct() 이후에 에러가 발생하면 updateAcct는 쿼리가 날아가는데 나머지 내용은 롤백 되는 현상이 발생할 수 있죠. 왜냐면 매번 새로운 트랜잭션을 만들기 때문에 insertTrade를 실행하는 트랜잭션과 updateAcct를 실행하는 트랜잭션이 별개기 때문입니다.</p>
+<p>뭐~ 이건 쉽네요. 걍 REQUIRED로 쓰거나 MANDATORY를 쓰면 됩니다.</p></div>
+<p></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(255, 255, 255);">
+롤백과 관련해서는 checked exception에 대비해야 한다.</p>
+<p>@Transactional(propagation=Propagation.REQUIRED)<br />
+public TradeData placeTrade(TradeData trade) throws Exception {<br />
+&nbsp;&nbsp; try {<br />
+&nbsp; &nbsp; &nbsp; insertTrade(trade);<br />
+&nbsp; &nbsp; &nbsp; updateAcct(trade);<br />
+&nbsp; &nbsp; &nbsp; return trade;<br />
+&nbsp;&nbsp; } catch (Exception up) {<br />
+&nbsp; &nbsp; &nbsp; //log the error<br />
+&nbsp; &nbsp; &nbsp; throw up;<br />
+&nbsp;&nbsp; }<br />
+}</p>
+<p>이런 코드가 과연 안전할까? 아니요. 왜냐면 저 코드에서 만약 updateAcct() 매서드 처리 도중에&nbsp; checked exception이 발생하면 insertTrade() 매서드는 그대로 실행하고 예외도 그냥 던지고 말기 때문에 데이터가 불안전한 상태가 될 것입니다. 따라서 checked exception에 대비해서..</p>
+<p>@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)<br />
+public TradeData placeTrade(TradeData trade) throws Exception {<br />
+&nbsp;&nbsp; try {<br />
+&nbsp; &nbsp; &nbsp; insertTrade(trade);<br />
+&nbsp; &nbsp; &nbsp; updateAcct(trade);<br />
+&nbsp; &nbsp; &nbsp; return trade;<br />
+&nbsp;&nbsp; } catch (Exception up) {<br />
+&nbsp; &nbsp; &nbsp; //log the error<br />
+&nbsp; &nbsp; &nbsp; throw up;<br />
+&nbsp;&nbsp; }<br />
+}</p>
+<p>이런 식으로 하는게 좋겠습니다.
+</div>
+<p></p>

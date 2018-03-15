@@ -1,0 +1,62 @@
+---
+layout: post
+title: Schema 기반 Advice parameters
+date: 2007-04-06 03:09:03.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- Schema-based AOP
+- Spring Reference 6장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322668503'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="../../665">Advice parameters</a> 여기서 살펴봤던 것과 거의 동일합니다. args() 표현식을 사용하여 포인트컷을 정의합니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;aop:pointcut id="sellTicket2" expression="execution(* sell*(..)) and args(movie,..)"/&gt;</div>
+<p>movie라는 이름의 파라미터를 받는 메소드의 조인포인트를 가리키게 됩니다. 이걸 받아서 처리할 어드바이스를 만듭니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; public void <span style="color: rgb(255, 0, 0);">veryWelcome</span>(Movie movie){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("하이 " + movie.getName() + "보려고?");<br />&nbsp; &nbsp; }</div>
+<p>xml 파일에 설정해 줍니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;aop:aspect id="cinema" ref="aspect"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:after-returning method="afterSellTicket" pointcut-ref="sellTicket" returning="ticket"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:around method="aroundSellTicket" pointcut-ref="sellTicket"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 153, 102);">&lt;aop:before method="<span style="color: rgb(255, 0, 0);">veryWelcome</span>" pointcut-ref="sellTicket2" <span style="color: rgb(255, 0, 0);">arg-names="movie"</span>/&gt;</span><br />&lt;/aop:aspect&gt;</div>
+<p>args-names에 넣어준 값 movie는 어드바이스 역할을 하는 메소드에서 받는 메개변수 이름입니다. 테스트를 실행하면 원하던 결과를 확인할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void sellTicket() {<br />&nbsp; &nbsp; &nbsp; &nbsp; cinema.sellTicket(movie, new Date());<br />&nbsp; &nbsp; }</div>
+<p>어서 오세요. 무엇을 도와드릴까요?<br />어서 오세요. 무엇을 도와드릴까요?<br />왔어? 영화 뭐 볼껀데?<br /><span style="font-weight: bold;">하이 공공의적보려고?</span><br />감사합니다. 공공의적을 구매 하셨습니다.<br />쌩큐&nbsp; 공공의적잘봐!</p>
+<p>before중에서 가장 마지막이고 around에서 pjp.proceed 이전에 수행하는 작업을 before로 보면 예상할 수 있는 위치에 수행된 걸 확인할 수 있습니다.</p>

@@ -1,0 +1,22 @@
+<p>DataTable 예제들
+<div id="bd">
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/basic.html">Basic Table</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/enhanced.html">From Existing Markup</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/formatting.html">Custom Cell Formatting</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/nestedheaders.html">Nested Headers</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/customsort.html">Custom Sorting</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/paginated.html">Pagination over XHR</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/scrolling.html">Scrolling</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/rowselect.html">Row Selection</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/inlineediting.html">Inline Editing</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/contextmenu.html">Integration with ContextMenu</a></li>
+<li><a href="http://developer.yahoo.com/yui/examples/datatable/complex.html">Complex Table</a></li>
+</div>
+<p>이 중에서 Basic Table을 자세히 살펴 보겠습니다.</p>
+<p>샘플코드 부분 날리고, Logger 부분을 날리고, CSS 부분도 날리면 다음과 같이 보입니다.<br /><img src="/assets/ck90.jpg" class="aligncenter" width="500" height="174" alt="사용자 삽입 이미지" />
+</div>
+<p>핵심 부분의 소스코드는 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&lt;script type="text/javascript"&gt;<br /><span style="color: rgb(212, 26, 1);">var myColumnHeaders = [</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp; &nbsp; {key:"POID", abbr:"Purchase order ID", sortable:true, resizeable:true},</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp; &nbsp; {key:"Date", type:"date", sortable:true, resizeable:true},</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp; &nbsp; {key:"Quantity", type:"number", sortable:true, resizeable:true},</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp; &nbsp; {key:"Amount", type:"currency", sortable:true, resizeable:true},</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp; &nbsp; {key:"Title", type:"html", sortable:true, resizeable:true}</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">];</span><br style="color: rgb(212, 26, 1);" /><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">var <span style="color: rgb(0, 0, 0);">myColumnSet </span>= new YAHOO.widget.<span style="color: rgb(0, 0, 0);">ColumnSet</span>(myColumnHeaders);</span></p>
+<p><span style="color: rgb(153, 51, 102);">var <span style="color: rgb(0, 0, 0);">myDataSource </span>= new YAHOO.util.<span style="color: rgb(0, 0, 0);">DataSource</span>(YAHOO.example.Data.bookorders);</span><br style="color: rgb(153, 51, 102);" /><span style="color: rgb(153, 51, 102);">myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSARRAY;</span><br style="color: rgb(153, 51, 102);" /><span style="color: rgb(153, 51, 102);">myDataSource.responseSchema = {</span><br style="color: rgb(153, 51, 102);" /><span style="color: rgb(153, 51, 102);">&nbsp; &nbsp; fields: ["POID","Date","Quantity","Amount","Title"]</span><br style="color: rgb(153, 51, 102);" /><span style="color: rgb(153, 51, 102);">};</span><br /><span style="color: rgb(0, 102, 153);">var myDataTable = new YAHOO.widget.DataTable("basic", <span style="color: rgb(0, 0, 0);">myColumnSet</span>, <span style="color: rgb(0, 0, 0);">myDataSource</span>,{caption:"Whiteship: Basic Table"});</span><br />&lt;/script&gt;</div>
+<p><span style="color: rgb(212, 26, 1);">먼저 배열로 테이블의 헤더 부분을 지정하고, 그걸로 ColumnSet 객체를 만듭니다.</span><br /><span style="color: rgb(153, 51, 102);">다음은 DataSource 객체를 만들고 몇가지 속성을 설정합니다.</span><br /><span style="color: rgb(0, 102, 153);">마지막으로 위에서 만든 ColumnSet과 DataSource를 사용해서 DataTable객체를 만들면 됩니다.</span></p>

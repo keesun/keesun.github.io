@@ -1,0 +1,17 @@
+<p><a title="[http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/web/servlet/support/WebContentGenerator.html]로 이동합니다." target="_blank" href="http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/web/servlet/support/WebContentGenerator.html">http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/web/servlet/support/WebContentGenerator.html</a></p>
+<p>링크를 보면, WebContentGenerator가 해주는 일을 대략 알 수 있습니다. HTTP cache 헤더를 제어할 수 있는 옵션들을 제공해 줍니다.</p>
+<p>여러가지 속성들에 따라 HTTP cache-control 헤더 내용이 달라지는데, 그 중 중요한 녀석으로 cacheSeconds가 있습니다. 이 녀석은 기본 값이 -1로 되어 있고, 그 내용인 즉슨 cache 관련 헤더를 전혀 사용하지 않겠다는 것입니다.</p>
+<p>캐시를 유지할 기간만 설정해주면 캐시 관련 헤더들이 다시 설정 되는데, 이 떄 설정되는 녀석들 중 하나가 HTTP 1.1에 추가된 cache-control이라는 헤더입니다.</p>
+<p><a title="[http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html]로 이동합니다." target="_blank" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">스펙</a>에서는 다음과 같이 정의하고 있습니다.</p>
+<blockquote><p>The Cache-Control general-header field is used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain.</p></blockquote>
+<p>요청/응답 체인과 관련된 모든 캐싱 매커니즘이 반드시 따라야 하는 지시를 설정한다고 요약해도 될 듯 합니다.</p>
+<p>자바스크립트가 들어있는 어떤 페이지를 요청하면, 해당 자바스크립트 파일을 브라우저가 매번 읽어오는데, 그걸 좀 더 효율적으로 개선하기 위해, 자바스크립트를 어떤 url을 통해 가져오도록 src="js.do?name=base.js" 이런식으로 설정하고, 컨트롤러에서는 요청한 자바스크립트를 찾아서 response에 write해 줍니다. 이 때 캐시를 사용하도록 하는거죠. </p>
+<p>컨트롤러는 WebContentGenerator를 상속 받은 AbstractController를 상속받는 클래스를 하나 만들고, 내용은 name이라는 매개변수의 값에 해당하는 File을 읽어와서, HttpServletResponse에 쭉~ write() 해주고, 컨텐츠 타입을 자바스크립트로 response.setContentType("application/javascript"); 이렇게 설정해줍니다. 그리고 WebContentGenerator를 가 제공해주는 setCacheSeconds로 캐시를 유지할 시간 설정을 해 줍니다.</p>
+<p>파폭과 live HTTP 헤더 플러긴으로 확인해본 결과, 초기 한 번 만 js를 읽어오고 그 뒤 요청 부터는 js를 읽어오지 않았습니다.</p>
+<p>문제 1. 컨트럴러에서 자바스크립트 파일을 읽어오는 부분이 녹녹치 않더군요. @_@.. 그래서 자바스크립트가 담겨있는 폴더를 컨트롤러에 설정해줘야 합니다. 개발 환경은 사람 마다 다를테고 배포 환경도  다를텐데.. 이 값을 안 쓰는 방법(상대 경로로 웹 루트에서 부터 js 파일을 찾아가면 좋을 텐데, 제 이클립스에서 돌려보니까 이클립스 루트 폴더부터 경로를 탐색하더군요. @_@)</p>
+<p>문제 2. 자바스크립트를 요청하는 URL이 역시 개발 환경과 배포 환경 마다 다를텐데 이건 또 어떻게 해결해야 할지.. 고민입니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;script language="JavaScript" src="http://localhost:8080/js.do?name=koma.js"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/script&gt;</p>
+<p>이런 URL이 되버리는데.. 개발할 때는 이렇게 써도 돌아갈테지만, 배포하면?... @_@</p>
+<p>일단 이 두 문제가 맘에 많이 걸리네요.</p>
+<p></p>

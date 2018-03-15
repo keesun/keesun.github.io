@@ -1,0 +1,60 @@
+---
+layout: post
+title: "[웹 사이트 속도 향상 베스트 프랙티스 7] CSS expression 사용하지 않기"
+date: 2009-11-25 01:56:52.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- CSS expression
+- 웹 사이트 성능 향상
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323164955'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>http://developer.yahoo.com/performance/rules.html#css_expressions</p>
+<p>Avoid CSS Expressions</p>
+<p>tag: css</p>
+<p>CSS expression은 CSS 속성을 동적으로 설정할 수 있는 강력(하면서도 위험)한 방법이다. IE 버전5 부터 지원되기 시작했다. 예를 들어, CSS 표현식을 사용하여 배경 색을 매 시마다 다르게 설정할 수 있다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; background-color: expression( (new Date()).getHours()%2 ? "#B8D4FF" : "#F08A00" );</p>
+<p>여기 보시다시피, expression 메서드는 자바스크립트 표현식을 받아들인다. CSS 속성은 자바스크립트 표현식을 계산한 결과로 설정된다.. expression 메서드는 다른 브라우저에서는 무시된다. 따라서 여러 브라우저에 걸쳐 일관적인 경험을 제공하고자 할 때 IE에 속성을 설정하는 방법으로 유용하다.</p>
+<p>expression의 문제는 사람들이 예상한 것보다 훨씬 빈번히 계산된다는 것이다. 페이지가 렌더링 되고 크기 조절이 될 때에만 계산되는 것이 아니라, 페이지를 스크롤 하거나 사용자가 페이지 위에서 마우스를 움직일떄에도 계산한다. CSS 표현식에 카운터를 추가하여 CSS expression을 얼마나 계산했는지 추적할 수 있다. 마우스를 페이지에서 움직이면 거의 10,000 번이 넘게 계산을 수행한다.</p>
+<p>CSS expression 계산 횟수를 줄일 수 있는 방법은 딱 한 번만 expression를 수행하도록 하는 것이다. 처음 expressio을 계산할때 stype 속성을 CSS expression 대신 명시적인 값으로 교체한다. 만약 스타일 속성이 반드시 페이지가 살아있는 동안 동적으로 바뀌어야 한다면, CSS Css expression 대신 이벤트 핸들러를 사용하는것도 하나의 대안이다. 만약 반드시 Css expression을 사용해야 한다면,수 천번 계산될 거라는 것과 그로인해 페이지 성능에 영향을줄수 있다는 것을 염두하라.</p>

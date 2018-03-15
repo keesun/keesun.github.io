@@ -1,0 +1,16 @@
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-programming-models">https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-programming-models</a></p>
+<div class="paragraph">
+<p><code>spring-web</code>  모듈은 스프링 웹플러스가 올라가는 리액티브 기반 시설을 포함하고 있다. HTTP 추상화, 리액티브 스트림 서버 어댑터, 리액티브 코덱과 핵심 웹 API가 있다. 웹 API는 서블릿 API와 비슷하자먼 논-블럭킹용이다.</p>
+</div>
+<div class="paragraph">
+<p>그 기반 시설 위에서 스프링 웹플럭스는 두가지 프로그래밍 모델을 제공한다.</p>
+</div>
+<div class="ulist">
+<ul>
+<li><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-controller">애노테이션 컨트롤러</a> - 스프링 MVC와 동일하며 spring-web 모듈에서 제공하는 것과 동일한 애노테이션에 기반하고 있다. 스프링 MVC와 웹플럭스 컨트롤러 모두 리액티브 (Reactor, RxJava) 리턴 타이을 지원하기 때문에 따로 분리해서 말하긴 어렵다. 주목할만한 차이라면 웹플러그는 리액티브 @RequestBody 인자로 지원한다.</li>
+</ul>
+<ul>
+<li><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-fn">함수형 Endpoint</a> - 람다 기반의 가벼운 함수형 프로그래밍 모델이다. 애플리케이션이 요청을 라우팅하고 처리 할 때 사용할 수 있는 작은 라이브러리나 유틸리티 셋으로 생각할 수 있다. 애노테이션 컨트롤러와의 큰 차이점은 애플리케이션이 요청 처리의 처음부터 끝까지 책임진다는 점이다. 애노테이션 컨트롤러에서는 애노테이션으로 인텐트를 표현하고 컨트롤러의 코드는 프레임워크에서 나중에 호출(콜 백)되는 식이었던과 비교할 수 있다.</li>
+</ul>
+<p>&nbsp;</p>
+</div>

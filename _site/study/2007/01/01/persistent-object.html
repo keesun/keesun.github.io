@@ -1,0 +1,9 @@
+<p>참조 : Hibernate In Action 4.1.2 Persistent Obejct</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Persistent 객체는 <a href="http://whiteship.tistory.com/330" target="_blank">Database indentity</a>를 가지고 있는 객체이다.</p>
+<p>Persistent Maneger(Hibernate의 Session)에 의해 save()가 호출된 객체 or 이미 Persistent Manager와 연관이 있는 Persistent 객체에 의해 참조된 객체. &lt;= <span style="color: rgb(23, 127, 205);">persistent instances are always associated with a Session and are transactional.</span></p>
+<p><span style="color: rgb(23, 127, 205);">Persistent 객체는 트랜잭션이 끝날 때 까지 DB와 동기화된다.</span> 트랜잭션이 커밋될 때 메모리에 있던 객체의 상태가 SQL쿼리를 이용해서 DB로 보내진다. 이런 처리는 트랜잭션이 끝날 때가 아니더라도 발생할 수 있다.</p>
+<p><span style="color: rgb(23, 127, 205);">"new"라는 상태는 Persistent 객체가 주키를 가졌지만 아직 DB에 들어가지 않은 상태</span>다. 동기화가 발생하기 전까지 "new"상태가 유지된다.</p>
+<p><span style="color: rgb(23, 127, 205);">automatic dirty checking 은 트랜잭션 내에서 어떤 Persistent 객체가 수정이 되었는지 찾아내는 ORM 소프트웨어의 전략</span>이다. 하이버네이트는 애플리케이션에서 안보이게(transparent) persistent 상태의 변화를 가능한한 나중에 DB에 반영을 하는데 이것을 <span style="color: rgb(23, 127, 205);">transparent transaction-level write-behind</span> 라고 한다.</p>
+<p>하이버네이트는 어떤 속성이 변했는지 알 수 있으며 따라서 특정 컬럼만 update하는 것이 가능하다. =&gt; 이래서 <a href="http://whiteship.tistory.com/308" target="_blank">1-7. 레코드 update하기</a> 에서 session.update(pizza);를 하지 않아도 가능 했던것 같습니다.</p>
+<p>delete()를 호출하게 되면 DB table에서 객체에 해당하는 row가 삭제 되며 transient 객체가 된다.</p></div>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bl113.bmp" class="aligncenter" width="411" height="315" alt="사용자 삽입 이미지">bl113.bmp</a></p>

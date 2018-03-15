@@ -1,0 +1,37 @@
+<p>참조 : <a href="http://java.sun.com/j2se/1.5.0/docs/api/" target="_blank">http://java.sun.com/j2se/1.5.0/docs/api/</a></p>
+<p>두 개의 Lock을 제공하는 인터페이스로, 동시에 여러 쓰레드가 사용할 수 있는 읽기 Lock과 베타적인 쓰기 Lock을 제공한다.</p>
+<p>하나의 쓰레드(쓰기 쓰레드)만 공유 데이터를 변경할 수 있고, 공유 데이터를 읽으려는 쓰레드(읽기 쓰레드)는 여럿이 동시 읽을 수 있다. 이론적으로 이러한 접근이 예전의 상호베타적인 접근에 비해 성능상 좋다고 하는데, 실제로는 멀티 프로세서 환경에서 성능 향상을 볼 수 있다.</p>
+<p>정해야 할 규칙들.
+<ul>
+<li>Determining whether to grant the read lock or the write lock, when<br />
+ both readers and writers are waiting, at the time that a writer releases<br />
+ the write lock. Writer preference is common, as writes are expected to be<br />
+ short and infrequent. Reader preference is less common as it can lead to<br />
+ lengthy delays for a write if the readers are frequent and long-lived as<br />
+ expected. Fair, or "in-order" implementations are also possible.</p>
+</li>
+</ul>
+<p>=&gt; 읽기 쓰기 롹 둘 다 대기 중일 때, 어떤 것 부터 허용할지. 쓰기 부터 허용하는게 흔한데, 쓰기가 보통 짧게 끝나기 때문, 읽기부터 허용하는건 드문데 리더가 오래 걸려서. 물론 순서대로 적용하는 것도 가능함.
+<ul>
+<li>Determining whether readers that request the read lock while a<br />
+ reader is active and a writer is waiting, are granted the read lock.<br />
+ Preference to the reader can delay the writer indefinitely, while<br />
+ preference to the writer can reduce the potential for concurrency.</p>
+</li>
+</ul>
+<p>=&gt; 리더가 활성화 상태고 롸이터가 대기중일 때 리더의 리드 롹 요청할 경우 어떻게 할까. 리더를 우선시하면 롸이터는 무한대기 할지도 모른다. 쓰기를 우선시 하면 점유율을 줄일 수 있다.
+<ul>
+<li>Determining whether the locks are reentrant: can a thread with the<br />
+ write lock reacquire it? Can it acquire a read lock while holding the<br />
+ write lock? Is the read lock itself reentrant?</p>
+</li>
+</ul>
+<p>=&gt; 롹이 reentrant한지 결정. 쓰기 롹을 가진 쓰레드가 그걸 다시 요구할 수 있는지? 쓰기 롹을 가진 상태에서 읽기 롹을 얻을 수 있는지? 읽기 롹 자체가 reentrant 한지?
+<ul>
+<li>Can the write lock be downgraded to a read lock without allowing<br />
+ an intervening writer? Can a read lock be upgraded to a write lock,<br />
+ in preference to other waiting readers or writers?</p>
+</li>
+</ul>
+<p>=&gt; 쓰기 롹을 읽기 롹으로 다운그레이드 할 수 있는지? 읽기 롹을 쓰기롹으로 업그레이드 할 수 있는지?</p>
+<p>어이쿠.. 어려워 어려워; -_-;;</p>

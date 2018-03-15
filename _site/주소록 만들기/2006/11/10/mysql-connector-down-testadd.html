@@ -1,0 +1,22 @@
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1258680398.bmp" class="alignleft" width="232" height="395" alt="">1258680398.bmp</a>Java 소스코드와 MySQL을 연결하기 위한 객체를 생성하려면 JDBC 드라이버가 필요합니다. 드라이버는 <a href="http://dev.mysql.com/downloads/">다운로드 페이지</a>의 왼쪽 메뉴처럼 클릭하면 <a href="http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.0.4.zip/from/ftp://mysql.byungsoo.net/pub/mysql/">다운</a> 받으실 수 있습니다.</p>
+<p>다운로드 받은 파일의 압축을 풀면 mysql-connector-java-5.0.4-bin.jar 파일을 볼 수 있습니다. 이 jar파일을 프로젝트에 추가합니다.</p>
+<p>spring에서는 DB연결 설정을 XML 파일을 사용하여 설정할 수 있습니다. 그렇게 하려면 org.apache.commons.dbcp.BasicDataSource 이 클래스가 필요한데 이 클래스는 commons-dbcp.jar 파일에 들어있습니다. 이 jar파일은 "Spring 설치 폴더"\lib\jakarta-commons에 들어있습니다. </p>
+<p>이제 다시 Eclipse로 돌아가서 MemberRepositoryTest 클래스에 testAdd 메소드를 추가합니다. </p>
+<p>소스코드보기<br />
+[#M_ more.. | less.. | <br />
+public void testAdd() {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;Member member = createMember();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;mr.add(member);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(1, mr.getNumberOfMembers());</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;member = createMember();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;mr.add(member);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(2, mr.getNumberOfMembers());</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;member = createMember();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;mr.add(member);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(3, mr.getNumberOfMembers());<br />
+ &nbsp; &nbsp;}_M#]<br />
+MemberRepository mr;<br />
+이 멤버 변수를 class에 추가합니다. 그리고 src폴더에 MemberRepository 인터페이스와 이를 구현한 MemberRepositoryImpl 클래스를 추가합니다. MemberRepositoryImpl에서는 MemberDao를 사용하도록 멤버변수를 추가하고 MemberDao 인터페이와 이를 구현한 SqlmapMemberDao 클래스를 만듭니다. 이때 SqlmapMemberDao는 SqlMapClientDaoSupport를 상속 받도록 하여 xml을 사용하여 sql 쿼리를 보내고 결과를 받아올 수 있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1032444174.bmp" class="aligncenter" width="524" height="375" alt="">1032444174.bmp</a><br />
+클래스는 이러한 구조로 이루어집니다. SqlMapclientDaoSupport 클래스는 Spring.jar안에 들어있기 때문에 따로 특정 jar파일을 프로젝트에 추가할 필요는 없습니다.</p>
+<p></p>

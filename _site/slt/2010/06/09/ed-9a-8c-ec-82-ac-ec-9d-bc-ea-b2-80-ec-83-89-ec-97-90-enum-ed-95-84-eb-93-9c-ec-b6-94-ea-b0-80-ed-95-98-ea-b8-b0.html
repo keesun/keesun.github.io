@@ -1,0 +1,111 @@
+<p>검색 파라미터에 추가해주고 화면에 추가하고 DAO에서 검색부분 코드만 조금 바꾸면 될 것 같습니다.
+<div>
+</div>
+<div>코드 검색 파라미터를 하나의 클래스로 정의해놨기에 망정이지 이걸 개별적으로 다 핸들러 파라미터로 받아서 처리하면;;; @_@;; 컨트롤러 코드도 손대야 했을껍니다. 아마 서비스 코드도 마찬가지구요.</div>
+<div>
+</div>
+<div>
+<div></div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<div>
+public class CodeSearchParam {</div>
+<div>
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;<b>private int cateValue</b>;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;private String name;</div>
+<div>
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;private String code;</div>
+</div>
+<div id="">
+</div>
+<div id="">...</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">이렇게 CodeCate의 값을 바로 가져옵니다. 스프링 바인딩 사용해서 CodeCate 타입으로 받아도 되지만 굳이 그럴필요가 없더군요. 어차피 DB에 들어있는 값과 비교하려면 CodeCate의 value가 필요하며 화면에서도 이걸 전달해 주는데 굳이 이걸 또 포매터 사용해서 CodeCate로 바꿔서 거기서 .getValue()로 꺼내서 비교할 필요가 있나 싶더라구요. 그래서 그냥 int 타입인 cateValue를 선언했습니다.</div>
+<div id="">
+</div>
+<div id="">
+이제 화면코드로 넘어갑니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;p class="ui-widget-content"&gt;&lt;label&gt;코드종류: &lt;/label&gt;</div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;form:select path="cateValue"&gt;</b></div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;form:option value="0" label="ALL"/&gt;</b></div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;form:options items="${ref.codeCateList}" itemLabel="descr" itemValue="value"/&gt;</b></div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/form:select&gt;</b></div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/p&gt;</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">아무것도 선택하지 않았을 때 기본으로 ALL이 보일테고 그걸 선택하면 0이라는 값이 넘어가게 합니다. 뭐 이부분은 맘대로인것 같은데 그닦 맘에 들진 않아도 뭐 어쩔 수 있나요. 모든 enum마다 ALL 이라는 값을 만들기도 뭐하고.. 걍 이대로가 나은것 같습니다.</div>
+<div id="">
+</div>
+<div id="">
+DAO에서 검색 파라메터를 적용하는 부분에 코드를 추가합니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;private void applySearchParam(Criteria c, CodeSearchParam searchParam) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "code", searchParam.getCode());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CriteriaUtils.addOptionalLike(c, "name", searchParam.getName());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<b>CriteriaUtils.addOptionalEqual(c, "cate", searchParam.getCateValue()</b>);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+CriteriaUtils에 메서드를 하나 추가해 줍니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b></b></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b>&nbsp;&nbsp; &nbsp;public static void addOptionalEqual(Criteria c, String fieldName, Integer value) {</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(value != null &amp;&amp; value != 0){</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.add(Restrictions.eq(fieldName, value));</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>&nbsp;&nbsp; &nbsp;}</b></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b></b></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+끝. 오예 잘 됩니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+컨트롤러나 서비스 코드는 한줄도 건드리지 않았답니다.&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">한번 만들어 논 뒤로는 거의 본적이 없으니 어떻게 생겼는지도 기억나지 않는군요.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<img src="/assets/cfile1.uf.2001730B4C0F00394EA04E.jpg" class="aligncenter" width="400" /><img src="/assets/cfile22.uf.1571220B4C0F00397F036C.jpg" class="aligncenter" width="400" />
+</div>

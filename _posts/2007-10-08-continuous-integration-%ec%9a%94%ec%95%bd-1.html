@@ -1,0 +1,63 @@
+---
+layout: post
+title: Continuous Integration 요약 1
+date: 2007-10-08 07:05:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Reading
+tags:
+- Continuous Integration
+- 간략한 작업 순서
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879877'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조<br /><a href="http://martinfowler.com/articles/continuousIntegration.html" target="_blank">http://martinfowler.com/articles/continuousIntegration.html</a><br /><a href="http://moai.tistory.com/224" target="_blank">http://moai.tistory.com/224</a></p>
+<p>맨 첫 번째 파트인 "<a href="http://martinfowler.com/articles/continuousIntegration.html#BuildingAFeatureWithContinuousIntegration" target="_blank">Building a Feature with Continuous Integration</a>"[footnote]번역본 링크 <a href="http://moai.tistory.com/226" target="_blank">http://moai.tistory.com/226</a>[/footnote]을 살표보겠습니다.</p>
+<p>간단한 기능 하나를 지속적인 통합(CI) 환경에서 개발하는 과정을 설명하고 있습니다.</p>
+<p>1. 현재 통합되어 있는 소스 코드를 로컬 개발 컴퓨터로 다운 받는다. <br />이 것은 소스 코드 관리 시스템을 사용하여 mainline을 체크아웃 받으면 된다.</p>
+<p>2. mainline을 체크아웃 받은 working copy를 가지고 작업을 하기 시작한다.<br />기존의 코드와 테스트를 수정하기도 하고, 새로운 코드와 테스트를 추가하기도 한다.</p>
+<p>3. 작업을 완료 한 뒤, 로컬에서 빌드를 수행한다. 물론 이 빌드 과정 중에는 자동화 된 테스트를 포함하고 있다.<br />빌드와 테스트가 무사히 완료 될 때까지 코드를 수정하거나, 계속해서 개발한다.</p>
+<p>4. 이제 소스코드를 저장소에 커밋해야 한다. <br />이 때 커밋하기 전에 반드시 다른 사람이 코드를 변경했을 수도 있기 때문에 업데이트부터 해야 한다.<br />업데이트를 할 때 충돌이 발생할 수 있다. 이것은 Merge를 사용해서 해결한다.<br />업데이트를 받은 다음에 다시 로컬에서 빌드를 수행한다.<br />역시 에러가 발생하면 잡을 때 까지 수행한다.</p>
+<p>5. 커밋을 수행한 다음에는 integration machine에서 빌드 작업을 수행한다.<br />커밋이 제대로 수행되지 않았을 수도 있기 때문에 반드시 이 작업을 무사히 완료해야 모든 일이 끝났다고 할 수 있다.<br />통합 빌드는 손수 할 수도 있고, CruiseControl 같은 시스템을 사용할 수도 있다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">이렇게 작업하는 것의 장점</p>
+<p>1. 에러를 초기에 발견할 수 있다.<br />에러를 발견하면 가장 중요한 일은 그것을 해결하는 것이다.<br />자주 통합 할 수록 에러가 발생하는 반경은 좁기 때문에 에러를 잡는 것이 수월해진다.<br />2. 안정된 프로젝트 기반을 공유하고 있을 수 있다.<br />매우 잘 동작하며, 에러가 거의 없는 소프트웨어를 유지할 수 있다.</div>
+<p></p>

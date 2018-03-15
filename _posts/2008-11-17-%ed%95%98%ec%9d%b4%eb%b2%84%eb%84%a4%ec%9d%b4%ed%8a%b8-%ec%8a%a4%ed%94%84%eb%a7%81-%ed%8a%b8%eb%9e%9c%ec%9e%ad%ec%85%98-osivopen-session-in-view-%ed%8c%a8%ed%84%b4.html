@@ -1,0 +1,81 @@
+---
+layout: post
+title: 하이버네이트, 스프링, 트랜잭션, OSIV(Open Session In View) 패턴
+date: 2008-11-17 06:10:54.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- OpenSessionInViewFilter
+- OSIV
+- 스프링
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322887968'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+참조</p>
+<p>No Hibernate Session bound to thread 에러로 시작한 OSIV 얘기<br />
+<a title="[http://forum.springframework.org/archive/index.php/t-33082.html]로 이동합니다." target="_blank" href="http://forum.springframework.org/archive/index.php/t-33082.html">http://forum.springframework.org/archive/index.php/t-33082.html</a></p>
+<p>논쟁에서 언급한 HibernateTemplate API<br />
+<a title="[http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/HibernateTemplate.html]로 이동합니다." target="_blank" href="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/HibernateTemplate.html">http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/HibernateTemplate.html</a></p>
+<p>스프링의 OpenSessionInViewFilter API<br />
+<a title="[http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/support/OpenSessionInViewFilter.html]로 이동합니다." target="_blank" href="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/support/OpenSessionInViewFilter.html">http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/orm/hibernate3/support/OpenSessionInViewFilter.html</a></p>
+<p>하이버네이트 위키 OSIV<br />
+<a title="[http://www.hibernate.org/43.html]로 이동합니다." target="_blank" href="http://www.hibernate.org/43.html">http://www.hibernate.org/43.html</a></p>
+<p>손권남님의 OSIV 정리<br />
+<a title="[ http://kwon37xi.springnote.com/pages/1075048]로 이동합니다." target="_blank" href="http://kwon37xi.springnote.com/pages/1075048">http://kwon37xi.springnote.com/pages/1075048</a></p>
+<p>InfoQ에서 Spring In Production 요약한 것<br />
+<a href="http://www.infoq.com/news/2007/11/spring-production" target="_blank">http://www.infoq.com/news/2007/11/spring-production</a></p>
+<p>댓글에 보면 OSIV 패턴이 안티 패턴인가에 대한 내용이 있음<br />
+<a href="http://blog.springsource.com/2007/11/09/download-the-spring-in-production-white-paper/" target="_blank">http://blog.springsource.com/2007/11/09/download-the-spring-in-production-white-paper/</a></p>
+<p>Tip4에서 OSIV 패턴은 안티 패턴이라고 한다.<br />
+<a href="http://www.realsolve.co.uk/site/tech/orm-performance.php" target="_blank">http://www.realsolve.co.uk/site/tech/orm-performance.php</a></div>
+<p>
+이미 세션이 닫힌 상태에서 뷰에서 Detached 객체에서 아직 로딩하지 않은 객체에 접근하면 에러(LazyInitializationException)가 발생합니다. 이 에러는 정상적인 에러죠. 하이버네이트 맵핑을 Lazy loading으로 최소한의 객체만 로딩하도록 하고 필요할 때 연관을 맺고 있는 객체를 추가로 가져오도록할 때 흔히 발생하는 아주 정상적인 에러입니다.</p>
+<p>이런 상황을 극복하려면 필요한 객체를 미리 팻치(Eager Fatch)해둔 상태로 로딩하는 메소드를 DAO쪽에 구현해서 뷰에서 추가로 세션을 사용할 필요없이 뷰 랜더링을 마치도록 하면 되기도 하고.. </p>
+<p>아니면 OSIV 패턴을 사용해서, 인터셉터나 필터를 적용해서 뷰를 완전히 랜더링 할 때까지 세션을 열어 두는 겁니다. 그럼 뷰를 랜더링 하다가 필요한 객체가 있으면 세션을 사용해서 로딩할 수 있겠죠. 그럼 위의 방법처럼 DAO에 이른 팻치를 해서 가져오는 별도의 메소드나 쿼리를 만들지 않아도 되겠죠.</p>
+<p>흠.. 하지만 뷰에서 자신도 예측하지 못한 쿼리가 계속 발생할 여지도 있고, 웹 단에서 데이터 캡슐화를 깨기 때문에 OSIV를 안티패턴으로 보고 사용을 최소화 해야 한다는 주장도 있습니다.</p>
+<p>스프링 + 하이버네이트 조합을 쓸 때 OpenSessionInViewFilter를 자주 사용하는데, 이 API는 아주 잘 봐둘 필요가 있습니다. 그 중에서 가장 주목해야 할 부분은 다음과 같습니다.</p>
+<p>1. 기본 플러시 모드는 FlushMode.NEVER입니다. NEVER는 deprecated 됐는데, 아직 사용하고 있습니다. 이 걸 왜 주의해야 하냐면, OSIV를 등록하고 만약 서비스 계층에 @Trasaction을 설정하지 않았다고 해봅시다. 그럴 때 트랜잭션 처리는 됩니다. 왜냐면 OSIV 때문이죠. 요청이 들어오면 해당 요청을 처리할 쓰레드에 새로운 세션 만들고 그걸로 트랜잭션 만들어서 쓰기 때문에 트랜잭션은 있는데 문제는 플러시 모드가 NEVER라서 명시적으로 flush()를 호출하기 전까지는 절대로 DB에 반영이 안 됩니다.</p>
+<p>2. Conversation을 하나의 세션을 늘리는 방법(extending a sesion for conversation)으로 구현할 경우에, persistence 객체의 reassociation을 최대한 요청 처리 초기에 해야 합니다. 안 그럼 나중에 동일한 객체가 또 있다고 충돌 날 수가 있습니다. 이 문제에 대응하기 위해서 singleSession이라는 옵션에 false 값을 줄 수도 있지만, 그렇게 하면 매 요청 마다 새로운 Session 만들어서 사용하겠다는 것이고 Conversation을 구현하는 다른 방법(detached 객체를 가지고 구현하는 방법)으로 구현해야 될 것 같습니다. 즉 코딩할 때 조금 주의해서 단일 세션으로 Conversation을 사용할 것이냐, 아님 단순하게 요청 마다 새로운 세션으로 만들고 객체들을 붙였다 띄었다 할 것이냐 인데.. 필요한 객체를 계속 하나의 세션에 들고 유지하는게 좀 더 효율적이지 않을까 싶네요.</p>
+<p></p>

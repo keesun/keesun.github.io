@@ -1,0 +1,11 @@
+<p>참조: Effecive Java 2nd Edition. Item 12: Consider implementing Comparable</p>
+<p>compareTo는 Comparable 인터페이스가 제공한다. Object의 equals와 비슷하지만, 순서 비교가 가능하며, 동일성 여부도 알 수 있고 generic하다.(어떤 의미에서 generic 하다는 거지?) 이 인터페이스를 구현한 클래스는 정렬이 가능한 것으로 인식한다. 따라서 이 클래스 타입의 배열을 다음과 같이 정렬할 수 있다.</p>
+<p>Arrays.sort(a);</p>
+<p>String은 Comparable 인터페이스 구현했다. 알파벳 순으로 정렬 쉽게 할 수 있다.</p>
+<p>public interface Comparable&lt;T&gt; {<br />&nbsp; int compareTo(T t);<br />}</p>
+<p>Generic 사용해서 타입 제한 할 수 있다.</p>
+<p>제약사항<br />- 넘어온 객체보다 작을 떄는 음수 반환, 같으면 0 반환, 크면 양수 반환.<br />- 음수일 땐 -1, 같을 땐 0, 양수일 땐 1을 반환하는 함수 sgn(expression)이 있을 때<br />&nbsp; -&nbsp; sgn(x.compareTo(y)) == -sgn(y.compare-To(x))<br />&nbsp; - (x.compareTo(y) &gt; 0 &amp;&amp; y.compareTo(z) &gt; 0)이면, x.compareTo(z) &gt; 0<br />&nbsp; - x.compareTo(y) == 0 이때, sgn(x.compareTo(z)) == sgn(y.compareTo(z))<br />&nbsp;- 권고 사항: equals 비교 했을 때 같은 객체끼리는 compareTo 결과가 0이어야 한다.</p>
+<p>구현하기<br />- equals와 비슷하지만 타입 확인할 필요 없다.<br />- 캐스팅도 필요없다.<br />- null 일 떈, NullPointerException 던진다.<br />- 각각의 필드를 비교한다.</p>
+<p>샘플</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public int compareTo(PhoneNumber pn) { <br />&nbsp; // Compare area codes<br />&nbsp; if (areaCode &lt; pn.areaCode)<br />&nbsp; &nbsp; return -1;<br />&nbsp; if (areaCode &gt; pn.areaCode)<br />&nbsp; &nbsp; return&nbsp; 1;<br />&nbsp; ...</p>
+<p>}</p></div>

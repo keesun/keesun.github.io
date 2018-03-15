@@ -1,0 +1,65 @@
+---
+layout: post
+title: Singleton & Prototype
+date: 2007-03-09 06:07:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Bean Scope
+- Spring Reference 3장
+meta:
+  arkayne-time-post: '1323013601'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>&lt;bean /&gt; 엘리먼트의 scope 속성을 사용하여 bean의 scope을 지정해 줄 수 있습니다. default 값은 singleton입니다.<br /><img src="{{ site.baseurl }}/assets/dk76.png" class="aligncenter" width="500" height="248" alt="사용자 삽입 이미지" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="email2" class="beanConfiguration.Email" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="keesun6" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="email" ref="email2" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="keesun7" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="email" ref="email2" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>위와 같이 설정 해뒀다면 keesun6과 keesun7 이라는 Member bean은 같은 email 객체를 가지게 됩니다. 그래서 아래 처럼 원하지 않는 일이 발생할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">@Test public void singletonScope(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun6 = getMember("keesun6");<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun7 = getMember("keesun7");<br />&nbsp; &nbsp; &nbsp; &nbsp; Email email6 = keesun6.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; Email email7 = keesun7.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(email6, email7);<br />&nbsp; &nbsp; &nbsp; &nbsp; String emailAddress = "hi@email.com";<br />&nbsp; &nbsp; &nbsp; &nbsp; email6.setAddress(emailAddress);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(emailAddress, email7.getAddress());<br />&nbsp; &nbsp; }</div>
+<p>email2 bean의 scope을 prototype으로 지정해 줍니다.<br /><img src="{{ site.baseurl }}/assets/ck66.png" class="aligncenter" width="500" height="248" alt="사용자 삽입 이미지" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;!-- prototype --&gt;<br />&nbsp; &nbsp; &lt;bean id="email3" class="beanConfiguration.Email" scope="prototype"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="keesun8" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="email" ref="email3" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="keesun9" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="email" ref="email3" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>다음의 테스트를 통해서 email3 bean이 참조 대상 마다 생긴 것을 확인 할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void prototypeScope(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun8 = getMember("keesun8");<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun9 = getMember("keesun9");<br />&nbsp; &nbsp; &nbsp; &nbsp; Email email8 = keesun8.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; Email email9 = keesun9.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotSame(email8, email9);<br />&nbsp; &nbsp; }</div>
+<p>번외.. ref 에서 자동 완성 기능 사용 시 스크린 샷<br /><img src="{{ site.baseurl }}/assets/dk73.jpg" class="aligncenter" width="500" height="193" alt="사용자 삽입 이미지" />역시.. 좋아요.</p>

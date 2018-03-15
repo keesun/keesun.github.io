@@ -1,0 +1,59 @@
+---
+layout: post
+title: Java 6에서 @Override
+date: 2007-10-01 03:35:16.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- "@Override"
+- Eclipse
+- Java 6
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323121461'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이 애노테이션은 Java 5에 추가된 것입니다. 아시죠?</p>
+<p>상속받은 메소드를 재정의 했는지 표현하기 위해서 사용하며 컴파일 할 때 진짜로 해당 메소드가 상위 클래스의 메소드를 오버라이딩 하고 있는 것인지 확인해서, 만약 그렇치 않다면(메소드 시그너처가 다른 경우) 에러 메시지를 보여줍니다.</p>
+<p>그런데, <span style="background-color: rgb(255, 218, 237); color: rgb(255, 0, 0);">Java 6에서는 인터페이스를 구현한 메소드에도 붙여 줄 수 있습니다.</span> Eclipse 3.3에서 Java 6를 무심코 사용하고 계셨다면 어느날 다음과 같은 이상한 에러를 볼 수도 있습니다.<br /><img src="{{ site.baseurl }}/assets/dn388.jpg" class="aligncenter" width="506" height="96" alt="사용자 삽입 이미지" /><br />sayGreeting은 인터페이스를 구현하는 메소드 입니다. 애노테이션을 없애거나 Super type에 이 메소드를 정의하라고 합니다. 내참.. 왜이러지? 인터페이스 구현한 건데 왜 @Override를 붙여놨지? 라고 생각하고 없애지 말고 다시 한번 위의 단락에 제가 적어 둔 것을 읽으시기 바랍니다. Java 6에서는 이상한 일이 아닙니다.</p>
+<p>프로젝트가 사용하고 있는 JDK 버전을 살펴봤습니다.<br /><img src="{{ site.baseurl }}/assets/dn389.jpg" class="aligncenter" width="247" height="363" alt="사용자 삽입 이미지" />6.0이자네.. 근데 왜이러는 거야..<br />아차!.. 저것은 그냥 참조하는 라이브러리를 보여주고 있을뿐. 실제 컴파일러는 아니잖은가..</p>
+<p>프로젝트를 선택한 상태에서 "Alt + 엔터" 클릭하고 왼쪽 메뉴에서 Java Compiler를 선택합니다.<br /><img src="{{ site.baseurl }}/assets/co403.jpg" class="aligncenter" width="600" height="543" alt="사용자 삽입 이미지" />이런..컴파일 레벨이 5.0이였네요. 6.0으로 바꿔주면 에러는 사라집니다. peace~</p>
+<p></p>

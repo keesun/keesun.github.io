@@ -1,0 +1,60 @@
+---
+layout: post
+title: "[웹 사이트 속도 향상 베스트 프랙티스 2] CDN(Content Delivery Network) 사용하기"
+date: 2009-11-17 12:39:00.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 성능 향상
+- 웹 사이트 최적화
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323126140'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a title="[http://developer.yahoo.com/performance/rules.html#cdn]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#cdn">http://developer.yahoo.com/performance/rules.html#cdn</a></p>
+<p>Use a Content Delivery Network</p>
+<p>tag: server</p>
+<p>여러분 웹 서버에 대한 사용자 접근은 응답 시간에 영향을 준다. 컨텐츠를 여러개로 분산되어 있는 서버에 배포한다면 사용자 시점에서 페이지 로딩을 빠르게 할 수 있다. 하지만 무엇부터 시작해야 할까?</p>
+<p>지리학적으로 분산되어 있는 컨텐트(geographically dispersed content)를 구현할 때 제일 먼저 할 것은, 여러분의 웹 애플리케이션을 분산 아키텍처로 다시 설계하는 짓을 하지 않는 것이다. 애플리케이션에따라, 아키텍처의 변경은 여러 곳에 위치한 서버를 넘나드는 '세션 상태 동기'와 '데이터베이스 트랜잭션 복사' 작업의 압박을 받을 수 있다. 사용자와 컨텐츠 사이의 거리를 좁히려는 시도는 그러한 애플리케이션 아키텍처 변경 단계로 말미암아 연기 되거나 그 단계를 못 벗어날지도 모른다.</p>
+<p>기억할 것은 80-90%의 최종 사용자 응답 시간은 페이지의 컴포넌트들(이미지, 스타일시트, 스크립트, 플래시 등)을 다운로드 하는데 소비 된다는 것이다. 바로 이것이 성능에 있어서 황금 법칙이다. 여러분 애플리케이션 아키텍처를 다시 설계하는 어려운 작업부터 시작하지 말고, 정적인 컨텐츠들을 분리하는 것부터 먼저 하는 것이 더 좋다. 응답 시간을 크게 줄여줄 뿐 아니라, 고마운 CDN 덕분에 그 작업도 쉽다.</p>
+<p>CDN은 보다 효율적으로 사용자에게 컨텐츠를 제공하기 위해 여러 곳으로 분산되어 있는 웹 서버 집합이다. 특정 사용자에게 컨텐츠를 제공할 서버는 기본적으로 네트워크 접근성 측정을 기반으로 선택된다. 예를 들어, 가장 낮은 네트워크 홉(hop)을 가지고 있거나 가장 빠른 응답 시간을 가지고 있는 것이 선택된다.</p>
+<p>몇몇 대규모 인터넷 회사들은 자신들의 CDN을 가지고 있지만, <a title="[http://www.akamai.com/]로 이동합니다." target="_blank" href="http://www.akamai.com/">Akamai Technologies</a>, <a title="[http://www.mirror-image.com/]로 이동합니다." target="_blank" href="http://www.mirror-image.com/">Mirror Image Internet</a>, <a title="[http://www.limelightnetworks.com/]로 이동합니다." target="_blank" href="http://www.limelightnetworks.com/">Limeight Networks</a> 같은 CDN 서비스 제공자를 사용하는 것이 비용적으로 효율적이다. 신생 회사나 개인적인 웹 사이트의 경우 CDN 서비스 비용이 비쌀수도 있지만, 여러분의 대상 고객이 점점 증가하고 점점 글로벌화 됨에 따라, 첫 응답 시간을 높이기 위해 CDN이 필요해질 것이다. 야후에서 정적인 컨텐츠를 웹 서버에서 CDN으로 옮김으로써 사용자 응답 시간을 20% 이상 향상 시켰다. CDN으로 바꾸는데 필요한 것은 여러분의 웹 사이트 속도를 극적으로 향상시키는것에 비해 상대적으로 간단하게 코드를 변경하기만 하면 된다.</p>

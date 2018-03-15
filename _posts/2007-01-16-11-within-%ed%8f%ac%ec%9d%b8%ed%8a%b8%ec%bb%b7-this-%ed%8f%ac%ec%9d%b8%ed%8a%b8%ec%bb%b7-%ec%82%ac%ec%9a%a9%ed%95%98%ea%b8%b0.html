@@ -1,0 +1,85 @@
+---
+layout: post
+title: 11. within 포인트컷 & this 포인트컷 사용하기
+date: 2007-01-16 10:21:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- AspectJ
+- this 포인트컷
+- within 포인트컷
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323107141'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>within(Type)은 Type 안에 클래스 타입을 넣어줍니다. 그러면 그 클래스에 있는 메소드가 실행되는 시점들(Join point)을 포인트컷으로 묶습니다.</p>
+<p>이번 예제 소스는 아래 파일에 있습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl193.zip" class="aligncenter">bl193.zip</a></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@Aspect</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> MannerAOP {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2" /><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@Pointcut</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"within(Keesun) || within(Youngkun)"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">)</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> sayGoodBye(){}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2" /><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@AfterReturning</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"sayGoodBye()"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">)</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> say(){</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>System.</span><i><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">out</span></i><span style="color: black; font-family: 'Courier New';" lang="EN-US">.println(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"</span><span style="color: rgb(42, 0, 255);"><font face="맑은 고딕">안녕히</font></span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';"> </span><span style="color: rgb(42, 0, 255);"><font face="맑은 고딕">가세요</font></span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">."</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US">}</span></font></font></p>
+</div>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left">여기서 @Pointcut(within(Keesun) || within(Youngkun))[footnote]Pointcut들에 ||, &amp;&amp;, ! 연산을 할 수 있으며 의미는 알고 계신 의미와 동일합니다.[/footnote] 은 Keesun 클래스와 Youngkun클래스의 메소드를 호출하는 모든 Join point를 나타내게 됩니다. </p>
+<p>두 클래스 모두 Human이라는 클래스를 구현하였기 때문에 within(Human)으로 하고 싶지만 Human은 인터페이스 이기 때문에 객체를 만들수 없으며 따라서 Human 객체의 메소드를 호출할 수도 없고 그럴 일도 없기 때문에 적용이 되지 않습니다. 이럴 때는 this를 사용합니다. 다음과 같이 수정하시면 위의 코드와 동일 한 결과를 얻을 수 있습니다.</p>
+<p><font size="2"><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US"></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@Aspect</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> MannerAOP {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@Pointcut</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"this(Human)"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">)</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> sayGoodBye(){}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(100, 100, 100); font-family: 'Courier New';" lang="EN-US">@AfterReturning</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"sayGoodBye()"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">)</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> say(){</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>System.</span><i><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">out</span></i><span style="color: black; font-family: 'Courier New';" lang="EN-US">.println(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"</span><span style="color: rgb(42, 0, 255);"><font face="맑은 고딕">안녕히</font></span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';"> </span><span style="color: rgb(42, 0, 255);"><font face="맑은 고딕">가세요</font></span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">."</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</font></span></p>
+</div>
+<p></span></font><br /></p>

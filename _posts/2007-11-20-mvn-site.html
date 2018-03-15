@@ -1,0 +1,55 @@
+---
+layout: post
+title: mvn site
+date: 2007-11-20 01:07:28.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- site
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322781429'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Maven에서 제공하는 빌드 라이프사이클 단계<font size="1">Phase</font> 중에서 site를 사용하면, 프로젝트에 대한 정보를 보여주는 html 파일을 작성해 줍니다. 참고로 빌드 라이프사이클 단계를 실행 할 때마다 관련된 플러그인과 해당 플러그인이 참조하는 jar 파일들을 다운로드 하느라 다소 시간이 소요됩니다.<br /><img src="{{ site.baseurl }}/assets/gk0.png" class="aligncenter" width="336" height="421" alt="사용자 삽입 이미지" /><br />실행을 마치고, 프로젝트를 다시로딩<font size="1">Refresh</font> 해주면, target 폴더에 다수의 html 파일이 생성된 것을 확인할 수 있습니다. 그 중에서 index.html을 열어보겠습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek1.png" class="aligncenter" width="600" height="169" alt="사용자 삽입 이미지" />첫 화면은 위와 같습니다. 왼쪽의 메뉴를 보니, 공부할 것이 태산 같다는 생각이 듭니다. Continuous Integration. 와우.. CI 툴과 연동하면, 그 결과를 이 페이지에서 참조할 수 있을 것 같습니다. Dependencies<br />&nbsp;<img src="{{ site.baseurl }}/assets/ek2.png" class="aligncenter" width="600" height="176" alt="사용자 삽입 이미지" />Dependencies를 보시면, 현재 JUnit만 정의해 두었기 때문에, 썰렁하지만 추이적 종속성과 그 모습을 그래프로 볼 수 있다는 사실이 재밌어 보입니다.</p>
+<p>이 밖에도, 이슈 트래킹, 메일링 리스트, 프로젝트 요약정보, 프로젝트 팀, 소스 저장소 등의 메뉴가 있습니다. 미루어 짐작해볼 때, CI도 설치하고, SVN도 설치하고, 이슈트래커도 설치하여 Maven에서 참조할 수 있게 설정해두면 정말 좋겠네요.</p>

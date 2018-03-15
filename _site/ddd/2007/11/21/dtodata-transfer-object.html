@@ -1,0 +1,9 @@
+<p>참조 : <br /><a href="http://martinfowler.com/eaaCatalog/dataTransferObject.html" target="_blank">http://martinfowler.com/eaaCatalog/dataTransferObject.html</a><br /><a href="http://en.wikipedia.org/wiki/Data_Transfer_Object" target="_blank">http://en.wikipedia.org/wiki/Data_Transfer_Object</a><br /><a href="http://www.theserverside.com/discussions/thread.tss?thread_id=32389" target="_blank">http://www.theserverside.com/discussions/thread.tss?thread_id=32389</a></p>
+<p>찬욱군이 요즘 DTO Assembler를 만들고 있는 것 같습니다. 저는 DTO 개념이 없기 때문에, 오히려 더 복잡해 보이는데 왜 저렇게 해야 되는거지 궁금해 했습니다. 대체 DTO가 뭐길래...그래서 찾아봤습니다.</p>
+<p><img src="/assets/gk3.gif" class="aligncenter" width="509" height="183" alt="사용자 삽입 이미지" />위 그림은 첫 번째 링크 마틴 파울러 eaa 카탈로그에서 가져왔습니다. 원격 호출을 할 때 호출의 수를 줄이려면, 한 번에 여러 객체를 가져와야 하는데, 메소드가 오직 하나의 객체만 반환할 수 있는 자바같은 언어들은 그런 것이 불가능하기 때문에 고안한 것이 DTO 입니다.</p>
+<p>즉, 필요한 정보만 모아놓은 객체가 되겠죠. 따라서 서버 측에서는 이런 객체(DTO)를 지원하기 위해 여러 객체의 정보를 가지고 DTO를 만들어주는 Assembler라는 녀석을 제공해야 하고, 지금 찬욱군이 이 녀석을 만들고 있는 것 같습니다.</p>
+<p>두 번째 링크인 위키피디아의 정의를 보면, DAO, 비즈니스 도메인 객체(DO), 그리고 DTO의 차이를 매우 간략하게 말해주고 있습니다.</p>
+<p>The difference between Data Transfer Objects and Business Objects or Data Access Objects is that <span style="font-weight: bold;">DTOs do not have any behaviour except for storage and retrieval of its own data</span> (accessors and mutators).</p>
+<p>무언가 혼란스러움이 생기기 시작합니다. 이제까지 도메인 객체(DO)라고 구현했던 녀석들과 DTO와의 차이가 없습니다. 그 녀석들(DO)도 단순하게 프로퍼티와 세터 게터만 가지고 있었으니까요. 그럼 DTO와 별단 차이가 없기 때문이죠. 이것참... 어쩐지 도메인 객체가 너무 횡하다 했습니다. </p>
+<p>MemberDao.save(Member) 같은 메소드는 뭔가 어색하고 Member.join() 하면 그냥 DB 저장이 되야 어색하지 않은데 말이죠. MemberService.getMember(id)를 호출하면, Member 도메인 객체가 아니라, 사용자가 보기 원하는 정보만을 담은 Member DTO를 넘겨주는 것이였군요. 이런식으로 하면 도메인 객체 계층을 눞힐 수 있겠군요.(세워두는 것이 아니라..) <a href="http://chanwook.tistory.com/528" target="_blank">찬욱군이 그린 ROO 아키텍처</a>가 이해가 가기 시작합니다.</p>
+<p>저는 저 위의 그림의 Assembler보다 Facade가 더 궁금하네요. 역시 그림도 좋은데 코드가 있어야... 좀 더 명확할텐데 말이죠. DTO와 Assembler 그리고 Facade를 잘 활용한 애플리케이션 코드를 보고 싶네요.</p>

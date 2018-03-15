@@ -1,0 +1,67 @@
+---
+layout: post
+title: Spring Web Flow 2.0 특징
+date: 2008-04-26 02:11:49.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- spring web flow
+- Web Flow 2.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323132551'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.infoq.com/news/2008/04/spring-webflow-2rc" target="_blank">http://www.infoq.com/news/2008/04/spring-webflow-2rc</a><br />예제 : <a href="http://richweb.springframework.org/swf-booking-faces/spring/intro" target="_blank">http://richweb.springframework.org/swf-booking-faces/spring/intro</a></p>
+<p><span style="font-weight: bold;">Web Flow 2.0의 새로운 기능은?</span></p>
+<p>- Progressive Ajax:&nbsp; Ajax 이벤트 핸들링 기능을 추가했다. 다른 웹 플로우 이벤트처럼 Ajax 이벤트를 처리할 수 있다. 자바스크립트를 클라이언트 쪽에서 사용하지 않아도 제대로 동작하도록해놨다. Ajax 지원 기능은 서버쪽 기능과 클라이언트쪽 기능 둘로 나눠져있다.</p>
+<p>- Spring MVC와 더 긴밀한 통합: Spring MVC와 상호 보완 관계이다. Stateless한 Spring MVC @Controller가 Folw를 호출할 수 있고 Flow의 결과가 컨트로러에 맵핑될 수 있다. </p>
+<p>- 재구성하고 확장된 JSF와의 통합: JSF 내용은 패스 저도 잘 모르기 땜시..</p>
+<p>- Spring Security아의 통합: 플로우에 보안 기능을 추가할 수 있다. 플로우, 스테이트, 트랜지션에 @Secured를 애노테이션을 붙이면 SecurityFlowExecutionListener가 사용자의 인증을 요구한 뒤에 플로우를 시작하고, 스텝을 진행하고 이벤트를 시작할 것이다.</p>
+<p>- 보다 간단한 Spring Folw Definition Language: 200줄 가량의 코드와 6개의 파일이 필요한 애플리케이션이 동일한 기능을 이제는 93라인의 코드와 2개의 파일로 할 수 있다.</p>
+<p>- 새로운 모듈화 기능: 플로우의 개념을 "재사용 가능하며, 독립적인 애플리케이션 컨트롤 모듈"로 확장했다. 따라서 기본적으로 플로우와 그것이 사용하는 리소스인 뷰, 메시지, 헬퍼등을 하나로 패키징된다. </p>
+<p><span style="font-weight: bold;">이번 배포의 배경이 되는 철학은 무엇인가?</span></p>
+<p>- 사용성 편의다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1.0에서 2.0으로 이전하는데 필요한 중대 변화는?</span></p>
+<p>- Web Flow Definition Language다. 그래서 1.0 정의를 2.0으로 바꿔주는 기능을 제공한다. 일명 WebFlowUpgrader xnf.</p>
+<p><span style="font-weight: bold;">스프링 웹 플로우를 지원하는 도구는?</span></p>
+<p>- 스프링 IDE</p>
+<p><span style="font-weight: bold;">앞으로 웹 플로우의 개발 방향과, 2.1 배포의 초점은?</span></p>
+<p>- 선언적인 모델 검증. 애노테이션으로 Validation을 할 수 있도록.. 선언적으로 모델에 벨리데이션 규칙을 붙여두면, 그것을 서버 사이드와 클라이언트 사이드에 반영해주는.. <br />- Grooby로 Flow Definition 작성하는 기능.</p>

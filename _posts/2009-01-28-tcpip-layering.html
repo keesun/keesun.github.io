@@ -1,0 +1,67 @@
+---
+layout: post
+title: TCP/IP Layering
+date: 2009-01-28 02:10:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- The Protocols
+tags:
+- ARP
+- icmp
+- IGMP
+- IP
+- RARP
+- tcp
+- UDP
+- 프로토콜
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323153276'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>TCP/IP 프로토콜 스위트에서는 여러 프로토콜이 있다.</p>
+<p><img src="{{ site.baseurl }}/assets/497fbad1b7592BC.png" class="aligncenter" width="512" height="515" alt="사용자 삽입 이미지" />TCP/IP 프로토콜 스위트에서 각 계층에서 사용하는 다양한 프로토콜들..</p>
+<p>TCP와 UDP는 가장 널리 사용되고 있는 전송 계층 프로토콜로 둘 다 네트워크 계층으로 IP를 사용한다.</p>
+<p>TCP는 자신이 사용하는 서비스(IP)가 비록 신뢰할 수 없음에도 불구하고 신뢰할 수 있는 전송 계층을 제공한다. 17~22장에서 자세히 살펴봄. 텔넷(26장), FTP(27장), SMTP(28장)</p>
+<p>UDP는 애플리케이션데 대한 데이터그램을 주고 받는다. 데이터그램은 정보 단위로(보내는 쪽에서 정의한 정보를 몇몇 바이트로 나타낸것) 보내는 쪽에서 받는 쪽으로 전송된다. TCP와는 달리 데이터그램이 최종 목적지로 갈 것이라는 보장을 할 수 없다. 11장에서 자세히 살펴봄. DNS(14장), TFTP(15장), Bootstrap Protocol(16장)에서 UDP를 사용하는 애플리케이션 몇 개를 살펴본다.</p>
+<p>IP는 네트워크 계층의 핵심 프로토콜로 TCP와 UDP가 이것을 사용한다. 모든 TCP와 UDP 데이터는 IP 계층을 통해서 종단 시스템과 모든 중계 라우터를 거쳐간다. 그림을 보면 애플리케이션에서 IP 계층에 직접 접근하는 모습도 보인다. 이는 드물지만 가능하다. 3장에서 IP를 살펴보고 9, 10장에서 IP 라우팅을 살펴본다.</p>
+<p>ICMP는 IP의 부속물로. IP 계층에서 에러 메시지와 다른 호스트 또는 라우터에 있는 중요한 정보 변환에 사용된다. 6장에서 자세히 살펴본다. IP가 주로 사용하며 애플리케이션에서 직접 접근하는 것도 가능하다. ICMP를 사용하는 두 가지 주요 진단 도구인 Ping과 Tracerout를 7, 8장에서 살펴본다. </p>
+<p>IGMP는 인터넷 그룹 관리 프로토콜로 UDP 데이터그램을 여러 호스트에 보내는 멀티캐스팅(multicasting)이 사용한다. 브로드캐스팅과 멀티캐스팅은 12장에서 다루고 IGMP에 대해서는 13장에서 다룬다.</p>
+<p>ARP(Address Resolution Protocol)와 RARP(Reverse Address Resolution Protocol)은 (이더넷과 토큰링 같은) 특정 타입의 네트워크 인터페이스에서 사용한다. 이 프로토콜들을 사용하여 IP 계층에서 사용하는 주소와 네트워크 인터페이스에서 사용하는 주소를 변환한다. 4, 5장에서 이를 다룬다.</p>

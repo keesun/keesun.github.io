@@ -1,0 +1,90 @@
+<div id="">
+참조:&nbsp;<a href="http://download.fr.forge.objectweb.org/asm/asm-guide.pdf" target="_blank" title="[http://download.fr.forge.objectweb.org/asm/asm-guide.pdf]로 이동합니다.">http://download.fr.forge.objectweb.org/asm/asm-guide.pdf</a></div>
+<div id="">
+</div>
+<div id="">
+- 프로그램 분석: 파싱에서 부터 애플리케이션의 잠재적인 버그를 찾거나, 사용하지 않는 코드나 역공학에 사용할 수 있다.</div>
+<div>- 프로그램 생성: 일반 컴파일러나 Just in Time 컴파일러 같이 분산 프로그래밍에서 사용할 스텁, 스켈레톤 컴파일러가 사용할 프로그램을 작성한다.</div>
+<div id="">- 프로그램 변경: 프로그램을 최적화 하거나 AOP같이 성능 모니터링 이나 디버깅용 코드를 추가한다.</div>
+<div id="">
+</div>
+<div id="">
+자바 소스 코드보다 컴파일된 자바 클래스를 사용할 때 얻을 수 있는 장점</div>
+<div id="">- 소스코드가 필요 없다</div>
+<div id="">- JVM에 로딩 되기 전에 분석, 생성, 변경 할 수 있다.(소스 코드도 가능하지만 느리고 완전한 컴파일러가 필요하다)</div>
+<div id="">- 스텁 컴파일러나 Aspectj 위버 사용이 사용자로부터 감춰진다.</div>
+<div id="">
+</div>
+<div id="">
+ASM도 그런 툴 중 하나로 컴파일 된 클래스를 사용하도록 설계되었다.</div>
+<div id="">최대한 빠르고 작게 설계했다.</div>
+<div id="">- 빨라야 런타임에 애플리케이션이 느려지지 않으니까</div>
+<div id="">- 작아야 메모리 소비가 적을테니까</div>
+<div id="">
+</div>
+<div id="">
+ASM 주요 장점</div>
+<div id="">- 간단하다. 잘 설계되어 있고 모듈화된 API가 있어서 사용하기 쉽다. (근데 나에겐 왜케 어려운건지.. OTL)</div>
+<div id="">- 문서화가 잘 되어 있고 Eclipse 플러그인도 가지고 있다. (홈피에 있는 문서 중에서는 이것밖에 볼만한게 없던데..)</div>
+<div id="">- 자바 최신 버전(Java 6)을 지원한다.</div>
+<div id="">- 작고 빠르고 견고하다.</div>
+<div id="">- 다수의 사용자 커뮤니티가 있으니 새로운 사용자를 도울 것이다.</div>
+<div id="">- 오픈 소스니까 맘대로 쓸 수 있다.</div>
+<div id="">
+</div>
+<div id="">
+ASM 목적</div>
+<div id="">- 바이트 배열로 표현되는 컴파일 된 자바 클래스를 생성, 변형, 분석 한다.</div>
+<div id="">- 클래스 로딩 프로세스는 범위에 속하지 않는다.</div>
+<div id="">
+</div>
+<div id="">
+두 종류 API를 제공한다.</div>
+<div id="">- core API: 이벤트 기반 표현체</div>
+<div id="">- tree API: 객체 기반 표현체</div>
+<div id="">
+</div>
+<div id="">
+이벤트 기반 모델</div>
+<div id="">- 연속적인 이벤트로 클래스를 표현한다.</div>
+<div id="">- 각 이벤트는 클래스의 특정 구성 요소를 나타낸다.</div>
+<div id="">- 이벤트 기반 API는 사용 가능한 이벤트, 반드시 따라야 하는 순서, 파싱할 엘리먼트 당 하나의 이벤트를 생성하는 클래스 파서, 연속적인 이벤트에서 컴파일된 클래스를 생성하는 클래스 작성기를 제공한다.</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+객체 기반 모델</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 객체 트리로 클래스를 표현한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 각 객체가 클래스 구성 요소를 나타낸다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 각 객체는 자신의 하위 구성 요소에 대한 객체들을 나타내는 레퍼런스를 가지고 있다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 객체 기반 API는 연속적인 이벤트 모델을 객체 트리 모델로 변경하는 하거나 그 반대로 변경하는 기능을 제공한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 객체 기반 API는 이벤트 기반 API를 근간으로 만들어졌다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이벤트 기반 API</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 객체 기반 API 보다 빠르고 메모리 소비가 적다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 클래스 변형이 객체 기반 모델 보다 어렵다. 한번에 한 엘리먼트만 조작하니까.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+ASM 아키텍처</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 이벤트 기반 API는 이벤트 공급자(클래스 파서), 이벤트 소비자(클래스 작성기), 미리 정의해둔 이벤트 필터로 구성되어 있으며 사용자 정의 생성자, 소비자, 필터도 추가할 수 있다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이벤트 기반 API 사용법</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 이벤트 공급자,&nbsp;필터, 소비자 컴포넌트를&nbsp;구성한다.&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 이벤트 공급자가 일을 시작하도록 지시한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+구조</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">-&nbsp;asm.jar:&nbsp;org.objectweb.asm 와 org.objectweb.asm.signature패키지가 들어있고, 이벤트 기반 API를 정의하고 클래스 파서, 클래스 작성기를 제공한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- asm-util.jar: org.objectweb.asm.util 패키지는 core API를 기반으로 다양한 툴을 제공한다. (너무 대강이네;;)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- asm-commons.jar: org.objectweb.asm.commons 패키지에서 미리 만들어둔 클래스 변경기(transformer)를 제공한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- asm-tree.jar: org.objectweb.asm.tree 패키지는 객체 기반 API를 제공한다. 이벤트 기반 모델과 객체 기반 모델을 변환할 수 있다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- asm-analysis.jar: org.objectweb.asm.tree.analysis 패키지는 tree API를 기반으로 클래스 분석 프레임워크와 미리 만들어 둔 클래스 분선기를 제공한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>

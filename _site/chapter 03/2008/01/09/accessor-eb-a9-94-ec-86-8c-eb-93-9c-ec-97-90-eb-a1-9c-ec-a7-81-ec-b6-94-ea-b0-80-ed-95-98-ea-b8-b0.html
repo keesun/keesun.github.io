@@ -1,0 +1,36 @@
+<h1>Setter 메소드에 Validation 로직 추가.</h1>
+<ul>
+<li>하이버네이트가 DB에서 데이터를 가져올 때 이 Setter 메소드를 사용하여 속성을 설정하는데, 그럴 경우에는 validation을 하지 않고 변수에 직접 접근하도록 설정할 수 있다. 어떻게? p122 첫 줄.</li>
+</ul>
+<h1>Getter 메소드에서 복사체 전달.</h1>
+<ul>
+<li>하이버네이트는 Dirty Checking을 하기 때문에, Persistent 상태의 객체 속성의 변경을 DB에 반영하기 위해 UPDATE문을 자동으로 실행한다.</li>
+</ul>
+<ul>
+<li>Getter에서 같은 값의 다른 객체를 반환하더라도 불필요한 Update문을 실행하지 않는다.</li>
+</ul>
+<div class="code panel" style="border-style: solid; border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px; border-bottom-style: solid;"><b>다른 객체 반환하는 Getter</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> <span class="code-object">String</span> getFirstname() {<br /><span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-object">String</span>(firstname);<br />}</pre>
+</div>
+</div>
+<ul>
+<li>Hibernate compares the objects by value—not by object<br />
+identity—to determine whether the property's persistent state needs to<br />
+be updated.</li>
+</ul>
+<ul>
+<li>하지만 Collection일 경우에는 예외이며, 이 경우 같은 객체들을 가진 다른 Collection 객체를 반환하면, 불필요한 UPDATE 문을 실행한다.</li>
+</ul>
+<div class="code panel" style="border-style: solid; border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px; border-bottom-style: solid;"><b>다음과 같이 하지 말 것</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> void setNames(List namesList) {<br />    names = (<span class="code-object">String</span>[]) namesList.toArray();<br />}<br /><span class="code-keyword">public</span> List getNames() {<br />    <span class="code-keyword">return</span> Arrays.asList(names);<br />}</pre>
+</div>
+</div>
+<h1>예외 던지기</h1>
+<ul>
+<li>Runtime Exception이 발생하면, 트랜잭션을 롤백하고 Checked Exception이 발생하면, 하이버네이트가 잡아서 Runtime Exception으로 랩핑한다.</li>
+</ul>
+<p>참조 : <a href="http://www.amazon.com/Java-Persistence-Hibernate-Christian-Bauer/dp/1932394885/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1199863766&amp;sr=8-1" target="_blank">Java Persistence With Hibernate</a></p>

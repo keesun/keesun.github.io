@@ -1,0 +1,123 @@
+---
+layout: post
+title: "[하이버네이트] 2차 캐싱 적용하기"
+date: 2009-09-07 09:43:29.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 2차 캐시
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322861323'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조<br />
+Java Persistence With Hibernate<br />
+<a title="[http://whiteship.tistory.com/1256]로 이동합니다." target="_blank" href="http://whiteship.tistory.com/1256">http://whiteship.tistory.com/1256</a><br />
+<a title="[http://www.informit.com/articles/article.aspx?p=353736&amp;seqNum=5]로 이동합니다." target="_blank" href="http://www.informit.com/articles/article.aspx?p=353736&amp;seqNum=5">Improving Hibernate's Performance</a><br />
+<a title="[http://docs.jboss.org/hibernate/stable/core/reference/en/html/performance.html#performance-cache]로 이동합니다." target="_blank" href="http://docs.jboss.org/hibernate/stable/core/reference/en/html/performance.html#performance-cache">19.2. The Second Level Cache</a><br />
+<a title="[http://www.javalobby.org/java/forums/t48846.html]로 이동합니다." target="_blank" href="http://www.javalobby.org/java/forums/t48846.html">Hibernate: Truly Understanding the Second-Level and Query Caches </a><br />
+<a title="[http://ehcache.org/documentation/hibernate.html]로 이동합니다." target="_blank" href="http://ehcache.org/documentation/hibernate.html">Hibernate Caching</a></p>
+<p>이론적으로 정리할 것 들</p>
+<p>- 2차 캐싱이라고 하는 이유? 1차 캐시(persistence context cache)는 있으니깐.<br />
+- 하이버네이트 캐싱 종류(트랜잭션 스콥 캐싱, 프로세스 스콥 캐싱, 클러스터 스콥 캐싱)<br />
+- 캐싱에 적당한 클래스(데이터 변경이 드물고, (금전적인 데이터 처럼)핵심적인 데이터가 아니며, 공유하는 데이터가 아니고 애플리케이션에 국한된 데이터)<br />
+- 동시성 전략(Transactional, Read-write, Nonstrict-read-write, Read-only)<br />
+- 캐싱 공급자 선택하기(EHCache, OSCache, SwarmCacahe, JBoss Cache)</p>
+<p>적용하기</p>
+<p>1. 캐싱 동시성 전략 선택하기</p>
+<p>read-wirte 모드를 선택함. read committed isolation 수준을 유지하려고.</p>
+<p>@Entity<br />
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)<br />
+public class Study implements Serializable{</p>
+<p>2. SessionFactory 설정에 2차 캐싱 관련 설정 추가.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;bean id="sessionFactory"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="packagesToScan" value="springsprout.domain" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="hibernateProperties"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;props&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.dialect"&gt;${hibernate.dialect}&lt;/prop&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.show_sql"&gt;true&lt;/prop&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.hbm2ddl.auto"&gt;update&lt;/prop&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.generate_statistics"&gt;true&lt;/prop&gt;<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.cache.use_second_level_cache"&gt;true&lt;/prop&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.cache.use_query_cache"&gt;true&lt;/prop&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;prop key="hibernate.cache.provider_class"&gt;net.sf.ehcache.hibernate.EhCacheProvider&lt;/prop&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/props&gt;</span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/property&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/bean&gt;</p>
+<p>2차 캐시와 함께 쿼리 캐시도 켜주고, 사용할 캐싱 공급자를 설정해 줍니다.</p>
+<p>3. Query 또는 Criteria API에 cacheable 설정 true로 변경.</p>
+<p>기본값이 false기 때문에 이렇게 해주지 않으면 캐시가 적용되지 않습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; public List&lt;Study&gt; getStudyList() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Criteria c = getCurrentSession().createCriteria(Study.class);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">c.setCacheable(true);</span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return c.list();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>4. 테스트</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void getAll() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(sr.getStudyList().size(), is(2));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(sr.getStudyList().size(), is(2));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>콘솔에 select 쿼리가 한 번만 찍히는지 확인합니다. </p>
+<p>5. (optional) ehcache.xml 설정 파일 추가.</p>
+<p>&lt;ehcache&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;diskStore path="java.io.tmpdir"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;defaultCache maxElementsInMemory="500" eternal="true"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; overflowToDisk="false" memoryStoreEvictionPolicy="LFU" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;cache name="springsprout.domain.study.Study"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxElementsInMemory="500" eternal="true" overflowToDisk="false"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; memoryStoreEvictionPolicy="LFU" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;cache name="springsprout.domain.study.Meeting"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxElementsInMemory="500" eternal="true" overflowToDisk="false"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; memoryStoreEvictionPolicy="LFU" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;cache name="org.hibernate.cache.StandardQueryCache"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxElementsInMemory="5" eternal="false" timeToLiveSeconds="120"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; overflowToDisk="true" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;cache name="org.hibernate.cache.UpdateTimestampsCache"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; maxElementsInMemory="5000" eternal="true" overflowToDisk="true" /&gt;<br />
+&lt;/ehcache&gt;</p>
+<p>이런식으로 만든다음 src 폴더 바로 밑에 추가해주면 끝.</p>
+<p>6. 고민하기</p>
+<p>- 콘솔을 눈으로 확인하는;; 수동 테스트인데 이걸 어떻게 하면 자동화 테스트로 바꿀 수 있을까요. 흠..<br />
+- SessionFactory 자체에 아예 모든 Qeury와 Criteria가 캐시를 사용하도록 설정할 수는 없을까요?<br />
+- <a title="[http://gleichmann.wordpress.com/2008/04/29/pragmatic-caching-a-simple-cache-configuration-model-for-spring/]로 이동합니다." target="_blank" href="http://gleichmann.wordpress.com/2008/04/29/pragmatic-caching-a-simple-cache-configuration-model-for-spring/">스프링 AOP를 이용한 애플리케이션 차원의 캐시</a>와 지금 사용한 시스템적인 캐시 중에 어떤것을 어떤 경우에 사용해야 적당한 것일까?</p>

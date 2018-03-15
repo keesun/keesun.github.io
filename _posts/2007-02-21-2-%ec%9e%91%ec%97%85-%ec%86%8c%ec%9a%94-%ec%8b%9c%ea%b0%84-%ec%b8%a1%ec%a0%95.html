@@ -1,0 +1,67 @@
+---
+layout: post
+title: 2. 작업 소요 시간 측정
+date: 2007-02-21 03:59:13.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- TDD 도우미
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322969390'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>2.1. "작업 시작" 버튼을 클릭 한 시간 부터 "작업 완료" 버튼을 클릭 했을 때 까지의 시간을 잽니다.</p>
+<p>이걸 좀 더 잘개 쪼개야 겠습니다. 시간은 초 단위가 좋을 것 같습니다.<br />2.1.1. "작업 시작" 버튼을 클릭하면 시간을 재기.</p>
+<p>&nbsp; &nbsp; @Test public void getStartTime(){<br />&nbsp; &nbsp; &nbsp; &nbsp; int startTime = new Work("work1").start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertFalse(startTime == 0);<br />&nbsp; &nbsp; }</p>
+<p>다음 작업을 하기 전에 startTime을 Work 클래스에 저장해 둬야 할 것 같아졌습니다. 그래야 나중에 작업이 완료 됐을 때 계산할 수 있으니깐요..</p>
+<p>2.1.2. startTime 저장하기</p>
+<p>&nbsp; &nbsp; @Test public void getStartTime(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(work.getStartTime());<br />&nbsp; &nbsp; }</p>
+<p>2.1.2. "작업 완료" 버튼을 클릭하면 현재 시간에서 작업 시작 시간을 빼서 소요 시간 구하기.<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; @Test public void getWorkedTime(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; long workedTimeInMilli = work.end();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(work.getEndTime() - work.getStartTime(), workedTimeInMilli);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(workedTimeInMilli * 1000, work.getWorkedTime());<br />&nbsp; &nbsp; }</p>
+<p>2.2. "일시 정지" 버튼을 클릭하면 시간 재는 걸 잠시 중단 합니다. "작업 시작"버튼을 클릭하면 다시 이어서 시간을 잽니다.</p>
+<p>이 작업을 구현하려니까 시간을 가지고 테스트 하는게 엄청 불편하게 느껴집니다. start와 end를 할 때 로그 메시지를 기록 하도록 하고 그 메시지를 확인 하도록 테스트를 변경합니다.</p>
+<p>&nbsp; &nbsp; @Test public void pausedTime(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Work work = new Work("work1");<br />&nbsp; &nbsp; &nbsp; &nbsp; work.start();<br />&nbsp; &nbsp; &nbsp; &nbsp; work.pause();<br />&nbsp; &nbsp; &nbsp; &nbsp; work.reStart();<br />&nbsp; &nbsp; &nbsp; &nbsp; long workedTime = work.end();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("작업 시작 -&gt; 일시 중지 -&gt; 다시 시작 -&gt; 작업 종료", work.getLog().toString());<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals((work.pause() - work.start()) + (work.getEndTime() - work.reStart()), workedTime);<br />&nbsp; &nbsp; }</p>
+<p>2.3. "작업 완료" 버튼을 클릭하면 해당 작업한 시간이 기록됩니다. 이건 이미 위에 것들을 구현하다보니 구현이 되버렸군요.</p>
+<p>현재 까지 작업 상황을 보면</p>
+<p>- 시작 -&gt; 종료 :: 2.1.<br />- 시작 -&gt; 일시 정지 -&gt; 다시 시작 -&gt; 종료 :: 2.2.<br />- 시작 -&gt; 일시 정지 -&gt; 종료<br />- 시작 -&gt; 일시 정지 -&gt; 다시 시작 -&gt; 일시 정지 -&gt; 다시 시작 -&gt; 종료<br /><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">미쳐 아래 두 가지 경우 수를 생각 못했었군요.</span></p>
+<p>그리고 <span style="color: rgb(255, 0, 0);">작업한 시간을 출력해보니 전부 0으로 나오기 때문에 수치가 정확한지 가늠할 수 있는 뭔가 더 좋은 테스트 방안을 모색해 봐야겠습니다.</span></p>
+<p><span style="color: rgb(255, 0, 0);">테스트를 위해서 log를 만들었지만</span> 이 것이 차후 프로그램에서 필요한가를 생각해보니.. 시간 테스트를 위한 대안이였는데 <span style="color: rgb(255, 0, 0);">전혀 적절한 대안이 되진 못한 것</span>이 절 초라하게 만드는군요. ㅠ.ㅠ</p>

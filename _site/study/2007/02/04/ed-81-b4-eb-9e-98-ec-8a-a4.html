@@ -1,0 +1,9 @@
+<p>기본 형태
+<pre><div style="padding: 10px; background-color: rgb(250, 255, 169);">class 클래스이름[(상속 클래스명)]:<br />    &lt;클래스 변수 1&gt;<br />    &lt;클래스 변수 2&gt;<br />    ...<br />    def 클래스함수1(self[, 인수1, 인수2,,,]):<br />        &lt;수행할 문장 1&gt;<br />        &lt;수행할 문장 2&gt;<br />        ...<br />    def 클래스함수2(self[, 인수1, 인수2,,,]):<br />        &lt;수행할 문장1&gt;<br />        &lt;수행할 문장2&gt;<br />        ...<br />    ...</div></pre>
+<p>self라는 것이 매우 특이합니다. self.name = name 이런식으로 쓸 수가 있는데 name이 클래스 변수로 선언이 되어있지 않아도 사용할 수 있습니다. self.name을 할 때 만드는 것 같은데 변수들의 scope이 어떻게 되는 것인지는..흠.. 모르겠군요.</p>
+<p>클래스의 인스턴스들만 클래스에 있는 메소드를 사용하도록 하려면 저기 있는 self라는 녀석을 사용해야 합니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">class Keesun:<br />&nbsp; &nbsp; &nbsp;&nbsp; <br />&nbsp; &nbsp; def setData(self, name, age):<br />&nbsp; &nbsp; &nbsp; &nbsp; self.aName = name<br />&nbsp; &nbsp; &nbsp; &nbsp; self.aAge = age</p>
+<p>&nbsp; &nbsp; def eat(self, something):<br />&nbsp; &nbsp; &nbsp; &nbsp; print "%s, %s를 먹는다." %(self.aName, something)</div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&gt;&gt;&gt; me = Keesun()<br />&gt;&gt;&gt; me.setData("기선", 26)<br />&gt;&gt;&gt; me.aAge<br />26<br />&gt;&gt;&gt; me.eat("과자")<br />기선, 과자를 먹는다.</div>
+<p></p>

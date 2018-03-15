@@ -1,0 +1,76 @@
+---
+layout: post
+title: 톰캣에 Jira ear/war 버전 설치하기
+date: 2008-08-29 04:16:12.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- JIRA
+meta:
+  arkayne-time-post: '1323018448'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.atlassian.com/software/jira/docs/latest/servers/tomcat60.html" target="_blank">http://www.atlassian.com/software/jira/docs/latest/servers/tomcat60.html</a></p>
+<p>1. 다운로드</p>
+<p>생략</p>
+<p>2. DB 만들기</p>
+<p>생략</p>
+<p>3. &lt;datasource&gt;에서 dialect 변경하기</p>
+<p>Jira 설치 폴더/edit-webapp/WEB-INF/classes/entityengine.xml&nbsp; 파일을 열고, &lt;datasource&gt; 태그에서 field-type-name 속성에 사용할 DB 이름을 설정해줍니다.</p>
+<p>이 때 주의할 사항들이 &lt;datasource&gt; 엘리먼트 위에 주석으로 나와있으니 꼭 참조하시기 바랍니다. 그 중 하나로, HSQL을 사용하지 않을 떄는 schema-name="PUBLIC" 이 설정을 삭제해야 합니다.</p>
+<p>4. 빌드하기</p>
+<p>Jira 설치 폴더 에서 ./build 실행.<br />그러면 dist-tomcat/tomcat-6 폴더에 war 파일과 jira.xml 파일을 만들어 줍니다.</p>
+<p>5. 추가 라이브러리 설치</p>
+<p>Jira 실행에 필요한 라이브러리를 톰캣/lib 폴더에 추가하기.<br /><a href="http://www.atlassian.com/software/jira/docs/servers/jars/v1/jira-jars-tomcat6.zip" target="_blank">http://www.atlassian.com/software/jira/docs/servers/jars/v1/jira-jars-tomcat6.zip</a></p>
+<p>6. 톰캣 설정하기</p>
+<p>빌드하기 과정에서 만들어준 jira.xml 파일을 톰캣/conf/Catalina/localhost로 복사합니다. 그리고 열어서 편집해야 합니다. 편집할 것은 세 가지.</p>
+<p>6-1. conf/Catalina/localhost/jira.xml</p>
+<p>&lt;Context&gt;엘리먼트의 docBase가 제대로 설정되어 있는지 확인(이건 기본으로 알아서 제대로 잡아 주는데 그래도 확인하는게 좋습니다.)합니다.</p>
+<p>그리고 &lt;Resource&gt;에 datasource 설정을 사용하시는 DB에 맞게 적절하게.. 설정해줍니다.</p>
+<p>6-2. conf/server.xml </p>
+<p>톰캣/conf/server.xml 을 열고 useBodyEncodingForURI 속성을 추가해줍니다. 국제화 지원때문에..</p>
+<p>&lt;Connector port="8080" protocol="HTTP/1.1"<br />&nbsp; &nbsp; &nbsp; &nbsp; connectionTimeout="20000"<br />&nbsp; &nbsp; &nbsp; &nbsp; redirectPort="8443" useBodyEncodingForURI="true"/&gt;</p>
+<p>6-3. bin/setenv.sh</p>
+<p>메모리 부족 문제가 생길 수 있으니 bin 폴더에 setenv.sh 파일에 다음을 추가합니다.(이 파일이 없을 땐 만들어 줍니다.)</p>
+<p>export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true"</p>
+<p>7. 톰캣 재기동.</p>
+<p>톰캣을 껐다 키고, localhost:8080/jira로 접속합니다.</p>

@@ -1,0 +1,60 @@
+---
+layout: post
+title: 기트(git) config
+date: 2009-04-09 01:57:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- git config
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322799501'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a href="http://www.kernel.org/pub/software/scm/git/docs/git-config.html" target="_blank">http://www.kernel.org/pub/software/scm/git/docs/git-config.html</a></p>
+<p><img src="{{ site.baseurl }}/assets/49dd5343bbf9aEH.png" class="aligncenter" width="600" height="392" alt="사용자 삽입 이미지" /><br />--global 옵션을 사용하려고 시도하면 처음에 fatal: $HOME not set git 이런 에러를 만나게 됩니다. 그럼 환경 변수에 $HOME 변수를 추가해주고 다시 시도해보면 잘 동작할 겁니다.</p>
+<p>기트 설정 파일의 위치는 세 종류가 있습니다. 특정 저장소와 관련된 설정, 컴터 사용자 관련 설정, 컴터 관련 설정이 있습니다.</p>
+<p>아무런 옵션을 주지 않고 git config 라고 사용하면 그 하위 폴더에 .git/config에 설정 합니다. 명시적으로 -f ./git/config 또는 --file ./git/config 같은 식으로 설정할 수도 있습니다.</p>
+<p>ex) git conifg user.name "whiteship"</p>
+<p>컴터 사용자 관련 설정은 --global 옵션을 사용하면 되고, 시스템 관련 설정은 --system을 사용하면 됩니다. </p>
+<p>설정한 정보는 --list 옵션으로 보는데, 살펴볼 설정 위치를 명시해주지 않으면 모든 위치의 설정 성보를 보여줍니다.</p>
+<p>ex) git config --list</p>
+<p><img src="{{ site.baseurl }}/assets/49dd560f177cbCN.png" class="aligncenter" width="600" height="636" alt="사용자 삽입 이미지" /></p>

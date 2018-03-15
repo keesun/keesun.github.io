@@ -1,0 +1,15 @@
+<p>참고: <a title="[http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch14s04.html]로 이동합니다." target="_blank" href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch14s04.html">http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch14s04.html</a></p>
+<p>oxm 네임스페이스를 스프링 XML 설정 파일에 추가하여 사용할 수 있다.</p>
+<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />
+&nbsp;&nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; xmlns:oxm="http://www.springframework.org/schema/oxm</span>"<br />
+&nbsp;&nbsp;&nbsp; xsi:schemaLocation="http://www.springframework.org/schema/beans<br />
+&nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/beans/spring-beans-3.0.xsd<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/oxm</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd</span>"&gt;</p>
+<p>현재 지원하는 태그는 다음과 같다.<br />
+&nbsp;&nbsp;&nbsp; •&nbsp;&nbsp;&nbsp; jaxb2-marshaller<br />
+&nbsp;&nbsp;&nbsp; •&nbsp;&nbsp;&nbsp; xmlbeans-marshaller<br />
+&nbsp;&nbsp;&nbsp; •&nbsp;&nbsp;&nbsp; jibx-marshaller</p>
+<p>각각의 태그는 해당 섹션에서 자세히 설명하겠다. 예를 들어, 다음은 JAXB2 마샬러를 설정한 모습니다.</p>
+<p>&lt;oxm:jaxb2-marshaller id="marshaller" contextPath="org.springframework.ws.samples.airline.schema"/&gt;</p>

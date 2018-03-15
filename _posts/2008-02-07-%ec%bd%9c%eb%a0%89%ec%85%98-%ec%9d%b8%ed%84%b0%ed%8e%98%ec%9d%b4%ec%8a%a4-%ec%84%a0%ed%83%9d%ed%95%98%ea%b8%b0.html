@@ -1,0 +1,86 @@
+---
+layout: post
+title: 콜렉션 인터페이스 선택하기
+date: 2008-02-07 13:15:37.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- 콜렉션 특징
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322761571'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>꼭 변수의 타입은 구현체가 아닌 인터페이스를 사용해야 한다. private &lt;&lt;Interface&gt;&gt; images = new &lt;&lt;Iimplementataion&gt;&gt;();</li>
+</ul>
+<ul>
+<li>콜렉션은 항상 바로 초기화를 하도록 한다.(권장사항)</li>
+</ul>
+<ul>
+<li>하이버네이트는 선언된 필드를 초기화 할 때 콜렉션을 감싼다.</li>
+</ul>
+<h1>콜렉션</h1>
+<ul>
+<li>java.util.Set -&gt; java.util.HashSet: 중복을 허용하지 않고, 순서를 따지지 않는다. 가장 흔하게 사용되는 타입.</li>
+</ul>
+<ul>
+<li>java.util.SortedSet -&gt; java.util.TreeSet: 정렬 조건을 설정할 수 있다.</li>
+</ul>
+<ul>
+<li>java.util.List -&gt; java.util.ArrayList: 인덱스를 가지고 있다. 중복 허용한다.</li>
+</ul>
+<ul>
+<li>java.util.Collection -&gt; java.util.ArrayList: Bag을 맵핑할 때 사용한다. 중복을 허용하고 순서는 없다.</li>
+</ul>
+<ul>
+<li>java.util.Map -&gt; java.util.HashMap: 키, 값 쌍으로 맵핑되어 있다.</li>
+</ul>
+<ul>
+<li>java.util.Sortedmap -&gt; java.util.TreeMap: 정렬할 수 있다.</li>
+</ul>
+<ul>
+<li>배열: 배열 타입을 감쌀 수는 없다. 배열은 사용하지 않는게 좋겠다.(lazy loading,<br />
+optimized dirty checking 등 이 밖에도 영속성 콜렉션을 다루는데 있어서 편리하고 성능을 높이는 기능들을<br />
+사용할 수 없다.)</li>
+</ul>

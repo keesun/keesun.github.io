@@ -1,0 +1,63 @@
+---
+layout: post
+title: HelloBundle 번들 소스 코드
+date: 2008-07-03 05:23:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- HelloOsgi
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322962852'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>HelloOsgi.java
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package whiteship;</p>
+<p>import org.osgi.framework.BundleActivator;<br />import org.osgi.framework.BundleContext;</p>
+<p>public class HelloOsgi implements BundleActivator {</p>
+<p>&nbsp;&nbsp; &nbsp;public void start(BundleContext arg0) throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("하이");<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public void stop(BundleContext arg0) throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("바이바이"); &nbsp; &nbsp; &nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>}</p></div>
+<p>설명이 필요 없는 매우 매우 간단한 번들.</p>
+<p>bnd 파일
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);"># helloBundle.bnd<br />Private-Package: whiteship<br />Bundle-Activator: whiteship.HelloOsgi</div>
+<p>저 번들을 start 시키면 화면에 "하이" 라는 메시지를 찍고 stop 시키면 "바이바이"를 출력함.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/hk22.jar" class="aligncenter">hk22.jar</a><br />테스트 용도로 사용하기 좋습니다.</p>

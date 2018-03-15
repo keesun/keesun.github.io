@@ -1,0 +1,12 @@
+<ul>
+<li>일반 POJO로 구현하고, equals() 메소드에서 모든 속성을 비교해야 한다. 하이버가 dirty checking 할 때 사용한다.</li>
+</ul>
+<ul>
+<li>Set으로 맵핑할 때는 컴포넌트의 모든 속성이 복합키로 사용되기 때문에, not-null 속성을 true로 해줘야 한다.</li>
+</ul>
+<ul>
+<li>Parent 속성을 사용하면 컴포넌트가 자신을 소유한 쪽으로 네비게이션을 할 수 있다.(불완전 양방향 설정)</li>
+</ul>
+<ul>
+<li>Collection 인터페이스와 ArrayList를 사용하거나, Map을 사용하면, equlas()와 hashmap()을 구현할 필요도 없고, nullable 컬럼을 가질 수도 있다.</li>
+</ul>

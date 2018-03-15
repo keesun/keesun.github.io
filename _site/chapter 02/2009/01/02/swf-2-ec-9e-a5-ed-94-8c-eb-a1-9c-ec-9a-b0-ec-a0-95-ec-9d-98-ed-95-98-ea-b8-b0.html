@@ -1,0 +1,231 @@
+<p>참조: <a href="http://static.springframework.org/spring-webflow/docs/2.0.x/reference/html/index.html" target="_blank">http://static.springframework.org/spring-webflow/docs/2.0.x/reference/html/index.html</a></p>
+<p>2.1. 개요</p>
+<p>이번 장은 User Section으로 시작한다. 플로우 정의 언어(flow definition language)를 사용하여 플로우를 구현하는 방법을 살펴볼 것이다. 이번 장이 끝날 때 여러분은 언어 구조를 이해하고 플로우를 정의할 수 있을 것이다.</p>
+<p>2.2 플로우란 무엇인가?</p>
+<p>플로우는 여러 문맥에서 실행될 수 있는 재사용 가능한 스탭의 연속체를 캡슐화 한 것이다. 아래 그림은 Garrett Inforamtion Architecture 다이어그램으로 호텔 예약 프로세스의 단계를 캡슐화한 플로우를 보여주고 있다.</p>
+<p><img src="/assets/mk24.png" class="aligncenter" width="280" height="396" alt="사용자 삽입 이미지" /><br />
+플로우를 나타내는 사이트 맵</p>
+<p>2.3. 일반적인 플로우의 구성요소는 무엇인가?</p>
+<p>스프링 웹 플로우에서, 플로우는 스테이트("states")라고 부르는 스탭의 일련으로 구성한다. 하나의 스테이트로 들어가면 보통 사용자에게 어떤 뷰 하나를 보여주게 된다. 해당 뷰에서, 스테이트가 처리할 사용자 이벤트가 발생한다. 이런 이벤트는 다른 스테이트로 이동(transition)을 시켜서 뷰 네이게이션을 하게 한다.</p>
+<p>아래 예제는 앞선 다이어그램에서 살펴본 호텔 예약 플로우 구조를 보여주고 있다.</p>
+<p><img src="/assets/pk150000000000.png" class="aligncenter" width="387" height="363" alt="사용자 삽입 이미지" />플로우 다이어그램</p>
+<p>2.4. 어떻게 플로우를 작성하는가?</p>
+<p>플로우는 웹 애플리케이션 개발자들이 간단한 XML 기반 플로우 정의 언어를 사용하여 작성한다. 이번 가이드의 다음 단계에서 이 언어의 구성 요소를 살펴보겠다.</p>
+<p>2.5. 기본적인 언어 구성 요소</p>
+<p>2.5.1 플로우(flow)</p>
+<p>모든 플로우는 다음의 루트 엘리먼트로 시작한다.</p>
+<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />
+&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&lt;/flow&gt;</p>
+<p>플로우의 모든 스테이트(state)를 이 엘리먼트 안에 정의한다. 처음에 정의한 스테이트가 플로우의 시작점이 된다.</p>
+<p>2.5.2. 뷰-스테이트(view-state)</p>
+<p>view-state 엘리먼트를 사용하여 플로우에서 뷰를 보여주는 단계를 정의한다.</p>
+<p>&lt;view-state id="enterBookingDetails" /&gt;</p>
+<p>기본적으로(by convention), 뷰-스테이트는 자신의 id를 플로우가 위치한 디렉터리의 뷰 템플릿으로 맵핑한다. 예를 들어, 위의 스테이트는 만약 플로우가 /WEB-INF/hotels/booking 디렉터리에 있었다면, /WEB-INF/hotels/booking/enterBookingDetails.xhtml을 사용자에게 보여줄 것이다.(rendering)</p>
+<p>2.5.3. 트랜지션(transition)</p>
+<p>transition 엘리먼트를 사용하여 스테이트에서 발생한 이벤트를 처리한다.</p>
+<p>&lt;view-state id="enterBookingDetails"&gt;<br />
+&nbsp; &nbsp; &lt;transition on="submit" to="reviewBooking" /&gt;<br />
+&lt;/view-state&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+이런 트랜지션이 뷰 네이게이션을 끌어낸다.</p>
+<p>2.5.4. end-state</p>
+<p>end-state 엘리먼트를 사용하여 플로우 종료를 정의한다.</p>
+<p>&lt;end-state id="bookingCancelled" /&gt;</p>
+<p>플로우 트랜지션이 종료-상태에 다다르면 플로우를 끝내고 결과를 반환한다.</p>
+<p>2.5.5. 체크포인트: 기본 언어 구성 요소</p>
+<p>세 개의 구성 요소 view-state, transition, end-state를 가지고 여러분은 빠르게 여러분의 뷰 네비게이션 로직을 표현할 수 있다. 팀에서 플로우 행동을 추가하기 전에 이 작업을 해봄으로써 먼저 사용자와 함께 애플리케이션 UI를 개발에 집중할 수 있다. 아래 예제는 이들 엘리먼트를 사용하여 뷰 네비게이션 로직을 구현한 것이다.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />
+&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;view-state id="enterBookingDetails"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="submit" to="reviewBooking" /&gt;<br />
+&nbsp; &nbsp; &lt;/view-state&gt;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; &lt;view-state id="reviewBooking"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="confirm" to="bookingConfirmed" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="revise" to="enterBookingDetails" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="cancel" to="bookingCancelled" /&gt;<br />
+&nbsp; &nbsp; &lt;/view-state&gt;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; &lt;end-state id="bookingConfirmed" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;end-state id="bookingCancelled" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+&lt;/flow&gt; &nbsp;&nbsp; </p>
+<p>2.6. 액션(Actions)</p>
+<p>대부분의 플로우는 단순히 뷰 네비게이션 로직 보다 더 많은 것을 표현할 필요가 있다. 일반적으로 애플리케이션의 비즈니스 서비스 또는 다른 액션을 호출할 필요가 있다.</p>
+<p>플로우에서 여러분이 액션을 실행할 수 있는 몇몇 포인트(point)가 있다. </p>
+<ul>
+<li>On flow start</li>
+<li>On state entry</li>
+<li>On view render</li>
+<li>On transition execution</li>
+<li>On state exit</li>
+<li>On flow end</li>
+</ul>
+<p>액션은 간결한 EL(expression language)로 정의한다. 스프링 웹 플로우는 기본적으로 UEL(Unified EL)을 사용한다. 다음의 몇몇 절에서 액션을 정의할 때 사용하는 기본 언어 구성 요소를 살펴보겠다.</p>
+<p>2.6.1. evaluate</p>
+<p>여러분이 사용할 대부분의 액션 엘리먼트는 evaluate 엘리먼트일 것이다. evaluate 엘리먼트를 사용하여 플로우의 어떤 순간(point)에 표현식의 값을 구할 수 있다. 이 태그 하나로 스프링 빈 또는 다른 플로우 변수의 메소드를 호출할 수 있다. 예를 들어 다음과 같이 사용할 수 있다.</p>
+<p>&lt;evaluate expression="entityManager.persist(booking)" /&gt;</p>
+<p>2.6.1.1. evaluate 결과값 대입하기</p>
+<p>만약 표현식이 값을 반환한다면, 그 값을 플로우의 데이터 모델 flowScope에 저장할 수 있다.</p>
+<p>&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" /&gt;</p>
+<p>2.6.1.2. evaluate 결과값 변경하기</p>
+<p>만약 표현식이 반환하는 값이 컨버팅이 필요하다면, 원하는 타입을 result-type 속성에 명시할 수 있다.</p>
+<p>&lt;evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels"<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result-type="dataModel"/&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />
+2.6.2. 체크포인트: 플로우 액션</p>
+<p>이제 예제 예약 플로우에 액션을 추가해보자.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />
+&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;input name="hotelId" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;on-start&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result="flowScope.booking" /&gt;<br />
+&nbsp; &nbsp; &lt;/on-start&gt;</p>
+<p>&nbsp; &nbsp; &lt;view-state id="enterBookingDetails"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="submit" to="reviewBooking" /&gt;<br />
+&nbsp; &nbsp; &lt;/view-state&gt;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; &lt;view-state id="reviewBooking"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="confirm" to="bookingConfirmed" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="revise" to="enterBookingDetails" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="cancel" to="bookingCancelled" /&gt;<br />
+&nbsp; &nbsp; &lt;/view-state&gt;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; &lt;end-state id="bookingConfirmed" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;end-state id="bookingCancelled" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <br />
+&lt;/flow&gt; &nbsp;&nbsp; </p>
+<p>이 플로우는 이제 플로우가 시작되면 Booking 객체를 플로우에 생성한다. 예약하려는 호텔의 id는 플로우 input 속성에서 얻어온다.</p>
+<p>2.7. Input/Output 맵핑</p>
+<p>각각의 플로우는 잘 정의되어 있는 input/output 제약을 가지고 있다. 플로우를 시작할 때 input 속성에 flow를 넘겨줄 수 있고, 플로우가 끝날 때 flow를 output 속성에 넘겨줄 수 있다. 플로우를 호출하는 것은 다음 시그너처를 가진 메소드를 호출하는 것과 비슷하다.</p>
+<p>FlowOutcome flowId(Map&lt;String, Object&gt; inputAttributes);</p>
+<p>FlowOutcome은 다음과 같이 생겼다.</p>
+<p>public interface FlowOutcome {<br />
+&nbsp;&nbsp; public String getName(); &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />
+&nbsp;&nbsp; public Map&lt;String, Object&gt; getOutputAttributes();<br />
+}</p>
+<p>2.7.1. input</p>
+<p>input 엘리먼트를 사용하여 플로우의 input 속성을 선언한다.</p>
+<p>&lt;input name="hotelId" /&gt;</p>
+<p>입력한 값은 속성의 name으로 flow 스코프에 저장된다. 예를 들어, 위의 input은 hotelId라는 이름으로 저장될 것이다.</p>
+<p>2.7.1.1. input 타입 선언하기</p>
+<p>type 속성을 사용하여 input 속성의 타입을 선언할 수 있다.</p>
+<p>&lt;input name="hotelId" type="long" /&gt;</p>
+<p>만약 input 값이 선언한 타입과 일치하지 않으면, 타입 전환을 시도한다.</p>
+<p>2.7.1.2. input 값 대입하기</p>
+<p>value 속성을 사용하여 input 값에 대입할 표현식을 기술할 수 있다.</p>
+<p>&lt;input name="hotelId" value="flowScope.myParameterObject.hotelId" /&gt;</p>
+<p>type 속성을 기술하지 않아을 때, 표현식 값의 타입을 판별할 수 있다면 해당 메타데이터를 타입 제약으로 사용할 것이다.</p>
+<p>2.7.1.3. input을 필수로 만들기</p>
+<p>required 속성을 사용하여 input이 null이거나 빈값이 아니도록 강제할 수 있다.</p>
+<p>&lt;input name="hotelId" type="long" value="flowScope.hotelId" required="true" /&gt;</p>
+<p>2.7.2. output</p>
+<p>output 엘리먼트를 사용하여 플로우 output 속성을 선언할 수 있다. output 속성은 특정 플로우 종료를 나타내는 end-states 내부에 선언한다.</p>
+<p>&lt;end-state id="bookingConfirmed"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;output name="bookingId" /&gt;&nbsp; <br />
+&lt;/end-state&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+output 값은 name 속성 값과 일치하는 것을 flow 스코프에서 가져온다. 예를 들어, 위의 output은 bookingId 변수의 값을 대입할 것이다.</p>
+<p>2.7.2.1. output 값 기술하기</p>
+<p>value 속성을 사용하여 output 값 표현식을 기술할 수 있다.</p>
+<p>&lt;output name="confirmationNumber" value="booking.confirmationNumber" /&gt;&nbsp; </p>
+<p>2.7.3. 체크포인트: input/output 맵핑</p>
+<p>이제 예제 예약 플로우에서 input/output 맵핑을 다시 살펴보자.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;input name="hotelId" /&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;on-start&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result="flowScope.booking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/on-start&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;view-state id="enterBookingDetails"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="submit" to="reviewBooking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/view-state&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;view-state id="reviewBooking"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="confirm" to="bookingConfirmed" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="revise" to="enterBookingDetails" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="cancel" to="bookingCancelled" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/view-state&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;end-state id="bookingConfirmed" &gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;output name="bookingId" value="booking.id"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/end-state&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;end-state id="bookingCancelled" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&lt;/flow&gt;&nbsp;&nbsp;&nbsp; </p>
+<p>플로우는 hotelId라는 input 속성을 받고 새로운 예약이 확정되면 bookingId라는 output 속성을 반환한다.</p>
+<p>2.8. 변수(Variables)</p>
+<p>플로우는 한 개 이상의 변수를 선언할 수 있다. 이들 변수는 플로우가 시작할 때 자리를 잡는다. 변수들이 가지고 있는 모든 @Autowired 임시 레퍼런스들 또한 플로우가 재시작 할 때 다시 와이어링한다.</p>
+<p>2.8.1. var</p>
+<p>var 엘리먼트를 사용하여 플로우 변수를 선언한다.</p>
+<p>&lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/&gt;</p>
+<p>여러 플로우 요청(request)에 걸쳐 인스턴스 상태를 저장할 때 해당 클래스가 java.io.Serializable을 구현했는지 확인하라.</p>
+<p>2.9. subflow 호출하기</p>
+<p>플로우에서 다른 플로우를 하위 플로우(subflow)로 호출할 수 있다. 플로우는 서브플로우가 끝날 때까지 기다렸다가 반환값이 오면 그때 서브 플로우 결과에 응답(response)을 한다.</p>
+<p>2.9.1. subflow-state</p>
+<p>subflow-state 엘리먼트를 사용하여 다른 플로우를 서브플로우로 호출하기</p>
+<p>&lt;subflow-state id="addGuest" subflow="createGuest"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;transition on="guestCreated" to="reviewBooking"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;evaluate expression="booking.guests.add(currentEvent.attributes.guest)" /&gt;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;/transition&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;transition on="creationCancelled" to="reviewBooking" /&gt;<br />
+&lt;/subfow-state&gt;</p>
+<p>위의 예제는 createGuest를 호출하고 있다. 그런 다음 반환되기를 기다린다. 플로우가 guestCreated라는 결과를 받으면, 새로운 guest를 booking guest 리스트에 추가한다.</p>
+<p>2.9.1.1. subflow input 전달하기</p>
+<p>input 엘리먼트를 사용하여 input을 서브플로우에 전달한다.</p>
+<p>&lt;subflow-state id="addGuest" subflow="createGuest"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;input name="booking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;transition to="reviewBooking" /&gt;<br />
+&lt;/subfow-state&gt;</p>
+<p>2.9.1.2. 서브플로우 output 맵핑하기</p>
+<p>간단하게 서브플로우 output 속성을 결과 트랜지션에서 그 이름으로 참조할 수 있다.</p>
+<p>&lt;transition on="guestCreated" to="reviewBooking"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;evaluate expression="booking.guests.add(currentEvent.attributes.guest)" /&gt;&nbsp; <br />
+&lt;/transition&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+위에서 guest는 guestCreated 결과에 의해 반환되는 output 속성 이름이다.</p>
+<p>2.9.2. 체크포인트: 서브플로우 호출하기</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;input name="hotelId" /&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;on-start&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result="flowScope.booking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/on-start&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;view-state id="enterBookingDetails"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="submit" to="reviewBooking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/view-state&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;view-state id="reviewBooking"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="addGuest" to="addGuest" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="confirm" to="bookingConfirmed" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="revise" to="enterBookingDetails" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="cancel" to="bookingCancelled" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/view-state&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;subflow-state id="addGuest" subflow="createGuest"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="guestCreated" to="reviewBooking"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;evaluate expression="booking.guests.add(currentEvent.attributes.guest)" /&gt;&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/transition&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;transition on="creationCancelled" to="reviewBooking" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/subfow-state&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &lt;end-state id="bookingConfirmed" &gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;output name="bookingId" value="booking.id" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/end-state&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;end-state id="bookingCancelled" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&lt;/flow&gt;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </p>
+<p>플로우는 이제 createGuest 서브플로우를 호출하여 새로운 게스트를 게스트 목록에 추가한다.</p>

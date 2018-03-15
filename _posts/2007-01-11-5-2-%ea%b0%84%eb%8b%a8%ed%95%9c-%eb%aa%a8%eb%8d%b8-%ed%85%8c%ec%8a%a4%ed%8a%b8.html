@@ -1,0 +1,65 @@
+---
+layout: post
+title: 5-2. 간단한 모델 테스트
+date: 2007-01-11 04:55:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- 주소록 만들기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323100722'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. 간단한 테스트를 위해서 sandbox.keesun 패키지 안에 MessengerTest.java를 만듭니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl169.bmp" class="aligncenter" width="308" height="152" alt="사용자 삽입 이미지">bl169.bmp</a>2. MessengerTest는 AbstractTransactionalDataSourceSpringContextDaoTest 클래스를 상속 받습니다.</p>
+<p><font size="2"><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span><strong>public</strong> <strong>class</strong> MessengerTest <strong>extends</strong> </span><span lang="EN-US" style="BACKGROUND: silver; COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt; mso-highlight: silver">AbstractTransactionalDataSourceSpringContextDaoTest</span></p>
+<p></span></font><br />3. 다음과 같이 코딩합니다.</p>
+<p><font size="2"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1"></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">public</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">void</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> testCRUD() {</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>Messenger m = </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">new</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> Messenger();</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>m.setM_id(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"keesun"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>m.setM_type(</span><span lang="EN-US" style="COLOR: #2a00ff; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">"skype"</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><span lang="EN-US" style="COLOR: #0000c0; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">s</span><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">.save(m);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><i>assertTrue</i>(m.getMessengerId() &gt; 0);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left" /></span></span></font><br />DB에 저장이 된다면 객체에 messengerId가 데이타를 가지게 되므로 그것을 확인하는 코드입니다.</p>
+<p>테스트를 돌리면 실패합니다. bean을 등록하지 않아서 그렇습니다. 헤헷;<br />bean은 다음과 같이 applicationContext-dao.xml에 등록합니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl170.bmp" class="aligncenter" width="500" height="232" alt="사용자 삽입 이미지">bl170.bmp</a><br />4. 이제 테스트를 돌리면 pass합니다. :)<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl171.bmp" class="aligncenter" width="287" height="219" alt="사용자 삽입 이미지">bl171.bmp</a></p>

@@ -1,0 +1,61 @@
+---
+layout: post
+title: "[기초 데이터] 백업/복구 방안"
+date: 2009-10-15 12:57:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 기초데이터 백업/복구
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322740840'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>애플리케이션 동작에 필요한 최소한의 기본 데이터들이 있습니다. 이것들을 어떻게 관리해야 백업/복구가 쉬울지 고민입니다. 일단, 기초 데이터를 관리한다는 것 자체는 괜찮은 일인 것 같습니다. 기초 데이터가 매번 필요하긴 한데, 매번 애플리케이션을 새로 설치할 때 마다 입력해야 하는 수고를 덜 수 있으니까 말이죠. 그럼 어떻게 관리해야 할까요.. @_@</p>
+<p>고민이 세부적으로 나뉩니다.</p>
+<p>1. 우선, 기초 데이터를 SQL, Excel, XML 중 어떤 형태로 관리할 것인지.<br />
+2. 그 기초 데이터를 메이븐 빌드로 자동으로 넣을지, 별도의 자바 애플리케이션을 돌려서 넣을지, 사용자도 할 수 있도록 웹 애플리케이션에 기능을 만들어 넣어야 할지.<br />
+3. 매번 서버를 켤 때마다 기존의 기초 데이터로 운영/테스트 중인 데이터를 갈아 엎을지, 현재 운영/테스트 중인 데이터를 백업 받아와서 그것을 새로운 기초 데이터로 삼을지, 수동으로 관리할지.</p>
+<p>일단 현재로써는 기초데이터가 자주 바뀔 가능성이 있고, 정확하지 않을 가능성이 높기 때문에 수동으로 관리해야 겠습니다. 수동으로 관리할 때는 Excel을 사용해서 일관적으로 바꾸는게 편하기 때문에 파일 형태로 Excel로 가져가는 것이 좋겠습니다. Excel로 데이터를 가져오고 넣을 때는 DBUnit을 활용하면 될 것 같습니다. 일단은 수동으로 관리자만 별도의 애프리케이션을 돌려서 넣을 수 있게 만들고, 그 일이 귀찮을 정도로 잦아 진다면 메이븐 빌드로 DBUnit 플러긴(당근 있겠죠?)을 이용해서 돌리면 될 듯 하군요.</p>
+<p>그래서 내일의 회사일은 <br />
+1. DBUnit으로 현재 DB의 데이터를 Excel로 뽑아보기.<br />
+2. 기초 데이터 마련하기.<br />
+3. 서버와 로컬 DB에 반영하기.</p>

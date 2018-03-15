@@ -1,0 +1,199 @@
+<p><font size="5"><span style="font-weight: bold;">2.3. Advanced Web Features</span></font></p>
+<p><font size="4"><span style="font-weight: bold;">2.3.1. Adding HTTP/HTTPS Channel Security</span></font></p>
+<p>애플리케이션에서 요청을 HTTP와 HTTPS로 아무거나 셋 중 하나의 채널로 받아들이도록 설정하려면 &lt;intercept-irl&gt; 의 requires-channel 속성을 사용한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http&gt;<br />&nbsp; &nbsp; &lt;intercept-url pattern="/secure/**" access="ROLE_USER" requires-channel="https"/&gt;<br />&nbsp; &nbsp; &lt;intercept-url pattern="/**" access="ROLE_USER" requires-channel="any"/&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;/http&gt;</div>
+<p>/secure/** 패턴의 HTTP를 사용해서 접근하면 HTTPS URL로 리다이렉트 된다. 가용한 옵션은 "http", "https", "any"(둘 중 아무거나)가 있음.</p>
+<p>위 프로토콜을 기본 포트가 아닌 다른 포트에서 사용할 때는 포트 맵핑을 해준다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &nbsp; &lt;port-mappings&gt;<br />&nbsp; &nbsp; &nbsp; &lt;port-mapping http="9080" https="9443"/&gt;<br />&nbsp; &nbsp; &lt;/port-mappings&gt;<br />&nbsp; &lt;/http&gt;</div>
+<p>채널에 대해서는 <a href="http://static.springframework.org/spring-security/site/reference/html/channel-security.html" target="_blank">여기</a>서 자세히<br /><font size="4"><br style="font-weight: bold;" /><span style="font-weight: bold;">2.3.2. Concurrent Session Control</span></font></p>
+<p>단일 사용자 계정을 한 명(세션)만 사용하도록 제한할 수 있다.<br />먼저 web.xml에 다음 리스너를 등록한다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;listener&gt;<br />&nbsp; &lt;listener-class&gt;org.springframework.security.ui.session.HttpSessionEventPublisher&lt;/listener-class&gt;<br />&lt;/listener&gt;</div>
+<p>그리고 application context에 다음을 추가한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &nbsp; &lt;concurrent-session-control max-sessions="1" /&gt;<br />&nbsp; &lt;/http&gt;</div>
+<p>이렇게 하면, 같은 계정으로 두 번 로그인 하면, 첫 번째 로그인한 유저가 invalid하게 된다. 두 번째 로그인하는 걸 막고 싶으면 다음과 같이 설정한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &nbsp; &lt;concurrent-session-control max-sessions="1" exception-if-maximum-exceeded="true"/&gt;<br />&nbsp; &lt;/http&gt;</div>
+<p>mac-sessions 속성으로 한 계정당 가용한 세션 수를 정할 수 있나봅니다.</p>
+<p><font size="4"><span style="font-weight: bold;">2.3.3. OpenID Login</span></font></p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http auto-config='true'&gt;<br />&nbsp; &nbsp; &lt;intercept-url pattern="/**" access="ROLE_USER" /&gt;<br />&nbsp; &nbsp; &lt;openid-login /&gt;<br />&nbsp; &lt;/http&gt;</div>
+<p>저렇게 설정하면, OpenID 로그인을 사용하게 된다. 그리고 자신의 OpenID 계정을 설정해야 한다. 그리고 사용자 정보를 in-memory &lt;user-service&gt;에 추가한다.(이건 어떻게 하는거지..?)</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;user name="http://jimi.hendrix.myopenid.com/" password="notused" authorities="ROLE_USER" /&gt;</div>
+<p><font size="4"><span style="font-weight: bold;">2.3.4. Adding in Your Own Filters</span></font></p>
+<p>이전 버전의 Acegi에서는 커스텀 필터를 필터 체인 중에 끼워넣을 수 있었다. 또는 이미 존재하는 필터를 커스터마이징해서 사용하고 싶을 수 있다. 2.0 이후 부터는 필터 체인이 명시적으로 보이지 않는데 어떻게 해야할까?</p>
+<p>네임스페이스를 사용할 때 필터의 순서는 항상 고정되어 있다. 각각의 필터들은 스프링의 Ordered 인터페이스를 구현했고 그에 따라서 초기화 과정에서 정렬된다. 각각 필터들은 다음과 같은 이름으로 맵핑되어 있다.</p>
+<table class="MsoTableLightGridAccent5" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border-style: solid; border-color: rgb(75, 172, 198); border-width: 1pt 1pt 2.25pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: center;" align="center"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">Alias<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: solid solid solid none; border-color: rgb(75, 172, 198) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: 1pt 1pt 2.25pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: center;" align="center"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">Filter Class<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">CHANNEL_FILTER<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">ChannelProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">CONCURRENT_SESSION_FILTER<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">ConcurrentSessionFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">SESSION_CONTEXT_INTEGRATION_FILTER<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">HttpSessionContextIntegrationFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">LOGOUT_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">LogoutFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">X509_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">X509PreAuthenticatedProcessigFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">PRE_AUTH_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">Subclass of AstractPreAuthenticatedProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">CAS_PROCESSING_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">CasProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">AUTHENTICATION_PROCESSING_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">AuthenticationProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">BASIC_PROCESSING_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">BasicProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">SERVLET_API_SUPPORT_FILTER<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">classname<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">REMEMBER_ME_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">RememberMeProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">ANONYMOUS_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">AnonymousProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">EXCEPTION_TRANSLATION_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">ExceptionTranslationFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">NTLM_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">NtlmProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">FILTER_SECURITY_INTERCEPTOR <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(210, 234, 241) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; width: 216.55pt;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">FilterSecurityInterceptor<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background-color: transparent;" valign="top">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><b><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">SWITCH_USER_FILTER <o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: rgb(236, 233, 216) rgb(75, 172, 198) rgb(75, 172, 198) rgb(236, 233, 216); border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 216.55pt; background-color: transparent;" valign="top" width="289">
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-size: 11pt; font-family: 굴림;" lang="EN-US">SwitchUserProcessingFilter<o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>커스텀 필터는 &lt;custom-filter&gt; 엘리먼트를 사용해서 체인에 있는 필터를 교체 할 수 있다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;beans:bean id="myFilter" class="com.mycompany.MySpecialAuthenticationFilter"&gt;<br />&nbsp; &nbsp; &lt;custom-filter position="AUTHENTICATION_PROCESSING_FILTER"/&gt;<br />&nbsp; &lt;/beans:bean&gt;</div>
+<p>필터 전 후에 끼워넣고 싶을 때는 after나 before 속성을 사용할 수 있으며 필터 이름 앞에 FIRST나 LAST를 붙일 수 있다.</p>
+<p><font size="4"><span style="font-weight: bold;">2.3.5. Session Fixation 공격 방어</span></font></p>
+<p>세션을 만들어서 사이트에 접속하려는 <a href="http://en.wikipedia.org/wiki/Session_fixation" target="_blank">Session Fixation</a> 공격이 있다. Spring Security는 사용자가 로그인 할 때 자동으로 새로운 세션을 만들어서 이 공격을 막는다. &lt;http&gt; 에 있는 session0-fixation-protection 속성에 다음과 같은 옵션을 사용하여 설정할 수 있다.</p>
+<ul>
+<li>migrateSession - 새 세션을 만들고 기존의 세션 속성을 새 세션으로 복사한다. 이게 기본값이다.
+</li>
+<li>none - 아무것도 하지 않음. 원래 세션을 유지한다.
+</li>
+<li>newSession - 완전히 비어있는 clean 세션을 생성하고 기존 세션으로부터 아무것도 복사하지 않는다.</li>
+</ul>
+<p><font size="4"><span style="font-weight: bold;">2.3.6. Setting a Custom AuthenticationEntryPoint</span></font></p>
+<p>네임스페이스가 지원하는 인증 방식이 아닌 다른 방법을 사용하고 있어서 새로운 인증 필터와 Entry Point를 사용한다면 이 것들을 네임스페이스에 끼워넣고 싶을 것이다. AuthenticationEntryPoint 구현체를 &lt;http&gt;의 entry-point-ref 속성에 설정하면 된다.</p>
+<p><font size="5"><span style="font-weight: bold;">2.4. Method Security</span></font></p>
+<p>스프링 시큐리티 2.0 부터는 서비스 계층의 메소드에 JSR-250 시큐리티 애노테이션과 프레임워크의 @Secured 애노테이션을 사용할 수 있다. 빈 설정에 intercept-methods 엘리먼트를 추가하거나 AspectJ 스타일 포인트 컷으로 여러 개의 빈에 적용할 수 있다.</p>
+<p><font size="4"><span style="font-weight: bold;">2.4.1. The &lt;global-method-security&gt; Element</span></font></p>
+<p>이 엘리먼트를 등록해서 애노테이션 기반 보안이 가능하도록 설정한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;global-method-security secured-annotations="enabled" jsr250-annotations="true"/&gt;</div>
+<p>두 가지 타입의 애노테이션을 모두 지원하도록 설정했다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2.4.1.1. Adding Security Pointcuts using protect-pointcut</span></p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;global-method-security&gt;<br />&nbsp; &nbsp; &lt;protect-pointcut expression="execution(* com.mycompany.*Service.*(..))" access="ROLE_USER"/&gt;<br />&lt;/global-method-security&gt;</div>
+<p>위 설정은 com.mycompany 패키지에 Service 라는 이름이 들어가는 빈들의 모든 메소드를 보안하도록 설정. ROLE_USER인 사용자만 해당 클래스의 메소드를 호출할 수 있다.</p>
+<p><font size="5"><span style="font-weight: bold;">2.5. The Default AccessDecisionManager</span></font></p>
+<p>여기는 기본적인 롤(ROLE) 기반의 접근 권한 관리 말고 좀 더 커스터마이징 하고자하는 분들을 위한 것임.</p>
+<p>네임스페이스를 사용하면 기본 AccessDecisionManager 객체를 생성하고 등록해준다. 그리고 이 녀석을 사용해서 메소드 호출과 web URL 접근 가능 여부를 intercept-url와 protect-pointcut 설정을 바탕으로 결정한다. <br />기존 전략은 RoleVoter와 AuthenticatedVoter를 하나씩 가지고 있는 AffirmativeBased AccessDecisionManager를 사용한다.</p>
+<p><font size="3"><span style="font-weight: bold;">2.5.1. Customizing the AccessDecisionManager</span></font></p>
+<p>좀 더 복잡한 접근 제어 전략을 사용하려면 메소드와 웹 보안 둘에 대한 대체제를 설정하면 ㅕ된다.</p>
+<p>메소드 보안을 용도로는 AccessDecisionmanager 빈을 가리키도록 gloval-security 엘리먼트의 acess-decision-manager-ref 속성을 사용한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;global-method-security access-decision-manager-ref="myAccessDecisionManagerBean"&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;/global-method-security&gt;</div>
+<p>웹 보안 접근 제어 대체제는 &lt;http&gt; 에 설정한다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;http access-decision-manager-ref="myAccessDecisionManagerBean"&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;/http&gt;</div>
+<p><font size="3"><span style="font-weight: bold;">2.5.2. The Authentication Manager</span></font></p>
+<p>스프링 시큐리티의 네임스페이스를 사용하면 인증 관리자 객체인 ProviderManager 타입의 객체도 생성해서 등록해준다. 이전 버전을 사용해봤다면 매우 친숙한 객체일 것이다.</p>
+<p>추가적인 AuthenticationManager를 추가 등록하고 싶을 때 &lt;custom-authentication0provider&gt; 속성을 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;bean id="casAuthenticationProvider"<br />&nbsp; &nbsp; &nbsp; class="org.springframework.security.providers.cas.CasAuthenticationProvider"&gt;<br />&nbsp; &nbsp; &lt;security:custom-authentication-provider /&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;/bean&gt;</div>
+<p>그리고 이렇게 등록한 빈을 컨텍스트 안에 있는 다른 빈들이 AhtehnticationManager라고 참조하도록 별칭을 등록할 수 있다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &lt;security:authentication-manager alias="authenticationManager"/&gt;<br />&nbsp; &lt;bean id="casProcessingFilter" class="org.springframework.security.ui.cas.CasProcessingFilter"&gt;<br />&nbsp; &nbsp;&nbsp; &lt;security:custom-filter position="CAS_PROCESSING_FILTER"/&gt;<br />&nbsp; &nbsp;&nbsp; &lt;property name="authenticationManager" ref="authenticationManager"/&gt;<br />&nbsp; &nbsp;&nbsp; ...<br />&nbsp; &lt;/bean&gt;</div>

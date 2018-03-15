@@ -1,0 +1,377 @@
+---
+layout: post
+title: "[Spring Data JPA] 1.0.0.RC1 Chapter 2"
+date: 2011-07-15 15:26:22.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Spring Data JPA
+tags:
+- JPA
+- Spring Data
+- Spring Data JPA
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323151608'
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><strong><span style="font-size: medium;">2장. JPA 리파지토리</span></strong></p>
+<p>이 챕터에서는 JPA 리파지토리 구현체를 자세히 설명한다.</p>
+<p><strong><span style="font-size: small;">2.1. 쿼리 메서드</span></strong></p>
+<p><strong><span style="font-size: x-small;">2.1.1. 쿼리 룩업 전략</span></strong></p>
+<p>JPA 모듈은 쿼리를 직접 정의하는 방법과 메서드 이름으로 정의하는 방법을 제공한다.</p>
+<p><strong>선언된 쿼리</strong></p>
+<p>메서드 이름을 사용해서 쿼리를 만들수도 있지만 사용하고 싶은 키워드를 지원하지 않는다거나, 메서드 이름이 너무 장황해지길 원치 않을 수도 있다. 그래서 JPA 네임드 쿼리를 사용하거나 쿼리 메서드에 @Query 애노테이션으르 사용할 수 있다.</p>
+<p><strong>전략</strong></p>
+<p>JPA @NamedQeury 또는 Hades @Query 애노테이션을 찾아내는 전략이다. 선언된 쿼리를 찾지 못하면 쿼리 실행은 실패한다.</p>
+<p><strong>CREATE_IF_NOT_FOUND(기본값)</strong></p>
+<p>1장에서 설명을 했을텐데…</p>
+<p><strong><span style="font-size: x-small;">2.1.2. 쿼리 생성</span></strong></p>
+<p>기본적으로 쿼리 생성은 1.3 “쿼리 메서드”에서 설명한 방식으로 만들어 진다.</p>
+<p>예제 2.1. 메서드 이름으로 쿼리 만들기</p>
+<p>public interface UserRepository extends Repository&lt;User, Long&gt; {</p>
+<p>  List&lt;User&gt; findByEmailAddressAndLastname(String emailAddress, String lastname);<br />
+}</p>
+<p>메서드 이름을 읽어서 JPA Criteria API를 사용해서 쿼리를 만들지만 결국 다음과 같은 쿼리가 된다.</p>
+<p>select u from User u where u.emailAddress = ?1 and u.lastname = ?2</p>
+<p>Spring Data JPA는 1.3.2.2.1 “property expressions”에서 설명한대로 속성을 확인한다. 다음 표에서 JPA가 지원하는 키워드를 살펴보고 키워드가 어떻게 해석되는지 살펴보자.</p>
+<p>표 2.1. 메서드 이름으로 지원하는 키워드</p>
+<table summary="Supported keywords inside method names" border="1"><span style="font-family: Gisha;"><br />
+</span><br />
+<colgroup>
+<col />
+<col />
+<col /></colgroup>
+<thead>
+<tr>
+<th><span style="font-family: Gisha;">Keyword</span></th>
+<th><span style="font-family: Gisha;">Sample</span></th>
+<th><span style="font-family: Gisha;">JPQL snippet</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">And</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByLastname<strong>And</strong>Firstname</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.lastname = ?1 and x.firstname = ?2</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">Or</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByLastname<strong>Or</strong>Firstname</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.lastname = ?1 or x.firstname = ?2</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">Between</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByStartDate<strong>Between</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.startDate between 1? and ?2</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">LessThan</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>LessThan</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age &lt; ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">GreaterThan</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>GreaterThan</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age &gt; ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">IsNull</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>IsNull</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age is null</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">IsNotNull,NotNull</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>(Is)NotNull</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age not null</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">Like</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByFirstname<strong>Like</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.firstname like ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">NotLike</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByFirstname<strong>NotLike</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.firstname not like ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">OrderBy</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>OrderBy</strong>Lastname<strong>Desc</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age = ?1 order by x.lastname desc</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">Not</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByLastname<strong>Not</strong></span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.lastname &lt;&gt; ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">In</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>In</strong>(Collection&lt;Age&gt; ages)</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age in ?1</span></code></td>
+</tr>
+<tr>
+<td><code class="code"><span style="font-family: Gisha;">NotIn</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">findByAge<strong>NotIn</strong>(Collection&lt;Age&gt; age)</span></code></td>
+<td><code class="code"><span style="font-family: Gisha;">… where x.age not in ?1</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>In이나 NotIn을 사용할 때 매개변수로 Collection 말고 배열이나 가변인자도 사용할 수 있다.</p>
+<p><strong><span style="font-size: x-small;">2.1.3. JPA NamedQueries 사용하기</span></strong></p>
+<p>예제에서는 간단하게 &lt;named-query/&gt; 엘리먼트와 @NamedQeury 애노테이션을 사용한다. 여기서 사용할 쿼리는 JPA 쿼리 언어(JQL)로 작성되어야 한다. 물론, &lt;named-native-query /&gt; 또는 @NamedNativeQuery를 사용할 수도 있다. 이 엘리먼트들은 DB에 특화된 네이티브 SQL을 사용할 수 있다.</p>
+<p><strong>XML named 쿼리 정의</strong></p>
+<p>XML 설정을 사용하려면, 클래스패스에 있는 META-INF 폴더의 orgm.xml에 &lt;named-query/&gt; 엘리먼트를 추가하라.</p>
+<p>예제 2.2. XML named 쿼리 설정</p>
+<p>[xml]<br />
+&amp;lt;named-query name=&quot;User.findByLastname&quot;&amp;gt;<br />
+  &amp;lt;query&amp;gt;select u from User u where u.lastname = ?1&amp;lt;/query&amp;gt;<br />
+&amp;lt;/named-query&amp;gt;<br />
+[/xml]</p>
+<p>보시다시피 쿼리마다 유일한 이름을 가지게 된다.</p>
+<p><strong>애노테이션 설정</strong></p>
+<p>애노테이션 설정은 다른 설정 파일을 작성할 필요가 없어서 유지 보수 비용을 낮출 수 있다는 장점이 있다. 대신 쿼리를 수정하면 도메인 클래스를 다시 컴파일 해야 하는 비용이 있다.</p>
+<p>예제 2.3. 애노테이션 기반 named 쿼리 설정</p>
+<p>[java]<br />
+@Entity<br />
+@NamedQuery(name = &quot;User.findByEmailAddress&quot;,<br />
+  query = &quot;select u from User u where u.emailAddress = ?1&quot;)<br />
+public class User {</p>
+<p>}<br />
+[/java]</p>
+<p><strong>인터페이스 정의하기</strong></p>
+<p>네임드 쿼리를 실행하려면 UserRepository에 다음과 같이 정의하면 된다.</p>
+<p>예제 2.4. UserRepository에 쿼리 메서드 선언</p>
+<p>[java]<br />
+public interface UserRepository extends JpaRepository&amp;lt;User, Long&amp;gt; {</p>
+<p>  List&amp;lt;User&amp;gt; findByLastname(String lastname);</p>
+<p>  User findByEmailAddress(String emailAddress);<br />
+}<br />
+[/java]</p>
+<p>도메인 클래스 이름 뒤에 점을 붙인 다음 메서드 이름을 붙여서(User.findByLastname) 네임드 쿼리를 찾는다.</p>
+<p><strong><span style="font-size: x-small;">2.1.4. @Query 사용하기</span></strong></p>
+<p>실행하려는 쿼리가 특정 메서드에 묶여있기 때문에 Spring Data JPA의 @Query 애노테이션을 사용해서 도메인 클래스 보다는 메서드에 선언할 수 있다. 이렇게 하면 도메인 클래스가 저장소 관련 정보를 담고 있지 않게 할 수 있으며, 쿼리를 리파지토리 인터페이스에 둘 수 있다.</p>
+<p>예제 2.5. @Query 사용해서 쿼리 메서드에 쿼리 선언하기</p>
+<p>[java]<br />
+public interface UserRepository extends JpaRepository&amp;lt;User, Long&amp;gt; {</p>
+<p>  @Query(&quot;select u from User u where u.emailAddress = ?1&quot;)<br />
+  User findByEmailAddress(String emailAddress);<br />
+}<br />
+[/java]</p>
+<p><strong><span style="font-size: x-small;">2.1.5. 네임드 매개변수 사용하기</span></strong></p>
+<p>기본으로 Spring Data JPA는 위치 기반 매개변수 바인딩을 사용한다. 이런 식의 쿼리는 약간 에러 발생 가능성이 높고 위치를 조정하기 어렵ㄴ다. 이 이슈를 해결하려면 @Param 애노테이션을 사용해서 정확한 이름을 사용해서 쿼리에 있는 이름에 바인딩할 수 있다.</p>
+<p>에제 2.6. 네임드 매개변수 사용하기</p>
+<p>[java]<br />
+public interface UserRepository extends JpaRepository&amp;lt;User, Long&amp;gt; {</p>
+<p>  @Query(&quot;select u from User u where u.firstname = :firstname or u.lastname = :lastname&quot;)<br />
+  User findByLastnameOrFirstname(@Param(&quot;lastname&quot;) String lastname,<br />
+                                 @Param(&quot;firstname&quot;) String firstname);<br />
+}<br />
+[/java]</p>
+<p>메서드 매개변수는 순서가 실제 SQL에서 사용된 순서와 같지 않아도 된다는 점을 눈여겨 보시라.</p>
+<p><strong><span style="font-size: x-small;">2.1.6. 수정 쿼리</span></strong></p>
+<p>가져오는 쿼리 말고 수정하는 쿼리도 커스터마이징 할 수 있다. 쿼리 메서드에 @Modifying을 추가하면 된다.</p>
+<p>예제 2.7. 수정 쿼리 선언</p>
+<p>[java]<br />
+@Modifying<br />
+@Query(&quot;update User u set u.firstname = ?1 where u.lastname = ?2&quot;)<br />
+int setFixedFirstnameFor(String firstname, String lastname);<br />
+[/java]</p>
+<p>select가 아니라 update 쿼리를 실행한다. EntityManager가 수정 쿼리를 실행한 다음 변경되기 전 데이터를 가지고 있을 수 있기 때문에, 기본적으로 EntityManager.clear()를 실행한다. 이렇게 하면, EntityManager에 남아있던 동기화(flush)되지 않은 데이터를 모두 버리는데, 그렇게 하고 싶지 않다면 @Modifying 애노테이션의 clearAutomatically 속성을 false로 설정하자.</p>
+<p><strong><span style="font-size: small;">2.2 Specifications</span></strong></p>
+<p>JPA 2는 쿼리를 프로그래밍으로 만들 수 있도록 Criteria API를 추가했다.</p>
+<p>Spring Data JPA는 에릭 에반스의 DDD에서 specification 개념을 차용했다. JPA Criteria API를 사용해서 Specification을 만들 수 있다. 그렇게 하려면 JpaSpecificationExecutor 인터페이스를 리파지토리에 추가 확장 시켜야 한다.</p>
+<p>[java]<br />
+public interface CustomerRepository extends CrudRepository&amp;lt;Customer, Long&amp;gt;, JpaSpecificationExecutor {<br />
+…<br />
+}<br />
+[/java]</p>
+<p>여기서 추가된 인터페이스의 메서드로는 다음과 같은 것들이 있다.</p>
+<p>[java]<br />
+List&amp;lt;T&amp;gt; readAll(Specification&amp;lt;T&amp;gt; spec);<br />
+[/java]</p>
+<p>Specification 인터페이스는 다음과 같이 생겼다.</p>
+<p>[java]<br />
+public interface Specification&amp;lt;T&amp;gt; {<br />
+  Predicate toPredicate(Root&amp;lt;T&amp;gt; root, CriteriaQuery&amp;lt;?&amp;gt; query,<br />
+            CriteriaBuilder builder);<br />
+}<br />
+[/java]</p>
+<p>좋아. 그래서 이걸 어떻게 쓰냐고? Specification은 확장 가능한 Predicate를 손쉽게 만드는데 사용한다. 그리고 그렇게 만든 것들을 조합해서 활용할 수 있다.</p>
+<p>예제 2.8. Customer 스팩</p>
+<p>[java]<br />
+public class CustomerSpecs {</p>
+<p>  public static Specification&amp;lt;Customer&amp;gt; isLongTermCustomer() {<br />
+    return new Specification&amp;lt;Customer&amp;gt;() {<br />
+      Predicate toPredicate(Root&amp;lt;T&amp;gt; root, CriteriaQuery&amp;lt;?&amp;gt; query,<br />
+            CriteriaBuilder builder) {</p>
+<p>         LocalDate date = new LocalDate().minusYears(2);<br />
+         return builder.lessThan(root.get(Customer_.createdAt), date);<br />
+      }<br />
+    };<br />
+  }</p>
+<p>  public static Specification&amp;lt;Customer&amp;gt; hasSalesOfMoreThan(MontaryAmount value) {<br />
+    return new Specification&amp;lt;Customer&amp;gt;() {<br />
+      Predicate toPredicate(Root&amp;lt;T&amp;gt; root, CriteriaQuery&amp;lt;?&amp;gt; query,<br />
+            CriteriaBuilder builder) {</p>
+<p>         // build query here<br />
+      }<br />
+    };<br />
+  }<br />
+}<br />
+[/java]</p>
+<p>구체적인 구현은 생략했다. 클라이언트는 이렇게 만들어둔 스팩을 다음과 같이 사용할 수 있다.</p>
+<p>예제 2.9. 스팩 사용하기</p>
+<p>[java]<br />
+List&amp;lt;Customer&amp;gt; customers = customerRepository.findAll(isLongTermCustomer());<br />
+[/java]</p>
+<p>그냥 쿼리 하나 만들지 뭐하러 이렇게 하냐는 생각이 들겠지만, 스팩을 하나만 사용했을 때는 그 진가를 잘 발휘하지 못한다. 스팩의 진정한 힘은 스팩 여러개를 조합해서 새로운 스팩을 만들 때 그 빛을 발한다. 스프링에서 제공하는 스팩 헬퍼 클래스(이게 뭔진 안보이는데.. 흠..)의 도움을 받아서 다음가 같이 만들 수 있다.</p>
+<p>예제 2.10. 스팩 조합하기</p>
+<p>[java]<br />
+MonetaryAmount amount = new MonetaryAmount(200.0, Currencies.DOLLAR);<br />
+List&amp;lt;Customer&amp;gt; customers = customerRepository.readAll(<br />
+  where(isLongTermCustomer()).or(hasSalesOfMoreThan(amount)));<br />
+[/java]</p>
+<p>보시다시피, 스팩을 조합하고 체인 형태로 만들 수 있다. 따라서 데이터 접근 계층을 확장하는 것은 새로운 스팩 구현체를 만들거나, 기존의 스팩을 어떻게 조합하느냐의 문제가 된다.</p>
+<p><strong><span style="font-size: small;">2.3. Transactionality</span></strong></p>
+<p>리파지토리의 CRUD 메서드는 기본적으로 트랜잭셔널하다. 읽어오는 오퍼레이션에는 기본으로 readOnly 플래스가 true로 설정되어 있다. 다른 것들은 모두 @Transactional이 붙어있다. 자세한 내용은 Repository 자바독을 살펴보자. 트랜잭션 설정을 바꾸려면 자신의 리파지토리 인터페이스에서 다음과 같이 @Transactional을 재정의하면 된다.</p>
+<p>예제 2.11. 커스텀 트랜잭션 설정</p>
+<p>[java]<br />
+public interface UserRepository extends JpaRepository&amp;lt;User, Long&amp;gt; {</p>
+<p>  @Override<br />
+  @Transactional(timeout = 10)<br />
+  public List&amp;lt;User&amp;gt; findAll();</p>
+<p>  // Further query method declarations<br />
+}<br />
+[/java]</p>
+<p>findAll() 메서드 실행 시간을 10초로 하고, readOnly 플래스를 제거했다.</p>
+<p>또다르느 트랜잭션 설정은 퍼사드 또는 여러 리파지토리를 사용하는 서비스 구현체에서 트랜잭션을 담당하는 것이다.</p>
+<p>예제 2.12. 여러 저장소 호출할 때 퍼사드 사용하기</p>
+<p>[java]<br />
+@Service<br />
+class UserManagementImpl implements UserManagement {</p>
+<p>  private final UserRepository userRepository;<br />
+  private final RoleRepository roleRepository;</p>
+<p>  @Autowired<br />
+  public UserManagementImpl(UserRepository userRepository,<br />
+    RoleRepository roleRepository) {<br />
+    this.userRepository = userRepository;<br />
+    this.roleRepository = roleRepository;<br />
+  }</p>
+<p>  @Transactional<br />
+  public void addRoleToAllUsers(String roleName) {</p>
+<p>    Role role = roleRepository.findByName(roleName);</p>
+<p>    for (User user : userRepository.readAll()) {<br />
+      user.addRole(role);<br />
+      userRepository.save(user);<br />
+    }<br />
+}<br />
+[/java]</p>
+<p>이렇게 하면 저장소에 설정해둔 트랜잭션은 무시되고 서비스에 적용한 트랜잭션으로 동작한다. &lt;tx:annotation=driven/&gt;과 컴포넌스 스캔을 사용하고 있다는 가정하게 작성한 예제다.</p>
+<p><strong><span style="font-size: x-small;">2.3.1. 트랜잭셔널 쿼리 메서드</span></strong></p>
+<p>쿼리 메서드를 트랜잭션으로 묶으려면 @Transactional을 리파지토리 인터페이스에 사용하면 된다.</p>
+<p>예제 2.13. 쿼리 메서드에 @Transactional 사용하기</p>
+<p>[java]<br />
+@Transactional(readOnly = true)<br />
+public interface UserRepository extends JpaRepository&amp;lt;User, Long&amp;gt; {</p>
+<p>  List&amp;lt;User&amp;gt; findByLastname(String lastname);</p>
+<p>  @Modifying<br />
+  @Transactional<br />
+  @Query(&quot;delete from User u where u.active = false&quot;)<br />
+  void deleteInactiveUsers();<br />
+}<br />
+[/java]</p>
+<p>해당 클래스의 모든 메서드의 readOnly 플래그를 true로 설정하고, deleteInactiveUsers 같은 경우는 수정하는 메서드니까 @Modifying을 붙이고, @Transactional을 재정의해서 readOnly를 제거했다.</p>
+<p>*주의*</p>
+<p>읽기 전용 오퍼레이션에는 반드시 readOnly 플래그를 true로 설정하는게 좋다. 이렇게 한다고 해서  수정 쿼리가 날아가는 것을 확인하는게 아니라, 기반으로 사용하고 있는 JDBC 드라이버에 힌트를 알려줘서 성능 최적화를 할 수 있게 해준다. 거기에 스프링이 기반하고 있는 JPA provider에 몇몇 최적화를 수행한다. 가령, 하이버네이트의 flush 모드를 NEVER로 설정해서 하이버네이트가 dirty checking을 무시하게 한다.</p>
+<p><strong><span style="font-size: small;">2.4. Auditing</span></strong></p>
+<p>대부분의 애플리케이션은 특정 엔티티의 작성일, 장성자, 갱신일, 갱신자를 기록하는 작업이 필요하다. Spring Data JPA는 이런 오딧 정보를 AOP를 사용해서 투명하게 처리한다. 이 기능을 도메인에 추가하려면 고급 인터페이스를 구현할 필요가 있다.</p>
+<p>에제 2.14. Auditable 인터페이스</p>
+<p>[java]<br />
+public interface Auditable&amp;lt;U, ID extends Serializable&amp;gt;<br />
+        extends Persistable&amp;lt;ID&amp;gt; {</p>
+<p>    U getCreatedBy();</p>
+<p>    void setCreatedBy(U createdBy);</p>
+<p>    DateTime getCreatedDate();</p>
+<p>    void setCreated(Date creationDate);</p>
+<p>    U getLastModifiedBy();</p>
+<p>    void setLastModifiedBy(U lastModifiedBy);</p>
+<p>    DateTime getLastModifiedDate();</p>
+<p>    void setLastModified(Date lastModifiedDate);<br />
+}<br />
+[/java]</p>
+<p>보시다시피 수정하려는 엔티티는 반드시 엔티티어야 한다. 보통 User 엔티티가 필요하기 때문에 U 매개변수 타입을 선택하자.</p>
+<p>*주의*</p>
+<p>코딩을 줄일 수 있도록 Spring Data JPA에서 AbstractPersisteable과 AbstractAuditable 기반 클래스를 제공한다. 그러니까, 단순히 인터페이스를 구현할지 아니면 기반 클래스를 확장해서 좀 더 복잡한 기능을 즐길지 맘대로해라.</p>
+<p>일반적인 오딧 설정</p>
+<p>Spring Data JPA는 오딧 정보를 캡춰할 수 있는 트리거로 사용할 엔티티 리스너를 제공한다. 우선, orm.xml에 모든 엔티티에 적용할 AuditingEntityListener를 등록해야 한다.</p>
+<p>예제 2.15. orm.xml 오딧 설정</p>
+<p>[xml]<br />
+&amp;lt;persistence-unit-metadata&amp;gt;<br />
+  &amp;lt;persistence-unit-defaults&amp;gt;<br />
+    &amp;lt;entity-listeners&amp;gt;<br />
+      &amp;lt;entity-listener class=&quot;….data.jpa.domain.support.AuditingEntityListener&quot; /&amp;gt;<br />
+    &amp;lt;/entity-listeners&amp;gt;<br />
+  &amp;lt;/persistence-unit-defaults&amp;gt;<br />
+&amp;lt;/persistence-unit-metadata&amp;gt;<br />
+[/xml]</p>
+<p>이제 auditing 엘리먼트만 추가하면 된다.</p>
+<p>예제 2.16. 스프링 설정에 오딧 기능 활성화하기</p>
+<p>&lt;jpa:auditing auditor-aware-ref="yourAuditorAwareBean" /&gt;</p>
+<p>다음과 같이 생긴 AuditorAware 인터페이스의 구현체를 설정해야 한다.</p>
+<p>예제 2.17. AuditorAware 인터페이스</p>
+<p>[java]<br />
+public interface AuditorAware&amp;lt;T, ID extends Serializable&amp;gt; {</p>
+<p>    T getCurrentAuditor();<br />
+}<br />
+[/java]</p>
+<p>보통 현재 시스템 사용자를 추적하는데 사용하는 인증 요소가 있을 것이다. 해당 컴포넌트는 보통 AuditAware여야 하며 오디터를 지속적으로 확인해야 한다.</p>
+<p><strong><span style="font-size: small;">2.5. 기타</span></strong></p>
+<p><strong><span style="font-size: x-small;">2.5.1. 퍼시스턴스 유닛 합치기</span></strong></p>
+<p>모듈화 때문에 애플리케이션을 여럿으로 쪼개놨는데, 런타임 때 그렇게 여럿으로 쪼갠 것을 하나로 묶어서 잘 동작하는 확인하고 싶을 수 있다. 그래서 Spring Data JPA는 자동으로 퍼시스턴스 이름을 기준으로 합쳐주는 PersistenceUnitManager 구현체를 제공한다.</p>
+<p>예제 2.18. MergingPersistenceUnitManager 사용하기</p>
+<p>[xml]<br />
+&amp;lt;bean class=&quot;….LocalContainerEntityManagerFactoryBean&quot;&amp;gt;<br />
+  &amp;lt;property name=&quot;persistenceUnitManager&quot;&amp;gt;<br />
+    &amp;lt;bean class=&quot;….MergingPersistenceUnitManager&quot; /&amp;gt;<br />
+  &amp;lt;/property<br />
+&amp;lt;/bean&amp;gt;<br />
+[/xml]</p>

@@ -1,0 +1,118 @@
+---
+layout: post
+title: Blocks and Iterators
+date: 2006-11-03 02:45:32.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Manual
+tags:
+- block
+- Iterator
+- ruby
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323119647'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번 세션에서는 간단하게 Ruby의 장점중에 하나를 설명하겠습니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">코드 블럭</span>을 살펴보려고 합니다. 코드 블럭은 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">callback</span>을 구현하거나(Java의 anonymous inner class보다 간단하게),<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> 코드 덩어리</span>(C의 funtion pointer보다 더 유연한)를 넘겨주거나, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">이터레이터를 구현할 때 사용</span>할 수 있습니다.</p>
+<p>코드 블럭은 ( )사이 또는 do 와 end 사이의 코드 덩어리 입니다.</p>
+<pre><span style="font-family: verdana,arial,helvetica,sans-serif">{ puts "Hello" }&nbsp; &nbsp; &nbsp; &nbsp;# this is a block</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif">do &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; #</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif"> &nbsp;club.enroll(person) &nbsp;# and so is this</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif"> &nbsp;person.socialize &nbsp; &nbsp; #</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif">end &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;#</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><br />
+코드 블럭을 만들어 두고 yield 를 사용하여 여러번 호출 할 수 있습니다.<br />
+<br />
+<span style="font-family: verdana,arial,helvetica,sans-serif">def callBlock</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif"> &nbsp;yield</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif"> &nbsp;yield</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif">end</span><br style="font-family: verdana,arial,helvetica,sans-serif" /></pre>
+<p><span style="font-family: verdana,arial,helvetica,sans-serif">callBlock { puts "In the block" }</p>
+<p>callBlock 이라는 메소드 안에는 yield 를 두 번 사용했습니다. 그리고 오른쪽에 코드 블럭이 있군요. 그럼 이 코드 블럭을 두 번 호출 하게 될 테니 화면에 in the block 가 두번 찍힐 것입니다.</p>
+<p>In the block</span><br style="font-family: verdana,arial,helvetica,sans-serif" /><span style="font-family: verdana,arial,helvetica,sans-serif">In the block</span></p>
+<pre><br />
+You can provide parameters to the call to<br />
+<code>yield</code>: these will be passed to the block. Within the block, you<br />
+list the names of the arguments to receive these parameters between<br />
+vertical bars (``|'').<br />
+</pre>
+<p>                          def callBlock    yield ,   end  callBlock { |, | ... }</p>
+<p>코드 블럭은 Ruby에서 이터레이터를 구현할 때 사용됐습니다.</p>
+<pre>a = %w( ant bee cat dog elk )&nbsp; &nbsp; # create an array<br />
+a.each { |animal| puts animal }&nbsp; # iterate over the contents</pre>
+<p>이 것의 결과는 다음과 같습니다.</p>
+<pre>ant<br />
+bee<br />
+cat<br />
+dog<br />
+elk<br />
+<br />
+each라는 메소드가 어떻게 구현되어 있는지 보겠습니다.<br />
+<br />
+# within class Array...<br />
+def each<br />
+ &nbsp;for each element<br />
+ &nbsp; &nbsp;yield(element)<br />
+ &nbsp;end<br />
+end<br />
+</pre>
+<p>You could then iterate over an array's elements by calling its<code>each</code> method and supplying a block. This block would be called foreach element in turn.<br />
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="400">
+<tbody>
+<tr>
+<td>
+<pre>[ 'cat', 'dog', 'horse' ].each do |animal|<br />
+ &nbsp;print animal, " -- "<br />
+end<br />
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>produces:</em>
+<pre>cat -- dog -- horse --<br />
+<br />
+Java와 C에서 사용하는 여러 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">loof를 Ruby에서는 단순한 메소드 호출을 사용하여 할 수 있습니다.</span><br />
+<br />
+5.times {&nbsp; print "*" }<br />
+3.upto(6) {|i| &nbsp;print i }<br />
+('a'..'e').each {|char| print char }<br />
+    <br />
+<em>produces:</em><br />
+<br />
+*****3456abcde<br />
+<br />
+*을 출력하는 코드 블럭을 다섯번 호출하고, 3~6까지 출력하고, a~e까지 출력했습니다.<br />
+<br />
+<br />
+</pre>

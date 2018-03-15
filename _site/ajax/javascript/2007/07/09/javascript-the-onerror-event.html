@@ -1,0 +1,15 @@
+<p>참조 : <a href="http://www.w3schools.com/js/js_onerror.asp" target="_blank">http://www.w3schools.com/js/js_onerror.asp</a></p>
+<p><span style="font-weight: bold;">onerror 이벤트</span><br />예외를 처리하는 다른 방법 중에 하나인 onerror 이벤트를 살펴보겠다.</p>
+<p>onerror 이벤트는 페이지에 스크립트 에러가 발생할 때 마다 호출 된다.</p>
+<p>onerror 이벤트를 사용하기 위해서는, 반드시 에러를 다룰 함수를&nbsp; 만들어야한다. 그런 뒤 onerror 이벤트 핸들러로 해당 함수를 호출하면 된다. 이 때 불려지는 함수는 세 개의 인자를 가지게 된다. msg(에러 메시지), url(에러를 발생시킨 페이지의 url) 그리고 line(몇 번째 행에서 에러가 발생했는지)</p>
+<p><span style="font-weight: bold;">문법</span>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">onerror=handleErr</p>
+<p>function handleErr(msg,url,l)<br />{<br />//Handle the error here<br />return true or false<br />}</div>
+<p>onerror 에 의해 반환되는 값으로 브라우저에 표준 에러 메시지를 출력할지 말지 결정할 수 있다. 만약에 false를 반환하면 브라우저는 자바스크립트 콘솔에 표준 에러 메시지를 출력합니다. 하지만 만약 true를 반환한다면 브라우저는 표준 에러 메시지를 출력하지 않습니다.</p>
+<p><span style="font-weight: bold;">예제</span>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;html&gt;<br />&lt;head&gt;<br />&lt;script type="text/javascript"&gt;<br />onerror=handleErr<br />var txt=""</p>
+<p>function handleErr(msg,url,l)<br />{<br />txt="There was an error on this page.\n\n"<br />txt+="Error: " + msg + "\n"<br />txt+="URL: " + url + "\n"<br />txt+="Line: " + l + "\n\n"<br />txt+="Click OK to continue.\n\n"<br />alert(txt)<br />return true<br />}</p>
+<p>function message()<br />{<br />adddlert("Welcome guest!")<br />}<br />&lt;/script&gt;<br />&lt;/head&gt;</p>
+<p>&lt;body&gt;<br />&lt;input type="button" value="View message" onclick="message()" /&gt;<br />&lt;/body&gt;</p>
+<p>&lt;/html&gt;</p></div>
+<p>에러가 발생하면 onerror 이벤트가 발생하고 거기에 정해준 콜백 메소드가 실행됩니다. 이 때 메시지를 직접 작성한 뒤 표준 에러 메시지를 출력하지 않고 handleErr() 함수에서 작성한 메시지를 보여줍니다.</p>

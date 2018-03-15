@@ -1,0 +1,66 @@
+---
+layout: post
+title: Fedora Core 6에 자바 최신 버전 설치
+date: 2007-06-25 05:00:11.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags:
+- Fedora core 6
+- Java 6.0 설치
+- 페도라 자바 설치
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322756441'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>좋은 링크를 발견해서 그대로 따라 했더니 잘 됐습니다.<br /><a href="http://news.softpedia.com/news/How-to-Install-Java-in-Fedora-Core-6-39724.shtml" target="_blank">http://news.softpedia.com/news/How-to-Install-Java-in-Fedora-Core-6-39724.shtml</a><br />학교 인터넷이 느린건지 접속이 상당히 느리네요.</p>
+<p>1. 설치할 jdk(or jre) 다운로드<br />rpm 버전이 아니라 그냥 self-extracting 파일입니다.<br /><img src="{{ site.baseurl }}/assets/dm254.png" class="aligncenter" width="600" height="93" alt="사용자 삽입 이미지" /><br />2. 설치할 폴더로 파일 이동<br /><span style="font-weight: bold;">mv jdk-6u1-linux-i586.bin /opt</span></p>
+<p>3. 설치할 폴더로 이동하여 권한 설정을 변경합니다.<br /><span style="font-weight: bold;">cd /opt</span><br style="font-weight: bold;" /><span style="font-weight: bold;">chmod +x jdk-6u1-linux-i586.bin</span></p>
+<p>4. 설치합니다.<br /><span style="font-weight: bold;">./jdk jdk-6u1-linux-i586.bin</span></p>
+<p>5. 다운 받은 파일 제거 합니다.<br /><span style="font-weight: bold;">rm -rf jdk-6u1-linux-i586.bin</span></p>
+<p>6. 파이어폭스의 플러그인에서 사용하는 java의 링크를 변경합니다.<br /><span style="font-weight: bold;">ln -s /opt/jdk1.6.0_01/jre/plugin/i386/ns7/libjavaplugin_oji.so /usr/local/firefox/plugins/libjavaplugin_oji.so</span><br />자세한 경로는 저와 다를 수 있습니다. 각각 자바 설치 폴더와 파이어폭스 설치 폴더로 변경해 주시면 됩니다.</p>
+<p>7. 패스 설정<br /><span style="font-weight: bold;">vi /etc/profile.d/java.sh</span><br />편집기 열고 다음과 같이 패스를 넣어 줍니다.<br /><span style="font-weight: bold;">export J2RE_HOME=/opt/jdk1.6.0_01/jre</span><br style="font-weight: bold;" /><span style="font-weight: bold;">export PATH=$J2RE_HOME/bin:$PATH</span></p>
+<p>8. 위에서 만든 파일을 사용하도록 합니다.<br /><span style="font-weight: bold;">source /etc/profile.d/java.sh</span></p>
+<p>9. 패스 설정 확인<br /><span style="font-weight: bold;">which java</span><br />명령으로 방금 설치한 java 디렉토리가 나오는지 확인합니다.</p>
+<p>10. 시스템에서 사용할 java 변경<br /><span style="font-weight: bold;">/usr/sbin/alternatives --install /usr/bin/java java /opt/jdk1.6.0_01/jre/bin/java 2</span><br style="font-weight: bold;" /><span style="font-weight: bold;">/usr/sbin/alternatives --config java</span><br />마지막 줄에서 선택 가능한 java가 두 개 나올 것 입니다. 이 때 2 를 입력합니다.</p>
+<p>11. 변경 됐는지 확인<br /><span style="font-weight: bold;">/usr/sbin/alternatives --display java</span></p>
+<p>12. 마지막으로 자바 버전 확인<br /><span style="font-weight: bold;">java -version</span>[footnote]6.0 이전에는 --version 이였는데 6.0부터는 짝대기 하나가 빠졌습니다.[/footnote]</p>
+<p></p>

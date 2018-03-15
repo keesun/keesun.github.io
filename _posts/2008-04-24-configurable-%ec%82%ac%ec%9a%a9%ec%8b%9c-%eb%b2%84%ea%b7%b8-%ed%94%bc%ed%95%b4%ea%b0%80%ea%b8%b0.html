@@ -1,0 +1,65 @@
+---
+layout: post
+title: "@Configurable 사용시 버그 피해가기"
+date: 2008-04-24 06:06:03.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- "@Configurable"
+- 버그
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322748378'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">Caused by: java.lang.VerifyError: (class:<br />
+머시기/모시기/클래스$$EnhancerByCGLIB$$6dd4e683, method: unique signature:<br />
+()L저기기/거시기/클래스;) Inconsistent stack height 1 != 0</div>
+<p>참조 : <a href="http://forum.springframework.org/showthread.php?t=51455" target="_blank">http://forum.springframework.org/showthread.php?t=51455</a></p>
+<p>CGLib으로 만든어진 객체에 위빙을 시도해서 생기는 문제 같은데, 일종의 버그인가봅니다. 이전에 @Configurable 테스트 할 땐 못 본 에러인데 오랜만에 이걸 쓸 일이 있어서 사용하니까 발생하네요.</p>
+<p>이 문제를 해결(?)하려면 일단 META-INF 폴더를 클래스 패스 안에 만들어 줍니다. 만든 다음에 클래스 패스에 추가해도 되구요.</p>
+<p>다음은 aop.xml 파일을 정의하고 다음과 같이 적어줍니다.</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">&lt;?xml version="1.0"?&gt;</p>
+<p>&lt;!--<br />&nbsp; &nbsp; AspectJ load-time weaving config file to install common Spring aspects.<br />--&gt;<br />&lt;aspectj&gt;<br /><br style="font-weight: bold; color: rgb(255, 0, 0);" /><span style="font-weight: bold; color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;weaver options="-showWeaveInfo" &gt;</span><br style="font-weight: bold; color: rgb(255, 0, 0);" /><span style="font-weight: bold; color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; &lt;exclude within="*..*CGLIB*" /&gt;</span><br style="font-weight: bold; color: rgb(255, 0, 0);" /><span style="font-weight: bold; color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;/weaver&gt;</span></p>
+<p>&nbsp; &nbsp; &lt;aspects&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;aspect<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;aspect<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name="org.springframework.transaction.aspectj.AnnotationTransactionAspect" /&gt;<br />&nbsp; &nbsp; &lt;/aspects&gt;</p>
+<p>&lt;/aspectj&gt;</p></div>
+<p>다른 내용은 spring-aspects.jar 파일에 기본으로 들어있는 aop.xml의 내용과 일치하구요. 거기에 &lt;warver&gt; 엘리먼트를 추가해서 CGLIB이 들어간 클래스에는 위빙하지 말라는 설정을 해줍니다.</p>
+<p>아.. 근데 이렇게 하면 프록시에는 위빙하지 말라는건데... 이것참 난감하네요. 버그 보니까 해결됐다고 나오는데 저 문제는 왜 발생하는건지..에구구...</p>

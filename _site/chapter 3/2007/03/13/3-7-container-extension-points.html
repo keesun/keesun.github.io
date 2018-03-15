@@ -1,0 +1,9 @@
+<p><span style="font-weight: bold;">3.7.1. Customizing beans using </span><a style="font-weight: bold;" href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/config/BeanPostProcessor.html" target="_blank">BeanPostProcessors</a></p>
+<p>Bean의 LifeCycle을 보면 initailization을 하기 전 과 후에 어떤 작업을 추가할 수 있는 인터페이스로 보입니다.</p>
+<p><img src="/assets/dk83.jpg" class="aligncenter" width="344" height="409" alt="사용자 삽입 이미지" /><br /><a href="../../../../561">BeanPostProcessor 사용 예</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.7.2. Customizing configuration metadata with BeanFactoryPostProcessors</span></p>
+<p>BeanPostProcessor와 비슷하지만 적용되는 대상이 Configuration Metadata 입니다. bean을 만들고 DI하기 전에 설정 내용을 변경할 수 있습니다.</p>
+<p><a href="../../../../562">BeanFactoryPostProcessor 사용 예</a></p>
+<p><span style="font-weight: bold;">3.7.3. Customizing instantiation logic using FactoryBeans</span></p>
+<p>FactoryBean 인터페이스를 구현해서 직접 factory를 만들어서 container에 끼워넣을 수 있습니다.</p>
+<p>getBean()의 인자로 &amp;를 붙여 주면 해당 bean 객체를 생성하는 FactoryBean을 얻을 수 있습니다.</p>
+<p><a href="../../../../556">ObjectFactoryCreatingFactoryBean 사용 예</a><br /><a href="../../../../564">'만들 수 없는 것'을 FactoryBean으로 만들기 <span class="cnt">(2)</span></a></p>

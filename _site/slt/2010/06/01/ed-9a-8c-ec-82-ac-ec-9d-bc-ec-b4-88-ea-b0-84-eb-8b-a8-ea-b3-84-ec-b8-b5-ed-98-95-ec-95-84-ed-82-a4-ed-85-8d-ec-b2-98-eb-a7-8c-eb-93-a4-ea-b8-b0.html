@@ -1,0 +1,149 @@
+<p>Code 라는 도메인이 있다. Item에서 사용할 색, 사이즈, 제품 성별 등을 이 '코드'라는 걸로 관리할 생각인데 그걸 대편하는 도메인이 Code다.
+<div>
+</div>
+<div>1. 도메인 클래스 만들기</div>
+<div>
+</div>
+<div>
+<div>@Entity</div>
+<div>public class Code {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Id</div>
+<div>&nbsp;&nbsp; &nbsp;@GeneratedValue(strategy = GenerationType.AUTO)</div>
+<div>&nbsp;&nbsp; &nbsp;private int id;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column(length = 50)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private String name;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column(length = 50)</div>
+<div>&nbsp;&nbsp; &nbsp;private String code;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column</div>
+<div>&nbsp;&nbsp; &nbsp;@Type(type = "text")</div>
+<div>&nbsp;&nbsp; &nbsp;private String descr;</div>
+</div>
+<div>
+...</div>
+<div>}</div>
+<div>
+</div>
+<div id="">
+2. JPA 애노테이션을 사용해서 매핑 정보를 입력했다. CodeDao 인터페이스를 만든다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">public interface CodeDao {</div>
+<div id="">&nbsp;&nbsp; &nbsp;List&lt;Code&gt; list();</div>
+<div id="">}</div>
+<div id="">
+</div>
+<div id="">
+3. 구현체를 만든다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">@Repository</div>
+<div id="">public class CodeDaoImpl implements CodeDao {</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;@Autowired SessionFactory sessionFactory;</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public List&lt;Code&gt; list() {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return getCriteriaOf(Code.class).list();</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div>}</div>
+<div>
+</div>
+<div>
+4. CodeService 인터페이스를 만든다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public interface CodeService {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;List&lt;Code&gt; list();</div>
+<div>}</div>
+<div>
+</div>
+<div>
+5. 구현체를 만든다.</div>
+<div>
+</div>
+<div>
+<div>@Service</div>
+<div>@Transactional</div>
+<div>public class CodeServiceImpl implements CodeService{</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired CodeDao codeDao;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public List&lt;Code&gt; list() {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return codeDao.list();</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div>
+}</div>
+<div>
+</div>
+<div>
+6. CodeController를 만든다.</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">@Controller</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">@RequestMapping("/base/code/*")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class CodeController {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Autowired CodeService codeService;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void list() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;}</div>
+<div>}</div>
+<div>
+</div>
+<div>
+7. web/WEB-INF/views/base/code/list.jsp 파일을 만든다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">생략</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그리고 화면에서 확인한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+아주 지겹게 써먹고 있는 아키텍처인데 사실 아직도 잘 못하고 있다.&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">코드 제위치 잡아 주는게 쉬운 일이 아니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이번엔 잘 해보자.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+</div>
+</div>
+<div id="">
+</div>

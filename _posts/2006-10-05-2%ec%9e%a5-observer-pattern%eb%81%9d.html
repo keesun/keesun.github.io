@@ -1,0 +1,84 @@
+---
+layout: post
+title: 2장 Observer Pattern(끝)
+date: 2006-10-05 01:37:10.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Design Pattern
+tags:
+- Head First Design Pattern
+- Observer Pattern
+- Wikipedia
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322640520'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div id="bodyContent">
+<h1 class="firstHeading">Observer pattern</h1>
+<h3 id="siteSub">From Wikipedia, the free encyclopedia</h3>
+<div id="jump-to-nav">Jump to: <a href="http://en.wikipedia.org/wiki/Observer_pattern#column-one">navigation</a>, <a href="http://en.wikipedia.org/wiki/Observer_pattern#searchInput">search</a></div>
+<p>			<!-- start content -->
+<div class="messagebox merge">
+<div class="floatleft"><span><a href="http://en.wikipedia.org/wiki/Image:Mergefrom.gif" class="image" title=""></a></span></div>
+<p>It has been suggested that <a href="http://en.wikipedia.org/wiki/Event_listener" title="Event listener">Event listener</a> be <a href="http://en.wikipedia.org/wiki/Wikipedia:Merging_and_moving_pages" title="Wikipedia:Merging and moving pages">merged</a> into this article or section. (<a href="http://en.wikipedia.org/wiki/Talk:Observer_pattern" title="Talk:Observer pattern">Discuss</a>)</div>
+<p>The <strong>observer pattern</strong> (sometimes known as <a href="http://en.wikipedia.org/wiki/Publish/subscribe" title="Publish/subscribe">publish/subscribe</a>) is a <a href="http://en.wikipedia.org/wiki/Design_pattern_%28computer_science%29" title="Design pattern (computer science)">design pattern</a> used in computer programming to observe the state of an <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29" title="Object (computer science)">object</a> in a <a href="http://en.wikipedia.org/wiki/Computer_program" title="Computer program">program</a>. It is related to the principle of <a href="http://en.wikipedia.org/wiki/Implicit_invocation" title="Implicit invocation">Implicit invocation</a>.</p>
+<p>This pattern is mainly used as a poor man’s <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">event handling system</span>.In some programming languages, the issues addressed by this pattern arehandled in the native event handling syntax.</p>
+<p>The essence of this pattern is that one or more objects (called <strong>observers</strong> or <strong>listeners</strong>) are registered (or register themselves) to <em>observe</em> an <a href="http://en.wikipedia.org/wiki/Event-driven_programming" title="Event-driven programming">event</a> which may be raised by the observed object (the <strong>subject</strong>). (The object which may raise an event generally maintains a collection of the observers.)</p>
+<p>The <a href="http://en.wikipedia.org/wiki/Unified_Modeling_Language" title="Unified Modeling Language">UML</a> diagram below illustrates this structure:<i><br />
+</i></p>
+<p><i><a href="http://en.wikipedia.org/wiki/Image:Observer-pattern-uml.jpg" class="image" title=""><img src="{{ site.baseurl }}/assets/590px-Observer-pattern-uml.jpg" alt="" longdesc="/wiki/Image:Observer-pattern-uml.jpg" height="247" width="590" /></a><br />
+</i>
+<div class="center">
+<div class="floatnone"><span><i><br />
+</i></span></div>
+</div>
+<p><a href="http://en.wikipedia.org/wiki/Observer_pattern">원문</a>에 보시면 더 자세한 설명이 있습니다. 간략히 보면..</p>
+<p>객체의 상태를 관찰하기 위한 디자인 패턴이라고 합니다.<br />
+주로 사용되는 곳은 event handling system이라고 합니다.<br />
+책이도 잠깐 나오지만 java의 수많은 이벤트 핸들링이 옵저버 패턴을 사용한 것인데 정말 놀랍지 안나요. ㅎㅎ</p>
+<p><a href="http://www.javaworld.com/javaworld/javaqa/2001-05/04-qa-0525-observer.html">이 글</a>을 보시면 옵저버 패턴을 어떻게 적용할 수 있을까요? 라는 질문에 대한 답변이 올라와 있는데요.</p>
+<p>질문은 다음과 같습니다.<br />
+<img src="{{ site.baseurl }}/assets/1393710277.jpg" class="aligncenter" width="476" height="65" alt="" />답변은 먼저 문제를 파악하고, 패턴을 이해하고, 그 다음 적용하라는 이야기를 해주고..<br />
+Java code로 예제를 제시해 줍니다.</p>
+<p>마지막으로 observer pattern을 적용할 수 있는 경매장 예제를 보면서 마무리를 하겠습니다.<br />
+<img src="{{ site.baseurl }}/assets/1350139409.jpg" class="aligncenter" width="550" height="418" alt="" /><br />
+위 상황에 맞도록 다음주 월요일까지 과제를 해야 합니다. ㅠㅠ<i><br />
+</i></div>

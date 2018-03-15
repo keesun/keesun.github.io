@@ -1,0 +1,71 @@
+---
+layout: post
+title: 기본 속성 맵핑하기- 실습
+date: 2008-01-22 00:41:12.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- DB가 생성하는 값 사용하기
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323158588'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>기본값 설정하는 방법을 테스트합니다.<br />- @Column의 columnDefinition 속성을 사용해서 column을 만들 때 사용할 공식을 사용할 수 있습니다.<br />- 하이버의 @GenerationTime 애노테이션을 사용해서 기본값이나 생성되는 값을 언제 생성할 지 설정할 수 있습니다.</p>
+<p>1. 테스트 코드</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void add() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Session session = sessionFactory.openSession();<br />&nbsp; &nbsp; &nbsp; &nbsp; Transaction transaction = session.beginTransaction();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; member.setName("썬");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; session.save(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; session.flush();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; transaction.rollback();<br />&nbsp; &nbsp; &nbsp; &nbsp; session.close();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(member.getId());<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(new Integer(1), member.getDefaultNum());<br />&nbsp; &nbsp; }</div>
+<p>2. 결과 쿼리</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(255, 255, 255);">Hibernate: select hibernate_sequence.nextval from dual<br />Hibernate: insert into Member (name, id) values (?, ?)<br />Hibernate: select member_.defaultNum as defaultNum0_ from Member member_ where member_.id=?</div>
+<p>3. Persistent Class</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">@Entity<br />public class Member {</p>
+<p>&nbsp; &nbsp; @Id<br />&nbsp; &nbsp; @GeneratedValue(strategy = GenerationType.AUTO)<br />&nbsp; &nbsp; private Long id;</p>
+<p>&nbsp; &nbsp; private String name;</p>
+<p>&nbsp; &nbsp; @Column(columnDefinition = "number(10,2) default '1'")<br />&nbsp; &nbsp; @org.hibernate.annotations.Generated(org.hibernate.annotations.GenerationTime.INSERT)<br />&nbsp; &nbsp; private Integer defaultNum;</p>
+<p>&nbsp; &nbsp; ...</p>
+<p>}</p></div>
+<p>위 테스트 코드에서 flush를 하지 않으면 시퀀스만 가져오고 insertion은 이뤄지지 않습니다. insertion을 안하기 때문에 db가 생성하는 기본값을 가져오기 위해 발생하는 세번째 쿼리도 실행하지 않습니다. 따라서 다음의 SQL 한 문장만 실행합니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Hibernate: select hibernate_sequence.nextval from dual</div>
+<p>참조 : 4.4.1 Mapping basic properties/Generated and default property values</p>
+<p></p>

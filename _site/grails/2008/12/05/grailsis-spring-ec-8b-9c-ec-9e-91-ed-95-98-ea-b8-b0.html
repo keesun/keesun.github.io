@@ -1,0 +1,20 @@
+<p>0. 일단 <a href="http://www.grails.org/Home" target="_blank">http://www.grails.org/Home</a> 여기로 가서 홈피 구경을 합니다.</p>
+<p>1. <a href="http://www.grails.org/Download" target="_blank">다운로드</a>하러 갑니다. 이때 주의 할 건 맨 위에 보이는 1.0.4가 아니라 1.1.0 베타1을 받습니다.</p>
+<p>2. 압축을 풀고 Grails 홉 디렉터리를 GRAILS_HOME으로 환경변수에 추가하고 PATH에는 GRAILS_HOME/bin을 추가해줍니다.</p>
+<p>3. 콘솔에서 grails help를 입력해 봅니다.</p>
+<p>=&gt; 화면에 뭔가 잘 뜨면 Grilas 준비 끝 납니다. 이젠 이클립스를 조금 준비해 줍니다.</p>
+<p>4. 이클립스를 켜고 <a href="http://groovy.codehaus.org/Eclipse+Plugin" target="_blank">Groovy 플러그인</a>을 받아서 설치합니다. http://dist.codehaus.org/groovy/distributions/update/ 업데이트 사이트를 이용할 수 있습니다.</p>
+<p>5. Preference -&gt; Java -&gt; Build Path -&gt; Classpath Component인가(?) 에 new 를 클릭하고 GRAILS_HOME 환경 변수를 등록해 줍니다.</p>
+<p>=&gt; 이클립스 준비 끝. 이젠 <a href="http://www.grails.org/Quick+Start" target="_blank">Grails 퀵스타트</a>를 보면서 프로젝트를 하나 만들어 봅니다.</p>
+<p>6. grails create-app 프로젝트이름</p>
+<p>7. 이클립스에서 import -&gt;&nbsp; Existing Project ... 로 프로젝트 로딩(Grails 프로젝트는 만들 때 기본으로 이클립스에서 인식할 수 있는 프로젝트로 만들어 줌)</p>
+<p>8. grails create-domain-class 도메인이름</p>
+<p>9. 이클립스에서 프로젝트 리로딩(F5)</p>
+<p>10. 도메인 클래스에 필요한 속성 추가</p>
+<p>11. grails generate-all</p>
+<p>12. grails run-app</p>
+<p>13. 브라우저에 http://localhost:8080/프로젝트이름/도메인이름/list 입력</p>
+<p>14. 환호성.. 오오오~~~~!!!</p>
+<p>코드가 Groovy라서 자바 코드 활용도 간단하고 코딩 스타일도 (자바 스타일이랑 거의 똑같이 해도 제대로 동작하지만) 좀 더 간결해지고 무엇보다.. 스크립트 언어 장점을 그대로 활용할 수 있다는거.. 이 말은 서버 재시작 없이 애플리케이션 변경하면 그 변경 사항이 그대로 적용된다는거... 아드리안 콜리어가 보여준 데모의 아주 일부를 해 봤습니다.</p>
+<p>아드리안이 보여준 데모는 이 데모 전에 스프링 인티그레이션을 보여주고 위의 데모 뒤에 위 애플리케이션이랑 스프링 인티그레이션으로 만든 애플리케이션을 연동하고, 마지막으로 grails war를 사용해서 스프링 dm 서버에 설치하는 것 까지 보여줬습니다.</p>
+<p>바램이 있다면, Grails에서 스프링 DM 개발을 빨리 지원해주면 좋겠습니다. grails bundle 같은 명령어로 쉽게 OSGi 번들로 패키징 해주면 좋겠습니다. 이런 플러긴을 만들 수 있는지 살펴보고 없으면 제가 만들어서 스프링소스에 제공해도 되겠네요. 흠~ 해볼까나~ </p>

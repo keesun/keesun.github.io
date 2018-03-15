@@ -1,0 +1,71 @@
+---
+layout: post
+title: Maven을 쓴다고 해서 종속성을 안중에서 Out 시킬 수 있느냐?
+date: 2008-03-03 10:03:56.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- CI
+- maven
+- 에피소드
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323136823'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>그런데 요즘, Maven과 JIA, Confluence, Bamboo, Clover, FishEye를 사용해서 Continuous Integration을 하면서 매우 재밌는 일들(주로 Maven과 관련된)이 많이 발생하고 있습니다. 그 중 방금전에 있었던 Maven과 관련된 매우 따끈따끈한 이슈 하나를 소개해 드리고자 합니다.</p>
+<p>프로젝트 라이브러리들 간의 종속성을 "Out of 안중"까지는 아니더라도.. 아~주 편하게 쓰려고 Maven을 공부하기 시작했었습니다. 그런데...</p>
+<p>잘~ 돌던 빌드가 실패했다는 이메일이 저에게 날아왔습니다. 구글토크를 항상 켜두는 저는 Bamboo에서 빌드 결과를 매번 메일로 보내도록 설정해 두었기 때문에, 금방 알 수 있었습니다. 그리고 누가 작업을 한 것인지가 바로 이메일 제목에 나와있습니다. 정말 사용자가 원하는 정보를 원하는 위치에 보여주는 Atlasian의 Considerable Email(이런 용어 없습니다. 그냥 제가 붙인겁니다.)에 놀라지 않을 수가 없었습니다.</p>
+<p>Anyway, 왜 빌드에 실패했는지 보기 위해 로그를 봤습니다. 빌드 과정을 Bamboo가 그대로 로깅 해두고, 보여주기 때문에 에러 메시지를 금방 확인할 수 있었습니다.</p>
+<p>빌드 실패의 원인은 컴파일 실패. 컴파일 실패시 발생한 에러는</p>
+<p>cannot find symbol: ClassUtils.</p>
+<p>ClassUtils는 스프링에서 제공하는 수 많은 유틸성 클래스들(언제 한 번 싹다 정리하려고 합니다.) 중에 하나입니다.</p>
+<p>ClassNotFound도 아니고..이게 무슨 에러인가 생각해보면서, 자바 기초가 이리도 없는가 하는 생각에 잠기기 시작하면서 구글에서 저 에러 메시지로 검색해서 어떤 상황에 발생할 수 있는지도 대강 살펴봤지만.. 그리.. 도움이 되는 메시지는 못봤습니다.</p>
+<p>이 빌드 전에는 빌드가 성공했는데, 이번 빌드가 실패했다.</p>
+<p>그럼 문제는 이번에 어떤 수정 사항으로 인한 것인데, 어떤 수정이 있었는지도 Bamboo에서 확인할 수 있습니다. (글을 쓰다보니 이게 Maven 이슈 글인지, Bamboo 마케팅 글인지 점점 햇갈리네요.) 암튼 거길 보니까 pom.xml밖에 없습니다.</p>
+<p>pom.xml을 보니까, spring-security 라이브러리가 추가되었습니다. 그래.. 문제는 여기 있을꺼다. 라고 거의 확신을 하고, 이전에도 Maven 종속성 출동 문제 때문에, 일일히 라이브러리르 뒤져본적이 있었기 때문에, 이번에는 그나마 좀 수월하게, spring-security의 pom.xml 파일을 찾을 수 있었습니다.</p>
+<p>그 파일을 열어보니, spring을 모듈별로 가져와서 사용하고 있는데, 버전도 명시가 되어 있지 않고, 이미 이 프로젝트에 추가되어 있는 라이브러리들도 중복해서 가져오고 있었습니다. 그것만 보고는 100% 확신할 수는 없었지만. 대략 정리가 되었습니다.</p>
+<p>ClassUtils가 이미 있는데, spring-secutiry가 또 가져오고(spring-support 모듈에서), 그래서 두 개의 다른 버전의 클래스가 존재하는데 이 둘 중에 뭘 써야 할지 모르니까. Cannot find symbol 이군..</p>
+<p>그래서 현 프로젝트의 pom.xml을 수정해서 spring-security를 가져올 때, 이미 프로젝트에 존재하는 라이브러리들은 가져오지 않도록 설정을 해주었습니다. 비록 이 작업이 한 문장으로 표현이 되긴 하지만, 결코 엘레강트한 작업은 아닙니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">1. 일일히 어떤 라이브러리들을 가져오는지 pom.xml에서 확인하고, 현재 프로젝트의 pom.xml에 존재한 녀석인지 확인하고, 있으면 빼줍니다. exclunsion 엘리먼트를 사용합니다.</p>
+<p>2. 현 프로젝트의 pom.xml에 없는 라이브러리인데, spring의 pom.xml에 optional로 등록되어 있다. 그럼 그 중에 버전이 높은 녀석을 등록해줍니다.</p>
+<p>3. 현 프로젝트의 pom.xml에 없는 라이브러리이고, spring의 pom.xml에 optional로도 등록되어 있지 않다. 그러면 추가합니다. 추가할 때는 별도의 코드를 적을 필요는 없습니다. 다만 주석으로 어떤 라이브러리가 추가되는지 적어두면 나중에 용이하겠죠.</p></div>
+<p>자.. 이 정도되면, 제목에 대한 답은 안해도 되겠죠?</p>

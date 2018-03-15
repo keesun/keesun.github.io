@@ -1,0 +1,79 @@
+---
+layout: post
+title: Spring Architecture - Eberhard Wolff
+date: 2008-10-21 02:14:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Spring One 2008
+tags:
+- Spring One 2008
+- 스프링 아키텍처
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323139422'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a href="http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Spring%20Architectures;talk=20676612" target="_blank">http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Spring%20Architectures;talk=20676612</a></p>
+<p>아키텍처<br />
+<blockquote>The software architecture of a program or computing system is the structure or structures of the system, which comprise software components, the externally visible properties of those components, and the relationships between them.</p>
+<p>Wikipedia</p></blockquote>
+<p>객체: Information hiding</p>
+<p>클래스: 객체의 타입을 정의. White box 재사용.</p>
+<p>재사용: <br />
+<blockquote>A Software Component is a unit of composition with contractually-speciﬁed interfaces and explicit&nbsp; context dependencies only. A software component can be deployed independently and is subject to composition by third parties. </p>
+<p>C. Szyperski: Component Software - Beyond Object-<br />Oriented Programming, Addison-Wesley, 1999</p></blockquote>
+<p>컴포넌트: note the plugability.<br />- 계약 같은 인터페이스<br />- Only 명시적인 의존성<br />- 독립적인 배포<br />- 컴포지션<br />- 결과: 간편한 재사용(black box)<br />- 결과: 간편한 수정(인터페이스는 놔두고 내부만 바꿀 수 있으니.)</p>
+<p>객체는 컴포넌트인가?<br />- 계약 같은 인터페이스? 있네, public 메소드<br />- 명시적인 의존성? 없네. 코드 내부에서 암거나 만들 수 있으니까.<br />- 독립적인 배포? 대부분은 안 돼지.<br />- 컴포지션? No.</p>
+<p>DI를 사용하는 객체는 컴포넌트?<br />- 계약 기반인가? 응<br />- 명시적인 의존성? 응 설정하자나. setter/constuctor injection,<br />- 독립적인 배포? Yes. Everything else is injected<br />- 컴포지션? Yes. DI 컨테이너를 사용해서 조합하니까.</p>
+<p>계층<br />- 각각의 계층은 하위 계층에만 의존해. -&gt; 더 나은 의존성 관리(계층을 쉽게 바꿀 수 있으니까..)<br />- Typical technical<br />- 퍼사드를 사용할 수 있음.</p>
+<p>스프링을 사용하는 컴포넌트<br />- 스프링 설정 파일을 각각의 컴포넌트 별로 만든다.<br />- 추가적인 기반 설정 파일은 javase.xml로..<br />- Facade를 인터페이스로 추가하고, bean 설정 파일에서 의존성을 정의한다.<br />- 각각의 컴포넌트는 JAR 파일로.<br />- 자신만의 빌드 스크립트를 가지고 있고<br />- 그들 컴포넌트를 묶을 때는 classpath*을 사용한다.</p>
+<p>ApplicationContext applicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; "classpath*:/config/applicationContext.xml");</p>
+<p>스프링 설정 파일 + Facade 사용했을 때 컴포넌트 체크 리스트<br />- Contractually-specific 인터페이스? Yes. Facade 사용했으니까.<br />- Only explicit context depedencies? No. 스프링 빈 의존성이 명시적이지 않을 수도 있다.<br />- 독립적인 배포 가능? Yes. 설정 파일 + 참조하는 클래스<br />- A way of composition? Yes. 스프링 DI.</p>
+<p>계층은 어떤가?<br />- ApplicationContext 계층 구조를 사용해서 구현했다.<br />- DispatcherServlet과 ApplicationContext 같은 예.<br />- 예제 코드</p>
+<p>ApplicationContext environmentApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; "javase.xml");</p>
+<p>ApplicationContext persistenceApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:*-persistence.xml" },<br />&nbsp;environmentApplicationContext);</p>
+<p>ApplicationContext logicApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:*-logic.xml" },<br />&nbsp; persistenceApplicationContext);</p>
+<p>ApplicationContext guiApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:*-gui.xml" },<br />&nbsp; logicApplicationContext);</p>
+<p>Vertical Slices.<br />- 예제 코드</p>
+<p>ApplicationContext environmentApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext("javase.xml");</p>
+<p>ApplicationContext catalogApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:/catalog-*.xml"}, <br />&nbsp;environmentApplicationContext);</p>
+<p>ApplicationContext configuratorApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:/configurator-*.xml" },<br />&nbsp;catalogApplicationContext);</p>
+<p>ApplicationContext trackingApplicationContext =<br />&nbsp;new ClassPathXmlApplicationContext(<br />&nbsp; new String[] { "classpath*:/tracking-*.xml"},<br />configuratorApplicationContext);</p>
+<p>이후 발표는... <br />- 스프링 JavaConfig를 사용해서 스프링을 사용해서 컴포넌트 설정 예제<br />- 스프링 DM을 사용하여 컴포넌트 개발 예제<br />가 이어집니다.</p>

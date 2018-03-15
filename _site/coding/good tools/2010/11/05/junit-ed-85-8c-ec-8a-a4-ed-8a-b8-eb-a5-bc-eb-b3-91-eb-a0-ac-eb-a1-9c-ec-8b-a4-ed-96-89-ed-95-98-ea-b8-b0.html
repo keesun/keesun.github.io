@@ -1,0 +1,36 @@
+<p style="clear: both;">어제 메이븐으로 병렬 빌드를 해보고 약간 실망했다. 하지만 생각해보니 단일 프로젝트에서는 병렬로 실행할께 마땅치 않았다. 멀티폼 프로젝트라면 분명히 메이븐 3.0을 써서 상당히 빌드 속도를 올릴 수 있을 것으로 생각된다. (하지만 역시 직접 해봐야 알 수 있겠다.)</p>
+<p style="clear: both;">해보고 싶은건 멸티폼 프로젝트 A에 B, C 프로젝트가 묶여있고 B, C 프로젝트에 각각 테스트가 1분씩걸려서 A프로젝트를 테스트하는데 총 2분이 걸린다고 했을 때 A프로젝트를 메이븐 3.0으로 분산빌드 하면 얼마나 빨라지느냐인데.. 일단 프로젝트 구성하기도 귀찮은데다.. 지금은 그보다 더 빨리 쉽게 빌드 속도를 올릴 수 있는 방법을 찾은 것 같아서 그 방법을 확인 중이다.</p>
+<p style="clear: both;">빌드하는데 시간이 오래 걸리는 이유는 '테스트'와 '패키징' 및 '배포' 떄문일 것이다. '패키징'과 '패포'는 일단 다음으로 미루고.. 그중에서도 '테스트'에 걸리는 시간이 상당할 텐데.. 바로 그 테스트만 병렬로 실행하는 방법이 있다.</p>
+<p style="clear: both;">그전에 한가지 의문이 드는건.. '병렬로 실행하면 반드시 빨라지는가?'이다. 코어가 하나면 프로세스가 하나다. 해당 프로세스에서 뭔가를 실행하다가 대기 시간이 생길 수 있다. I/O 같은거나 스윙 프로그래밍 하다 보면 분명히 그런 틈이 생긴다. 그래서 쓰레드라는걸 사용해서 해당 프로세스 내부에서 노는 시간을 쓰레드를 사용해서 다른 작업을 하는데 사용하는 것이다. 따라서 노는 시간이 안생기면 결국엔 병렬처리를 하더라도 시간이 비슷하거나 오히려 컨텍스트 스위칭 때문에 더 오래 걸릴 수도 있다. 그런데 요즘 CPU들은 코어가 적어도 거의 2개 또는 4개다. 정말로 동시에 실행할 수 있는 프로세서가 2개 또는 4개인거다. 그안에서 각각 또 쓰레드도 돌릴테니.. 코어가 2개라면 최소한 동시에 두 가지 프로세스를 실행할 수 있다. 그런데 물리적으로 그러면 뭐하나. 프로그램 자체가 여러 쓰레드를 사용하도록 코딩되어 있지 않으면 그냥 단일 프로세스 CPU를 쓰는거나 마찬가지다.</p>
+<p style="clear: both;">그래서 JUnit 4.7 부터는 테스트를 원하는 쓰레드 갯수만큼 병렬로 실행할 수 있는 기능을 지원해준다.</p>
+<p style="clear: both;">메이븐 Surefire 플러그인을 사용하면 간단하게 JUnit 테스트를 병렬로 실행할 수 있다.</p>
+<p style="clear: both;"><a href="http://www.wakaleo.com/blog/274-running-junit-tests-in-parallel-with-maven">http://www.wakaleo.com/blog/274-running-junit-tests-in-parallel-with-maven</a></p>
+<p style="clear: both;">이 글은 여러 설정을 참고할 때 좋다. 하지만 제일 좋은건 역시 Surefire 플러그인 홈페이지.</p>
+<p style="clear: both;"><a href="http://maven.apache.org/plugins/maven-surefire-plugin/examples/junit.html">http://maven.apache.org/plugins/maven-surefire-plugin/examples/junit.html</a></p>
+<p style="clear: both;">여기에 있는 설정이 더 최신 버전으로 되어있으니 여기있는 글을 참조하는게 좋겠다.</p>
+<p style="clear: both;">방법은 간단하다. 우선 JUnit 4.7부터 지원한댔지만 확인해보니 4.8을 쓰는게 좋다. 4.7로 했을때는 이상하게 테스트가 깨졌었다.. 근데 4.8로 하니 문제가 사라졌다. 그러니 우선 사용중인 junit 버전을 올리자.</p>
+<p style="clear: both;">
+<p>[xml]<br />
+&lt;dependency&gt;<br />
+    &lt;groupId&gt;junit&lt;/groupId&gt;<br />
+    &lt;artifactId&gt;junit&lt;/artifactId&gt;<br />
+    &lt;version&gt;4.8&lt;/version&gt;<br />
+    &lt;scope&gt;test&lt;/scope&gt;<br />
+&lt;/dependency&gt;<br />
+[/xml]</p>
+<p style="clear: both;">이제 surefire 플러그인을 설정해보자.</p>
+<p>[xml]<br />
+&lt;plugin&gt;<br />
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br />
+    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;<br />
+    &lt;version&gt;2.6&lt;/version&gt;<br />
+    &lt;configuration&gt;<br />
+        &lt;parallel&gt;classses&lt;/parallel&gt;<br />
+        &lt;threadCount&gt;4&lt;/threadCount&gt;<br />
+    &lt;/configuration&gt;<br />
+&lt;/plugin&gt;<br />
+[/xml]</p>
+<p style="clear: both;">여기서 parallel에 줄 수 있는 값은 methods와 classes가 있는데 어떤 설정인지 예측할 수 있으니 설명은 패스..</p>
+<p style="clear: both;">흠.. 코드도 좀 궁금하니까 코드좀 봐볼까나.. 스프링 테스트 콘텍스트는 병렬처리가 적용되는 건가 어쩌는건가.. 흠...</p>
+<p style="clear: both;">아참.. 실제로 적용해 봤더니 23~4초 걸리던데 20~21초로 줄어들긴 했다. 테스트 갯수가 190개 정도 되는데.. CI 서버에 돌릴 때는 12초밖에 안걸려서 이런 작업이 그다지 성과를 거두기는 힘들겠지만 테스트가 엄청나게 많은 대형 회사에서는 한번쯤 시도해볼 만할 것 같다.</p>
+<p><br class="final-break" style="clear: both;" /></p>

@@ -1,0 +1,151 @@
+---
+layout: post
+title: Collection과 Thread 2
+date: 2007-04-24 09:07:32.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Collection
+- thread
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322793777'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Thread Safe 하냐 안하냐 기준으로 Collection 클레스들을 나눠 봤습니다. Java 6.0 API 기준으로 나눴기 때문에 새로 눈에 띄는 클레스들과 잘 모르겠는 클레스들도 포함되어 있습니다.</p>
+<table class="1-1" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border: 1pt solid rgb(123, 160, 205); padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Thread safe collections<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">Vector(Stack)<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">HashTable<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">BlockingQueue<br />
+  implementations(ArrayBlockingQueue, DelayQueue, LinkedBlockingDeque,<br />
+  LinkedBlockingQueue, PriorityBlockingQueue, SynchronousQueue)<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">BlockingDeque<br />
+  implementation (LinkedBlockingDeque)<o:p></o:p></span></b></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal"><span lang="EN-US"><o:p>&nbsp;</o:p></span></p>
+<table class="MsoTableMediumShading1Accent2" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border: 1pt solid rgb(207, 123, 121); padding: 0cm 5.4pt; background: rgb(192, 80, 77) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Not thread safe collections<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(207, 123, 121) rgb(207, 123, 121); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(239, 211, 210) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">LinkedList,<br />
+  ArrayList(AttributeList, RoleList, RoleUnresolvedList)<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(207, 123, 121) rgb(207, 123, 121); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">EnumSet, HashSet,<br />
+  TreeSet<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(207, 123, 121) rgb(207, 123, 121); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(239, 211, 210) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">ArrayDeque, PriorityQueue<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(207, 123, 121) rgb(207, 123, 121); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">EnumMap,<br />
+  HashMap, IdentityHashMap, TreeMap, WeakHashMap<o:p></o:p></span></b></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal"><span lang="EN-US"><o:p>&nbsp;</o:p></span></p>
+<table class="MsoTableMediumShading1Accent3" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border: 1pt solid rgb(179, 204, 130); padding: 0cm 5.4pt; background: rgb(155, 187, 89) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span style="color: white;">뭔가 이상한 것들<span lang="EN-US">(</span>공부해야 할 것들<span lang="EN-US">)<o:p></o:p></span></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(179, 204, 130) rgb(179, 204, 130); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(230, 238, 213) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">CopyOnWriteArrayList<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(179, 204, 130) rgb(179, 204, 130); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">ConcurrentSkipListSet,<br />
+  CopyOnWriteArraySet<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(179, 204, 130) rgb(179, 204, 130); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(230, 238, 213) none repeat scroll 0% 50%; width: 461.2pt; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">ConcurrentLinkedQueue<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none solid solid; border-color: -moz-use-text-color rgb(179, 204, 130) rgb(179, 204, 130); border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 461.2pt;" valign="top" width="615">
+<p class="MsoNormal" style=""><b><span lang="EN-US">ConcurrentHashMap,<br />
+  ConcurrentSkipListMap<o:p></o:p></span></b></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>흠.. 대체 CopyOnWrite 와 Concurrency, ConcurrencySkip 은 어떤 뜻일까요? 역시 다음 글에서 알아보도록 하겠습니다.</p>

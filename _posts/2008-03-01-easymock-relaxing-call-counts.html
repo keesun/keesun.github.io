@@ -1,0 +1,60 @@
+---
+layout: post
+title: EasyMock - Relaxing Call Counts
+date: 2008-03-01 14:52:12.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- anyTimes()
+- atLeastOnce()
+- EasyMock
+- once()
+- times()
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323098796'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>테스트 대상이 호출하는 메소드의 호출 횟수를 예측할 때 횟수의 범위를 지정해서 어느정도 테스트에 여유를 줄 수 있습니다.</p>
+<p>예를 들어, MemberServiceImpl의 add를 호출할 때, 이미 add하려는 Member 데이터의 email이 DB에 존재하는지 확인하기 위해서, DB에 findByEmail()을 한 번 이상 호출 한다고 가정하겠습니다. 이 메소드는 정확히 몇 번 호출이 될지는 모릅니다.(사실 테스트를 만드는 입장에서는 알고 있겠죠. 그냥 그렇다고 하겠습니다.)</p>
+<p>그럴때 사용할 수 있는 것이 atLeastOnce() 입니다. 즉 최소한 한 번은 호출되어야 한다는 거죠. 한 번 호출되든 말든.. 상관없을 때는 anyTimes() 라는 메소드를 사용할 수 있고, 이런 메소드를 붙여주지 않으면 무조건 딱 한 번 호출되는 것으로 간주됩니다.</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void add() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.get(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(212, 26, 1);">expectLastCall().anyTimes();</span><br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberServiceImpl.add(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }</p>
+<p>time()로 횟수를 정확하게 명시하거나</p>

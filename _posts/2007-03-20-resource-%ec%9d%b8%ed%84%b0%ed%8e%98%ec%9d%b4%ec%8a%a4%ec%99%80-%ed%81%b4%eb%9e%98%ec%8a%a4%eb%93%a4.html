@@ -1,0 +1,58 @@
+---
+layout: post
+title: Resource 인터페이스와 클래스들
+date: 2007-03-20 01:23:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 4
+tags:
+- resources
+- Spring Reference 4장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323090717'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/Resource.html" target="_blank">Resource 인터페이스</a> extends InputStreamSource<br /><img src="{{ site.baseurl }}/assets/dk95.jpg" class="aligncenter" width="500" height="215" alt="사용자 삽입 이미지" /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/InputStreamSource.html" target="_blank">InputStreamSource 인터페이스</a><br /><img src="{{ site.baseurl }}/assets/ck94.jpg" class="aligncenter" width="500" height="60" alt="사용자 삽입 이미지" />구현한 클래스들
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/AbstractResource.html" title="class in org.springframework.core.io">AbstractResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/ByteArrayResource.html" title="class in org.springframework.core.io">ByteArrayResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/ClassPathResource.html" title="class in org.springframework.core.io">ClassPathResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/DescriptiveResource.html" title="class in org.springframework.core.io">DescriptiveResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/FileSystemResource.html" title="class in org.springframework.core.io">FileSystemResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/InputStreamResource.html" title="class in org.springframework.core.io">InputStreamResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/PortletContextResource.html" title="class in org.springframework.web.portlet.context">PortletContextResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/ServletContextResource.html" title="class in org.springframework.web.context.support">ServletContextResource</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/core/io/UrlResource.html" title="class in org.springframework.core.io">UrlResource</a></dd>
+</dl>
+<p>계층 구조를 대강 그려보면 다음과 같이 중간에 AbstractResource를 두고 그것을 상속받고 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk96.jpg" class="aligncenter" width="500" height="434" alt="사용자 삽입 이미지" /></p>

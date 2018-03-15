@@ -1,0 +1,7 @@
+<p>레코딩을 할 때, 테스트가 의존하는 메소드에 넘겨주는 아규먼트의 폭을 유동적으로 설정할 수 있습니다. 그때 사용하는 것들이 Argument Matcher입니다. 기본으로 제공해주는 것들을 사용할 수도 있고, 사용자가 새것을 정의해서 추가하여 사용할 수도 있습니다.</p>
+<p>예를 들어.. memberService의 foo 메소드에 어떤 값을 넘겨주던 memberDao의 foo 메소드에는 integer 값이 넘어간다고 했을 때.. 어떻게 레코딩 해야할까요.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void arguments() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.foo(<span style="color: rgb(255, 0, 0);">anyInt()</span>);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberServiceImpl.foo(1);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }</div>
+<p>anyInt() 라는 Argument Matcher를 사용해서 어떤 int값이 넘겨지도록 설정할 수 있습니다. 그러면 1이 넘겨지던 2가 넘겨지든 관계없이 테스트는 통과합니다.</p>
+<p>EasyMock에서는 aryEq()을 소개하고 있는데.. 무슨 내용인지 잘 이해가 안되더군요;</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void arguments() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; String[] names = new String[]{"whiteship", "toby"};<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.foo(names);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberServiceImpl.foo(names);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }</p>
+<p>이렇게 해도 테스트는 통과 하던데.. 어떤 때에 aryEq()을 사용해야 한다는 것인지.. 훔.. 나중에 다시 살펴봐야겠습니다.</p>

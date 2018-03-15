@@ -1,0 +1,63 @@
+---
+layout: post
+title: "[주말 코딩] 봄싹 위키"
+date: 2010-04-04 13:51:55.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 봄싹 위키
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323145390'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile1.uf.1207F0124BB8976B2EBF0D.png" class="aligncenter" width="600" height="441" alt="" filename="그림 3.png" filemime="image/png" /><br />
+왼쪽에는 모든 위키 목록, 오른쪽에는 최근 작업한 페이지 목록.. 각 목록의 이미지를 클릭하면 하단에 설명 부분이 열립니다. 페이지 목록에서는 미리 보기 형태로 페이지를 보여주는데;; 디자인이 좀 깨지기 때문에 직접 가서 보는게 좋겠습니다. 해당 위키나 페이지로 이동하려면 이미지가 아니라 제목 주변을 클릭하시면 됩니다.</p>
+<p>자바 코딩하는 데는 1시간도 안걸렸는데 화면 설계하고 코딩하는데 3시간 걸리네요. @_@;; 이렇게 보여줄까 저렇게 보여줄까? 이게 보기 편할까? 저게 보기 편할까? JQuery에 toggle을 어떻게 쓰더라. 옵션이 머지. accodoan을 써볼까 어쩔까.. 덩덩덩...</p>
+<p>위키 목록은 Confluence REST API를 호출하여 가져오고, 최근 글 목록은 Confluence에서 최근 30일 내에 글 10개를 가져오도록 만들어 둔 Atom Feed를 사용해서 가져옵니다. 매번 요청할 때 마다 두 URL로 요청/파싱을 해서 그런지 느립니다. @_@;</p>
+<p>내부 구현을 DAO를 사용하도록 바꾸는 작업은 KSUG에서 발표 할 때 해볼까 합니다.<br />
+1. 각 목록에 새로고침 버튼 추가.<br />
+2. 해당 버튼은 "관리자" 권한이 있는 사용자만 보이고 사용할 수 있음.<br />
+3. 새로고침을 누르면 WikiSpace와 WikiPage DB를 모두 비우고 새 데이터를 추가.<br />
+4. 위키 페이지 보여줌.<br />
+5. '일반' 사용자가 위키 페이지를 클릭하면 DB에 저장되어 있는 데이터를 가져옴.</p>
+<p>이렇게 하면 아마 스프링 시큐리티, 스프링 MVC, 하이버네이트 코딩까지도 보여드릴 수 있을것 같습니다.<br />
+Comming Soon!</p>

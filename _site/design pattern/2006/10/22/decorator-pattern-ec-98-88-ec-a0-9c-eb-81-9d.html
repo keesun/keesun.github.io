@@ -1,0 +1,89 @@
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1305800915.bmp" class="aligncenter" width="509" height="339" alt="">1305800915.bmp</a><br />
+무기쪽을 decorator pattern을 사용하여 다이어그램을 그려보았습니다.<br />
+저 주황색 부분 때문에 저 화면에 있는 모든 클래스들은 Human이 되며.. 그 중에서도 특히 WeaponDecorator 클래스들은 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">Human type의 모든 클래스들을 감쌀 수 있습니다.(</span>멤버 변수로 Human 타입의 변수를 가지고 있기 때문이지요.) 용법은 </p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237)">
+String name = "백기선";<br />
+Integer hp = 100;<br />
+Integer mp = 50;<br />
+Human worrior = new Worrior(name, hp, mp);</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">worrior = new LongSword(worrior);</div>
+</div>
+<p>
+녹색 부분 처럼 감쌀 수가 있게 되는 것입니다.</p>
+<p>구현은 먼저 Human쪽 부터 구현을 하고 그다음 WeaponDecorator..그다음은 뭐. 방어구도 Decorator로 하고 질병이며.. 나머지도 그런식으로 하면 될 듯합니다.</p>
+<p>먼저 HumanTest class부터 작성합니다.</p>
+<p>[#M_HumanTest code 보기|닫기| <br />
+package chracters;</p>
+<p>import characters.*;<br />
+import junit.framework.TestCase;</p>
+<p>public class HumanTest extends TestCase {</p>
+<p> &nbsp;&nbsp; public void testCreateWorrior() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer hp = 100;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer mp = 50;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human worrior = new Worrior("박정석", hp, mp);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; confirmHPAndMp(worrior, 100, 50);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testCreateMagician() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer hp = 50;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer mp = 100;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human magician = new Magician("임요환", hp, mp);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; confirmHPAndMp(magician, 50, 100);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testCreateThief() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer hp = 75;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer mp = 75;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human thief = new Thief("홍진호", hp, mp);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; confirmHPAndMp(thief, 75, 75);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; private void confirmHPAndMp(Human human, Integer hp, Integer mp) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(human.getHp().intValue(), hp.intValue());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(human.getMp().intValue(), mp.intValue());<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testDescription() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String name = "박정석";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer hp = 100;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer mp = 50;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human worrior = new Worrior(name, hp, mp);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; confirmHPAndMp(worrior, 100, 50);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; String description = worrior.getDescription();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(description, name + " 전사 입니다.\n" + hp + " HP과 " + mp<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; + " MP를 가지고 있습니다.");<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+이정도 하면..Human쪽은 끝난 듯 하군요.</p>
+<p>WeaponTest 클래스를 먼저 작성하고.. 위의 다이그램에 맞춰가며 클래스들을 구현해 갑니다. </p>
+<p>[#M_WeaponTest class 보기|닫기| <br />
+package weapons;</p>
+<p>import characters.Human;<br />
+import characters.Worrior;<br />
+import junit.framework.TestCase;</p>
+<p>public class WeaponTest extends TestCase {</p>
+<p> &nbsp;&nbsp; Human worrior;</p>
+<p> &nbsp;&nbsp; public void setUp() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer hp = 100;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Integer mp = 50;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; worrior = new Worrior("백기선", hp, mp);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testCreateWeapon() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human someone = new ShortSword(worrior);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertNotNull(someone);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; someone = new LongSword(someone);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertNotNull(someone);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; someone = new BastardSword(someone);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertNotNull(someone);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testDescription() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Human someone = new ShortSword(worrior);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String description = someone.getDescription();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(description, someone.getName() + " 전사 입니다.\n"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; + someone.getHp() + " HP과 " + someone.getMp()<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; + " MP를 가지고 있습니다." + "\n 단검을 착용 했습니다.");<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+헉... 에러 발생..</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1287911772.bmp" class="aligncenter" width="434" height="647" alt="">1287911772.bmp</a><br />
+어라... getter들이 값을 안가져왔군요... 흠... </p>
+<p>에러는 어떻게든 잡았고... 나머지.. 방어구 라든가.. 질병.. 뭐 그런것도 무기쪽 구현한 거랑 똑같기 때문에 DRY(Don't Repeat Yourself)법칙에 따라 생략하겠습니다.</p>
+<p></p>

@@ -1,0 +1,61 @@
+---
+layout: post
+title: Continuous Integration의 장점 1
+date: 2008-05-29 11:48:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- In Action
+tags:
+- CI
+- Continuous Integration
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322893058'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="text-align: center;"><font style="color: rgb(153, 204, 102); font-weight: bold;" size="3">황당한 사태가 벌어져도 당황할 필요 없다.</font></div>
+<p>불과 몇 초전에 발생했던 황당한 사태 입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/jk2.jpg" class="aligncenter" width="296" height="363" alt="사용자 삽입 이미지" />오늘 하루도 정말 열심히 일했고 할 만큼 했다는 생각이 들어서 최종적으로 커밋을 깔끔하게 집에 갈 생각이었습니다. 그런데 왠 걸.. FAILED 메시지가 구글톡에 전해졌습니다. 아 놔~~ 집에 가고 싶은데.. ㅠ.ㅠ</p>
+<p>대나무(Bamboo) 숲으로 들어가서 고장난 빌드 로그를 살펴봤습니다. 이런!! 테스트가 죄다(는 아니지만 상당히 많이) 깨졌군요.</p>
+<p><img src="{{ site.baseurl }}/assets/ik5.jpg" class="aligncenter" width="600" height="373" alt="사용자 삽입 이미지" /><br />헐.. 60개가 넘는 테스트가 한 방에... 그것도 바로 전까지 모두 Success 였는데.. 흠~ 예전 같으면 갑자기 어깨가 굳고 눈동자가 커지면서 조급해졌을텐데, 이젠 좀 CI랑 친해졌는지 더이상 두려워지지 않고 차근 차근 로그를 보고 깨진 테스트를 로컬(이클립스와 콘솔에서 메이븐으로)에서 실행해 봅니다.</p>
+<p>그리고 문제의 원인을 발견합니다. <span style="color: rgb(0, 153, 102); font-weight: bold;">문제의 원인은 분명 이전에 커밋한 코드와 방금 커밋하기 전 코드 사이에서 생겨난 겁니다.</span> 왜냐면 바로 전 단계의 빌드는 Success였기 때문이죠.</p>
+<p>문제의 원인은 간단했습니다. 스프링 XML 설정파일에서 빈 이름을 잘못 설정했기 때문입니다. 그래서 모든 통합테스트들이 깨졌고, 단위테스트들은 살아남았던 겁니다. 이걸 계기로 통합테스트가 총 몇 갠지도 덤으로 알 수 있게 됐네요. ㅋㅋ</p>
+<p>어쨋거나 중요한 건 CI가 주는 장점 한 가지. 바로 버그 발생 원인 탐사 범위를 좁혀준다는 거... 매우 귿입니다.</p>
+<p>이젠 그만 집으로 ㄱㄱㄱ</p>

@@ -1,0 +1,32 @@
+<p style="clear: both;">스터디 서비스에 노티 서비스와 캘린더 서비스 코드가 들어와 엄청 지져분해졌을 뿐 아니라 스터디 서비스 본 업무까지 방해하고 있다. 스터디 서비스 본업은 잘 마무리 됐는데 노티 서비스나 캘린더 서비스에서 발생한 에러 떄문에 스터디 추가/수정 작업이 실패하는 상황이 벌어졌다.</p>
+<p style="clear: both;">완전 엉망인거다;; 요즘 번역과 봄싹 화면작업만 하느라 지겹기도 했고 잠시 자바 코딩이 갑자기 너무 하고 싶어져서 스터디 서비스 개선 작업에 돌입했다. 잡고 싶은 토끼는 두마리였다.</p>
+<p style="clear: both;">
+<ol style="clear: both;">
+<li>본업에서 부가작업 관련 코드 제거할 것</li>
+<li>부가작업에서 발생한 에러가 본업에 지장을 주지 않게 할 것</li>
+<li>(optional)부가작업 자체를 별도의 스레드로 실행하면 더 좋음</li>
+</ol>
+<p>1. 프록시 클래스를 만들어 스터디 서비스로 위임하는 코드를 작성했다.</p>
+<p style="clear: both;">public class StudyServiceAdvancedImpl implements StudyService {}</p>
+<p style="clear: both;">2. 노티 서비스와 캘린더 서비스 코드를 프록시로 옮겨왔다.</p>
+<p style="clear: both;">3. 예외 처리 템플릿을 만들어 노티 서비스와 캘린더 서비스를 템플릿-콜백 패턴으로 감싸서 에러가 나도 본업에 지장을 주지 않도록 했다.</p>
+<p style="clear: both;">exceptionTemplate.catchAll(ExceptionalWork)</p>
+<p>4. 스터디 서비스 타입이 두개(본업, 프록시)라서 각각 이름을 설정해주고 그 중에 본업에 해당하는 걸 studyService, 프록시를 advanedStudyService이라고 주었다.</p>
+<p style="clear: both;">@Auwired("studyService")<br />
+@Auwired("advanedStudyService")</p>
+<p style="clear: both;">5. 따라서 기존에 @Autowired StudyService studyService를 본업으로 참조하고 있던 녀석들은 코드를 변경할 필요가 없었다.</p>
+<p>6. 대신 StudyController는 studyServiceAdvancedImpl를 사용하도록 변경했다.</p>
+<p style="clear: both;">@Resource StudyService advanedStudyService;</p>
+<p style="clear: both;">7. 테스트를 작성해 빈 의존 관계를 확인했다.</p>
+<p style="clear: both;">8. 톰캣에 배포해 확인해 봤다. 잘 동작한다. 1, 2번은 달성했지만 아무래도 (optional)이었던 세번째 토끼도 잡아야겠다.</p>
+<p style="clear: both;">9. ExceptionTemplate에 비동기 기능을 추가한 AsyncExcpetionTemplate을 만들었다.</p>
+<p style="clear: both;">10. AsyncExceptionTemaplteTest를 만들어 쓰레드를 확인해 봤다.</p>
+<p style="clear: both;">sout(Thread.getCurrentThread());</p>
+<p style="clear: both;">11. AsyncExceptionTemplate은 TaskExecutor를 사용하기 때문에 빈으로 등록하기로 결정.</p>
+<p style="clear: both;">
+@Auwiterd AsyncExceptionTemplate ...</p>
+<p style="clear: both;">12. 빈 의존 관계 테스트</p>
+<p style="clear: both;">13. 톰캣 배포후 테스트. 빨라졌다. 오예! 세마리 토끼를 다 잡았으나..</p>
+<p style="clear: both;">동기-&gt;비동기로 관계가 끊어지면서 발생하는 문제들이 생겼다. 하이버네이트 세션이 닫히면서 생기는 문제들이 있는데 이건 내일 처리해야겠다. 세션에 의존하지 않도록 하면 그만..</p>
+<p style="clear: both;">아 이젠 자야지.</p>
+<p><br class="final-break" style="clear: both;" /></p>

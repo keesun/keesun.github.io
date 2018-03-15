@@ -1,0 +1,61 @@
+---
+layout: post
+title: Self Number 찾기
+date: 2007-02-01 02:55:30.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 퀴즈풀기
+tags:
+- Self Number
+- 퀴즈
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879783'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://decoder.tistory.com/43" target="_blank">대엽님 블로그</a>에서 퀴즈를 발견하고 <a href="http://tdd.or.kr/pf/pey/view?post_key=35" target="_blank">원문</a>을 보고 풀었는데 원문에는 파이썬 코드인지 모르는 문법이라 그런가 눈에 잘 안들어오네요. 대엽님이 푼 코드는 자바여서 역시 눈에 잘 들어오더군요. 문제를 다르게 풀 수 있을 것 같아서 코딩을 해봤습니다.</p>
+<p>저는 1~4999까지 배열을 만들고 Generated 숫자가 될 수 있는 것들[footnote]다른 말로 generator를 가지고 있는 수[/footnote]을 지워나갔습니다.[footnote]해당 index안에 들어있는 수를 0으로 만들었습니다.[/footnote] 지우고 남는 숫자들이 Self Number들이기 때문에 나중에 배열에 들어있는 수를 쫙 더해주면 됩니다.</p>
+<p>[#M_ more.. | less.. | public class SumOfSelfNumber {<br />&nbsp;&nbsp; &nbsp;public static void main(String[] args) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;new SumOfSelfNumber().start();<br />&nbsp;&nbsp; &nbsp;}</p>
+<p><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp;private void start() {</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;int[] numbers = <span style="color: rgb(212, 26, 1);">makeArray();</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 51, 153);">checkSelfNumber(numbers);</span></span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(<span style="color: rgb(0, 102, 153);">addAllSelfNumber(numbers)</span>);</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp;}</span></p>
+<p>&nbsp;&nbsp; &nbsp;<span style="color: rgb(212, 26, 1);">private int[] makeArray() {</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;int[] numbers = new int[4999];</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for (int i = 1; i &lt; 5000; i++) {</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;numbers[i-1] = i;</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(212, 26, 1);" /><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return numbers;</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">&nbsp;&nbsp; &nbsp;}</span></p>
+<p>&nbsp;&nbsp; <span style="color: rgb(255, 51, 153);">&nbsp;private void checkSelfNumber(int[] numbers) {</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for (int i = 0 ; i &lt; numbers.length ; i++) {</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int generatedNumber = 0;</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: rgb(255, 51, 153);"> &nbsp;&nbsp; generatedNumber = <span style="color: rgb(0, 0, 0);">generate(i+1)</span>;</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><span style="color: rgb(255, 51, 153);">if (generatedNumber != 0 &amp;&amp; generatedNumber &lt; 5000) {</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;numbers[generatedNumber - 1] = 0;</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(255, 51, 153);" /><span style="color: rgb(255, 51, 153);">&nbsp;&nbsp; &nbsp;}</span></p>
+<p>&nbsp;&nbsp; &nbsp;private int generate(int number) {<br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;char[] chars = new String(number+"").toCharArray();</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;int[] ints = new int[chars.length + 1];</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ints[0] = number;</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for (int j = 1; j &lt; ints.length; j++) {</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ints[j] = (int)chars[j-1] - 48;</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(0, 0, 0);" /><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;int generatedNumber = 0;</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for (int i = 0; i &lt; ints.length; i++) {</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;generatedNumber += ints[i];</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(0, 0, 0);" /><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return generatedNumber;</span><br style="color: rgb(0, 0, 0);" /><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp; &nbsp;}</span></p>
+<p>&nbsp;&nbsp; &nbsp;<span style="color: rgb(0, 102, 153);">private long addAllSelfNumber(int[] numbers) {</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;long sum = 0;</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(int i : numbers)</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sum += i;</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return sum;</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; &nbsp;}</span><br />}_M#]<br />코딩할 때 불편한 점은 int -&gt; char -&gt; int 이 과정에서 숫자가 변질 되는데 이것좀 어떻게 편하게 바꿀 수 있는 방법이 없을지 궁금하네요.</p>
+<p>대엽님 코드를 보니 <font><font face="'Gulim', 'Sans-serif'" size="2"><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US"><span><span>(<strong>int</strong>)c - (<strong>int</strong>)</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">'0' </span></span></span></font></font>이런 방법으로&nbsp; char 안에 들어간 int값을 그대로 살려냈는데 저도 마찬가지로 (int)chars[j-1] - 48 이런식으로 int값을 살려냈습니다. 좋은 방법 아시는 분~</p>

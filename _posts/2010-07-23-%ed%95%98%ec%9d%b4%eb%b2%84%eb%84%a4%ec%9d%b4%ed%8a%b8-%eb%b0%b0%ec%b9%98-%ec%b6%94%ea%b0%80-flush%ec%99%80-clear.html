@@ -1,0 +1,103 @@
+---
+layout: post
+title: "[하이버네이트 배치 추가] flush와 clear"
+date: 2010-07-23 05:18:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- Clear
+- flush
+- 배치
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323154480'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>배치 작업이라는 것이 DB에서 데이터를 읽어온 다음 뭔가 수정하고 뭔가를 다시 DB에 넣는 작업인데 이런 작업을 하이버네이트로 할 때 조심해야 할 것이 있습니다.
+<div>
+</div>
+<div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;InvDailyClosing invDailyClosing = new InvDailyClosing();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setDate(today);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setLocation(location);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setItem(item);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyStart(qtyStart);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setInvInList(invInList);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setInvOutList(invOutList);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.closing();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>dao.add(invDailyClosing);</b></div>
+</div>
+<div id="">
+</div>
+<div id="">이렇게 작성하면 끝난것 같지만 사실 좀 위험한 코드입니다. 만약 저 코드가 for 루프 안에 있고 굉장히 여러번 반복 된다면 언젠가는 MemoryOutOfException을 보게 될 겁니다. "아니 왜?" 라고 하시는 분들이 계실텐데요.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+흠... 하이버네이트 1차 캐시 때문에 그런 현상이 생깁니다. 하이버네이트는 Persistent 상태의 객체를 하이버네이트 Session에 담아둡니다. 여기사 1차 캐시입니다. 캐시니까 저안에 담아놓고 재사용할 수 있습니다. DB에 다녀오는 횟수를 줄일 수 있겠죠. 그런데 언젠가는 이 캐시를 DB와 동기화 시켜야 합니다. 그래야 Session에 담겨있는 객체(Pesistent 객체)를 지지고 볶은 것이 DB에 반영이 되겠죠. 그렇게 DB와 Session 상태를 동기화 시키는것을 Flush라고 하는데.. 또 Persistent 상태라는 것은... 아.. 이런.. 안되겠군요. @_@ 그냥 <a href="http://www.yes24.com/24/goods/3892382" target="_blank" title="[http://www.yes24.com/24/goods/3892382]로 이동합니다.">하이버네이트 완벽 가이드</a>를 읽어주세요.</div>
+<div id="">
+</div>
+<div id="">
+아무튼 너무 많이 쌓여서 메모리가 부족해지는 상황이 발생하지 않도록 계속해서 Session을 DB에 동기화 시키고 Session을 비워주는게 좋습니다.</div>
+<div id="">
+</div>
+<div id="">
+하이버네이트 Session의 flush()와 clear()이 바로 그런 용도로 존재하죠.&nbsp;그래서&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;InvDailyClosing invDailyClosing = new InvDailyClosing();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setDate(today);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setLocation(location);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setItem(item);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setQtyStart(qtyStart);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setInvInList(invInList);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.setInvOutList(invOutList);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;invDailyClosing.closing();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>dao.add(invDailyClosing);</b></div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dao.flushAndClear();</b></div>
+<div id=""><b><br />
+</b></div>
+<div id="">이렇게 하이버네이트용 GenrericDao에 flushAndClear()라는걸 만들어 놓고 써주면 됩니다. 주의하실 것은... 반드시 flush 먼저 하고 나서 clear 해야 합니다. 반대로 하면 음식 담긴 쟁반을 서빙도 안하고 설것이 해버리는거나 마찬가지..</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>

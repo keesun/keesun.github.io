@@ -1,0 +1,23 @@
+<p>제일 간단한 경우 입니다. 테스트 데이터가 필요 없기 때문에 @WarConfiguration만 사용하면 됩니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+@RunWith(WebTestRunner.class)<br />
+@WarConfiguration(appName="springsprout")<br />
+public class SampleWebTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void sinario1(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("test1");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void sinario2(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("test2");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p></div>
+<p>
+이렇게만 하면, </p>
+<p>1. WAR 패키징<br />
+2. WAR 배포<br />
+3. 테스트~<br />
+4. WAR un배포</p>
+<p>과정을 거치게 됩니다~ 이건 뭐 너무 간단해서 더 설명할 것도 없네요~</p>
+<p><img src="/assets/cfile22.uf.1804D10C4A0CF91AB8C325.png" class="aligncenter" width="600" height="189" alt="" filename="1.png" filemime="image/png" /><br />
+이제부터 본격적인 테스트는 WebDriver나 Selenium을 이용해서 작성하면 되겠죠. ㄱㄱㅆ~</p>

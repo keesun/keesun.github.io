@@ -1,0 +1,8 @@
+<p>참조: <a href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.0/com/google/gwt/user/client/rpc/AsyncCallback.html">http://google-web-toolkit.googlecode.com/svn/javadoc/2.0/com/google/gwt/user/client/rpc/AsyncCallback.html</a></p>
+<p>GWT에서 RPC를 할 때 사용하는 주요 인터페이스다. 서비스 인터페이스의 비동기 인터페이스를 만들 때 사용한 콜백 인터페이스인데, 약간 특이하다. 우선 제네릭을 사용해서 AsyncCallback에 타입을 줄 수 있는데, 이 타입은 보통 서비스 인터페이스에서 호출할 메서드의 리턴 타입이 된다. 즉 서비스 인터페이스에서 Shape[]를 반환하는 메서드가 있었다고 치자.</p>
+<p>Shape[] getShapres(String dbName) throws ShapeException;</p>
+<p>그럼 AsyncCallback&lt;Shape[]&gt; 이런식으로 타입을 선언해주면 된다. 그리도 이 콜백 인터페이스에는 두 개의 메서드가 있는데 하나는 비동기 호출이 성공했을 때 호출될 녀석이고 다른 건 비동기 호출이 실패했을 때 사용하는 녀석이다. 여기서도 일종의 규칙이 있는데 성공과 실패는 서비스 구현체에서 예외를 사용해서 구분한다. 즉 예외가 발생하면 실패, 아니면 성공. 그래서 구현할 메서드 타입도 다음과 같이 생겼다.</p>
+<p>
+<img src="/assets/pic1.png" width="480" height="130" alt="pic1.png" /></p>
+<p>실패했을 땐 서비스 구혀체에서 던진 예외를 받아올 수 있고, 성공했을 땐 서비스 메서드에서 반환한 값을 가져올 수 있다.</p>
+<p>AyncCallback 타입 객체를 만들어서 비동기 인터페이스 타입에 있는 메서드 인자로 넘겨줘야 하는데 이 때도 여러가지 방법이 있을 수 있다. 가장 간단한 방법으로는 익명 클래스를 사용하는 방법이 있고, GWT 시작하기 문서처럼 로컬 클래스를 사용할 수도 있다. 뭐.. static 멤버 클래스나 non-static 멤법 클래스를 사용해도 되고 아주 별도의 클래스로 만들어 사용할 수도 있겠으나... 최대한 간단한 녀석으로 시도해 보고 해당 메서드 내부에서 공유해서 사용할 법하면 로컬 클래스로 빼고 여러 메서드에서 사용할 녀석이라면 static 멤버 클래스로 빼는 순으로 스코프를 정하는게 좋겠다.</p>

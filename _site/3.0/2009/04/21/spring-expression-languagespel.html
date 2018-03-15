@@ -1,0 +1,190 @@
+<p>참조: <a title="[http://www.epril.com/resources/spring3/reference/html/ch07.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch07.html">7. Spring Expression Language (SpEL)</a></p>
+<p>번역, 요약 및 편역 합니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">7.1 도입</span></span><br style="font-weight: bold;" /><br />
+<br />
+스프링 EL(SpEL)은 실행시(runtime)에 객체 그래프 질의와 조작을 지원하는 강력한 EL(Expression Language)이다. 통합 EL(Unified EL)과 언어 문법이 비슷하지만, 메서드 호출과 기본 문자열 템플릿 같은 추가 기능을 제공한다.</p>
+<p>OGNL, MAVEL, JBoss EL 같은 다른 자바 EL도 있지만, 스프링 EL은 스프링 커뮤니티에 모든 스프링 포트폴리오 제품에서 사용할 수 있는 단일 EL을 제공하기 위해 만들었다. 이 언어의 기능은 스프링 포트폴리오의 요구사항을 기반으로 도출했다. 그 중에는 이클립스 기반의 스프링소스 툴 스위트(STS)에서 코드 완성에 필요한 도구도 포함되어 있다.</p>
+<p>SpEL이 스프링 포트폴리오에 표현 평가(evaluation) 기반을 제공하기는 하지만, 그렇다고 해서 스프링에 강력하게 묶여있지는 않다. 독립적으로 사용할 수 있다. 독립적으로 사용하는 예제가 이 번 장에 많이 나와있다. 그러려면 약간의 부트스트랩 역할을 하는 (파서 같은)기반 클래스들을 만들어야 한다. 스프링 사용자들은 그런 기반 시설을 사용할 필요가 없고 그저 표현식을 사용하면 된다. 일반적인 SpEL 사용법은 XML 또는 애노테이션 기반 빈 설정에 사용하는 것인데 <span style="font-weight: bold;">빈 정의할 때 EL 사용하기 절</span>에서 살펴볼 수 있다.</p>
+<p>이번 장은 EL 기능과 API와 그리고 문법을 살펴본다.&nbsp; </p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">7.2. 기능 개요</span></span></p>
+<p>EL은 다음의 기능을 제공한다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Literal expressions: 상수 표현<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Boolean and relational operators: 불린과 관계형 연산자<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Regular expressions: 정규 표현식<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class expressions: 클래스 표현식<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Accessing properties, arrays, lists, maps: 속성, 배열, 리스트, 맵에 접근하기<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Method invocation: 메서드 호출<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Relational operators: 관계형 연산자<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assignment: 대입<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Calling constructors: 생성자 호출<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ternary operator: 3항 연산자<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Variables: 변수<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User defined functions: 사용자 정의 함수<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Collection projection: 콜렉션 보기<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Collection selection: 콜렉션 선택<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Templated expressions: 템플릿 표현식<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;"><span style="font-size: 11pt;">7.3. 스프링의 Expression 인터페이스를 사용한 표현식 평가</span></span></p>
+<p>이번 절에서는 간단한 SpEL 인터페이스와 그 EL 사용법을 살펴보겠다. <span style="font-weight: bold;">EL 레퍼런스</span>에서 자세한 내용을 참조하라.</p>
+<p>다음 코드는 SpEL API를 사용하여 상수 문자열 표현식 'Hello World' 값을 구한다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+ExpressionParser parser = new SpelAntlrExpressionParser();<br />
+Expression exp = parser.parseExpression("'Hello World'");<br />
+String message = (String) exp.getValue();</div>
+<p>
+message 변수의 값은 'Hello World'다.</p>
+<p>여러분이 주로 사용할 SpEL 클래스와 인터페이스는 org.springframework.expression 패키지와 그 하위 패키지 spel.antlr과 spel.support에 있다.</p>
+<p>EL은 ANTLR 문법을 사용하며 lexer와 파서(parser)를 구성할 때 사용한다. ExpressionParser 인터페이스는 표현식 파싱을 책임진다. 이 예제에서 표현식은 홑따옴표로 둘러쌓여있는&nbsp; 문자열 상수다. Expression 인터페이스는 앞에서 정의한 표현식 값을 도출하는 책임을 지니고 있다. parser.parseExpression을 호출할 때는 ParseException이 발생할 수 있고 exp.getValue를 호출할 때는 EvaluationException이 발생할 수 있다.</p>
+<p>SpEL은 메서드 호출, 속성 접근, 생성자 호출 같은 다양한 기능을 제공한다.</p>
+<p>다음 예제는 메서드 호출의 예로, concat 메서드를 호출한다. </p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+ExpressionParser parser = new SpelAntlrExpressionParser();<br />
+Expression exp = parser.parseExpression("'Hello World'.concat('!')");<br />
+String message = (String) exp.getValue();</div>
+<p>
+SpEL은 . 기호를 사용하여 속성의 속성에도 접근할 수 있다. 예를 들어 prop1.prop2.prop3에 접근할 수 있고 값을 설정할 수 있다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+ExpressionParser parser = new SpelAntlrExpressionParser();<br />
+Expression exp = parser.parseExpression("'Hello World'.bytes.length");&nbsp; // invokes 'getBytes().length'<br />
+int length = (Integer) exp.getValue();</div>
+<p>
+문자열의 생성자도 호출할 수 있다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+ExpressionParser parser = new SpelAntlrExpressionParser();<br />
+Expression exp = parser.parseExpression("new String('hello world').toUpperCase()");<br />
+String message = exp.getValue(String.class);</div>
+<p>
+여기서 public &lt;T&gt; T getValue(Class&lt;T&gt; desiredResultType) 이 메서드를 주목해서 살펴보자. 이 메서드를 사용하면 결과 값을 캐스팅하지 않아도 된다. 값이 T 타입 또는 등록된 타입 컨버터로 캐스팅이 되지 않을 때는 <br />
+EvaluationException가 발생한다.</p>
+<p>좀 도 흔한 SpEL 사용처는 특정 객체 인스턴스에 대한 표현식일 것이다. 다음 예제는 Inventor 클래스의 인스턴스에서 Name 속성을 가져온다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+// Create and set a calendar <br />
+GregorianCalendar c = new GregorianCalendar();<br />
+c.set(1856, 7, 9);</p>
+<p>//&nbsp; The constructor arguments are name, birthday, and nationaltiy.<br />
+Inventor tesla = new Inventor("Nikola Tesla", c.getTime(), "Serbian");</p>
+<p>ExpressionParser parser = new SpelAntlrExpressionParser();<br />
+Expression exp = parser.parseExpression("name");</p>
+<p>EvaluationContext context = new StandardEvaluationContext();<br />
+context.setRootObject(tesla);</p>
+<p>String name = (String) exp.getValue(context);
+</div>
+<p>
+마지막 줄에서 'name' 변수는 "Nikola Tesla"가 설정된다. StandardEvaluationContext 클래스에 "Name" 속성을 찾아볼 객체를 알려준다. 같은 표현식을 새로운 루트 객체로 설정해가며 여러 번 재사용할 수 있다. Expression은 리플렉션을 사용한다.</p>
+<div style="border: 1px solid rgb(254, 222, 199); padding: 10px; background-color: rgb(254, 222, 199);" class="txc-textbox">
+노트</p>
+<p>SpEL을 독립적으로 사용할 때는 파서와 Evaluation context를 만들어야 한다. 하지만 설정 파일의 일부로 SpEL을 사용할 때는 파서와 Evaluation context, root 객체 등을 암묵적으로 스프링이 설정해 준다.</p></div>
+<p>
+마지막으로 간략히 살펴볼 예제는 불린 연산자를 사용하는 것이다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+Expression exp = parser.parseExpression("name == 'Nikola Tesla'");<br />
+boolean result = exp.getValue(context, Boolean.class);&nbsp; // evaluates to true</div>
+<p>
+<span style="font-weight: bold;"><span style="font-size: 10pt;">7.3.1 EvaluationContext 인터페이스</span></span></p>
+<p>EvaluationContext 인터페이스는 사용하여 속성, 메서드, 필드를 찾을 수 있고 타입 변환을 수행하는데 이용할 수 있다. 구현하여 제공하는 클래스로 StandardEvaluationContext가 있는데, 객체를 다룰 때 리플렉션을 사용하고, 최적화를 위해 Method, Field, Constructor 인스턴스를 캐싱한다.</p>
+<p>StandardEvaluationContext의 setRootObject 메서드를 사용해서 식을 적용할 루트 객체를 명시한다. 또한 setVariable과 registerFunction을 사용하여 표현식에서 사용할 변수와 함수를 명시할 수 있다. 변수와 함수 사용법은 EL 레퍼런스의 변수와 함수 절을 참조하라. StandardEvaluationContext는 또한 커스텀 ConstructorResolver, MethodResolver, PropertyAccessor등을 등록하여 SpEL이 표현식을 다루는 방법을 확장할 수 있다. 자세한 내용은 이들 클래스의 JavaDoc을 참조하라.</p>
+<p><span style="font-weight: bold;">7.3.1.1 타입 변환</span></p>
+<p>SpEL은 기본으로 스프링 코어에서 사용할 수 있는 변환 서비스(org.springframework.core.convert.ConversionService)를 사용한다. 이 변환 서비스는 기본 변환기를 내장하고 있지만 커스텀 변환기를 추가하는 것도 가능하다. 또한 핵심 기능으로 제네릭(Generic)을 인식한다. 즉 표현식에서 제네릭 타입을 사용하면, 스프링은 타입 일관성을 유지하기 위해 해당 타입으로 변환을 시도한다는 것이다.</p>
+<p>실제로 어떻게 될까? setValue()를 사용하여 문자열을 Boolean 타입의 리스트에 넣는다. SpEL은 해당 리스트의 요소가 Boolean 타입이어야 한다는 것을 인식하고 적절하게 문자열을 Boolean 타입으로 변환해준다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+class Simple {<br />
+&nbsp;&nbsp;&nbsp; public List&lt;Boolean&gt; booleanList = new ArrayList&lt;Boolean&gt;();<br />
+}<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+Simple simple = new Simple();</p>
+<p>simple.booleanList.add(true);</p>
+<p>StandardEvaluationContext simpleContext = new StandardEvaluationContext(simple);</p>
+<p>// false is passed in here as a string.&nbsp; SpEL and the conversion service will <br />
+// correctly recognize that it needs to be a Boolean and convert it<br />
+parser.parseExpression("booleanList[0]").setValue(simpleContext, "false");</p>
+<p>// b will be false<br />
+Boolean b = simple.booleanList.get(0);
+</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
+<span style="font-weight: bold;"><span style="font-size: 11pt;">7.4. 빈 정의할 때 EL 사용하기 절</span></span></p>
+<p>SpEL 표현식은 XML과 애노테이션 기반 설정에서 BeanDefinition에 대한 메타데이터를 정의할 때 사용할 수 있다. 두 경우 모두 표현식을 정의할 때 #{표현식} 문법을 사용한다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">7.4.1. XML 기반 설정</span></span></p>
+<p>속성 또는 생성자-인자 값을 아래와 같이 표현식에 설정할 수 있다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&lt;bean id="numberGuess" class="org.spring.samples.NumberGuess"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="randomNumber" value="#{ T(java.lang.Math).random() * 100.0 }"/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- other properties --&gt;<br />
+&lt;/bean&gt;
+</div>
+<p>
+'systemProperties' 변수는 미리 정의되어 있다. 따라서 아래 처럼 표현식에서 사용할 수 있다. 미리 정의되어 있는 변수는 #기호를 붙일 필요가 없다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">&lt;bean id="taxCalculator" class="org.spring.samples.TaxCalculator"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="defaultLocale" value="#{ systemProperties['user.region'] }"/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- other properties --&gt;<br />
+&lt;/bean&gt;</div>
+<p>
+또한 다른 빈의 속성을 그 이름으로 참조할 수도 있다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&lt;bean id="numberGuess" class="org.spring.samples.NumberGuess"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="randomNumber" value="#{ T(java.lang.Math).random() * 100.0 }"/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- other properties --&gt;<br />
+&lt;/bean&gt;</p>
+<p>
+&lt;bean id="shapeGuess" class="org.spring.samples.ShapeGuess"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;property name="initialShapeSeed" value="#{ numberGuess.randomNumber }"/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- other properties --&gt;<br />
+&lt;/bean&gt;</div>
+<p><span style="font-weight: bold;"><span style="font-size: 10pt;">7.4.2. 애노테이션-기반 설정</span></span></p>
+<p>@Value 애노테이션을 필드, 메서드 그리고 메서드와 생성자의 매개변수에 사용하여 기본 값을 설정할 수 있다.</p>
+<p>다음 예제는 필드 변수에 기본 값을 설정한다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">public static class FieldValueTestBean</p>
+<p>&nbsp; @Value("#{ systemProperties['user.region'] }")<br />
+&nbsp; private String defaultLocale;</p>
+<p>&nbsp; public void setDefaultLocale(String defaultLocale)<br />
+&nbsp; {<br />
+&nbsp;&nbsp;&nbsp; this.defaultLocale = defaultLocale;<br />
+&nbsp; }</p>
+<p>&nbsp; public String getDefaultLocale() <br />
+&nbsp; {<br />
+&nbsp;&nbsp;&nbsp; return this.defaultLocale;<br />
+&nbsp; }</p>
+<p>}</p></div>
+<p>이번에는 같은 작업을 세터 메서드에 한다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">public static class PropertyValueTestBean</p>
+<p>&nbsp; private String defaultLocale;</p>
+<p>&nbsp; @Value("#{ systemProperties['user.region'] }")<br />
+&nbsp; public void setDefaultLocale(String defaultLocale)<br />
+&nbsp; {<br />
+&nbsp;&nbsp;&nbsp; this.defaultLocale = defaultLocale;<br />
+&nbsp; }</p>
+<p>&nbsp; public String getDefaultLocale() <br />
+&nbsp; {<br />
+&nbsp;&nbsp;&nbsp; return this.defaultLocale;<br />
+&nbsp; }</p>
+<p>}
+</div>
+<p>자동 연결(Autowiring)을 사용하는 메서드와 생성자에도 @Value 애노테이션을 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public class SimpleMovieLister {</p>
+<p>&nbsp;&nbsp;&nbsp; private MovieFinder movieFinder;<br />
+&nbsp;&nbsp;&nbsp; private String defaultLocale;</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; public void configure(MovieFinder movieFinder, <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Value("#{ systemProperties['user.region'] } String defaultLocale) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.movieFinder = movieFinder;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.defaultLocale = defaultLocale;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; // ...<br />
+}
+</div>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">public class MovieRecommender {</p>
+<p>&nbsp;&nbsp;&nbsp; private String defaultLocale;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; private CustomerPreferenceDao customerPreferenceDao;</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; public MovieRecommender(CustomerPreferenceDao customerPreferenceDao,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Value("#{ systemProperties['user.country'] } String defaultLocale) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.customerPreferenceDao = customerPreferenceDao;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.defaultLocale = defaultLocale;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; // ...<br />
+}
+</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;"><span style="font-size: 11pt;">7.5. EL 레퍼런스</span></span></p>
+<p><a title="[http://www.epril.com/resources/spring3/reference/html/ch07s05.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch07s05.html">생략</a></p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">7.6. 예제에서 사용한 클래스</span></span></p>
+<p><a title="[http://www.epril.com/resources/spring3/reference/html/ch07s06.html]로 이동합니다." target="_blank" href="http://www.epril.com/resources/spring3/reference/html/ch07s06.html">생략</a></p>

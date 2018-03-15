@@ -1,0 +1,48 @@
+<p><span style="font-weight: bold;">13.7.1. Introduction</span></p>
+<p>테마를 적용하기 위해서는 전역적으로 사용할 스타일 시트(CSS)와 그림 파일등의 자원을 정의하는 것이 필요합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">13.7.2. Defining themes</span></p>
+<p>ThemeSource 를 사용하면 되는데 XmlWebApplicationContext 가 ThemeSource 를 구현하고 있으며 내부 구현체로는 ResourceBundleThemeSource 를 기본으로 사용하고 있습니다.</p>
+<p><img src="/assets/cl198.jpg" class="aligncenter" width="500" height="331" alt="사용자 삽입 이미지" /><br />ResourceBundleThemeSource는 classpath에 들어있는 프로퍼티 파일을 읽어 들여서 theme을 설정할 때 사용합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">styleSheet=/themes/cool/style.css<br />background=/themes/cool/img/coolBg.jpg</div>
+<p>위와 같이 프로퍼티 파일에 설정해 두고 view에서는 spring:theme 태그를 사용하여 key에 해당하는 이름으로 각 요소들을 사용할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%&gt;<br />&lt;html&gt;<br />&nbsp;&nbsp; &lt;head&gt;<br />&nbsp; &nbsp; &nbsp; &lt;link rel="stylesheet" href="&lt;spring:theme code="styleSheet"/&gt;" type="text/css"/&gt;<br />&nbsp;&nbsp; &lt;/head&gt;<br />&nbsp;&nbsp; &lt;body background="&lt;spring:theme code="background"/&gt;"&gt;<br />&nbsp; &nbsp; &nbsp; ...<br />&nbsp;&nbsp; &lt;/body&gt;<br />&lt;/html&gt;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">13.7.3. Theme resolvers</span></p>
+<p>마지막으로 저렇게 만들어둔 여러개의 Theme 중에 어떤 Theme를 사용할지 선택해야 합니다. 이때 ThemeResolver를 사용하면 됩니다.</p>
+<table class="MsoTableMediumShading2Accent1" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border-style: solid none; border-color: windowtext -moz-use-text-color; border-width: 2.25pt medium; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Class<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: solid none; border-color: windowtext -moz-use-text-color; border-width: 2.25pt medium; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Description<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border: medium none ; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">FixedThemeResolver<o:p></o:p></span></b></p>
+</td>
+<td style="border: medium none ; padding: 0cm 5.4pt; background: rgb(216, 216, 216) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span lang="EN-US">defaultThemeName<br />
+  </span>속성을 사용해서 고정적인 테마를 설정합니다<span lang="EN-US">.<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border: medium none ; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">SessionThemeResolver<o:p></o:p></span></b></p>
+</td>
+<td style="border: medium none ; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal">각 세션에 테마에 대한 정보를 유지합니다<span lang="EN-US">. </span>세션 간에 공유되지는<br />
+  않습니다<span lang="EN-US">.<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color windowtext; border-width: medium medium 2.25pt; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">CookieThemeResolver<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none none solid; border-color: -moz-use-text-color -moz-use-text-color windowtext; border-width: medium medium 2.25pt; padding: 0cm 5.4pt; background: rgb(216, 216, 216) none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style="">선택된 테마에 대한 정보를 쿠키에 유지 합니다<span lang="EN-US">.<o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>

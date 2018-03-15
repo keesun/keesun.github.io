@@ -1,0 +1,61 @@
+---
+layout: post
+title: 아 답답해;;
+date: 2007-03-26 04:29:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 네이버 API
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323189309'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>오픈 API로 검색하는 거랑 실제 검색창에서 검색하는 거랑 왜 결과가 다르죠???</p>
+<p>"이런 경우 BeanCurrentlyInCreationException 이 발생한다고 합니다."</p>
+<p>이 문장을 네이버 웹에서 검색하면 제 블로그에 어떤 글이 뜹니다. 제대로 검색이 된거죠.<br /><img src="{{ site.baseurl }}/assets/dl101.jpg" class="aligncenter" width="500" height="209" alt="사용자 삽입 이미지" />그럼 오픈API 사용해서 검색한 XML 파일을 보죠.</p>
+<p>오픈API를 사용하는 가장 간단한 방법은 URL에 쳐보는거죠. </p>
+<p>네이버 블로그 검색 API 사용하는 URL은 다음과 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">http://openapi.naver.com/search?key=1898d436d8cf2f2b9b380aa157ae756b&amp;query=이런 경우 BeanCurrentlyInCreationException 이 발생한다고 합니다.&amp;display=10&amp;start=1&amp;target=blog&amp;sort=sim</div>
+<p>검색 문자열의 인코딩 문제로 다음과 같은 에러가 납니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dl102.jpg" class="aligncenter" width="500" height="160" alt="사용자 삽입 이미지" />그럼 복잡하지만 java로 어쩌구 저쩌구 해서 String 문자열로 받아 오면 됩니다. 받아온 XML을 봤습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dl103.jpg" class="aligncenter" width="500" height="305" alt="사용자 삽입 이미지" /><br />웹에서 검색할 때 두번째 위치에 있던 검색 결과가 가장 위로 올라와있고 제 블로그의 내용은 검색되지 않았습니다.</p>
+<p>대체 뭘까요!... 소팅을 sim 과 data로 바꿔 보아도 검색결과가 나오지 않네요..흠냐..</p>

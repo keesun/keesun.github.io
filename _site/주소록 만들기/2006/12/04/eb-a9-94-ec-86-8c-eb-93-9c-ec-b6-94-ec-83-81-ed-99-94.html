@@ -1,0 +1,20 @@
+<p>현재 주소록 어플리케이션에 구현되어 있는 메소드는 다음과 같습니다.<br />
+[#M_ more.. | less.. | <br />
+ &nbsp;&nbsp; void add(Member newMember);</p>
+<p> &nbsp;&nbsp; int getNumberOfMembers();</p>
+<p> &nbsp;&nbsp; List&lt;Member&gt; getAllMembers();</p>
+<p> &nbsp;&nbsp; Member get(int id);</p>
+<p> &nbsp;&nbsp; void update(Member member);</p>
+<p> &nbsp;&nbsp; void deleteById(int id);</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)"> &nbsp;&nbsp; List&lt;Member&gt; findByName(String name);</p>
+<p> &nbsp;&nbsp; List&lt;Member&gt; findByMessengerId(String messengerId);</p>
+<p> &nbsp;&nbsp; List&lt;Member&gt; findByEmail(String email);</p>
+<p> &nbsp;&nbsp; List&lt;Member&gt; findByBlugAddress(String blugAddress);</p>
+<p> &nbsp;&nbsp; List&lt;Member&gt; findByPhone(String phone);</p></div>
+<p>
+_M#]<br />
+이 중에서 find 관련된 메소드들은 매우 구체적입니다. findByXXX(value); 이런식입니다. 이 것을 다음과 같이 추상화 시킬 수 있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1376261315.bmp" class="aligncenter" width="544" height="249" alt="">1376261315.bmp</a><br />
+1번이 현재 상태입니다. 이것을 2번과 같이 좀더 추상화 시켜서 findByName(value)를 findBy("Name",value) 이런식으로 추상화 시킬 수 있습니다. 이 때 메소드 갯수는 대폭 줄어 듭니다. 하지만 이 메소드 내부가 복잡해 집니다. if나 switch 문이 생기게 될 것입니다.</p>
+<p>3번 상태는 By 까지 추상화 시켜서 아예 맵을 넘겨 주는 것입니다. 그리고 4번은 key가 한정된 범위 내에서 선택 되도록 EnumMap을 사용하도록 3번을 좀더 개선 시킨 것입니다.</p>
+<p>각각이 다 장단점이 있지만 1번의 메소드 이름이 구체적이고 새로운 검색 조건이 추가 될 때 기존 메소드를 고치기 보다 그냥 하나 추가하는 것이 편하기 때문에 1번 방법을 계속 사용하도록 하겠습니다.</p>

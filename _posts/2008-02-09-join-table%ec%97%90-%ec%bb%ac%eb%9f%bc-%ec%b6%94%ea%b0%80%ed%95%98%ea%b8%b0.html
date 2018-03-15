@@ -1,0 +1,123 @@
+---
+layout: post
+title: Join Table에 컬럼 추가하기
+date: 2008-02-09 01:22:33.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- ManyToMany 맵핑
+- 연관 테이블 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323082160'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>연관 테이블에 추가 속성이 필요할 수 있다.</li>
+</ul>
+<h1>연관 테이블을 Intermediate Entity로 맵핑하기</h1>
+<h2>특징</h2>
+<ul>
+<li>연관 테이블로 맵핑 될 새로운 테이블을 작성한다.</li>
+</ul>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">양방향 네이게이션이 가능하다.</span>(장점)</li>
+</ul>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">연관 클래스를 생성하고 제거하는데 관리해야하는 코드가 늘어난다.</span>(단점)</li>
+</ul>
+<ul>
+<li>Category나 Item을 추가할 때 CategoryItem에 Cascade 옵션을 사용해서 transitive persistence를 사용할 수 있다.(12장에서 다룸)</li>
+</ul>
+<h2>맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>CategoryItem.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br /><span class="code-keyword">public</span> class CategoryItem {<br /><br />	@Embeddable<br />	<span class="code-keyword">public</span> <span class="code-keyword">static</span> class Id <span class="code-keyword">implements</span> Serializable {<br /><br />		@Column(name = <span class="code-quote">"CATEGORY_ID"</span>)<br />		<span class="code-keyword">private</span> <span class="code-object">Long</span> categoryId;<br /><br />		@Column(name = <span class="code-quote">"ITEM_ID"</span>)<br />		<span class="code-keyword">private</span> <span class="code-object">Long</span> itemId;<br /><br />		<span class="code-keyword">public</span> Id() {<br />		}<br /><br />		<span class="code-keyword">public</span> Id(<span class="code-object">Long</span> categoryId, <span class="code-object">Long</span> itemId) {<br />			<span class="code-keyword">this</span>.categoryId = categoryId;<br />			<span class="code-keyword">this</span>.itemId = itemId;<br />		}<br /><br />		<span class="code-keyword">public</span> <span class="code-object">boolean</span> equals(<span class="code-object">Object</span> o) {<br />			<span class="code-keyword">if</span> (o != <span class="code-keyword">null</span> &amp;&amp; o <span class="code-keyword">instanceof</span> Id) {<br />				Id that = (Id) o;<br />				<span class="code-keyword">return</span> <span class="code-keyword">this</span>.categoryId.equals(<span class="code-keyword">this</span>.categoryId)<br />						&amp;&amp; <span class="code-keyword">this</span>.itemId.equals(that.itemId);<br />			} <span class="code-keyword">else</span> {<br />				<span class="code-keyword">return</span> <span class="code-keyword">false</span>;<br />			}<br />		}<br /><br />		<span class="code-keyword">public</span> <span class="code-object">int</span> hashCode() {<br />			<span class="code-keyword">return</span> categoryId.hashCode() + itemId.hashCode();<br />		}<br />	}<br /><br />	<span class="code-keyword">public</span> CategoryItem() {<br />	}<br /><br />	<span class="code-keyword">public</span> CategoryItem(Category category, Item item) {<br />		<span class="code-keyword">this</span>.category = category;<br />		<span class="code-keyword">this</span>.item = item;<br /><br />		id.categoryId = category.getId();<br />		id.itemId = item.getId();<br /><br />		item.getCategoryItems().add(<span class="code-keyword">this</span>);<br />		category.getCategoryItems().add(<span class="code-keyword">this</span>);<br />	}<br /><br />	@EmbeddedId<br />	<span class="code-keyword">private</span> Id id = <span class="code-keyword">new</span> Id();<br /><br />	@Column(name = <span class="code-quote">"ADDED_ON"</span>)<br />	<span class="code-keyword">private</span> Date dateAdded = <span class="code-keyword">new</span> Date();<br /><br />	@ManyToOne<br />	@JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>, insertable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> Item item;<br /><br />	@ManyToOne<br />	@JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>, insertable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> Category category;<br /><br />    <span class="code-comment">//getter, setter<br /></span>}</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@OneToMany(mappedBy = <span class="code-quote">"category"</span>)<br /><span class="code-keyword">private</span> Set&lt;CategoryItem&gt; categoryItems = <span class="code-keyword">new</span> HashSet&lt;CategoryItem&gt;();</pre>
+</div>
+</div>
+<ul>
+<li>생성자에 참조 무결성을 지키기 위한 코드 추가.</li>
+</ul>
+<ul>
+<li>이 객체가 연관을 맺고 있는 클래스들의 상태는 Detached 이거나, Persistent 상태여야 한다. Transient 상태에서 Fake Object를 활용해도 되지 않는다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Error Log</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">Hibernate: insert into CategoryItem (ADDED_ON, CATEGORY_ID, ITEM_ID) values (?, ?, ?)<br />2008-02-08 09:51:31,381 WARN [org.hibernate.util.JDBCExceptionReporter] - <br />	&lt;SQL Error: 0, SQLState: <span class="code-keyword">null</span>&gt;<br />2008-02-08 09:51:31,381 WARN [org.hibernate.util.JDBCExceptionReporter] - <br />	&lt;SQL Error: 0, SQLState: <span class="code-keyword">null</span>&gt;<br />2008-02-08 09:51:31,381 ERROR [org.hibernate.util.JDBCExceptionReporter] - &lt;failed batch&gt;<br />2008-02-08 09:51:31,381 ERROR [org.hibernate.util.JDBCExceptionReporter] - &lt;failed batch&gt;<br />2008-02-08 09:51:31,381 ERROR [org.hibernate.event.def.AbstractFlushingEventListener] -<br />	 &lt;Could not synchronize database state with session&gt;</pre>
+</div>
+</div>
+<h1>연관 테이블을 컴포넌트의 콜렉션으로 맵핑하기</h1>
+<h2>특징</h2>
+<ul>
+<li>라이프사이클 관리를 별도로 하지 않아도 된다. 컴포넌트 콜렉션을 가지고 있는 Entity에 추가하거나 삭제하기만 하면 된다.</li>
+</ul>
+<ul>
+<li>양방향 네비게이션을 할 수 없다. 컴포넌트는 공유될 수 없기 때문에, Item에서 CategoryItem으로 이동하지 못한다. 그치만 SQL을 잘 작성해서 가져올 순 있다.</li>
+</ul>
+<h2>맵핑하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>CategoryItem.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Embeddable<br /><span class="code-keyword">public</span> class CategoryItem {<br /><br />	<span class="code-keyword">public</span> CategoryItem() {<br />	}<br />	<br />	<span class="code-keyword">public</span> CategoryItem(Category category, Item item){<br />		<span class="code-keyword">this</span>.category = category;<br />		<span class="code-keyword">this</span>.item = item;<br />	}<br />	<br />	@Parent<br />	<span class="code-keyword">private</span> Category category;<br /><br />	@ManyToOne<br />	@JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>, insertable = <span class="code-keyword">false</span>, updatable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> Item item;<br /><br />	@Temporal(TemporalType.TIMESTAMP)<br />	@Column(name = <span class="code-quote">"ADDED_ON"</span>, nullable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> Date dateAdded = <span class="code-keyword">new</span> Date();<br /><br />    <span class="code-comment">// getter, setter, equals, hashcode<br /></span>}</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Category.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@CollectionOfElements<br />@JoinTable(name = <span class="code-quote">"CATEGORY_ITEM"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"CATEGORY_ID"</span>))<br /><span class="code-keyword">private</span> Set&lt;CategoryItem&gt; categoryItems = <span class="code-keyword">new</span> HashSet&lt;CategoryItem&gt;();</pre>
+</div>
+</div>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">양방향 관계를 맵핑할 수 없다</span>. Item에서 CategoryItems 콜렉션을 가질 수 없다. 오직 하나의 Entity에 포함된다. 공유 자원이 아니니까.</li>
+</ul>
+<ul>
+<li><span style="background-color: rgb(201, 237, 255);">CategoryItem에 있는 모든 속성은 Not Null이어야 한다. </span>주키 없으니까. 모든 속성을 복합키로 사용하기 때문에.</li>
+</ul>

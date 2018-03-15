@@ -1,0 +1,100 @@
+<h1>API 변경사항</h1>
+<h2>BytecodeProvider extension</h2>
+<ul>
+<li>하이버네이트의 바이트코드 처리에 필요한 라이브러리를 추가할 수 있는 기능을 추가했다. 이전에는 CGLIB만 사용했는데, 이제는 CGLIB과 Javassist 중에 하나로 선택할 수 있다.</li>
+</ul>
+<h1>행동 변경사항</h1>
+<h2>Non-transactional access</h2>
+<ul>
+<li>FlushMode.AUTO는 Session내의 변경을 모두 SQL을 실행해서 반영한다. 트랜잭션 범위가 아닐 경우에 auto flush는 생략된다.</li>
+</ul>
+<ul>
+<li>Second has to do with identifiers generated via an<br />
+"in-database" strategy (the so-called post-insert id generators). Saves<br />
+to such entities in previous versions caused an immediate SQL INSERT to<br />
+be issued in order to determine the generated identifier value.<br />
+Starting with 3.2, these INSERTS will be delayed when done outside of a<br />
+transaction.</li>
+</ul>
+<h1>쿼리 언어 변경사항</h1>
+<h2>Implicit joins are more deterministic</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;class name='Currency' lazy='false'&gt;</span><br />   ....<br /><span class="code-tag">&lt;/class&gt;</span><br /><br /><span class="code-tag">&lt;class name='Asset'&gt;</span><br />  <span class="code-tag">&lt;id name='id' ... &lt;/id&gt;</span><br />  <span class="code-tag">&lt;many-to-one name='currency' class='Currency' fetch='select'/&gt;</span><br /><span class="code-tag">&lt;/class&gt;</span></pre>
+</div>
+</div>
+<ul>
+<li>select a.id, a.currency from Asset a 이런 쿼리는 inner join을 생성한다.</li>
+</ul>
+<ul>
+<li>select a.id, c from Asset a left join a.currency as c 이렇게 해야 currency가 Null Asset도 전부 가져온다.</li>
+</ul>
+<h2>Path expressions joining across a collection throw exception</h2>
+<ul>
+<li>select f.bars.baz from Foo f 이런 네비게이션은 이제 에러난다.</li>
+</ul>
+<ul>
+<li>select b.baz from Foo f join f.bars b 이렇게 써야 한다.</li>
+</ul>
+<h2>Changed aggregation (count, sum, avg) function return types</h2>
+<ul>
+<li>스펙에 맡게 리턴타입이 바꼈다.</li>
+<li>COUNT는 Long을 반환한다.</li>
+<li>MAX와 MIN은 적용된 필드 타입을 반환한다.</li>
+<li>AVG는 Double을 반환한다.</li>
+<li>SUM은 정수타입이 경우에는 Long을 반환한다. 실수일 경우에는 Double, BidInteger일 경우에는 BidInteger, BigDecimal일 경우에는 BidDecimal.</li>
+<li>이전 타입을 쓰려면 다음의 코드를 추가한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Configuration classicCfg = <span class="code-keyword">new</span> Configuration(); <br />classicCfg.addSqlFunction( <span class="code-quote">"count"</span>, <span class="code-keyword">new</span> ClassicCountFunction()); <br />classicCfg.addSqlFunction( <span class="code-quote">"avg"</span>, <span class="code-keyword">new</span> ClassicAvgFunction()); <br />classicCfg.addSqlFunction( <span class="code-quote">"sum"</span>, <span class="code-keyword">new</span> ClassicSumFunction()); <br />SessionFactory classicSf = classicCfg.buildSessionFactory();</pre>
+</div>
+</div>
+<h2>Improved parameter type guessing</h2>
+<ul>
+<li>이전에는 파라미터의 타입을 넘어온 값으로 판단했는데, 이제는 쿼리르 보고 판단한다.</li>
+</ul>
+<h2>Expanded component support</h2>
+<ul>
+<li>First is the ability to bind complete components as parameter values.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Name name = <span class="code-keyword">new</span> Name();<br />    name.setFirst( <span class="code-quote">"John"</span> );<br />    name.setLast( <span class="code-quote">"Doe"</span> );<br />    List johnDoes = session.createQuery( <span class="code-quote">"from Person where name = :name"</span> )<br />            .setParameter( <span class="code-quote">"name"</span>, name )<br />            .list();</pre>
+</div>
+</div>
+<ul>
+<li>ANSI SQL 처럼 "row balue contructor"를 사용할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">List johnDoes = session.createQuery( <span class="code-quote">"from Person where name = ('John', 'Doe')"</span> ).list();</pre>
+</div>
+</div>
+<h2>Improved boolean literal and parameter handling</h2>
+<ul>
+<li>List pregs = session.createQuery( "from Animal where pregnant = true" ).list(); 이런 쿼리에서의 true 역시 쿼리를 분석하여 SQL을 만들어 낸다.</li>
+</ul>
+<h1>Native SQL 쿼리 변경사항</h1>
+<h2>Sequence of return values from native sql queries (createSQLQuery() and getNamedQuery())</h2>
+<ul>
+<li>이전에는 scalar 먼저, entity는 그 다음 순으로 반환했다.</li>
+</ul>
+<ul>
+<li>3.2에서 그 순서는 맵핑이나 코드에 있는 것으르 따른다.</li>
+</ul>
+<ul>
+<li>따라서 다음의 코드는 에러가 나지 않지만, 만약에 Entity를 먼저 add했으면 에러가 날 것이다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">List result = s.createSQLQuery(<span class="code-quote">"select o.*, o.value as anumber from ORDER as o"</span>).addScalar(<span class="code-quote">"anumber"</span>).addEntity(Order.class).list();<br /> <span class="code-object">Object</span>[] row = (<span class="code-object">Object</span>[])result.get(0);<br /> <span class="code-object">Integer</span> number = (<span class="code-object">Integer</span>)row[0];<br /> Order order = (Order)row[1];</pre>
+</div>
+</div>
+<h2>Stored procedures no longer require OUT parameter</h2>
+<ul>
+<li>이전에는 영향을 받는 row의 수를 반환하는 out 파라미터를 필요로 했었는데 이젠 필수사항이 아니다.</li>
+</ul>
+<ul>
+<li>check 속성에 none, count, param 을 사용할 수 있다.</li>
+</ul>

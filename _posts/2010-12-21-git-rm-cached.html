@@ -1,0 +1,59 @@
+---
+layout: post
+title: "[Git] rm --cached"
+date: 2010-12-21 15:29:46.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Git
+- git rm
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323143699'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://progit.org/book/ch2-2.html#removing_files">http://progit.org/book/ch2-2.html#removing_files</a></p>
+<p>잘못해서 버전관리 하지 않아야 할 파일을 추가한 경우가 있습니다. 인텔리J 설정 파일이나 이클립스 관련 파일 중 일부는 개발자 환경마다 다르기 때문에 버전관리에서 빼주는게 맞는 듯 합니다. 괜히 그런 파일을 버전관리 해봤자. update나 pull 받는 쪽에서 환경 설정이 이상해져서 클래스패스 이상해지고 컴파일 에러나는 상황만 연출될 뿐이니까요.</p>
+<p>암튼.. 어떻게 해야되냐면.</p>
+<p>git rm --cached 파일</p>
+<p>이러면 됩니다. --cached를 붙이지 않으면 파일시스템에서도 삭제되기 때문에 조심해야 합니다. 뭐 아에 지워버릴 파일이라면 git rm만 사용해도 되겠지만.. 그런 경우는 흠.. 드물겠죠.</p>
+<p>ps: --는 (빼기 두개)인데 화면에선 이상하게 보이네요. @_@;</p>

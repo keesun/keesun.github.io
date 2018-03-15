@@ -1,0 +1,62 @@
+---
+layout: post
+title: 아이고 머리야...
+date: 2007-04-03 14:30:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Thinking
+tags:
+- DB 에러 메시지
+- OTL
+- 서버관리
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323098441'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cl126.jpg" class="aligncenter" width="456" height="130" alt="사용자 삽입 이미지" /><br />hda3 파티션이 꽉찼습니다.</p>
+<p>요즘 위키와 블로그가 이상해서 서버에 들어가서 새로 만들어서 테스트를 해보려고 DB를 만들려고 하는데 에러가 납니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">ERROR 1006 (HY000): Can't create database 'testdatabse' (errno: 28)</div>
+<p>에러 코드 1006 이라고 읽어야 하는건지 28이라고 읽어야 하는건지 암튼 참 성의 없는 에러 메시지는 구글신을 찾아가게 만듭니다.</p>
+<p>검색 결과 : <a href="http://archives.neohapsis.com/archives/mysql/2006-q4/0877.html" target="_blank">http://archives.neohapsis.com/archives/mysql/2006-q4/0877.html</a><br />눈에 띄는 건 딱 한줄 <font face="arial" size="2">"<span style="background-color: rgb(255, 218, 237);">You need more disk space.</span>"</font></p>
+<p>그래서 df를 쳐보게 된거죠.</p>
+<p>그럼 DB와 저 파티션이 무슨 관계인가.. DB 파일 넣는 디렉토리가 어딘가...서버에 xampp를 설치해 뒀기 때문에 xampp안에 들어있습니다. xampp는 /opt/lampp 에 들어있습니다.</p>
+<p>즉... DB가 저 파티션에 있다는 거죠.. 이를 어쩐댜;; DB 설정파일에서 폴더 바꿔주고 그 쪽으로 폴더를 옮겨주면 되나요? 뭔가 잘못될까봐 안해봤는데요. 흠.. 그냥 해볼까요? 흐흣.</p>
+<p>일단 오늘은 머리가 아파서 일찍 자고 내일 해봐야겠네요. :)</p>

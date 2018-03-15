@@ -1,0 +1,31 @@
+<h1>도메인에서 분리되어야 하는 이유</h1>
+<ul>
+<li>The domain model implementation is usually a central,<br />
+organizing component; it's reused heavily whenever you implement new<br />
+application functionality. For this reason, you should be prepared to<br />
+go to some lengths to ensure that concerns other than business aspects<br />
+don't leak into the domain model implementation.</li>
+</ul>
+<h1>관심사 누수leakage of concern</h1>
+<ul>
+<li>You shouldn't put code that addresses these crosscutting<br />
+concerns in the classes that implement the domain model. When these<br />
+concerns start to appear in the domain model classes, this is an<br />
+example of leakage of concerns.</li>
+</ul>
+<ul>
+<li>EJB 컨테이너가 interseption을 사용해서 몇몇 leakage of concern을 해결했지만,<br />
+EJB 2.1에서 도메인에 많은 규칙과 제약을 부과하는 바람에 관심사 누수가 생겼다. 이 경우에는 컨테이너 구현 관심사가 누수<br />
+됐다. EJB 3.0은 이것을 반영해서 다시 비침략적nonintrusive이고 훨씬 전통적인 JavaBean 프로그래밍 모델에<br />
+가까워졌다.</li>
+</ul>
+<h1>하이버네이트의 관심사</h1>
+<ul>
+<li>Hibernate is a solution for just one of these concerns: persistence.</li>
+</ul>
+<ul>
+<li>Hibernate persistent classes and the EJB 3.0 entity<br />
+programming model offer transparent persistence. Hibernate and Java<br />
+Persistence also provide automatic persistence.</li>
+</ul>
+<p>참조 : <a href="http://www.amazon.com/Java-Persistence-Hibernate-Christian-Bauer/dp/1932394885/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1199863766&amp;sr=8-1" target="_blank">Java Persistence With Hibernate</a></p>

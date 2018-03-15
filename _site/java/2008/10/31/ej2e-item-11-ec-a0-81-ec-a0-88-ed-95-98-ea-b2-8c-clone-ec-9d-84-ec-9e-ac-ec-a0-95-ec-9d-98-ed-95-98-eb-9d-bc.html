@@ -1,0 +1,21 @@
+<p>참조: Effective Java 2nd Edition Item 11. Override clone judiciously</p>
+<p><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Cloneable.html" target="_blank">Cloneable 인터페이스</a>는 mixin 인터페이스(Item 18)로 복제가 가능한 객체임을 나타낼 의도로 만들었다. 하지만, 그런 목적을 제공하는데 실패했다.</p>
+<p>이번 항목에서는 어떻게 하면 잘 동작하는 clone 메소드를 구현할지에 대한 것이다.</p>
+<p>메소드도 없는 Cloneable 인터페이스는 무엇을 해주는 건가? Object의 clone 구현체 행위를 결정한다. 만약 해당 클래스가 Cloneable을 구현했다면, Obejct의 clone 메소드는 객체의 모든 필드를 복사한 것을 반환한다. Cloneable 인터페이스를 구현하지 않았으면, CloneNotSupportedException을 던진다. </p>
+<p>JavaSE6 java.lang.Object 표준에서 정의한 clone 메소드 general contract</p>
+<p>x.clone() != x // true<br />x.clone().getClass() == x.getClass() // true<br />x.clone().equals(x) // true<br />생성자는 호출하지 않는다.</p>
+<p>문제<br />- 생성자를 호출하지 않는다는 조항은 너무 강하다.<br />- x.clone().getClass() == x.getClass() 조항은 너무 약하다.</p>
+<p>...중간 어렵다..-_-;;</p>
+<p>음.. 결론은.. final이 아닌 클래스의 clone 메소드를 재정의할 땐, super.clone 호출해서 얻어온 객체를 반환해야 한다.</p>
+<p>@Override public PhoneNumber clone() {<br />&nbsp; try {<br />&nbsp; &nbsp; return (PhoneNumber) super.clone();<br />&nbsp; } catch(CloneNotSupportedException e) {<br />&nbsp; &nbsp; throw new AssertionError();&nbsp; // Can't happen<br />&nbsp; }<br />}</p>
+<p>Object가 아니라 PhoneNumber를 반환하고 있는데, 1.5 부터는 이런 코드도 괜찮다. 1.5에 covariant return type을 도입했기 떄문에 재정의하는 메소드의 반환 타입으로 원래 타입의 하위 타입을 반환할 수도 있다.</p>
+<p>mutable 객체를 참조하는 필드(ex. private Object[] elements)를 가지고 있는 객체에서 위와 같은 clone 메소드를 사용하면 문제가 생길 수 있다. super.clone()으로 복사하면, 같은 객체를 참조하게 되고, 그럼 원복과 복사체가 동이한 객체에 대한 레퍼런스를 쥐고 있는거라 위험하다. 따라서 원본 객체와는 별개로 복사해줘야 한다.</p>
+<p>@Override public Stack clone() {<br />&nbsp; try {<br />&nbsp; &nbsp; Stack result = (Stack) super.clone();<br />&nbsp; &nbsp; result.elements = elements.clone();<br />&nbsp; &nbsp; return result;<br />&nbsp; } catch (CloneNotSupportedException e) {<br />&nbsp; &nbsp; throw new AssertionError();<br />&nbsp; }<br />}</p>
+<p>clone을 재쉬적으로 호출하는 걸로도 안 될 때(ex. private Entry[] buckets)가 있다. 그럴 땐 deep copy.</p>
+<p>코드 생략.</p>
+<p>아.. 복잡해. 이런게 정말 필요한거야? 만약에 Cloneable 인터페이스를 구현한 클래스를 상속할 땐, 위에 있는걸 전부 신경써서 잘 동작하는 clone 메소드를 구현해야 한다.</p>
+<p>그런 경우가 아니라면, 객체 복사 대안책을 사용하던가 아예 이런 기능을 제공하지 않아도 된다. immutable 클래스에서 객체 복사를 제공하는건 말이 안 된다. 복사체를 원본과 구분할 수가 없기 때문에.</p>
+<p>첫번째 대안 copy constructor 또는 copy factory를 제공하는 방법이 있다.</p>
+<p>복사 생성자(ex, public Yum(Yum yum);)<br />복사 팩터리(ex. public static Yum newInstance(Yum yum);)</p>
+<p>이 방법이 clone보다 더 좋은 이유<br />- they don’t rely on a risk-prone extralinguistic object creation mechanism<br />- they don’t demand unenforceable adherence to thinly documented conventions<br />- they don’t conflict with the proper use of final fields<br />- they don’t throw unnecessary checked exceptions<br />- they don’t require casts</p>
+<p>기선: clone 안 쓰는데 이거 왜케 어렵나요?<br />사부님 왈: 프로토타입 패턴에서 쓰는 거다.</p>

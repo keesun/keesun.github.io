@@ -1,0 +1,82 @@
+<p>예전에도 한 번 해본 것 같은데 잘 기억이 안나서 다시 해봤습니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+package perfomance;</p>
+<p>import org.junit.Before;<br />
+import org.junit.Test;<br />
+import org.springframework.util.StopWatch;</p>
+<p>public class StringAppendTest {</p>
+<p>&nbsp;&nbsp;&nbsp; StopWatch stopWatch;</p>
+<p>&nbsp;&nbsp;&nbsp; @Before<br />
+&nbsp;&nbsp;&nbsp; public void setUp(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch = new StopWatch();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch.start();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void appendByPlus() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int i = 0;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; while(i &lt; 100000){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; runAppendByPlusExample();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; i++;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch.stop();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("by Plus: " + stopWatch.getLastTaskTimeMillis());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void appendByContinuousPlus() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int i = 0;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; while(i &lt; 100000){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; runAppendByContinuousPlusExample();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; i++;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch.stop();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("by Continuous Plus: " + stopWatch.getLastTaskTimeMillis());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void appendByBuilder() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int i = 0;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; while(i &lt; 100000){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; runAppendByBuilderExample();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; i++;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch.stop();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("by Builder: " + stopWatch.getLastTaskTimeMillis());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void appendByBuffer() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int i = 0;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; while(i &lt; 100000){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; runAppendByBufferExample();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; i++;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stopWatch.stop();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("by Buffer: " + stopWatch.getLastTaskTimeMillis());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void runAppendByContinuousPlusExample() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String result = "a";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; result += "bc" + "de";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void runAppendByBufferExample() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; StringBuffer buffer = new StringBuffer("a");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; buffer.append("bc");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; buffer.append("de");</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void runAppendByBuilderExample() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; StringBuilder builder = new StringBuilder("a");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.append("bc");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.append("de");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void runAppendByPlusExample() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String result = "a";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; result += "bc";<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; result += "de";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>
+}</div>
+<p>
+결과는 연속 + 연산과 Builder를 사용한 것이 제일 빠릅니다. 연속해서 +를 사용하면 JVM이 내부적으로 StringBuilder를 사용해서 연결해준다고 합니다. 이 테스트 결과를 확인해도 비슷하다는 것을 알 수 있습니다. 결과는 매번 다르지만, 평균적으로 다음과 같이 나옵니다.</p>
+<p>위에서 사용한 StopWathch는 스프링 라이브러리에 들어있습니다.<br />
+3.0 기준으로 core 번들에 들어있습니다.</p>
+<p>by Plus: 46<br />
+by Continuous Plus: 16<br />
+by Builder: 16<br />
+by Buffer: 31</p>

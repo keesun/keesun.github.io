@@ -1,0 +1,136 @@
+---
+layout: post
+title: "[제이쿼리] 셀렉터를 잘 활용합시다"
+date: 2010-11-23 16:32:42.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323158601'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;"><a href="http://api.jquery.com/category/selectors/" target="_blank">http://api.jquery.com/category/selectors/</a></p>
+<p style="clear: both;">낮에 봄싹 그룹스에 자바스크립트 리팩토링을 부탁한다며 올렸던 코드입니다.</p>
+<p>[javascript]<br />
+function showAttended() {<br />
+  $(&quot;.memberItem&quot;).each(function(){<br />
+    var arate = $(this).attr(&quot;arate&quot;);<br />
+    var trate = $(this).attr(&quot;trate&quot;);<br />
+    if(arate == 0 &amp;amp;&amp;amp; trate == 0) {<br />
+      $(this).hide();<br />
+    } else {<br />
+      $(this).show();<br />
+    }<br />
+  });<br />
+  $(&quot;#attention-title&quot;).text(&quot;참석자&quot;);<br />
+}<br />
+function showNotAttended() {<br />
+  $(&quot;.memberItem&quot;).each(function(){<br />
+    var arate = $(this).attr(&quot;arate&quot;);<br />
+    var trate = $(this).attr(&quot;trate&quot;);<br />
+    if(arate == 0 &amp;amp;&amp;amp; trate == 0) {<br />
+      $(this).show();<br />
+    } else {<br />
+      $(this).hide();<br />
+    }<br />
+  });<br />
+  $(&quot;#attention-title&quot;).text(&quot;불참자&quot;);<br />
+}<br />
+function showAll(){<br />
+  $(&quot;.memberItem&quot;).each(function(){<br />
+    $(this).show();<br />
+  });<br />
+  $(&quot;#attention-title&quot;).text(&quot;스터디 참석 신청자&quot;);<br />
+}<br />
+[/javascript]</p>
+<p style="clear: both;">원랜 올리고나서 번역에 집중을 할랬는데.. 갑자기 답멜로 코드가 쏟아지기 시작하더니.. 완전 멋진 코드까지 나오더군요.</p>
+<p>[javascript]<br />
+function showAttended() {<br />
+  $(&quot;.memberItem[arate=0][trate=0]&quot;).show();<br />
+  $(&quot;.memberItem:not([arate=0][trate=0])&quot;).hide();<br />
+  $(&quot;#attention-title&quot;).text(&quot;참석자&quot;);<br />
+}<br />
+function showNotAttended() {<br />
+  $(&quot;.memberItem[arate=0][trate=0]&quot;).hide();<br />
+  $(&quot;.memberItem:not([arate=0][trate=0])&quot;).show();<br />
+  $(&quot;#attention-title&quot;).text(&quot;참석자&quot;);<br />
+}<br />
+function showAll() {<br />
+  $(&quot;.memberItem&quot;).show();<br />
+  $(&quot;#attention-title&quot;).text(&quot;스터디참석신청자&quot;);<br />
+}<br />
+[/javascript]</p>
+<p style="clear: both;">이용혁님께서 보내주신 코드인데 셀력터를 사용해서 제가 사용했던 each로 루프를 돌면서 li를 조적하던 코드 보다 훨씬 간결하고 코드도 직관적이라 이것으로 당첨!!</p>
+<p style="clear: both;">그런데 Outsider님께서 셀렉터 성능을 개선할 방법으로 find와 filter를 제시해 주셨죠. 그래서 결국 코드는 요렇게 바꼈습니다.</p>
+<p>[javascript]<br />
+function showAttended() {<br />
+  $(&quot;.memberItem&quot;).hide().filter(&quot;:not([arate=0][trate=0])&quot;).show();<br />
+  $(&quot;#attention-title&quot;).text(&quot;참석자&quot;);<br />
+}<br />
+function showNotAttended() {<br />
+  $(&quot;.memberItem&quot;).hide().filter(&quot;[arate=0][trate=0]&quot;).show();<br />
+  $(&quot;#attention-title&quot;).text(&quot;불참&quot;);<br />
+}<br />
+function showAll() {<br />
+  $(&quot;.memberItem&quot;).show();<br />
+  $(&quot;#attention-title&quot;).text(&quot;스터디참석신청자&quot;);<br />
+}<br />
+[/javascript]</p>
+<p style="clear: both;">셀렉터를 잘 쓰면 each 같은걸 안써도 되니 더 직관적이고 깔끔한 코드를 만들 수 있더군요.</p>
+<p style="clear: both;">귿귿! 재미있는건 이 모든 피드백이 글을 올린지 불과 2시간 이내에 벌어졌다는거죠.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/11/Gmail_-__springsprout________________________._-_whiteship2000_gmail.com_.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="{{ site.baseurl }}/assets/Gmail_-__springsprout________________________-thumb._-_whiteship2000_gmail.com_.jpg" alt="" width="323" height="570" /></a>봄싹은 역시 멋져!!</p>
+<p><br class="final-break" style="clear: both;" /></p>
+<p>[javascript]<br />
+$(&quot;.memberItem&quot;).each(function(){<br />
+    var arate = $(this).attr(&quot;arate&quot;);<br />
+    if(arate &gt; 0){<br />
+        $(this).css(&quot;border&quot;, &quot;1px solid #4183C4&quot;);<br />
+    }</p>
+<p>    var trate = $(this).attr(&quot;trate&quot;);<br />
+    if(trate &gt; 0){<br />
+        $(this).css(&quot;background&quot;, &quot;#E0F8F7 none repeat scroll 0 0&quot;);<br />
+    }<br />
+});<br />
+[/javascript]</p>
+<p>이 코드도 역시 셀력터를 사용하면 딱 두줄로 간추릴 수 있습니다. 고건.. 걍 퀴즈!</p>

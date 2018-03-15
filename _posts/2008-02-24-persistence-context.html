@@ -1,0 +1,147 @@
+---
+layout: post
+title: Persistence Context
+date: 2008-02-24 04:58:08.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 9
+tags:
+- automatic dirty checking
+- Persistence Context Cache
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322838637'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>관리하고 있는 엔티티 개체에 대한 캐시라고 생각할 수 있다.</li>
+</ul>
+<ul>
+<li>하이버네이트에서는 하나의 Session이 하나의 내부 Persistent Context를 가지고 있다고 한다.</li>
+</ul>
+<ul>
+<li>JP에서는 하나의 EntityManager가 하나의 Persistent Context를 가지고 있다.</li>
+</ul>
+<ul>
+<li>Persistent 상태의 모든 엔티티들은 이 컨텍스트 안에 캐시된다.</li>
+</ul>
+<ul>
+<li>이 녀석이 유용한 이유</li>
+</ul>
+<ol>
+<li>하이버는 automatic dirty checking과 transactional write-behind를 할 수 있다.</li>
+<li>하이버는 이 녀석을 1차 캐시로 사용할 수 있다.</li>
+<li>하이버는 가바 객체 식별자의 스콥을 보장할 수 있다.</li>
+<li>하이버는 Persistent Context를 전체 Conversation 범위로 확장할 수 있다.</li>
+</ol>
+<h1>Automatic dirty checking</h1>
+<ul>
+<li>Persistent 상태의 객체는 Unit of work가 끝날 때 SQL을 날려서 DB와 동기화 된다. 이 과정은 다른 때에 발생시킬 수도 있다.</li>
+</ul>
+<ul>
+<li>하이버는 쿼리를 실행하기 전에 DB와 동기화 할 수 있다. ??? 이것으로 인해 쿼리는 unit of work 초기에 변경 사항을 알 수 있다. ??</li>
+</ul>
+<ul>
+<li>dirty: DB에 반영되지 않은 변경 사항.</li>
+</ul>
+<ul>
+<li>transparent transaction-level write-behind를 사용해서 하이버는 변경 사항들을 쥐도 새도 모르게 가능한한 나중에 DB에 반영할 수 있다.</li>
+</ul>
+<ul>
+<li>변경 사항을 가능한한 나중(DB 트랜잭션 끄트머리)에 반영함으로써 롹 타임을 최소화 한다.</li>
+</ul>
+<ul>
+<li>하이버는 객체의 상태를 수정하는 UPDATE문을 날릴 때, SessionFactory를 생성하면서 만들어두었던 SQL을 사용하는데, 그 SQL에는 모든 필드를 포함하고 있다.</li>
+</ul>
+<ul>
+<li>하이버는 정확히 어떤 속성이 변경 됐는지 알아내고 해당 컬럼만 UPDATE 문을 사용하여 수정하는 것이<br />
+가능하다. 이렇게 함으로써, DB에 부하를 줄이는 대신 약간의 작업이 필요하니까 성능이 약간 떨어질 수도 있다.(DB에 부하를<br />
+주느니, 메모리랑 CPU를 조금 더 쓰는게 좋겠지.)</li>
+</ul>
+<ul>
+<li>새로운 레코드를 추가할 때도 위와 같은 메카니즘이 구현되어 있다.</li>
+</ul>
+<ul>
+<li>dynamic-update="true", dynamic-insert="true"를 사용하여 설정할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@org.hibernate.annotations.Entity(<br />    dynamicInsert = <span class="code-keyword">true</span>, dynamicUpdate = <span class="code-keyword">true</span><br />)</pre>
+</div>
+</div>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Test<br /><span class="code-keyword">public</span> void dirtyChecking() <span class="code-keyword">throws</span> Exception {<br />	Group group = <span class="code-keyword">new</span> Group();<br />	group.setName(<span class="code-quote">"KSUG"</span>);<br />	session.save(group);<br />	<br />	group.setName(<span class="code-quote">"AJN"</span>);<br />}</pre>
+</div>
+</div>
+<ul>
+<li>이 설정들은 컬럼이 50개 정도로 매우 많을 때 설정하기를 권장한다.</li>
+</ul>
+<ul>
+<li>커스텀 dirty checking 알고리즘을 구현하여 사용할 수도 있다.</li>
+</ul>
+<h1>Persistence Context Cache</h1>
+<ul>
+<li>Caching의 또 다른 장점 repeatable read</li>
+</ul>
+<ul>
+<li>주키를 사용하여 객체를 로딩하라는 지시를 받으면, 하이버는 현재 Unit of work의 Persistent Context 안에서 먼저 찾아 본다. 그 안에 있으면 DB를 다녀오지 않고 그 녀석을 돌려준다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Test<br /><span class="code-keyword">public</span> void repeatablRead() <span class="code-keyword">throws</span> Exception {<br />	Group group = <span class="code-keyword">new</span> Group();<br />	session.save(group);<br />	<br />	Group group2 = (Group) session.get(Group.class, group.getId());<br />	<br />	assertEquals(group, group2);<br />}</pre>
+</div>
+</div>
+<ul>
+<li>캐시는 성능 향상과 isolation level을 공짜로 향상시켰다.</li>
+</ul>
+<ul>
+<li>Persistent context가 불필요한 DB 트래픽을 줄이는데 도움을 주지만, 그 보다 더 중요한 것들이 있다.</li>
+</ul>
+<ol>
+<li>Persistent laver에서 객체 그래프 내의 circular reference로 인한 스택 오버플로우를 야기시키지 않는다.</li>
+<li>Unit of work의 종료 시점에 같은 DB 레코드를 나타내는 여러 객체가 있을 수 없다. 오직 하나의 객체만 하나의 레코드를 나타낼 수 있고, 그에 대한 변경 사항은 안전하게 DB에 반영된다.</li>
+<li>특정 Persistent context 내에서 실행되는 코드들은 모두 해당 Persistent context 내부에 있는 객체을 참조할 수 있다. repeatable read를 보장한다.</li>
+</ol>
+<ul>
+<li>이런 기능을 가능캐 하는 persistence context cache는 별도의 조작이 필요없이 항상 가동되어 있으며, 끌 수도 없다.</li>
+</ul>

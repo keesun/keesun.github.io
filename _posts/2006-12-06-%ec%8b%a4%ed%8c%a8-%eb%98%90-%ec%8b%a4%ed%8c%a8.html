@@ -1,0 +1,61 @@
+---
+layout: post
+title: 실패 또 실패
+date: 2006-12-06 14:44:01.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Thinking
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322810204'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>거의 한달이 넘도록 페도라가 깔린 써버에 테터툴즈 설치를 못하고 있다.</p>
+<p>원인은 MySQL과 Linux를 다룰줄 전혀 모르기 때문에 어떤 에러가 나는데 도통 잡을 수가 없다. 당황해서 여기저기 물어보고 검색해가며 한발 한발 문제에 다가갈 뿐이다.</p>
+<p>일단 현재까지 알아낸 것은.</p>
+<p>지금 서버에 mysql이 설치는 돼어있지만 돌아가고 있지는 않다.<br />
+./mysql start를 하면</p>
+<p>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)<br />
+이 에러가 발생한다.</p>
+<p>이 에러 메시지로 구글에서 검색한 결과 많은 댓글들이 검색되었는데 그 중에 한수형이 말해준 것과 비슷한 댓글을 찾았다.<br />
+<a href="http://forums.mysql.com/read.php?11,27769,62470#msg-62470">http://forums.mysql.com/read.php?11,27769,62470#msg-62470</a><br />
+대강 지금 있는 DB를 날리고 새로 mysql_install_db 를 실행해서 하라는 것인데.. 해봤지만 제대로 되지 않은 것 같다. 그리고 지워버려야 할 DB가 /var/data인가에 없었다. pgsql은 보였는데;;;</p>
+<p>근 한달째 서버에 한 일이라곤 kmoinmoin 위키를 설치한 일 밖에 없다. ㅠ.ㅠ 기선아 너무하자나..쫌 어떻게 해봐~</p>

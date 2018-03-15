@@ -1,0 +1,122 @@
+<p><a href="http://java.dzone.com/articles/memory-leak-protection-tomcat">http://java.dzone.com/articles/memory-leak-protection-tomcat</a>
+<div>
+
+</div>
+<div id="">
+<b>웹 애플리케이션을 릴로딩 할 때 어떤 메모리 누수가 발생하며 그 징후가 어떤지...</b></div>
+<div id="">
+
+</div>
+<div id="">
+PermGen (Permanent Generation) 메모리 영역에 클래스들이 제대로 GC (Gabage collect)에 의해 회수되지 않아서 OOME (OutOfMemoryObejct)가 발생하게 된다.</div>
+<div id="">
+
+</div>
+<div id="">
+톰캣은 릴로딩 할 때 기존의 WebApp CL을 버리고 새로운 WebApp CL을 만들어서 애플리케이션을 다시 로딩하는데 만약 이때 누군가 WebApp CL에 대한 레퍼런스를 가지고 있다면 GC 대상이 되지 않고 그렇게 되면 WebApp CL이 로딩한 클래스들이 PermGen에서 사라지지 않기 때문에 계속해서 릴로딩 하다가 이 영역이 꽉차게 되고 그럼 OOME가 발생합.</div>
+<div id="">
+
+</div>
+<div id="">
+<b>어떤 웹 애플리케이션, 라이브러리, JVM 코드가 메모리 누수를 일으킬 수 있는가..</b></div>
+<div id="">
+
+</div>
+<div id="">
+1. WebApp CL에서 만든 어떤 객체를 다른 클래스로더(예. BootStrap CL)가 로딩한 클래스에 등록한다. - 여기까진 괜찮다.</div>
+<div id="">
+2. 그 뒤 등록한 객체를 언젠가 꺼내서 제대로 반환하지 않는다. - 이게 문제의 시작이다.</div>
+<div id="">
+3. 톰캣이 릴로딩을 시도한다. -&nbsp;기존 WebApp CL을 버리고 GC가 처리해 주겠거니 기대한다. 하지만 그렇게 되지 않는다.</div>
+<div id="">
+
+</div>
+<div id="">
+BootStrap CL에는 아직 WebApp CL에서 로딩한 클래스의 인스턴스를 들고 있으며 해당 인스턴스는 WebApp CL을 참조하고 있기 때문에 WebApp CL과 그 CL이 로딩한 클래스는 제대로 GC가 자원을 반환하지 못하고 PermGen에 쌓이고 결국 언젠가는 OOME를 보게 된다.</div>
+<div id="">
+
+</div>
+<div id="">
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: arial,verdana,helvetica,sans-serif;" id="">
+<div style="border: 1px solid rgb(121, 165, 228); background-color: rgb(219, 232, 251); padding: 10px;" class="txc-textbox">
+Application or library code that can trigger this situation include:</p>
+<ul style="margin: 0px 0px 0px 20px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">JDBC driver registration</li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">Some logging frameworks</li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">Storing objects in ThreadLocals and not removing them</li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">Starting threads and not stopping them</li>
+</ul>
+<p>
+There are also a number of places that using the standard Java API can trigger a similar issue. These include:</p>
+<ul style="margin: 0px 0px 0px 20px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;">Using the javax.imageio API (the Google Web Toolkit can trigger this)</li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;"><font class="Apple-style-span" id="">Using java.beans.Introspector.flushCaches() (Tomcat does this to prevent memory leaks caused by this caching)</font></li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;"><font class="Apple-style-span" id="">Using XML parsing (the root cause is unknown due to a bug in the&nbsp;</font><a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6916498" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline; text-decoration: none;"><font class="Apple-style-span" id=""><font class="Apple-style-span" color="#000000">JRE</font></font></a>)</li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;"><font class="Apple-style-span" id="">Using RMI (somewhat ironically, causes a leak related to the garbage collector)</font></li>
+<li id="" style="margin: 0px; padding: 0px; border-width: 0px; outline-width: 0px; font-size: 12px; font-family: inherit; vertical-align: baseline;"><font class="Apple-style-span" id="">Reading resources from JAR files</font></li>
+</ul>
+<div id="">
+</div>
+</div>
+<div id="">
+</div>
+<div id="">
+ThreadLocal에 객체를 등록한 뒤 제거하지 않은 경우를 생각해보자.</div>
+<div id="">
+
+</div>
+<div id="">
+<img src="/assets/cfile25.uf.201C120E4B9DE7125013C0.jpg" class="aligncenter" width="281" height="332" alt="" filename="1.jpg" filemime="image/jpeg" /> 
+</div>
+<div id="">
+1. ThreadLocal은 BootStrap+Extention 클래스로더가 가지고 있을테고 만약에 웹 애플리케이션의 클래스패스에 있는 Whiteship의 객체를 만든 다음 ThreadLocal에 넣어뒀다.</div>
+<div id="">
+
+</div>
+<div id="">
+2. remove()를 하지 않았다.</div>
+<div id="">
+
+</div>
+<div id="">
+3. 톰캣을 릴로딩 한다.</div>
+<div id="">
+
+</div>
+<div id="">
+하지만.. ThreadLocal에 Whiteship이 담겨 있고 Whiteship은 WebApp CL을 참조(Whiteship.class.getClassLoader()로 접근할 수 있다.)하고 있기 때문에 WebApp CL이 제대로 GC에 의해 처리되지 않는다.&nbsp;</div>
+<div id="">
+
+</div>
+<div id="">
+웹 애플리케이션을 릴로딩 할 때 Whiteship을 ThreadLocal에서 제거해주면 문제는 해결된다.</div>
+<div id="">
+
+</div>
+<div id="">
+<b>톰캣 새 버전은 이 문제를 어떻게 해결했는가?</b></div>
+<div id="">
+
+</div>
+<div id="">
+애플리케이션과 라이브러리 코드 문제 해결 방법</div>
+<div id="">
+- 자원을 반납해주고 개발자에게 경고해준다.</div>
+<div id="">
+- <a href="http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/catalina/loader/WebappClassLoader.java?view=markup" target="_blank" title="[http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/catalina/loader/WebappClassLoader.java?view=markup]로 이동합니다.">톰캣의 WebappClassLoader의 clearReference() 코드</a>를 참조하라</div>
+<div id="">
+
+</div>
+<div id="">
+자바 라이브러리 관련 문제 해결 방법</div>
+<div id="">
+- 웹 애플리케이션이 안전하게 호출할 수 있도록 톰캣 코어에서 미리 호출한다.</div>
+<div id="">
+- <a href="http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/catalina/core/JreMemoryLeakPreventionListener.java?view=markup" target="_blank" title="[http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/catalina/core/JreMemoryLeakPreventionListener.java?view=markup]로 이동합니다."><font class="Apple-style-span" id=""><font class="Apple-style-span" color="#3058d2">JreLeakPreventionListener 클래스</font></font></a> 참조</div>
+<div id="">
+
+</div>
+<div id="">
+
+</div>
+<p></span></div>

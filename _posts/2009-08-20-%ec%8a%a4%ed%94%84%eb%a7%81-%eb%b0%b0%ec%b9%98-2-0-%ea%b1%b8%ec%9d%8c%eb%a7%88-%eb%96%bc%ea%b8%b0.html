@@ -1,0 +1,158 @@
+---
+layout: post
+title: "[스프링 배치 2.0] 걸음마 떼기"
+date: 2009-08-20 15:26:37.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 스프링 배치 2.0
+- 스프링 배치 걸음마
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323144832'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. 라이브러리 추가.</p>
+<p>pom.xml에 스프링 번들 저장소에서 제공하는 스프링 배치 가장 최신 버전을 추가해줍니다</p>
+<p>프로젝트가 세 개로 나눠져 있더군요. test 모듈은 테스트 용이니까 test scope으로 설정하는 것이 좋겠네요. </p>
+<p>&lt;dependency&gt; </p>
+<div style="margin-left: 4em;">
+&lt;groupId&gt;org.springframework.batch&lt;/groupId&gt; 
+</div>
+<div style="margin-left: 4em;">
+&lt;artifactId&gt;org.springframework.batch.core&lt;/artifactId&gt;
+</div>
+<div style="margin-left: 4em;">
+&lt;version&gt;2.0.2.RELEASE&lt;/version&gt;
+</div>
+<div>
+&lt;/dependency&gt;</p>
+<p>&lt;dependency&gt;
+</div>
+<div style="margin-left: 4em;">
+&lt;groupId&gt;org.springframework.batch&lt;/groupId&gt; &lt;artifactId&gt;org.springframework.batch.infrastructure&lt;/artifactId&gt; &lt;version&gt;2.0.2.RELEASE&lt;/version&gt;
+</div>
+<div style="">
+&lt;/dependency&gt;</p>
+<p>&lt;dependency&gt;
+</div>
+<div style="margin-left: 4em;">
+&lt;groupId&gt;org.springframework.batch&lt;/groupId&gt; &lt;artifactId&gt;org.springframework.batch.test&lt;/artifactId&gt;<br />
+&lt;version&gt;2.0.2.RELEASE&lt;/version&gt;
+</div>
+<div style="">
+&lt;/dependency&gt;</p>
+<p>2. 배치를 Job와 Step으로 표현합니다.</p>
+<p>하나의 Job이 하나의 배치 작업이라고 생각하면 될 듯 하고, 배치 작업의 세세한 단계들을 여러 개의 Step으로 표현할 수 있습니다. 하나의 Step은 ItemReader, ItemProcessor, ItemWriter를 각각 가질 수 있는데, 이 것들 다 필요 없이 Tasklet을 구현해서 통짜로 Step을 구현할 수도 있습니다. 그러나 저는 최대한 IR, IP, IW 구조를 이용해 보려고 한 번 써봤습니다.</p>
+<p>할 일은 DB에서 특정 데이터들을 읽어와서 이메일로 뿌려주고, 배치가 끝나면 그 결과를 로깅할 것.</p>
+<p>2-1. XML 스키마 설정.</p>
+<p>batch 네임스페이스를 기본 네임스페이스로 설정한 XML 스키마를 사용합니다.</p>
+<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;beans:beans xmlns="http://www.springframework.org/schema/batch"<br />
+&nbsp;&nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"<br />
+&nbsp;&nbsp;&nbsp; xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.0.xsd<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.5.xsd<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"<br />
+&nbsp;&nbsp;&nbsp; xmlns:beans="http://www.springframework.org/schema/beans"<br />
+&nbsp;&nbsp;&nbsp; xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"<br />
+&nbsp;&nbsp;&nbsp; xmlns:tx="http://www.springframework.org/schema/tx"&gt;</p>
+<p>// 여기에 job 설정.</p>
+<p>&lt;/beans:beans&gt;</p>
+<p>job 하나 당 하나의 XML 설정 파일로 만드는걸 기본으로 하고, 공통으로 쓸 녀석들은 별도의 XML로 뺀 다음 각각의 job XML에서 import 해서 쓰는 것이 좋을 듯 합니다.</p>
+<p>2-2. Job 설정.</p>
+<p>본격적으로 job을 설정 파일로 만들어야 합니다. 배치 2.0에서는 개별 아이템들이 아니라 아이템 뭉탱이(chunk) 단위로 배치 작업을 설정할 수 있습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;job id="itemCouningJob" job-repository="jobRepository"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;step id="itemCouningStep"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;tasklet&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;chunk reader="komaItemReader" writer="emailWriter"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; commit-interval="100" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;listeners&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;listener ref="stepResultListener" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/listeners&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/tasklet&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/step&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;listeners&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;listener ref="jobResultListener"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/listeners&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/job&gt;</p>
+<p>이게 끝입니다. 하나의 job 내부에. 하나의 step이 있고, 하나의 listerner(jobResultListener)를 등록해 뒀습니다. job 내부에 여러 개의 step을 설정할 수 있고, 여러 개의 리스너도 등록할 수 있습니다.</p>
+<p>하나의 step 에는 리더, 프로세서, 라이터를 등록할 수 있는데, 제가 개념 잡기 힘들었던 부분은 하나의 item을 읽어와서 처리하고 바로 쓴다고??? 였습니다. 그러나 그게 아니더군요. 뭉탱이던 개별 Item이던 읽어온 다음 개별적으로 처리를 하는 것 까진 맞는데, 그것들을 하나 하나 라이터가 처리하는게 아니라, 모든 프로세싱이 끝난 아이템 전체 목록을 라이터가 받아서 작업 합니다.</p>
+<p>따라서, 제가 할 일이었던 모든 아이템 목록을 읽어오는 것은 리더에게 맡기면 되고, 별도의 프로세싱 작업이 필요 없는 듯 하니 프로세서는 설정하지 않고, 모든 목록을 읽어온 뒤 이메일로 보내야 하니까 emailWriter라는 걸 하나 등록했습니다.</p>
+<p>그리고 Step에도 리스너 하나를 등록해 두었습니다. 이 녀석은 Job에 등록한 것과는 달리 한 Step의 결과, 이름, 시작 시간, 끝난 시간, 수행 시간 등을 알 수 있는 여긴한 녀석입니다.; Job에 등록한 리스너는 모든 Step..즉 Job에 대한 내용을 알 수 있지요.</p>
+<p>만약, 정의해야 하는 작업이 step의 리더, 프로세서, 라이터 개념과 잘 맞지 않다면..&nbsp; Tasklet 자체를 구현한 다음 &lt;tasklet ref=""/&gt; 에 등록해주면 됩니다.</p>
+<p>2-3. Job 에서 필요한 빈 정의 및 설정.</p>
+<p>이제 위에서 설정한 job에 필요한 빈들을 등록합니다. 우선 리파지토리를 등록합니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;job-repository id="jobRepository" data-source="dataSource"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; transaction-manager="transactionManager" isolation-level-for-create="SERIALIZABLE"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; table-prefix="BATCH_" /&gt;</p>
+<p>레퍼런스에 있는 것을 그대로 썼습니다. 실제 DB를 이용하도록 했습니다. 다음은 리더 입니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;beans:bean id="komaItemReader"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; class="org.springframework.batch.item.database.HibernateCursorItemReader"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; p:queryString="from Item" p:sessionFactory-ref="sessionFactory" /&gt;</p>
+<p>하이버네이트 커서 아이템 리더로.. 스프링 배치에서 기본으로 제공해주는 클래스입니다. HQL과 세션 팩토리만 설정하면 됩니다. 다음은 라이터 입니다. 이 녀석은 별도로 구현해 주었습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;beans:bean id="emailWriter" class="sandbox.batch.writer.EmailWriter"/&gt;</p>
+<p>public class EmailWriter implements ItemWriter {</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; public void write(List items) throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; sendEmail(items);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void sendEmail(List items) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("Mailing : " + items);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>구현이라고 해봤자.. 그냥 저렇게 좀 허접하게 해뒀습니다. 주요 관심사는 아니기 때문에 저렇게 했습니다. 마지막으로 리스너 두개를 구현하는데 이 녀석들은 뭐 간단하니까 패스하죠.</p>
+<p>3. 배치 실행하기.</p>
+<p>배치 실행은 JobLauncher를 사용하는데 이 녀석은 jobRepository를 필요로 합니다. 따라서 이 녀석도 스프링 DI를 사용하도록 빈으로 등록해 줍니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;beans:bean id="jobLauncher"<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; class="org.springframework.batch.core.launch.support.SimpleJobLauncher" p:jobRepository-ref="jobRepository" /&gt;</p>
+<p>자 이제 드디어 자바 코드로 Job을 실행해 줍니다.</p>
+<p>jobLauncher.run(job, new JobParameters());</p>
+<p>jobLauncher 이 녀석을 applicationContext에서 DL을 하건, Autowiring으로 가져오건 하고, job도 2번 작업에서 등록한 녀석을 가져옵니다. 그리고 JobParameter 객체를 넘겨주면 실행이 안 될 겁니다.</p>
+<p>테이블이 없다는 에러가 나오죠. 다음 스키마 파일 중에 사용 중인 DB에 맞는 녀석을 골라서 테이블을 만들어 준 다음에 실행해 봅니다. 그럼 돌아갈 겁니다.</p>
+<p>
+4. 앞으로 할 일</p>
+<p>JobParameter가 이전에 사용한 것과 같다면 배치는 다시 돌지 않습니다. JobParameter를 다른 정보를 가지도록 매번 새로 만들어 줘야 하는데, 그 부분을 좀 살펴봐야겠습니다. Incrementer라는 것과 관련이 있어 보이던데 매번 실행할 때마다 자동으로 겹치지 않는 JobParameter를 만들어 주는게 있을 법도 한데 말이죠.</p>
+<p>배치 테스트에 대하 알아봐야겠습니다. 어떻게 테스트 할 수 있는지. 스프링 배치가 제공해주는 테스트 방법은 어떤 것인지.</p>
+<p>하이버네이트와 스프링 배치 기본 테이블 스키마를 맵핑해줄 자바빈 객체들은 없는지 살펴봐야겠습니다. 이것도 어딘가 있을 법도 한데 말이죠. 테이블 보고서 직접 자바빈 만들어서 맵핑 해주기는 좀 귀찮자나요. 누군가 해놨거나.. 하이버네이트 툴로 스키마에서 자바빈을 만들고 맵핑도 해주는 걸 찾아보던가 해야겠습니다. 하이버 맵핑만 끝나면.. 뭐 배치 정보 가져와서 화면에 뿌려주기만 하면 되니깐.. 식을 죽 먹기겠네요.</p>
+<p>음.. 그리고 간간히 레퍼런스 보면서 이론 공부도 좀 해야겠네요. 여러 용어들이랑 개념들 기타 세부 기능들에는 뭐가 있는지 등등등.
+</div>

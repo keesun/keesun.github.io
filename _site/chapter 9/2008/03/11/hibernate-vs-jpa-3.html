@@ -1,0 +1,28 @@
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Hibernate </th>
+<th class="confluenceTh"> JPA </th>
+</tr>
+<tr>
+<td class="confluenceTd"> 네 가지의 상태(transient, persistent, removed, detached)가 있다. </td>
+<td class="confluenceTd"> 이것들을 표준화했다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> detached 객체를 merging하거나 reattach할 수 있다. </td>
+<td class="confluenceTd"> merging만 지원한다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> flush 시점에서 save()와 update()는 모든 연관된 객체들에 영향을 준다. persist()는 호출 시점에 연관되어 있는 객체들에만 영향을 준다. </td>
+<td class="confluenceTd"> flush 시점에서 persist()는 모든 연관된 객체들에 영향을 준다. save()와 update()는 해당 메소드를 호출하는 시점에 연관되어 있는 객체들에만 영향을 준다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> get()은 DB에 다녀오고, load()는 프록시를 반환한다. </td>
+<td class="confluenceTd"> find()는 DB를 다녀오고, getReference()는 프록시를 반환한다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> EJB에서 Session을 사용할 때 Depedency Injection은 JBoss Application Server만 지원한다. </td>
+<td class="confluenceTd"> EntityManager의 DI는 모든 EBJ 3.0 호환 서버에서 지원한다.</td>
+</tr>
+</tbody>
+</table>

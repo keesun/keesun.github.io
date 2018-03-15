@@ -1,0 +1,61 @@
+---
+layout: post
+title: 태그 파일 배포하기
+date: 2008-09-14 14:12:33.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JSP
+- TagFile
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323101040'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <br /><a href="http://docs.sun.com/app/docs/doc/819-3669/bnalj?l=ko&amp;a=view" target="_blank">http://docs.sun.com/app/docs/doc/819-3669/bnalj?l=ko&amp;a=view</a></p>
+<p>1. 작성한 태그 파일을 JAR로 묶기</p>
+<p>- META-INF/tags 밑에 또는 그 하위 폴더에 태그 파일을 옮기고 묶는다.</p>
+<p>2. TLD 파일을 작성하기</p>
+<p>- WEB-INF/tag 밑에 두었으면 tld 파일 자동으로 만들어 주지만, 별도의 jar로 배포할 때는 반드시 TLD 파일을 작성해야 함. 태그 파일들의 위치를 알아야할테니..<br />- tld 파일은 META-INF/ 폴더 또는 그 하위 폴더에 둔다. 태그들이랑 같은 폴더에 둬도 상관없음.</p>
+<p>3. JSP에서 참조하기</p>
+<p>- &lt;%@ taglib prefix="o" uri="www.opensprout.org" %&gt;<br />- 여기서 uri는 진짜 URI를 말하는게 아니라, 그냥 이름. TLD 파일에 정의한 uri와 같은 값.<br />- JSP 2.0 이전에는 DD에 직접 TLD 위치를 설정해줬지만, JSP 2.0부터 WEB-INF/lib에 들어있는 JAR들의 META-INF/ 폴더 밑 그 하위 폴더를 뒤져서 TLD 파일을 찾아냄.</p>
+<p>Whiteship's 사족</p>
+<p>흠.. 글쿠나.. WEB-INF/tags 밑에 태그 두고 사용하면, 자동으로 TLD 파일을 컨테이너가 만들어 준댔는데.. 그럼 그 파일을 복사해서 좀만 수정해서 TLD를 만들면 편하겠네. 그렇게 자동으로 만들어진 TLD 파일은 어디에 만들어질려나.. WEB-INF/ 폴더 일려나.. 흠... 구하고 싶다. xml 파일 만들기 귀찮은데; TLD 생성기 같은거 없나.</p>

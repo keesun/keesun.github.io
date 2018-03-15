@@ -1,0 +1,903 @@
+<p>본격적인 개발을 시작하기 전에 할일이 너무 많다. 그래서 처음엔 스프링 Roo로 개발할까 생각도 했다. 10분만에 내가 원하는 모든 세팅을 가지고 CRUD 애플리케이션을 돌릴 수 있었다. 하지만 디자인도 맘에 안들고 스캐폴딩 코드를 빼면 내가 뭘 어떻게 해야할지 감이 잡히지 않았다. 책이라도 있었으면 보면서 했을텐데 책은 아직 없고 레퍼런스도 빈약했다. 포기했다. 그냥 맨땅에서 다시 다 만들기로 마음 먹었다. 처음부터 그렇게 생각했으면 조금 더 빨리 시작할 수 있었을 것이다.
+<div>
+</div>
+<div>프로젝트 세팅 작업은 STS에서 했다. 아직 인텔리J에 완전히 익숙하지 못해서 그런지 초기 프로젝트 세팅은 왠지 이클립스가 편하다.</div>
+<div>
+</div>
+<div>
+1. 다이나믹 웹 프로젝트 만들기</div>
+<div>
+</div>
+<div>
+중간에 웹 컨텐츠 폴더를 web으로 바꿔줬다.</div>
+<div id="">
+</div>
+<div>
+2. pom.xml 만들기</div>
+<div>
+</div>
+<div>
+STS에는 m2c 플러긴이 기본으로 깔려있다.</div>
+<div>프로젝트를 우클릭하고 pom.xml 파일 생성을 했다.</div>
+<div>이제부터 메이븐과의 싸움이다.</div>
+<div>(이전에는 뭐가 뭔 설명인지 몰라서 괜히 어려워 보였었는데 이제는 머 그냥 귀찮을 따름이다.)</div>
+<div>
+</div>
+<div>
+3. 프로젝트 구조 설정하기.</div>
+<div>
+</div>
+<div id="">
+내가 원하는 프로젝트 구조는 간단하다.&nbsp;일반적인 자바 프로젝트 같이 보이는 메이븐 프로젝트를 원한다.&nbsp;즉 프로젝트 최상위에는 src, test, web만 있으며 src와 test 밑에는 바로 패키지가 시작된다. 일반적인 메이븐 프로젝트 구조가 아니다. 난 이게 더 편하다. 메이븐 플젝 구조라면 소스 패키지 시작하기 전에 3중 폴더를 지나야한다. 리소스와 자바 파일도 구분되어 있다. 그림 그리기는 귀찮아서 패스.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&lt;build&gt;</div>
+<div id="">&lt;sourceDirectory&gt;</div>
+<div id="">${project.basedir}/src</div>
+<div id="">&lt;/sourceDirectory&gt;</div>
+<div id="">&lt;testSourceDirectory&gt;</div>
+<div id="">${project.basedir}/test</div>
+<div id="">&lt;/testSourceDirectory&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;resources&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;resource&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;directory&gt;${project.basedir}/src&lt;/directory&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;excludes&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;exclude&gt;**/*.java&lt;/exclude&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/excludes&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/resource&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/resources&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;testResources&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;testResource&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;directory&gt;${project.basedir}/test&lt;/directory&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;excludes&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;exclude&gt;**/*.java&lt;/exclude&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/excludes&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/testResource&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/testResources&gt;</div>
+<div id="">&lt;/build&gt;</div>
+</div>
+<div id="">
+</div>
+<div>
+</div>
+</div>
+<div id="">
+&nbsp;이렇게 해서 src에 메이븐 자바 소스 파일과 리소스 파일을 넣을 거구 test에 메이븐 자바 테스트 파일과 리소스 파일을 넣겠다고 설정해줬다.</div>
+<div id="">
+</div>
+<div id="">
+4. 메이븐 플러그인 설정</div>
+<div id="">
+</div>
+<div id="">
+설명 생략. 역시 귀찮음;;</div>
+<div id="">
+</div>
+<div id="">
+<div id="">4-1. maven-war-plugin 설정</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;plugin&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;warSourceDirectory&gt;web&lt;/warSourceDirectory&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/plugin&gt;</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">4-2. maven-compiler-plugin 설정</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;plugin&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;source&gt;1.6&lt;/source&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;target&gt;1.6&lt;/target&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;encoding&gt;UTF-8&lt;/encoding&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/plugin&gt;</div>
+<div id=""></div>
+</div>
+<div id="">
+</div>
+<div id="">4-3. maven-resources-plugin 설정</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;plugin&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;encoding&gt;UTF-8&lt;/encoding&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/plugin&gt;</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">4-4. maven-eclipse-plugin 설정</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;plugin&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;maven-eclipse-plugin&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.4&lt;/version&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;additionalProjectnatures&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;projectnature&gt;org.springframework.ide.eclipse.core.springnature&lt;/projectnature&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/additionalProjectnatures&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;additionalBuildcommands&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;buildcommand&gt;org.springframework.ide.eclipse.core.springbuilder&lt;/buildcommand&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/additionalBuildcommands&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;downloadSources&gt;${downSource}&lt;/downloadSources&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;downloadJavadocs&gt;${downJavadoc}&lt;/downloadJavadocs&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;wtpversion&gt;1.5&lt;/wtpversion&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;wtpContextName&gt;${wtpContextName}&lt;/wtpContextName&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/configuration&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/plugin&gt;</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">4-5. maven-clean-plugin 설정</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;plugin&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.4&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;configuration&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;filesets&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;fileset&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;directory&gt;web/WEB-INF/lib&lt;/directory&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/fileset&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;fileset&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;directory&gt;web/WEB-INF/classes&lt;/directory&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/fileset&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/filesets&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/configuration&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/plugin&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">4-6. 플러그인 저장소 설정</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;pluginRepositories&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;pluginRepository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;id&gt;codehaus snapshot repository&lt;/id&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;url&gt;http://snapshots.repository.codehaus.org/&lt;/url&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;releases&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;enabled&gt;true&lt;/enabled&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/releases&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/pluginRepository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/pluginRepositories&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">5. 프로젝트 의존성 설정&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;properties&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;spring.version&gt;3.0.2.RELEASE&lt;/spring.version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/properties&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;dependencies&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Spring depedencies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.core&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.instrument&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.test&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;scope&gt;test&lt;/scope&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.web&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.web.servlet&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.jdbc&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.context&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.context.support&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.aop&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.aspects&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.orm&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.springframework&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;org.springframework.transaction&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;${spring.version}&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Hibernate dependecies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hibernate&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;3.3.2.GA&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hibernate.annotations&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;3.4.0.GA&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hibernate.annotations.common&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;3.3.0.ga&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hibernate.ejb&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;3.4.0.GA&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Caching dependecies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;net.sourceforge.ehcache&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.net.sf.ehcache&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.6.2&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- DBMS dependecies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.persistence&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.persistence&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.0.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.transaction&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.transaction&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.1.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;c3p0&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;c3p0&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;0.9.1.2&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;postgresql&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;postgresql&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;8.2-507.jdbc3&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Logging depedencies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.slf4j&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.5.10&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;scope&gt;runtime&lt;/scope&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.ch.qos.logback.classic&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;0.9.9&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Test dependencies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.junit&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.junit&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;4.8.1&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hamcrest&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hamcrest&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.1.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.mockito&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.mockito&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.8.4&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.dbunit&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.dbunit&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.2.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hsqldb&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hsqldb&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.8.0.9&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;scope&gt;test&lt;/scope&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Web dependencies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.servlet.jsp.jstl&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.2.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.servlet&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.5.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;scope&gt;provided&lt;/scope&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.servlet.jsp&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.1.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;scope&gt;provided&lt;/scope&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.tuckey&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.tuckey.web.filters.urlrewrite&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;3.1.0&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.apache.commons.fileupload&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.2.1&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.codehaus.jackson&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.codehaus.jackson&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.4.2&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.codehaus.jackson&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.codehaus.jackson.mapper&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.4.2&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- AspectJ dependencies --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.aspectj&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.aspectj.runtime&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.6.5.RELEASE&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.aspectj&lt;/groupId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.aspectj.weaver&lt;/artifactId&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;1.6.5.RELEASE&lt;/version&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/dependencies&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">직접 운영할 수 있거나 라이브러리 설치를 부탁할 수 있는 넥서스 같은 메이븐 저장소를 설정해주는게 좋은데 난 봄싹 저장소를 설정했다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;repositories&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;repository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;id&gt;springsprout nexus&lt;/id&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;name&gt;SpringSprout Nexus public&lt;/name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;url&gt;http://dev.springsprout.org/nexus/content/groups/public&lt;/url&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/repository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;repository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;id&gt;springsprout snapshots&lt;/id&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;name&gt;SpringSprout Nexus public snapshots&lt;/name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;url&gt;http://dev.springsprout.org/nexus/content/groups/public-snapshots/</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/url&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/repository&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/repositories&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+6. web.xml 설정하기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이제 메이븐은 끝났다. 이제부턴 웹 프로젝트 설정과의 싸움이다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>id="WebApp_ID" version="2.5"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;display-name&gt;ㅇㅇㅇ&lt;/display-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;context-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;param-name&gt;webAppRootKey&lt;/param-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;param-value&gt;ㅇㅇㅇ.root&lt;/param-value&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/context-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;context-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;param-value&gt;classpath*:applicationContext*.xml&lt;/param-value&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/context-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-name&gt;encoding&lt;/param-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-value&gt;UTF-8&lt;/param-value&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-name&gt;forceEncoding&lt;/param-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-value&gt;true&lt;/param-value&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;UrlRewriteFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.tuckey.web.filters.urlrewrite.UrlRewriteFilter&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;Spring OpenSessionInViewFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.springframework.orm.hibernate3.support.OpenSessionInViewFilter&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;Spring OpenSessionInViewFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;UrlRewriteFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;listener&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/listener&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;servlet&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-name&gt;smdis2&lt;/servlet-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;param-value&gt;/WEB-INF/spring/webmvc-config.xml&lt;/param-value&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/init-param&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/servlet&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;servlet&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-class&gt;org.springframework.js.resource.ResourceServlet&lt;/servlet-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/servlet&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;servlet-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-name&gt;smdis2&lt;/servlet-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/servlet-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;servlet-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/resources/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/servlet-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;session-config&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;session-timeout&gt;10&lt;/session-timeout&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/session-config&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;welcome-file-list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/welcome-file-list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;error-page&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;exception-type&gt;java.lang.Exception&lt;/exception-type&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;location&gt;/app/uncaughtException&lt;/location&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/error-page&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;error-page&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;error-code&gt;404&lt;/error-code&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;location&gt;/app/resourceNotFound&lt;/location&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/error-page&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;/web-app&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+스프링 Roo에서 만들어주는 web.xml을 배꼈다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이 중에서 일부 필터는 사용할 ORM에 따라 바꿔야 하며, 스프링 웹 플로우도 필요하다. 아직 웹 플로우 의존성은 추가하지 않았는데 나중에 넣어도 상관없으니 그냥 쓴다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+7. URL Rewriter 설정</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;urlrewrite default-match-type="wildcard"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/resources/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to last="true"&gt;/resources/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/static/WEB-INF/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;set type="status"&gt;403&lt;/set&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to last="true"&gt;/static/WEB-INF/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/static/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to last="true"&gt;/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to last="true"&gt;/app/index&lt;/to&gt;<span class="Apple-tab-span" style="white-space:pre">		</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/app/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to last="true"&gt;/app/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to&gt;/app/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;outbound-rule&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;from&gt;/app/**&lt;/from&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;to&gt;/$1&lt;/to&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/outbound-rule&gt;<span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;/urlrewrite&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div>web.xml과 같은 폴더에 넣어준다. 스프링 Roo를 배꼈다.&nbsp;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">8. 스프링 디스패처 서블릿 설정 파일 만들기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+web.xml 설정에 보면 이 파일 위치가 명시되어 있는 걸 볼 수 있다. 스프링 Roo에서 사용하는 기본 위치다. 그냥 똑같이 쓰도록 하자. web.xml에서 위치를 명시하지 않으면 web.xml과 같은 위치에 디스패처 서블릿의 이름-servlet.xml 파일로 만들어 줘야한다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;beans xmlns="http://www.springframework.org/schema/beans"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xmlns:context="http://www.springframework.org/schema/context"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd &nbsp; &nbsp; http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd &nbsp; &nbsp; http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;context:component-scan base-package="ㅇㅇㅇ"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>use-default-filters="false"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;context:include-filter expression="org.springframework.stereotype.Controller"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>type="annotation" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/context:component-scan&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:annotation-driven /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/login" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/index" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/sample" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/uncaughtException" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/resourceNotFound" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:view-controller path="/dataAccessFailure" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;bean</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>p:defaultErrorView="uncaughtException"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;property name="exceptionMappings"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;props&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;prop key=".DataAccessException"&gt;dataAccessFailure&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;prop key=".NoSuchRequestHandlingMethodException"&gt;resourceNotFound&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;prop key=".TypeMismatchException"&gt;resourceNotFound&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;prop key=".MissingServletRequestParameterException"&gt;resourceNotFound&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;/props&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/property&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/bean&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;bean</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;property name="mediaTypes"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;map&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;entry key="atom" value="application/atom+xml" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;entry key="html" value="text/html" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;entry key="json" value="application/json" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;/map&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/property&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;property name="viewResolvers"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;bean class="org.springframework.web.servlet.view.BeanNameViewResolver" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;bean</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">					</span>class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">					</span>&lt;property name="prefix" value="/WEB-INF/views/" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">					</span>&lt;property name="suffix" value=".jsp" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;/bean&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;/list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/property&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;property name="defaultViews"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">				</span>&lt;bean</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">					</span>class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">			</span>&lt;/list&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;/property&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/bean&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;bean</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>class="org.springframework.web.multipart.commons.CommonsMultipartResolver"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>id="multipartResolver" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;/beans&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+스프링 Roo에서 배낀 코드에 몇 가지 설정을 변경하고 컨텐츠 네고 설정을 추가했다. 컨텐츠 네고 설정은 토비님 책에 나오는 코드다. 머시냐면.. 웹 브라우저 주소창에 /code/list를 입력하면 JSTL 뷰를 보여주고 Ajax로 JSON 형태의 응답을 달라고 요청하면 JSON 뷰를 받을 수 있다. 정말 편하지 아니한가..&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+하지만 아마도 프로젝트 진행하는 도중 이 파일은 자주 손보게 될 것 같다. mvc:annotation에서 기본으로 등록해주는 핸들러 매핑이나 어댑터를 확장하려면 어쩔 수 없다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+9. applicationContext.xml 만들기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+src 폴더에 만들어준다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&lt;beans xmlns="http://www.springframework.org/schema/beans"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:aop="http://www.springframework.org/schema/aop"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:context="http://www.springframework.org/schema/context"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:jee="http://www.springframework.org/schema/jee"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:lang="http://www.springframework.org/schema/lang"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:p="http://www.springframework.org/schema/p"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:tx="http://www.springframework.org/schema/tx"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:util="http://www.springframework.org/schema/util"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;context:property-placeholder location="classpath*:*.properties"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;context:component-scan base-package="smdis"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/context:component-scan&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="driverClass" value="${database.driverClassName}"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="jdbcUrl" value="${database.url}"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="user" value="${database.username}"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="password" value="${database.password}"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/bean&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;tx:annotation-driven/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;!-- ============================================================= --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;!-- &nbsp;Hibernate &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;--&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;!-- ============================================================= --&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;bean id="transactionManager"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;class="org.springframework.orm.hibernate3.HibernateTransactionManager"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;p:sessionFactory-ref="sessionFactory"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;bean id="sessionFactory"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="dataSource" ref="dataSource"/&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="packagesToScan" value="smdis" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;property name="hibernateProperties"&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;props&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;prop key="hibernate.dialect"&gt;${hibernate.dialect}&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;prop key="hibernate.show_sql"&gt;true&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;prop key="hibernate.hbm2ddl.auto"&gt;update&lt;/prop&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;/props&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/property&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;&lt;/bean&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&lt;/beans&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+네임스페이스 설정 빼면 별거 없다. 컴포넌트 스캔이 없던 시절은 생각하기도 싫다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+10. database.properties 파일을 만든다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+#Updated at Tue May 25 14:01:35 KST 2010</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">#Tue May 25 14:01:35 KST 2010</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">database.password=ㅇㅇㅇ</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">database.username=ㅇㅇㅇ</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">database.url=jdbc:postgresql://localhost/ㅇㅇㅇ</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">database.driverClassName=org.postgresql.Driver</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">DB는 PostgereSQL을 사용하기로 결정했다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+11. index.jsp 만들기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+대충 Hello 찍는 JSP 파일을 만들고 끝!</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">드디어 코딩을 시작할 수 있겠다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>

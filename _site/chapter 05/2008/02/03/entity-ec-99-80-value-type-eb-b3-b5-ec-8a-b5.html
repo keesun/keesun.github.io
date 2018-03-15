@@ -1,0 +1,37 @@
+<h1>특징</h1>
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Entity </th>
+<th class="confluenceTh"> Value Type </th>
+</tr>
+<tr>
+<td class="confluenceTd"> Coarse-grained </td>
+<td class="confluenceTd"> Fine-grained </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 도메인 설명에 잘 나타난다. </td>
+<td class="confluenceTd"> 잘 나타나지 않는다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> Persistent id를 가지고 있다. </td>
+<td class="confluenceTd"> 그런거 없고, Entity 클래스에 종속된다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 상태(transient, detached, persistent)가 있다. </td>
+<td class="confluenceTd"> 이런 상태를 신경쓰지 않는다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 자신만의 라이프 사이클을 가지고 있다. </td>
+<td class="confluenceTd"> 라이프 사이클은 자신을 소유한 Entity를 따른다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 공유 된다. </td>
+<td class="confluenceTd"> 공유되지 않는다. Entity는 고유한 Value Type을 가지고 있다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> @Entity로 맵핑한다. </td>
+<td class="confluenceTd"> @Embeddable로 맵핑한다.</td>
+</tr>
+</tbody>
+</table>

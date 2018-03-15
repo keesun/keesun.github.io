@@ -1,0 +1,6 @@
+<p>캬오.. 간단하지 않네요. media 속성 값중에 "none"이라는 값을 지원해주면 좋을텐데, 이 값은 지원하지 않습니다. 이슈 트래커에 올리면 반영해주려나.. 흠..</p>
+<p>방법은.. 일단 CSS에 hidden이라는 클래스 하나를 추가합니다.</p>
+<p>.hidden {<br />&nbsp; &nbsp; display: none;<br />}</p>
+<p>그리고 컬럼의 class와 headerClass의 값을 hidden으로 설정해줍니다.</p>
+<p>&nbsp; &nbsp; &lt;d:column property="id" class="hidden" headerClass="hidden" /&gt;</p>
+<p>끝~ 나중에 OSAF 태그 파일로 감싸서 좀 더 간단하게 이 기능을 제공할 수 있겠습니다. isHidden 이라는 속서을 추가해서 말이죠. 간단하게~ 명시적으로~ </p>

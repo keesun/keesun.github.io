@@ -1,0 +1,108 @@
+---
+layout: post
+title: 웹 통합 테스트 프레임워크 개발 중
+date: 2009-05-14 14:10:15.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- AppFuse
+- Cargo
+- DbUnit
+- JUnit 4.6
+- Maven Embedder
+- 웹 통합 테스트 프레임워크
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323124702'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>웹 통합 테스트를 지시 받고, 몇일 전 삽질부터 시작해서 오늘까지 조금 열심히 달렸습니다. 오늘은 오후 6시쯤 되니까 머리가 아파서 더 못 앉아 있겠더군요. 아침에 오자마자 만들기 시작해서 조금 하다 보면 오후 1, 2시가 금방 되고, 그러면 밥 먹고 나서 또 조금 하다 보면 4, 5시가 되고, 또 조금 하다 보면 7, 8시가 되니까 하루가 정말 짧더군요. @_@</p>
+<p>아직도 많이 손봐야 하지만, 이제 조금 윤곽이 잡혔습니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">@RunWith(WebTestRunner.class)<br />
+@WarConfiguration(appName="springsprout")<br />
+@DataConfiguration(dataType=DataType.XML, location="integration/sample/testData.xml")<br />
+public class IndexPageWebTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void sample(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; WebDriver driver = new HtmlUnitDriver();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; driver.navigate().to("http://localhost:8080/springsprout/index.do");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertTrue(driver.getTitle().equals("SpringSprout"));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p></div>
+<p>WebDriver를 이용한 초간단 웹 테스트 코드입니다. 이렇게 설정한 다음 테스트를 실행하면..<br />
+1. 현재 프로젝트를 WAR 패키징을 합니다.<br />
+2. 생성한 WAR를 테스트용 톰캣 서버에 springsprout 컨텍스트 패스로 배포합니다.(maven/tomcat6x/webapp/springsprout)<br />
+3. 배포가 잘 됐으면, 테스트 데이터를 넣어줍니다.<br />
+<span style="font-weight: bold;">4. 이제 테스트를 실행합니다.</span><br />
+5. 테스트 데이터를 삭제합니다.<br />
+6. 앞서 배포한 WAR 파일을 undeploy 합니다.</p>
+<p>여기서 4번에 해당하는 코드만 작성하면 됩니다. 나머지는 애노테이션만 붙여주면 되죠. 테스트 케이스 마다 서버를 켰다 껐다 하는 건 좀 무리고, WAR만 그때 그때 배포하도록 했습니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+@RunWith(WebTestRunner.class)<br />
+@WarConfiguration(appName="springsprout")<br />
+@DataConfiguration(dataType=DataType.XML, location="integration/sample/testData.xml")<br />
+public class IndexPageWebTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void test1(){<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void test2(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}
+</div>
+<p>
+이렇게 테스트를 하나 더 추가하면? WAR 배포 이후에 두 개의 테스트를 모두 실행한 다음에 WAR를 unploy합니다.</p>
+<p>약간의 변화를 줄 수 있습니다. 테스트 데이터 입력이 필요 없다면, @DataConfiguration을 생략해도 됩니다. 그리고 테스트 서버 포트를 기본으로 8080을 사용하는데, 그 값을 @WarConfiguration의 port 속성에 줄 수 있습니다. 그럼 해당 포트에 배포를 시도하죠. 물론 그럴 때 해당 포트에 서버가 실행되고 있지 않다면, debug 모드의 로깅과 적절한 이름의 RuntimeException이 발생합니다.</p>
+<p>꾸준히 가꿔야겠지만, 이제 내일 부터는 이녀석을 이용해서 본격적으로 웹 통합 CRUD 테스트를 만들고, CI를 해보려고 합니다.</p>
+<p>얘 때문에 조금이라도 뒤적여 본 것들은 다음과 같습니다.<br />
+- JUnit 4.6 <br />
+- Spring Test<br />
+- Cargo<br />
+- DBUnit<br />
+- WebDriver<br />
+- Maven Surefire Plugin<br />
+- Appfuse<br />
+- Maven Embedder</p>
+<p>지난주 금, 월, 화, 수, 목.. 거의 일주일이네요. <br />
+개발이 참 더디고 어설프네요. ㅎㅎ 갈 길이 멀었습니다. @_@</p>

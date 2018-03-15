@@ -1,0 +1,62 @@
+---
+layout: post
+title: assertThat()으로 null 여부 확인하기
+date: 2008-07-30 05:34:11.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- assertThat
+- JUnit 4.4
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322991853'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>JUnit 4.4 전에는 assertNotNull(dao); 이런식으로 확인했었습니다.</p>
+<p>그러나 4.4부터 assertThat()을 사용해서 다음과 같이 테스트 할 수 있습니다.<br />assertThat(dao, is(notNullValue()));</p>
+<p>여기서 is를 빼면 어법이 좀 그렇긴 하지만.. 그래도 동작합니다.<br />assertThat(dao, notNullValue());</p>
+<p>처음엔 이렇게 작성했었습니다.<br />assertThat(dao, is(not(null)); </p>
+<p>하지만 위에 코드는 안 됩니다. null이 값이 아니기 때문에, 값 비교 하는데 null 때문에 NullPointerException이 발생합니다.</p>
+<p>Maven을 사용하고 계시다면..</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;groupId&gt;junit&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;junit&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;4.4&lt;/version&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/dependency&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;groupId&gt;org.hamcrest&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;hamcrest-library&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;1.1&lt;/version&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/dependency&gt;</p>
+<p>이렇게 라이브러리를 추가해주신 다음에 해야 합니다. static import를 추가해두면 편하겠죠.</p>
+<p>import static org.hamcrest.CoreMatchers.*;<br />import static org.junit.Assert.*;</p>

@@ -1,0 +1,7 @@
+<p><img src="/assets/jk27.png" class="aligncenter" width="566" height="425" alt="사용자 삽입 이미지" /><br />먼저, java.* 에 들어있는 클래스거나, org.osgi.framework.bootdelegation 속성에 설정된 클래스면 Parent Class Loader에게 클래스로딩 책임을 위임합니다.</p>
+<p>다음은 Import-Packaged에 명시된 패키지에 들어있는 클래스라면, 클래스로딩 책임을 해당 클래스를 Export 한 번들의 클래스로더에게 위임합니다.</p>
+<p>다음은 Required-Bundle 설정으로 참조한 패키지에 들어있는 클래스라면, 클래스로딩 책임을 해당 번들의 클래스로더에게 위임합니다.</p>
+<p>다음으로 자기 자신 내부에 해당 클래스가 있는지 찾습니다.</p>
+<p>다섯번째는 자신에게 붙어있는 Fragment에서 해당 클래스를 찾아봅니다. 클래스로더는 자신의 클래스로더를 사용합니다.</p>
+<p>여섯번째는 위 그림에 빠져있는데 동적 클래스로딩과 관련이있습니다. 이 부분은 나중에 살펴봅니다.</p>
+<p>참조 : <a href="http://neilbartlett.name/blog/osgibook/" target="_blank">http://neilbartlett.name/blog/osgibook/</a></p>

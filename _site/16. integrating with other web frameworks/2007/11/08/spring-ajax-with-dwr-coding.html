@@ -1,0 +1,29 @@
+<p>다음의 순서대로 코딩을 할 수 있습니다.(꼭 이 순서를 지켜야 하는 것은 아닙니다.)
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">0. POJO로 Ajax (자바스크립트로 노출시킬) 서비스 구현.<br />1. web.xml에 DWR Servlet 등록하기.<br />2. dwr.xml 작성하기.<br />3. 클라이언트 코드 작성하기.<br />&nbsp; &nbsp; 3-1. 자바스크립트 등록하기.<br />&nbsp; &nbsp; 3-2. 요청하기.<br />&nbsp; &nbsp; 3-3. 요청 처리하기.</div>
+<p><span style="font-weight: bold;">0. POJO로 Ajax (자바스크립트로 노출시킬) 서비스 구현.</span><br /><img src="/assets/dk130000000000.png" class="aligncenter" width="448" height="169" alt="사용자 삽입 이미지" />매우 단순하게 구현했으며, MemberService 인터페이스에서는 Member의 이름으로 회원을 검색하여 결과를 리스트 형태로 반환하는 메소드를 가지고 있습니다.</p>
+<p><span style="font-weight: bold;">1. web.xml에 DWR Servlet 등록하기.</span></p>
+<p>web.xml에 다음과 같은 코드를 추가합니다.
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">&nbsp; &nbsp; &lt;servlet&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-name&gt;dwr&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-class&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; org.directwebremoting.servlet.DwrServlet<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/servlet-class&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;init-param&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;param-name&gt;debug&lt;/param-name&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;param-value&gt;true&lt;/param-value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/init-param&gt;<br />&nbsp; &nbsp; &lt;/servlet&gt;<br />&nbsp; &nbsp; &lt;servlet-mapping&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;servlet-name&gt;dwr&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;<br />&nbsp; &nbsp; &lt;/servlet-mapping&gt;</div>
+<p>/dwr/ 로 시작하는 모든 요청을 DwrServlet이 처리하도록 설정하였습니다.</p>
+<p><span style="font-weight: bold;">2. dwr.xml 작성하기.</span></p>
+<p>WEB-INF/ 폴더에 dwr.xml 파일을 다음과 같이 작성합니다.
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">&lt;!DOCTYPE dwr PUBLIC<br />"-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"<br />"http://www.getahead.ltd.uk/dwr/dwr10.dtd"&gt;</p>
+<p>&lt;dwr&gt;<br />&nbsp; &nbsp; &lt;allow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;convert converter="bean" match="whiteship.domain.Member" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;create creator="new" javascript="MemberService"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;param name="class"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="whiteship.service.MemberServiceImpl" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/create&gt;<br />&nbsp; &nbsp; &lt;/allow&gt;<br />&lt;/dwr&gt;</div>
+<p>Member 타입으로 캐스팅 할 수 있도록, converter를 등록해줍니다.<br />new 생성기를 사용하여, MemberService라는 이름의 자바스크립트를 생성합니다. 이 자바스크립트는 MemberServiceImpl 자바 클래스를 가지고 작성합니다.</p>
+<p>=================================================================================<br />이제 서버쪽에서 설정해야 할 내용은 끝입니다. 이것으로 클라이언트 쪽에서 자바 객체의 메소드를 자바스크립트에서 호출할 수 있습니다. 어떻게 호출하는지 살펴보겠습니다.</p>
+<p><span style="font-weight: bold;">3. 클라이언트 코드 작성하기.</span><br style="font-weight: bold;" /><br style="font-weight: bold;" /><span style="font-weight: bold;">3-1. 자바스크립트 등록하기.</span></p>
+<p>View에서 사용할 자바스크립트를 등록합니다.
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;script type='text/javascript' src='dwr/engine.js'&gt;&lt;/script&gt;<br />&lt;script type='text/javascript' src='dwr/interface/MemberService.js'&gt;&lt;/script&gt;<br />&lt;script type='text/javascript' src='dwr/util.js'&gt;&lt;/script&gt;</div>
+<p>맨 아래 한 줄은 옵션입니다. 위의 두 줄은 필수이며, 위의 자바스크립트 파일들이 없다고 걱정하시지 않아도 됩니다. web.xml에서 설정한 dwr/ 경로를 통해 DwrServlet이 알아서 처리할 것입니다.</p>
+<p>두 번째 자바스크립트 파일의 이름은 dwr.xml에서 자바 클래스를 자바스크립트로 변환할 때 사용하기로 한 이름으로 설정해주시면 됩니다.</p>
+<p><span style="font-weight: bold;">3-2. 요청하기.</span></p>
+<p>폼에서 다음과 같은 input 엘리먼트가 있고, 해당 엘리먼트에서 자바스크립트를 호출합니다.
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">&lt;form name="memberForm"&gt;<br />&nbsp; &nbsp; &lt;input type="text" name="name" maxlength="10" onkeyup="inputChanged();" /&gt;<br />&lt;/form&gt;</div>
+<p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">function inputChanged() {<br />&nbsp; &nbsp; var name = document.memberForm.name.value;<br />&nbsp; &nbsp; if(name.length &gt; 1) {<br />&nbsp; &nbsp; &nbsp; &nbsp; MemberService.get(name, updateTable);<br />&nbsp; &nbsp; } else {<br />&nbsp; &nbsp; &nbsp; &nbsp; DWRUtil.removeAllRows("memberTable");<br />&nbsp; &nbsp; }<br />}</div>
+<p><span style="font-weight: bold;">3-3. 요청 처리하기.</span></p>
+<p>위의 자바스크립트에서 updateTable이 바로 요청의 결과를 처리할 자바스크립트 입니다. 다음과 같이 작성합니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">function updateTable(results) {<br />&nbsp; &nbsp; DWRUtil.removeAllRows("memberTable");<br />&nbsp; &nbsp; DWRUtil.addRows("memberTable", results, cellFuncs);<br />}</p>
+<p>var cellFuncs = [<br />&nbsp; &nbsp; function(data) { return data.name; },<br />&nbsp; &nbsp; function(data) { return data.email; }<br />];</div>
+<p>요청의 결과를 가져와서 테이블을 채워줄 때 해당 데이터에서 어떤 필드로 테이블을 채워야 하는지 정의하기 위해 cellFuncs 라는 구조체(?)를 정의해 주었습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/ck130000000000.zip" class="aligncenter">ck130000000000.zip</a>참조 : Spring In Action 16장</p>

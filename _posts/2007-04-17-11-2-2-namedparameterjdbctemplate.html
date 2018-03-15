@@ -1,0 +1,68 @@
+---
+layout: post
+title: 11.2.2. NamedParameterJdbcTemplate
+date: 2007-04-17 07:43:35.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 11
+tags:
+- Spring JDBC
+- Spring Reference 11장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323112350'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이전 글에서 JdbcTemplate을 사용하여 쿼리를 작성할 때 ? 를 사용하였는데요. 쿼리에 필요한 파라미터가 여러개 라면 ? 의 순서를 신경써야 하는 단점이 생깁니다.</p>
+<p>이때 JdbcTemplate 클래스를 감싸고 있는 <a href="http://static.springframework.org/spring/docs/2.0.x/api/index.html" target="_blank">NamedParameterJdbcTemplate 클래스</a>를 사용하면 됩니다.</p>
+<p>getJdbcOperations() 메소드를 사용해서 감싸고 있는 JdbcTempate 객체를 받아와서 사용할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">private <span style="color: rgb(255, 0, 0);">NamedParameterJdbcTemplate </span>namedParameterJdbcTemplate;</p>
+<p>public void setDataSource(DataSource dataSource) {<br />&nbsp; &nbsp; this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);<br />}</p>
+<p>public int countOfActorsByFirstName(String firstName) {</p>
+<p>&nbsp; &nbsp; String sql = "select count(0) from T_ACTOR where first_name = :<span style="color: rgb(0, 0, 255);">first_name</span>";</p>
+<p>&nbsp; &nbsp; SqlParameterSource namedParameters = new <span style="color: rgb(0, 153, 102);">MapSqlParameterSource</span>("<span style="color: rgb(0, 0, 255);">first_name</span>", firstName);</p>
+<p>&nbsp; &nbsp; return namedParameterJdbcTemplate.queryForInt(sql, namedParameters);<br />}</div>
+<p>: 를 사용해서 ? 대신 sql의 파라미터에 이름을 줄 수 있습니다.</p>
+<p>SqlParameterSource에는 위의 예제에 있는 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/namedparam/MapSqlParameterSource.html" target="_blank">MapSqlParameterSource</a>와 아래 예제에 있는&nbsp; <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/namedparam/BeanPropertySqlParameterSource.html" target="_blank">BeanPropertySqlParameterSource</a> 가 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public int countOfActors(Actor <span style="color: rgb(255, 0, 0);">exampleActor</span>) {</p>
+<p>&nbsp; &nbsp; // notice how the named parameters match the properties of the above 'Actor' class<br />&nbsp; &nbsp; String sql = "select count(0) from T_ACTOR where first_name = :firstName and last_name = :lastName";</p>
+<p>&nbsp; &nbsp; SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(<span style="color: rgb(255, 0, 0);">exampleActor</span>);</p>
+<p>&nbsp; &nbsp; return this.namedParameterJdbcTemplate.queryForInt(sql, namedParameters);<br />}</div>
+<p></p>

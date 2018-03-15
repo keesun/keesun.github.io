@@ -1,0 +1,33 @@
+<p><a href="http://java.sun.com/docs/books/tutorial/collections/interfaces/map.html">콜렉션에 관한 java 튜토리얼</a>을 보면서 정리해 봅니다.</p>
+<p>Map은 키와 값의 쌍으로 이루어진 map을 나타내는 객체입니다. 키는 DB의 주키 처럼 중복이 발생하면 안됩니다. 그리고 하나의 키는 최대한 하나의 값과 매칭 됩니다.</p>
+<p>Map에서 제공하는 책임들로는 다음과 같은 메소드들이 있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1197165374.bmp" class="aligncenter" width="402" height="427" alt="">1197165374.bmp</a>본문에 있던 내용입니다.<br />
+[#M_ more.. | less.. | </p>
+<pre>public interface Map&lt;K,V&gt; {<br />
+<br />
+    // Basic operations<br />
+    V put(K key, V value);<br />
+    V get(Object key);<br />
+    V remove(Object key);<br />
+    boolean containsKey(Object key);<br />
+    boolean containsValue(Object value);<br />
+    int size();<br />
+    boolean isEmpty();<br />
+<br />
+    // Bulk operations<br />
+    void putAll(Map&lt;? extends K, ? extends V&gt; m);<br />
+    void clear();<br />
+<br />
+    // Collection Views<br />
+    public Set&lt;K&gt; keySet();<br />
+    public Collection&lt;V&gt; values();<br />
+    public Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet();<br />
+<br />
+    // Interface for entrySet elements<br />
+    public interface Entry {<br />
+        K getKey();<br />
+        V getValue();<br />
+        V setValue(V value);<br />
+    }<br />
+}</pre>
+<p>_M#]</p>

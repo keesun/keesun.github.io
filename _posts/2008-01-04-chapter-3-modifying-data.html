@@ -1,0 +1,95 @@
+---
+layout: post
+title: 'Chapter 3: Modifying Data'
+date: 2008-01-04 02:23:05.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SQL
+tags:
+- SQL
+- 오라클
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323146902'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a></p>
+<ul>
+<li>새로운 값 추가하기</li>
+<ul>
+<li>INSERT INTO 테이블 (컬럼들) VALUES (값들);</li>
+<li>INTO는 MySQL에서는 생략가능 하지만, SQL-99 스팩이며 오라클에서는 필수다.</li>
+<li>컬럼명을 안 써도 되는 경우</li>
+<ul>
+<li>RDBMS가 값을 반드시 자동 생성 해주는 경우. ex) 주키 컬럼</li>
+<li>RDBMS가 갑을 자동으로 채워줄 수 있는 경우. ex) 기본값을 설정해둔 컬럼</li>
+<li>컬럼이 timestamp 타입임 경우. RDBMS가 알아서 현재 날짜와 시각을 넣어 줌.</li>
+<li>NULL을 허용하는 컬럼.</li>
+</ul>
+<li>기본값으로 전부 채우기</li>
+<ul>
+<li>INSERT INTO Author DEFAULT VALUES;</li>
+</ul>
+<li>여러 줄 한 번에 넣기</li>
+<ul>
+<li>VALUES 대신에 SELECT 문 사용.</li>
+</ul>
+</ul>
+<li>수정하기</li>
+<ul>
+<li>UPDATE 테이블 SET 컬럼 = 값, 컬럼 = 값 WHERE 조건;</li>
+<li>만약에 WHERE 절 빼면 해당 테이블의 모든 컬럼이 바뀌게 되니까 UPDATE 문 실행하기 전에 UPDATE를 SELECT로 바꿔서 변경 대상을 확인하는 것이 좋다.</li>
+</ul>
+<li>삭제하기</li>
+<ul>
+<li>DELETE FROM 테이블 WHERE 조건;</li>
+<ul>
+<li>FROM도 선택적인데 사용하는 것이 좋다.</li>
+</ul>
+<ul>
+<li>주키 컬럼을 조건절에 사용하는 것이 좀 더 안전하다. 유일한 컬럼을 지칭하니까.</li>
+</ul>
+<li>TRUNCATE TABLE 테이블;</li>
+<ul>
+<li>DELETE FROM과는 달리 삭제에 대한 로그를 남기지 않아서 좀 더 빠르다.</li>
+<li>대신 롤백이 불가능하다.</li>
+</ul>
+</ul>
+</ul>

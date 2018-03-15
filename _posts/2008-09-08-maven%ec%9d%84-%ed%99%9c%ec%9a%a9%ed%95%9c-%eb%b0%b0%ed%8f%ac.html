@@ -1,0 +1,68 @@
+---
+layout: post
+title: Maven을 활용한 배포
+date: 2008-09-08 01:31:24.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- war plugin
+- 배포
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323155520'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>배포도 여러 종류가 있겠지만, 우선은 개발시에 배포가 필요합니다. 톰캣이나 제티위에 웹 애플리키에션을 올려서 확인해봐야겠죠. 이렇게 배포한 것은 개발용도 이고, 오직 한 명의 개발자 용도로 배포하는 것이니 개발 환경 배포라고하겠습니다. 그리고 테스트 환경에 배포하여 다른 팀원 및 고객들도 공통으로 현재 돌아가는 웹 애플리케이션을 볼 수 있도록 배포할 수 있습니다. 팀 환경 배포라고 하겠습니다. 무슨 명칭이 따로 있었던 것 같은데, 기억이 안납니다. (장미를 꼭 장미라고 부를 필욘없죠. 로즈라고 하던 로젠이라고 하건,, 아메리카 원주민을 인도 사람-인디안-이라고 부르기도하는데 이정도야 뭐.. ㅋ) 그리고 최종 제품 단계에서 고객에게 배포하는 제품 환경 배포가 있겠습니다.</p>
+<p><span style="font-weight: bold;">1. 개발 환경 배포</span></p>
+<p>Maven으로 배포를 할 때 사용하는 플러긴은 <a href="http://maven.apache.org/plugins/maven-war-plugin/usage.html" target="_blank">war</a>입니다. 기본적으로 세 가지 goal을 제공합니다. </p>
+<p>war:war는 target 폴더 밑에 war 파일을 만들어 줍니다. 이 녀석을 톰캣홈/webapp 밑에 복사해서 배포할 수도 있겠지만, 상당히 불편한 작업입니다. 언제 그 파일 복사해서 톰캣 폴더 열고 복사하고 다시 띄우고;; 이러다가는 개발하기도 전에 지쳐버릴 겁니다.</p>
+<p>war:exploded가 있습니다. 이 녀석은 개발할 때 편하게 target/app이름/WEB-INF 를 만들어 그 안에 war를 풀어해진(exploded) 형태로 배포해줍니다. 소스파일을 컴파일 해서 target/app이름/WEB-INF/classes 이 안에 넣어줍니다.</p>
+<p>이 방법은 이클립스에서 톰캣 서버에 모듈 설정을 target/app이름 으로 잡아두고, 빌드 기본 디렉터리를 위의 classes 폴더로 잡아주면 상당히 편하게 개발을 할 수 있습니다. 하지만, target 폴더를 서버 홈으로 잡아 두는 건 그리 좋은 방법이 아닌것 같습니다. 왜냐면, 일단 src/main/webapp 밑에 개발해둔 jsp 파일과 WEB-INF 이하의 모든 파일을 target/app이름/ 밑으로 전부 복사를 하는데.. 파일이 많으면 이 복사 작업도 길어질 뿐더러, 개발시 xxx.jsp 파일을 찾으려고 Ctrl+F를 눌러서 검색해보면 파일이 두개 보입니다. 하나는 target에 위치한 녀석으로 수정하나 마나인 파일과 하나는 src/main/webapp에 있는 실제로 수정해야 하는 파일이죠. 이 둘을 잘 못 구분해서, 개발한 수고가 전부 날아가버린 경험이 몇 번 있습니다.</p>
+<p>따라서 마지막 방법인 war:inplcae가 가장 적당합니다. war:inplcae는 war:exploded의 변종으로 src/main/webapp 밑에다가 그냥 배포를 합니다. 따라서 필요한 라이브러리를 src/main/webapp/WEB-INF/lib 폴더로 이동시키는 것 말고는 별다른 복사가 발생하지 않습니다. 수정해야 할 파일도 하나고 말이죠. 단 classes 폴더는 직접 생성해주고 그쪽으로 빌드 디렉토리를 잡아줘야 합니다. 서버 모듈 홈 디렉토리도 src/main/webapp로 잡아줘야 하구요. 이건 뭐 두 번째 방법을 사용하더라도 설정해 줘야 하는 것이기 때문에 부가적인 일이라고 볼 순 없습니다. 어쨌든~ 이렇게 하면 이슈가 하나 있는데, 빌드 패스에 메이븐 의존성과 webapp/WEB-INF/lib에 복사된 라이브러리 들끼리 충돌한다는 메시지가 나옵니다. 이 메시지는 빌드 패스에 가서 메이븐 의존성을 열어 보면 WEB-INF/lib도 참조하도록 되어 있는데 그 걸 빼주면 됩니다.</p>
+<p>자 이렇게 설정을 해두면 이제 개발할 때 배포는.. 아주 간단합니다.</p>
+<p>개발 -&gt; 서버 실행 -&gt; 확인 -&gt; 서버 종료 -&gt; 개발 -&gt; pom.xml에 dependency 변경 -&gt; WEB-INF/lib 폴더 제거 -&gt; war:inplace -&gt; 서버 실행 -&gt; ... 이런식입니다. <br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. 팀 환경 배포</span></p>
+<p>CI를 하고 있다면 편하게 할 수 있습니다. 배번 빌들 할 때 마다 war:inplace로 배포를 하게 하고, 해당 폴더를 웹 서버에 모듈 홈으로 등록해두면 되겠죠. 대충 빌드는 이런식으로 짜면 될 겁니다.</p>
+<p>clean test war:inplace<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. 제품 환경 배포</span></p>
+<p>제품 환경에 배포하는 것은 조금 다릅니다. 빌드와도 관련이 없고(매번 빌드 할 때마다 제품 환경에 배포하진 않죠.) 어쩌면 이 때는 war로 패키징을 하던 어쩌던 별 상관이 없을 것 같지만, 제가 지금 다니는 회사에서 익힌 방법은 업데이트가 아주 용이한 방법입니다. 엄청나게 빠르게 에러를 잡고 제품에 반영해줄 수가 있습니다. 그야말로 Agile 방법입니다. </p>
+<p>war 패키징은 전혀 빠르지 않습니다. 귀찮죠. 일단 이 거는 별도의 브랜치가 필요합니다. 개발과는 전혀 다른 브랜치로 소스 코드 관리를 하고 있어야 합니다. 조그만 애플리케이션이라면 굳이 그럴 필요는 없겠지만 일반적으론 나눠 두는게 좋겠습니다. 그래야 배포랑 개발을 구분할 수 있으니까요.</p>
+<p>제품 배포 환경에 가서 배포용 프랜치를 commit 받습니다. 그리고 이렇게 받아둔 폴더를 중심으로 배포 환경 웹 서버에 모듈 홈을 등록합니다. 이게 초기 세팅입니다. 이대로 펼쳐진 상태로 배포가 끝납니다. war로 배포하지 않습니다.</p>
+<p>그런 다음 이슈가 생기거나 문제가 있을 때 개밣 환경에서 테스트 하고, 팀 개발 환경에서 테스트 하고, 잘 돌아가면, 배포 용 브랜치에 작업을 합니다. 그리고 커밋 합니다. 그런 다음 배포 환경으로 가서 소스 코드 업데이트를 업데이트 받고 서버에 가서 해당 웹 모듈만 내렸다 켜면 됩니다. war로 묶고 그걸 옮기는 작업이 사라져서 한 결 빨라졌습니다. 이걸 응용하면 매번 실행할 때 마다 새로 업데이트 받아서 실행하는 클라이언트 프로그램도 짤 수 있습니다,</p>

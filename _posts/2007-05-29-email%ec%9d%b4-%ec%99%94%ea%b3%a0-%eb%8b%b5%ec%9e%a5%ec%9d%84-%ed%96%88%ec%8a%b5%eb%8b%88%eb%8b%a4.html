@@ -1,0 +1,91 @@
+---
+layout: post
+title: Email이 왔고 답장을 했습니다.
+date: 2007-05-29 08:08:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 그냥 놀아
+tags:
+- Spring BeanFactory 관련 이메일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322963875'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font face="굴림" size="2">받은 이메일<br />[#M_ more.. | less.. |<font>&nbsp;</font><font face="굴림" size="2"></p>
+<p>안녕하세여..^^</p>
+<p>기선님.. 블러그를 보고 스프링을 공부 하고 있습니다.</p>
+<p>유익한 정보 감솨합니다.. !!</p>
+<p>spring을 공부 중인데.. 궁금한게 있어서.. 이렇게 메일을 보냅니다..</p>
+<p>궁금한것은.. </p>
+<p>만약에.. bean들을 xml 파일이 아닌 다른 방법으로</p>
+<p>beanFactory나 ApplicationContext에 넣을 수 있나요?!</p>
+<p>넣고 싶은데.. 아무리 찾아봐도 어떻게 해야 될지.. 모르겠습니다.</p>
+<p>그리고 또 질문이 하나 있습니다..</p>
+<p>factory에 올라와 있는 bean을 삭제 하고 싶을때는.. 어떻게 삭제를 해야 되나여?!</p>
+<p>기선님.. 도와주세요^^ ㅋㅋ</p>
+<p>넘.. 어렵네요.. 초보가 할라니까.. !!</p>
+<p>좋은 하루 되시고요~ !!</p>
+<p>메일 보내주시면 감솨하겠습니다.. ^^</p>
+<p>수고 하세요..^^</p>
+<p></font>_M#]<br />보낸 이메일<br />[#M_ more.. | less.. |<font>&nbsp;</font><br />안녕하세요.</p>
+<p>제 블로그를 애독해주시고 이렇게 질문도 해주셔서 매우 감사합니다. :)</p>
+<p>이 맛에 블로깅을 열심히 하는 것 같네요. 헤헷</p>
+<p>Q1.bean들을 xml 파일이 아닌 다른 방법으로 beanFactory나 ApplicationContext에 넣을 수 있나요?!</p>
+<p>A1.<br />
+있습니다. beanFactory나 ApplicationContext는 xml 파일에서 bean들의 설정 내용을 읽어서 bean<br />
+객체들의 생성과 종속성등을 관리합니다. 하지만 꼭 xml&nbsp; 파일로만 bean 설정 내용(configuration<br />
+metadata)를 정의할 수 있는 건 아니죠. Java의 어노테이션을 사용하여 할 수도 있습니다. 실제 spring 2.1 부터는 어노테이션을 사용한 bean 설정이 가능하다고 나와있습니다. 오늘 로드 존슨이 <a href="http://blog.interface21.com/main/2007/05/28/conference-season-builds-up-to-springone/" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">포스팅한 글</a>에도 얼핏 이와 관련된 내용이 있으니 참조하시면 좋을 것 같습니다.</p>
+<p>Q2. <font><font face="굴림" size="2"><br />
+factory에 올라와 있는 bean을 삭제 하고 싶을때는.. 어떻게 삭제를 해야 되나여?!</p>
+<p>A2.<br />
+먼저 factory에서 bean 객체를 가져오는 행위를 살펴보겠습니다.." factory에서 bean설정을 읽어 들인 후<br />
+(1)각각의bean들을 미리 만들어 두고 사용자가 (2)getBean("bean이름"); 을 호출 할 때 마다 해당 bean<br />
+객체를 전달해 준다." 이 말은 틀린말은 아니지만 항상 맞는 말도 아닙니다. 다시 말해서 여러가지 경우가 있을 수 있다는<br />
+겁니다. bean을 설정할 때 lazy-init="true" 로 설정해 두셨다면 (1) 부분이 달라집니다. 미리 만들어 두지<br />
+않고 getBean()으로 요청이 들어왔을 때 만들게 됩니다. 또한 getBean()을 할 때는 bean의 scope에 따라<br />
+다르게 동작하게 됩니다. 여기서 해당 bean과 다른 bean들과의 종속성을 생각하면 더 여러 경우의 수가 나올 수도 있습니다.</p>
+<p>그럼 다시 질문으로 돌아가서 beanFactory에서 bean을 제거 하고 싶으시다는 말씀은 아~~~주 가끔만<br />
+사용할 객체를 beanFactory로 관리하는 경우를 말씀하시는 것으로 생각이 됩니다. 이 경우 굳이 beanFactory에서<br />
+관리할 필요가 없기 때문에 필요할 때마다 new 키워드 사용해서 만들어서 사용하시면 됩니다. 그럼 beanFactory에서<br />
+어떻게 없애나 하는 걱정을 안하셔도 됩니다.<br />
+<br /></font></font>&nbsp;<br />그럼에도 불구하고 beanFactory로 관리하고 싶으시다면 lazy-init="true" 속성을 사용하셔서 필요할 때만 만들도록 하면 됩니다.</p>
+<p>자바의 객체는 null을 대입해주면 GC가 알아서 삭제를 해준다죠. :)</p>
+<p>도움이 됐나 모르겠네요.<br />이 글을 제 블로그에 포스팅 해도 될까요??_M#]<br />블로그에 포스팅 해도 되는지 답장은 안왔지만 답장 해드린 내용에서 약간 수정도 할겸 틀린 내용이 있으면 피드백도 받을 겸 올려둡니다.<br /></font></p>

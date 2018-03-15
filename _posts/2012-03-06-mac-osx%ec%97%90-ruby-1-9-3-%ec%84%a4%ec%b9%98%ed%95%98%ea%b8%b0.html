@@ -1,0 +1,53 @@
+---
+layout: post
+title: Mac OSX에 Ruby 1.9.3 설치하기
+date: 2012-03-06 23:03:13.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Ruby
+tags:
+- ruby
+- Ruby 설치
+meta:
+  _edit_last: '1'
+  _oembed_48ce7677162ea4b2dc85544d911371d7: "{{unknown}}"
+  _oembed_003af6629c55790b2bb0591081485ead: "{{unknown}}"
+  _oembed_92f40696c2bb6f36d065699ae5fc9564: "{{unknown}}"
+  _oembed_d56cd1c3b480a622888802b6794ad3f7: "{{unknown}}"
+  _oembed_6a5f545f5b5adc7665688a7f24b3086d: "{{unknown}}"
+  _oembed_4909e9364b86dc230f9591e4f6dadadf: "{{unknown}}"
+  _oembed_bb4ebf4db9548f05be626b67ce99900a: "{{unknown}}"
+  _oembed_11c188d3c281c75766a31a7ecbb854dd: "{{unknown}}"
+  _oembed_232e219345a9521c5b9180f3bc32075d: "{{unknown}}"
+  _oembed_afd5838b9a11c0a5b6f1c140648b2cd5: "{{unknown}}"
+  _oembed_3d1dce6d29cf03ef54ed21fe369f5e24: "{{unknown}}"
+  _oembed_e7aeae32d09fbe4e1583867208184ea2: "{{unknown}}"
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>왜이렇게 힘들지? 기본으로 1.8 버전이 설치되어 있는데 최신 버전으로 설치하려고 홈페이지를 찾았갔다.</p>
+<p>http://www.ruby-lang.org/en/downloads/</p>
+<p>여러가지 방법이 있는데 제일 위에 RVM을 이용해보래. 나도 그래볼까하고 rvm을 설치하는데까지는 성공.</p>
+<p>https://rvm.beginrescueend.com/rvm/install/</p>
+<p>그런데 이 뒤부터 도무지 진행이 안 되네. rvm을 설치하고 나면 OSX에 기본으로 깔려이는 루비말고 RVM으로 설치한 루비를 기본으로 사용할 수 있도록 하는 명령어 설명이 나온다.</p>
+<p>rvm requirements</p>
+<p>라고 입력하면 자세히 설명해 주는데... 거기서 첫번째 명령어가 rvm install 1.8.7 이었나. 아무튼 그걸 설치하다가 ./configure에서 에러가 났다고 에러 로그를 확인하란다.</p>
+<p>확인해보니까 OSX에 gcc가 없어서 ./configure를 못했데.. 이건 보통 XCode를 설치하면 깔리는걸로 알고 있는데.. XCode가 깔려있는데도 이런 에러가 나니까 황당하네... 그래서 XCode를 실행해봤는데 설치가 뭔가 잘못됐는지 실행하다가 자꾸 죽어.. 그래서 다시 설치했는데 꽤 오래 걸리데... 1.3기가니깐;;</p>
+<p>아무튼 다시 설치하고 나서도 설치를 진행하는데 안 돼~ 도무지 안 돼~... 그래서 작전을 바꿈. RVM 꺼져...</p>
+<p>Homebrew를 쓰기로 결정.</p>
+<p>https://github.com/mxcl/homebrew/wiki/installation</p>
+<p>brew를 설치하는건 간단히 한줄로 끝.</p>
+<p>/usr/bin/ruby -e "$(curl -fsSL https://raw.github.com/gist/323731)"</p>
+<p>그런 다음 루비 설치도 한 줄로 끝</p>
+<p>brew install ruby</p>
+<p>버전을 명시하는 부분이 없어서 좀 불안했는데 다행히 최신 버전으로 설치해주네.. 오호. 귿.</p>
+<p>설치된 루비를 Path에 추가해주고 설치 끝.</p>
+<p>오늘은 설치까지만... 원래 30분만 할려고 그랬는데 고작 설치하는데만 이게 몇시간이야;; 아이고.. @_@;;</p>

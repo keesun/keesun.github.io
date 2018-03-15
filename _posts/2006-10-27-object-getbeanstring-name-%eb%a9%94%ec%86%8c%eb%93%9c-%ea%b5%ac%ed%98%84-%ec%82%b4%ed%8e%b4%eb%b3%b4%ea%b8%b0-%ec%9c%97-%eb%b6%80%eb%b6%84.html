@@ -1,0 +1,332 @@
+---
+layout: post
+title: Object getBean(String name) 메소드 구현 살펴보기-윗 부분
+date: 2006-10-27 10:27:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mission
+tags:
+- AbstractBeanFactory
+- BeanFactory
+- getBean()
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322745388'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p class="MsoNormal">
+<div style="padding: 10px; background-color: rgb(208, 255, 157)"><span lang="EN-US">Object getBean(String name) throwsBeansException </span>메소드는<span lang="EN-US"> name</span>에 해당하는<span lang="EN-US">bean</span>의 객체를 반환합니다<span lang="EN-US">. </span>이 메소드는<span lang="EN-US">BeanFactory</span>가<span lang="EN-US"> Singleton </span>또는<span lang="EN-US">Prototype </span>패턴을 사용하는 것을 보여줍니다<span lang="EN-US">. name</span>으로<span lang="EN-US"> bean</span>의 별명을 넘겨 줘도 그에 상응하는<span lang="EN-US"> bean </span>객체를 받아 볼수 있으며 이 경우에도 역시 해당하는<span lang="EN-US"> name</span>이 없다면 상위<span lang="EN-US">BeanFactory</span>에서 찾게 됩니다<span lang="EN-US">. </span>이 메소드는 특히<span lang="EN-US">RuntimeException</span>을 발생 시킬 수 있는데<span lang="EN-US"> BeanException</span>은<span lang="EN-US"> bean </span>객체를 가져오지 못했을 때 발생하며<span lang="EN-US"> BeanException</span>의하위 클래스인<span lang="EN-US"> NoSuchBeanDefinitionException</span>은 해당하는<span lang="EN-US"> name</span>의<span lang="EN-US"> bean</span>을 찾지 못했을 때 발생합니다<span lang="EN-US">.</span></div>
+<p>
+먼저 소스코드를 보겠습니다.</p>
+<p>public Object getBean(String name) throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return getBean(name, null, null);<br />
+ &nbsp;&nbsp; }</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1231377222.bmp" class="aligncenter" width="328" height="104" alt="">1231377222.bmp</a><br />
+아.. 다른 메소드를 호출 하고 있습니다. 혹시 getBean(String name, Class requiredType) 메소드도 이러한 모습을 하고 있지 않을까 예상됩니다. </p>
+<p>public Object getBean(String name, Class requiredType) throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return getBean(name, requiredType, null);<br />
+ &nbsp;&nbsp; }</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1022700860.bmp" class="aligncenter" width="324" height="101" alt="">1022700860.bmp</a><br />
+역시 같은 모습을 하고 있었습니다.</p>
+<p>이번 글에서는 두 개의 메소드 구현을 한꺼번에 살펴볼 수 있게 됐습니다. :) 이거양득?</p>
+<p>먼저 세개의 아규먼트들이 무엇에 사용되는지 주석을 보겠습니다.</p>
+<p>/**<br />
+ &nbsp;&nbsp; &nbsp;* Return the bean with the given name,<br />
+ &nbsp;&nbsp; &nbsp;* checking the parent bean factory if not found.<br />
+ &nbsp;&nbsp; &nbsp;* @param name the name of the bean to retrieve<br />
+ &nbsp;&nbsp; &nbsp;* @param requiredType the required type of the bean to retrieve<br />
+ &nbsp;&nbsp; &nbsp;* @param args arguments to use if creating a prototype using explicit arguments to a<br />
+ &nbsp;&nbsp; &nbsp;* static factory method. It is invalid to use a non-null args value in any other case.<br />
+ &nbsp;&nbsp; &nbsp;*/</p>
+<p>name과 class는 알겠는데 args 라는 final Object[] 타입이 무엇인지 잘 모르겠네요. 정적 팩토리 메소드를 사용해서prototype을 생성할 때 사용할 아규먼트들이라고 합니다. </p>
+<p>Object getBean(String name, Class requiredType, final Object[] args) 메소드 보기</p>
+<p>[#M_ more.. | less.. | <br />
+public Object getBean(String name, Class requiredType, final Object[] args) throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; final String beanName = transformedBeanName(name);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Object bean = null;</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Eagerly check singleton cache for manually registered singletons.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Object sharedInstance = getSingleton(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (sharedInstance != null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (isSingletonCurrentlyInCreation(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Returning eagerly cached instance of singleton bean '" + beanName +<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "' that is not fully initialized yet - a consequence of a circular reference");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Returning cached instance of singleton bean '" + beanName + "'");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (containsBeanDefinition(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; RootBeanDefinition mergedBeanDefinition = getMergedBeanDefinition(beanName, false);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bean = getObjectForBeanInstance(sharedInstance, name, mergedBeanDefinition);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bean = getObjectForBeanInstance(sharedInstance, name, null);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Fail if we're already creating this singleton instance:<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // We're assumably within a circular reference.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (isSingletonCurrentlyInCreation(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new BeanCurrentlyInCreationException(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Check if bean definition exists in this factory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BeanFactory parentBeanFactory = getParentBeanFactory();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (parentBeanFactory != null &amp;&amp; !containsBeanDefinition(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Not found -&gt; check parent.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String nameToLookup = originalBeanName(name);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (parentBeanFactory instanceof AbstractBeanFactory) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Delegation to parent with args only possible for AbstractBeanFactory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return ((AbstractBeanFactory) parentBeanFactory).getBean(nameToLookup, requiredType, args);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else if (args == null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // No args -&gt; delegate to standard getBean method.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return parentBeanFactory.getBean(nameToLookup, requiredType);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new NoSuchBeanDefinitionException(beanName,<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "Cannot delegate to parent BeanFactory because it does not supported passed-in arguments");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.alreadyCreated.add(beanName);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; final RootBeanDefinition mergedBeanDefinition = getMergedBeanDefinition(beanName, false);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; checkMergedBeanDefinition(mergedBeanDefinition, beanName, args);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Create bean instance.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (mergedBeanDefinition.isSingleton()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sharedInstance = getSingleton(beanName, new ObjectFactory() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; public Object getObject() throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return createBean(beanName, mergedBeanDefinition, args);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; catch (BeansException ex) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Explicitly remove instance from singleton cache: It might have been put there<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // eagerly by the creation process, to allow for circular reference resolution.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Also remove any beans that received a temporary reference to the bean.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; destroySingleton(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw ex;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bean = getObjectForBeanInstance(sharedInstance, name, mergedBeanDefinition);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else if (mergedBeanDefinition.isPrototype()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // It's a prototype -&gt; create a new instance.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object prototypeInstance = null;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; beforePrototypeCreation(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; prototypeInstance = createBean(beanName, mergedBeanDefinition, args);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; finally {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; afterPrototypeCreation(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bean = getObjectForBeanInstance(prototypeInstance, name, mergedBeanDefinition);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String scopeName = mergedBeanDefinition.getScope();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; final Scope scope = (Scope) this.scopes.get(scopeName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (scope == null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new IllegalStateException("No Scope registered for scope '" + scopeName + "'");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object scopedInstance = scope.get(beanName, new ObjectFactory() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; public Object getObject() throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; beforePrototypeCreation(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object bean = createBean(beanName, mergedBeanDefinition, args);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (requiresDestruction(bean, mergedBeanDefinition)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scope.registerDestructionCallback(beanName,<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; new DisposableBeanAdapter(bean, beanName, mergedBeanDefinition, getBeanPostProcessors()));<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return bean;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; finally {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; afterPrototypeCreation(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bean = getObjectForBeanInstance(scopedInstance, name, mergedBeanDefinition);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; catch (IllegalStateException ex) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new BeanCreationException(beanName, "Scope '" + scopeName + "' is not active", ex);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Check if required type matches the type of the actual bean instance.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (requiredType != null &amp;&amp; !requiredType.isAssignableFrom(bean.getClass())) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return bean;<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+헉.... 깁니다....</p>
+<p>메소드를 가장 밖에 있는 if 문을 기준으로 삼등분 시키겠습니다.</p>
+<p>상<br />
+[#M_ more.. | less.. |<br />
+ public Object getBean(String name, Class requiredType, final Object[] args) throws BeansException {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;final String beanName = transformedBeanName(name);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;Object bean = null;</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;// Eagerly check singleton cache for manually registered singletons.<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;Object sharedInstance = getSingleton(beanName);<br />
+ &nbsp; &nbsp; &nbsp;
+<div style="padding: 10px; background-color: rgb(250, 255, 169)"> if (sharedInstance != null) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">if (isSingletonCurrentlyInCreation(beanName)) {<br />
+ &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Returning eagerly cached instance of singleton bean '" + beanName + "' that is not fully initialized yet - a consequence of a circular reference");<br />
+ &nbsp; &nbsp;&nbsp; }<br />
+} else {<br />
+ &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Returning cached instance of singleton bean '" + beanName + "'");<br />
+ &nbsp; &nbsp; }<br />
+ }</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)"> if (containsBeanDefinition(beanName)) {<br />
+ &nbsp; &nbsp;&nbsp; RootBeanDefinition mergedBeanDefinition = getMergedBeanDefinition(beanName, false);<br />
+ &nbsp;&nbsp; &nbsp; <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">bean = getObjectForBeanInstance(sharedInstance, name, mergedBeanDefinition);</span><br />
+&nbsp; } else {<br />
+ &nbsp; &nbsp;&nbsp; <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">bean = getObjectForBeanInstance(sharedInstance, name, null);</span><br />
+ &nbsp; }</p>
+<p>}
+</div>
+</div>
+<p>_M#]<br />
+세 부분으로 나누니까 그래도 조금 안심이 되네요. 하지만 여전히 중간 부분이 굉장히 크네요. 먼저 제일 윗 부분 부터 살펴보겠습니다.</p>
+<p>이 부분은 getSingleton(String) 메소드를 호출한 결과 값이 null이 아닐 경우에 실행되는 부분입니다. 그리고 크게 두 부분으로 나뉘어 지는데 첫번째 부분은 메소드 이름으로 추정해 보건데 싱글톤 객체가 현재 생성 중일 때 또는 그렇지 않을 때 logging 메시지를 처리하는 부분이라고 생각됩니다.</p>
+<p>다음 부분은 실질적으로 빈을 생성하는 부분인듯 합니다. 빈 이름에 해당하는 빈 정의가 존재할 때와 그렇치 않을 때 각각 getObjectForBeanInstance()를 통해 bean을 받아 오고 있습니다.</p>
+<p>이전에도 몇 번 본적이 있는 transformedBeanName(String) 메소드입니다.<br />
+[#M_ more.. | less.. | <br />
+protected String transformedBeanName(String name) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String beanName = BeanFactoryUtils.transformedBeanName(name);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; // Handle aliasing.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; synchronized (this.aliasMap) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String canonicalName = (String) this.aliasMap.get(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return (canonicalName != null ? canonicalName : beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+Object sharedInstance = getSingleton(beanName); 여기서 호출되는 getSingleton(String)메소드 입니다. 이 메소드는 DefaultSingletonBeanRegistry 클래스에 있습니다. DefaultSingletonBeanRegistry 클래스와 AbstractBeanFactory와의 관계는 바로 <a href="http://whiteship.tistory.com/98">다른 글</a>에서 언급이 되었습니다. 짧게 D가 A의 아버지 입니다.<br />
+[#M_ more.. | less.. | <br />
+//DefaultSingletonBeanRegistry class</p>
+<p>public Object getSingleton(String beanName) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; synchronized (this.singletonCache) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return this.singletonCache.get(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+logging 관련 부분은 나중에 살펴보도록 하고 getMergedBeanDefinition(String, boolean) 메소드를 보겠습니다.<br />
+[#M_ more.. | less.. | <br />
+/**<br />
+ &nbsp;&nbsp; &nbsp;* Return a RootBeanDefinition, even by traversing parent if the parameter is a<br />
+ &nbsp;&nbsp; &nbsp;* child definition. Can ask the parent bean factory if not found in this instance.<br />
+ &nbsp;&nbsp; &nbsp;* @param name the name of the bean to retrieve the merged definition for<br />
+ &nbsp;&nbsp; &nbsp;* @param includingAncestors whether to ask the parent bean factory if not found<br />
+ &nbsp;&nbsp; &nbsp;* in this instance<br />
+ &nbsp;&nbsp; &nbsp;* @return a (potentially merged) RootBeanDefinition for the given bean<br />
+ &nbsp;&nbsp; &nbsp;* @throws NoSuchBeanDefinitionException if there is no bean with the given name<br />
+ &nbsp;&nbsp; &nbsp;* @throws BeanDefinitionStoreException in case of an invalid bean definition<br />
+ &nbsp;&nbsp; &nbsp;*/<br />
+ &nbsp;&nbsp; protected RootBeanDefinition getMergedBeanDefinition(String name, boolean includingAncestors)<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; throws BeansException {</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; String beanName = transformedBeanName(name);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Efficiently check whether bean definition exists in this factory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (includingAncestors &amp;&amp; !containsBeanDefinition(beanName) &amp;&amp;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; getParentBeanFactory() instanceof AbstractBeanFactory) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return ((AbstractBeanFactory) getParentBeanFactory()).getMergedBeanDefinition(beanName, true);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Resolve merged bean definition locally.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+마지막으로 getObjectForBeanInstance(Object, String,&nbsp; RootBeanDifinition) 메소드를 살펴보겠습니다.<br />
+[#M_ more.. | less.. | <br />
+/**<br />
+ &nbsp;&nbsp; &nbsp;* Get the object for the given bean instance, either the bean<br />
+ &nbsp;&nbsp; &nbsp;* instance itself or its created object in case of a FactoryBean.<br />
+ &nbsp;&nbsp; &nbsp;* @param beanInstance the shared bean instance<br />
+ &nbsp;&nbsp; &nbsp;* @param name name that may include factory dereference prefix<br />
+ &nbsp;&nbsp; &nbsp;* @param mbd the merged bean definition<br />
+ &nbsp;&nbsp; &nbsp;* @return the object to expose for the bean<br />
+ &nbsp;&nbsp; &nbsp;*/<br />
+protected Object getObjectForBeanInstance(Object beanInstance, String name, RootBeanDefinition mbd) throws BeansException {</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; String beanName = transformedBeanName(name);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Don't let calling code try to dereference the<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; // bean factory if the bean isn't a factory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (BeanFactoryUtils.isFactoryDereference(name) &amp;&amp; !(beanInstance instanceof FactoryBean)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new BeanIsNotAFactoryException(beanName, beanInstance.getClass());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; boolean shared = (mbd == null || mbd.isSingleton());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Object object = beanInstance;</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; // Now we have the bean instance, which may be a normal bean or a FactoryBean.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; // If it's a FactoryBean, we use it to create a bean instance, unless the<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; // caller actually wants a reference to the factory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (beanInstance instanceof FactoryBean) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!BeanFactoryUtils.isFactoryDereference(name)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Return bean instance from factory.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FactoryBean factory = (FactoryBean) beanInstance;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Bean with name '" + beanName + "' is a factory bean");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Cache object obtained from FactoryBean if it is a singleton.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (shared &amp;&amp; factory.isSingleton()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; synchronized (this.factoryBeanObjectCache) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; object = this.factoryBeanObjectCache.get(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (object == null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; object = getObjectFromFactoryBean(factory, beanName, mbd);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.factoryBeanObjectCache.put(beanName, object);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; object = getObjectFromFactoryBean(factory, beanName, mbd);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // The user wants the factory itself.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (logger.isDebugEnabled()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.debug("Calling code asked for FactoryBean instance for name '" + beanName + "'");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; return object;<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+getObjectForBeanInstance 메소드는 좀 더 자세히 살펴 봐야겠습니다. </p>

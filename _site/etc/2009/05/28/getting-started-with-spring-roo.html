@@ -1,0 +1,191 @@
+<p>참조 요약 편역: <a title="[http://blog.springsource.com/2009/05/27/roo-part-2/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2009/05/27/roo-part-2/">http://blog.springsource.com/2009/05/27/roo-part-2/</a></p>
+<p>벤 알렉스가 다음 달에 결혼하나봅니다. 그래서 RSVP 받는 프로그램을 Roo로 만들어 볼까 한다는군요. 1석 2조네요. RSVP도 만들고 Roo도 소개하고. RSVP는 청첩장을 받은 것에 대한 응답으로 몇명이 참석할지 알려주는 응답이라고 봐도 되겠네요.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">진행상황</span></span></p>
+<p>오늘 M1 버전이 배포됐습니다. 31% 성능 향상, 이메일 서비스, JMS, 스프링 웹 플로, 시큐리티, 자동 셀레늄 테스트 지원등이 주요 기능이죠.</p>
+<p>다음은 관련 사이트 입니다.<br />
+- <a title="[http://forum.springsource.org/forumdisplay.php?f=67]로 이동합니다." target="_blank" href="http://forum.springsource.org/forumdisplay.php?f=67">커뮤니티 포럼</a><br />
+- <a title="[http://jira.springframework.org/browse/ROO]로 이동합니다." target="_blank" href="http://jira.springframework.org/browse/ROO">이슈 트래커</a><br />
+- <a title="[https://anonsvn.springframework.org/svn/spring-roo/]로 이동합니다." target="_blank" href="https://anonsvn.springframework.org/svn/spring-roo/">SVN 저장소</a><br />
+- <a title="[https://fisheye.springsource.org/browse/spring-roo]로 이동합니다." target="_blank" href="https://fisheye.springsource.org/browse/spring-roo">소스코드 모니터링</a><br />
+- <a title="[http://search.twitter.com/search?q=%23roo]로 이동합니다." target="_blank" href="http://search.twitter.com/search?q=%23roo">Roo 트위터</a></p>
+<p>프로젝트 이름 투표는 952명이 투표했고, 467표를 얻은 Spring Roo로 결정이 됐답니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">설치하기</span></span></p>
+<p>다운받고, 압축 풀고, bin 폴더를 path에 추가하면 끝입니다.<br />
+알파버전일 때는 ROO_HOME 환경 변수를 등록했었는데, 이건 필요없으니 지워야겠습니다.<br />
+STS 2.1.0.M1 버전을 사용할 때는 Roo 1.0.0.A2가 내장되어 있다고 합니다. STS 2.1.0.M2에는 Roo 1.0.0.M1이 내장 될 예정이라고 하네요. STS에서 Roo 쉘을 이용할 때는 탭키가 아니라 Ctrl+스페이스로 자동완성을 지원한다고 합니다. 이클립스 스타일에 따라서 말이죠.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">애플리케이션 요구사항</span></span></p>
+<p>Roo는 직접 코딩하고 커스터마이징 하는 것을 투명하고, 편하며, 자동생성과 잘 어울리도록 설계되었다는 겁니다.</p>
+<p>청첩장을 아직 보내진 않았지만, 보낼 건데, 그 뒤에 "초대 코드"를 적어서 보낼 거라고 합니다. 그럼 받은 사람들은 "초대 코드"를 사이트에 입력한뒤에 RSVP 폼을 작성하도록 하는 것이죠. RSVP가 일종의 로그인 정보가 되고 그 뒤에 RSVP 폼에서 필요한 정보(참석할 인원, 하고 싶은 말 등)을 입력받는 겁니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">프로젝트 만들기</span></span></p>
+<p>$ mkdir wedding<br />
+$ cd wedding<br />
+$ roo</p>
+<p>폴더를 만들고, 이동한 뒤, roo 쉡로 들어갑니다. 종종 hint를 입력해서 필요한 정보와 지시를 얻을 수 있습니다. 이 부분에 대한 한글 번역을 제공할 수 있다면 좋겠네요.</p>
+<p>roo&gt; create project -topLevelPackage com.wedding<br />
+Created /home/balex/blog/wedding/pom.xml<br />
+Created SRC_MAIN_JAVA<br />
+Created SRC_MAIN_RESOURCES<br />
+Created SRC_TEST_JAVA<br />
+Created SRC_TEST_RESOURCES<br />
+Created SRC_MAIN_WEBAPP<br />
+Created SRC_MAIN_RESOURCES/applicationContext.xml<br />
+Created SRC_MAIN_WEBAPP/WEB-INF<br />
+Created SRC_MAIN_WEBAPP/WEB-INF/wedding-servlet.xml<br />
+Created SRC_MAIN_WEBAPP/WEB-INF/web.xml<br />
+Created SRC_MAIN_WEBAPP/WEB-INF/jsp<br />
+Created SRC_MAIN_WEBAPP/WEB-INF/jsp/index.jsp<br />
+Created SRC_MAIN_WEBAPP/WEB-INF/urlrewrite.xml</p>
+<p>프로젝트를 만듭니다. 이 때 최상위 패키지 정보를 줄 수 있군요. 메이븐 기본 폴더 구조로 프로젝트가 생성되고 스프링 설정 파일들이 보이네요. 이것으로 일단 기본 스프링 3.0 웹 애플리케이션이 만들어졌고, URL rewriting, 애노테이션 기반 클래스패스 스캐닝, 의존성 주입 등의 기능을 갖추었습니다.</p>
+<p>roo&gt; install jpa -provider HIBERNATE -database HYPERSONIC_PERSISTENT<br />
+Created SRC_MAIN_RESOURCES/META-INF<br />
+Created SRC_MAIN_RESOURCES/META-INF/persistence.xml<br />
+Created SRC_MAIN_RESOURCES/database.properties<br />
+Managed SRC_MAIN_RESOURCES/applicationContext.xml<br />
+Managed ROOT/pom.xml</p>
+<p>이번에는 JPA를 추가했습니다. 영속성 관리를 하이버네이트로 하고, DB는 hsql을 사용하겠다고 했군요. 맨 밑에 두줄은 Managed로 표시되어 있는데, 어떤 문제가 있을 되돌리기 위해 Roo가 관리하는 파일을 표시해 둔 거라고 합니다. Roo가 생성한 코드는 성능 최적화를 고려하여 toString()에서 리플렉션을 사용하지 않는다고 하는군요. 흠.. 코드가 궁금해지네요. 아니면 지금 번역을 잘못한건지.. @_@</p>
+<p>Roo does everything from avoiding reflection to optimizing string operations in your toString() methods (and everything in between) to maximise runtime performance of your applications. </p>
+<p>데이터베이스 설정을 확인할 수 있습니다.</p>
+<p>roo&gt; database properties<br />
+database.driverClassName = org.hsqldb.jdbcDriver<br />
+database.password =<br />
+database.url = jdbc:hsqldb:${user.home}/wedding<br />
+database.username = sa</p>
+<p>변경할 수도 있습니다.</p>
+<p>roo&gt; database set -key database.url -value jdbc:hsqldb:/home/balex/our-wedding<br />
+Managed SRC_MAIN_RESOURCES/database.properties</p>
+<p>물론 Roo를 사용하지 않고 IDE에서 직접 수정해도 됩니다. 단, 이렇게 커맨드를 이용할 수 있게 만든 이유는 스크립트를 제작할 수 있도록 하기 위해서 랍니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">엔티티 만들기</span></span></p>
+<p>roo&gt; new persistent class jpa -name ~.domain.Rsvp<br />
+Created SRC_MAIN_JAVA/com/wedding/domain<br />
+Created SRC_MAIN_JAVA/com/wedding/domain/Rsvp.java<br />
+Created SRC_MAIN_JAVA/com/wedding/domain/Rsvp_Roo_Plural.aj<br />
+Created SRC_MAIN_JAVA/com/wedding/domain/Rsvp_Roo_Entity.aj<br />
+Created SRC_MAIN_JAVA/com/wedding/domain/Rsvp_Roo_ToString.aj<br />
+Created SRC_MAIN_JAVA/com/wedding/domain/Rsvp_Roo_Configurable.aj</p>
+<p>프로젝트를 만들 때 입력한 최상위 프로젝트 밑에 domain 패키지를 만들고 그 아래 Rsvp 도메인을 추가했습니다. ~가 바로 그 최상위 프로젝트를 나타내는 단축키이고, Rsvp 도메인을 만들면서 AspectJ 파일 네 개를 자동생성했네요. 이 파일들은 STS 1.0+에서 자동으로 숨겨주기 때문에 이클립스에서 그냥 보시면 보이지가 않습니다. hide 옵션에서 *.aj 파일 체크를 해제해야 볼 수 있죠.</p>
+<p>roo&gt; add field string code -notNull -sizeMin 1 -sizeMax 30<br />
+roo&gt; add field string email -sizeMax 30<br />
+roo&gt; add field number attending -type java.lang.Integer<br />
+roo&gt; add field string specialRequests -sizeMax 100<br />
+roo&gt; add field date jpa confirmed -type java.util.Date</p>
+<p>필드를 추가합니다. 이 때 검증 관련 옵션을 주는데 이 옵션들은 JSR 303 Bean Validation 스펙을 이용합니다. 이를 사용하여 영속 계층에서도 검증을 하고, 웹에서도 검증을 하고, DDL을 생성할 때도 이용합니다. Roo를 사용할 때 얻을 수 있는 장점 중 하나가 바로 이렇게 별다른 수고 없이도 자연스래 표준을 이용하게 된다는 겁니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">제대로 동작하는지 확인하기</span></span></p>
+<p>roo&gt; new integration test</p>
+<p>통합테스트를 만듭니다. 아마도 DB, 도메인, 서비스를 연계한 테스트겠지요?</p>
+<p>roo&gt; new controller automatic ~.web.RsvpController</p>
+<p>이번에는 컨트롤러를 만드는데, 자동 모드로 만듭니다. 스프링 3.0 REST 지원을 사용합니다. 사용자가 사용하게 될 URL은 완전한 RESTful 이며 깔끔하고 잘 정의된 URL이 될 겁니다. 이런 자동 웹 단은 다음의 경우에 유용합니다.</p>
+<p>roo&gt; new selenium test -controller ~.web.RsvpController</p>
+<p>이번에는 앞에서 만든 컨트롤러에 대한 셀레늄 테스트를 만듭니다. 그래서 갑자기 컨트롤러를 만들었군요. @_@</p>
+<p>이제 테스트를 실행할 차례입니다. roo 쉘에서 잠깐 나가야겠네요.</p>
+<p>roo&gt; quit<br />
+$ mvn test<br />
+$ mvn tomcat:run</p>
+<p>roo 쉘에서 나가서, mvn test로 아마 통합 테스트까지 실행 한 뒤, 웹 테스트를 위해서 일단 톰캣을 가동합니다. 이상태에서 http://localhost:8080/wedding에 접속하여 애플리케이션이 잘 동작하나 확인할 수 있습니다.</p>
+<p>$ mvn selenium:selenese</p>
+<p>자 이번에는 자동으로 만들어진 셀레늄 테스트를 실행합니다. 뭐.. 잘 되겠지요. 자동으로 만든 코드를 자동으로 만든 테스트로 테스트를 하는데, 제대로 안 되면... 배포를 안 했겠죠.. @_@.. 이건 뭐 그냥 쑈를 위해 해본 듯한 느낌이지 진짜 테스트 같다는 느낌은 들지 않는군요.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">보안과 로깅</span></span></p>
+<p>roo&gt; configure logging -level DEBUG -package WEB</p>
+<p>웹 단이 잘 동작하나 보기 위해 로딩을 DEBUG 모드로 설정했네요. Log4J 기반 로깅을 사용한답니다..</p>
+<p>다음은 시큐리티인데, 스프링 시큐리티를 한 줄로 설치할 수 있습니다. 참 쉽죠~</p>
+<p>roo&gt; install security</p>
+<p>install web flow, install jms도 이런 식으로 한방 설치가 가능하다고 하는데 이건 뭐 거의.. Grails를 봤을 때의 충격과 맞먹는 기능입니다. 멋져부러~~!!!</p>
+<p>컨트롤러, 동적 파인더, 이메일 기능 관리하기</p>
+<p>roo&gt; new controller manual -name ~.web.PublicRsvpController</p>
+<p>이번에는 자동모드가 아니라 직접 코딩으로 만들 컨트롤러를 추가합니다. 이 컨트롤러는 HTTP GET과 POST 요청을 다룹니다. 두 개의 메서드가 자동으로 컨트롤러 클래스에 추가되어 있다고 합니다.</p>
+<p>GET 요청이 오면 특정 "초대 코드"에 대한 RSVP를 가져오는 것입니다. 스프링 시큐리티를 사용하여 "요청 코드"를 일종의 username으로 취급하여 사용자가 로그인 할 수 있게 하고, 로그인 한 사용자의 "요청 코드<br />
+로 DB에서 RSVP 정보를 가져오는 역할을 할 겁니다. 이때 "요청 코드"로 RSVP를 찾아오는 JPA QL을 작성할 필요가 있겠지만. 이것 역시 Roo가 도와줄테니 걱정할 필요 없습니다.</p>
+<p>만들고자 하는 동적 파인더를 찾아봅니다.</p>
+<p>roo&gt; list finders for -class ~.domain.Rsvp -filter code,equ<br />
+findRsvpsByCodeEquals(String code)<br />
+findRsvpsByCodeNotEquals(String code)</p>
+<p>캬.. 이것참 멋집니다. 찾고자 하는게 딱 있네요. filter 옵션 사용법만 잘 익히면 원하는 파인더를 뚝딱 만들어 낼 수 있다니.. 멋집니다. 멋져.</p>
+<p>roo&gt; install finder -finderName findRsvpsByCodeEquals</p>
+<p>이런 식으로 필요한 파인더를 추가할 수 있습니다.</p>
+<p>POST 요청이 오면 RSVP 정보를 추가하고 이메일로 알림을 받고 싶습니다. 그럼 이제 이메일 공급자를 설치하고 email 필드를 컨트롤러에 추가하겠습니다.</p>
+<p>roo&gt; install email provider -hostServer 127.0.0.1<br />
+roo&gt; add field email template -class ~.web.PublicRsvpController</p>
+<p>너무 쉬워서 말이 안나오네요. <a title="[http://stsmedia.net/introducing-spring-roo-part-2-security-jms-email-support/]로 이동합니다." target="_blank" href="http://stsmedia.net/introducing-spring-roo-part-2-security-jms-email-support/">Roo에서 Gmail을 사용하여 이메일을 보내는 방법</a>도 간단한가 봅니다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">IDE 통합</span></span></p>
+<p>roo&gt; quit<br />
+$ mvn eclipse:eclipse<br />
+$ roo</p>
+<p>roo 쉘에서 나가서 이클립스 프로젝트 설정을 추가한다음 다시 roo로 돌아옵니다. 이제 이클립스에서 import하면 되겠죠.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">마지막 단계</span></span></p>
+<p>이제는 이클립스에서 필요한 파일들을 수정, 추가하고 필요한 코딩을 하면 될 것 같습니다. 위에서 설명했던 컨트롤러 코딩을 해야겠죠. 시큐리티 설정도 손봐야겠구요.</p>
+<p>&nbsp;&nbsp; &lt;http auto-config="true"&gt;<br />
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;form-login login-processing-url="/static/j_spring_security_check" login-page="/static/login.jsp" authentication-failure-url="/static/login.jsp?login_error=t"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;logout logout-url="/static/j_spring_security_logout"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/rsvp/**" access="ROLE_ADMIN"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED" /&gt;<br />
+&nbsp;&nbsp; &lt;/http&gt;</p>
+<p>&nbsp;&nbsp; &lt;authentication-provider&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user-service&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user name="admin1234" password="ignored" authorities="ROLE_ADMIN"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user name="user12345" password="ignored" authorities="ROLE_USER"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user name="user67890" password="ignored" authorities="ROLE_USER"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/user-service&gt;<br />
+&lt;/authentication-provider&gt;</p>
+<p>시큐리티 설정을 손봤습니다. 로그인 할 때 사용자의 password는 무시하고 username으로 "요청 코드"를 입력하면 로그인 되도록 수정했네요.</p>
+<p>src/main/webapp/login.jsp 뷰도 수정해야겠죠. &lt;input name="j_password" type="hidden" value="ignored"/&gt; 이렇게 추가하고 기존에 "j_password" 레이블을 가진 &lt;div&gt;는 삭제합니다. 자 이제 시큐리티 설정은 끝났고, 컨트롤러를 코딩합니다.</p>
+<p>@RequestMapping("/publicrsvp/**")<br />
+@Controller<br />
+@SessionAttributes("rsvp")<br />
+public class PublicRsvpController {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; private transient MailSender mailTemplate;</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping<br />
+&nbsp;&nbsp;&nbsp; public String get(ModelMap modelMap) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.put("rsvp", getRsvp());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "publicrsvp";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping(method = RequestMethod.POST)<br />
+&nbsp;&nbsp;&nbsp; public String post(@ModelAttribute("rsvp") Rsvp rsvp, ModelMap modelMap) {<br />
+&nbsp; &nbsp;&nbsp;&nbsp; rsvp.setConfirmed(new Date());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (rsvp.getId() == null) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rsvp.persist();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rsvp.merge();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if (rsvp.getEmail().length() &gt; 0) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; sendMessage("Ben Alex &lt;ben.alex@springsource.com&gt;", "RSVP to our wedding", rsvp.getEmail(), "Your RSVP has been saved: " + rsvp.toString());<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; modelMap.put("rsvp", rsvp);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return "thanks";<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private Rsvp getRsvp() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Rsvp rsvp = new Rsvp();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String code = SecurityContextHolder.getContext().getAuthentication().getName();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rsvp.setCode(code);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // Cast due to http://java.sun.com/javaee/5/docs/api/javax/persistence/Query.html#getSingleResult()<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rsvp = (Rsvp) Rsvp.findRsvpsByCodeEquals(code).getSingleResult();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } catch (PersistenceException ignored) { /* no Rsvp for this code was found, so start a new Rsvp */ }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return rsvp;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private void sendMessage(String mailFrom, String subject, String mailTo, String message) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SimpleMailMessage simpleMailMessage = new SimpleMailMessage();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simpleMailMessage.setFrom(mailFrom);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simpleMailMessage.setSubject(subject);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simpleMailMessage.setTo(mailTo);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simpleMailMessage.setText(message);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mailTemplate.send(simpleMailMessage);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>
+GET 요청을 다룰 때는 getRsvp() 메서드를 보시면 아시겠지만, 위에서 설명했던대로, 시큐리티를 이용해서 현재 로그인한 사용자의 "요청 코드"를 가져오고, 위에서 만들었던 파인더(findRsvpsByCodeEquals)를 이용해서 rsvp를 가져옵니다. 그리고 최종적으로 "publicrsvp" 라는 뷰 이름을 반환하죠.</p>
+<p>POST 요청이 오면 날짜를 설정하고, 기존에 있던 정보면 수정하고 없던거면 새로 추가한 다음에 이전에 만들었던 이메일 공급자를 사용해서 이메일을 보내고 "thanks" 라는 뷰 이름을 반환합니다.</p>
+<p>이젠 최종 뷰를 만들어줘야 합니다. thanks 뷰는 src/main/webapp/WEB-INF/index.jsp를 thanks.jsp로 수정해서 만듭니다. 사용자가 입력한 RSVP 정보를 보여주기 위해 "Your RSVP has been confirmed: ${rsvp}". 이 한 줄을 추가하는 것도 괜찮겠죠.</p>
+<p>다음은 publicrsvp 뷰를 만듭니다. 이 뷰는 src/main/webapp/WEB-INF/rsvp/create.jsp를 src/main/webapp/WEB-INF/publicrsvp.jsp 이 파일로 변경합니다. 그리고 이 파일을 수정해서 "code"와 "confirmed" 섹션을 삭제합니다. 또한 폼 액션도 위에서 작성한 컨트롤러가 다룰 수 있도록 "/wedding/publicrsvp" 이렇게 수정해줍니다. </p>
+<p>마지막으로 src/main/webapp/WEB-INF/urlrewrite.xml 이 파일을 열고&nbsp; / 대신에 /WEB-INF/jsp/index.jsp 이렇게 리다이렉트할 페이지를 수정해 줍니다.</p>
+<p>이제 "mvn tomcat:run"로 톰캣을 실행하던지..<br />
+이클립스에서 Run As -&gt; Run on Server를 하던지<br />
+STS에서 Spring Tools -&gt; Open Roo Shell로 roo 쉘을 열고 "deploy -server someServer"를 이용하면 됩니다.</p>
+<p>roo 쉘을 이용해서 프로젝트 빌드 배포를 할 수 있을지 의문이 드네요.<br />
+roo를 제대로 활용하려면 스프링 3.0 역시 제대로 알고 있어야겠습니다. <br />
+거저 얻을 수 있는 것에도 한계가 있어보입니다. 이것 저것 수정해서 입맛에 맞게 변경하려면 스프링 학습은 필수라는 거..</p>
+<p>끝으로.. mvn package로 WAR 파일을 만들어서 tc 서버나 dm 서버에도 배포할 수 있다는 거~~</p>
+<p>
+ps1: 새로운 기술을 보거나 공부할 때 마다 기억나는 말이 있는데, "맨날 다른 기술 공부하기만 하면, 자기 자신의 것은 없고 따라갈 줄만 알게 되지 않겠냐?" 라는 건데, 제 생각엔 뭘 보고 배워야 자기 자신의 것도 만들 수 있게 되지 아무것도 모르는 상태에서 어떻게 뭘 만들어 내겠냐는 겁니다. 좋은 건 좋다고 인정하고, 배울 건 배워야 성장하지 않을까요. 백년 만년 자기가 접하는 제한된 환경 속에서 제한된 기술만 가지고 노는건 자기 스스로를 우물안에 가두는 꼴이 아닐런지 말입니다.</p>
+<p>&nbsp;ps2: 결혼식 하기전에 오랜만에 스크린캐스팅을 하나 찍어볼까 생각중입니다. 이래저래 스프링 소스는 참 재미난 것들을 많이 제공해 주네요. 멋져!</p>

@@ -1,0 +1,18 @@
+<p>참조 : <a href="http://en.wikipedia.org/wiki/Optimistic_concurrency_control" target="_blank">Wikipedia-Optimistic concurrency control</a><br />
+<blockquote>optimistic concurrency control, (OCC) is a <span style="color: rgb(255, 0, 0); font-weight: bold;">concurrency control method</span> used in relational databases <span style="color: rgb(255, 0, 0);">without using locking</span>. It is commonly referred to as <span style="font-weight: bold; color: rgb(0, 102, 153);">optimistic locking</span>, a misnomer.Optimistic concurrency control</p></blockquote>
+<p>Non-lock concurrency control 방법들 중에 하나로 Locking을 사용하지 않고 동시성 제어를 하는 방법을 Optimistic concurrency control 또는 Optimistic locking이라고 합니다.</p>
+<p>트랜잭션 충돌이 거의 발생하지 않는다는 가정하에 다음의 절차로 트랜잭션을 처리합니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);"><span style="font-weight: bold;">읽기</span>: 클라이언트가 데이타베이스로 부터 값을 읽어서 private sandox 나 cache에 저장하고 클라이언트는 그것을 가지고 작업을 합니다.</p>
+<p><span style="font-weight: bold;">검증하기</span>: 클라이언트가 샌드박스나 케쉬에서 편집을 끝내면 그것들을 데이타 베이스에 넣기 전에 검증 작업을 거칩니다.</p>
+<p>- backward validation schemes 에 커밋된 트랜잭션이 존재하거나<br />- forward validation schemes 에 현재 실행중인 트랜잭션이 존재하면</p>
+<p>출동이 발생합니다. 충돌이 발생하면 충돌을 풀기 위한 알고리즘이 사용되거나(주로 사용자에 의해 변경된 부분을 최소화 시킵니다.)[footnote]원문에는 ideally by minimizing the number of<br />
+changes made by the user  이렇게 적혀 있는데 변경 되는 사항들을 최소화 시킨다는 것이 어떤 건지 모르겠네요. queue로 변경 작업을 하는 트랜잭션을 관리하여 한번에 하나씩 처리하게 한다는 것인가;;??[/footnote] 전체 트랜잭션을 취소(이때는 사용자가 변경한 부분이 모두 날리게 되니까 그다지 좋은 방법은 아닙니다.)시킵니다.</p>
+<p><span style="font-weight: bold;">쓰기</span>: 만약 충돌이 발생하지 않았다면 커밋합니다.</div>
+<p>충돌이 자주 발생하지 않으면 이 방법으로 다른 방법들(non-lock concurrency control) 보다 많은 작업을 처리할 수 있지만, 충돌이 자주 발생하면 성능이 떨어지기 때문에 충돌이 자주 발생할 때 효율이 좋은 다른 방법을 사용합니다.</p>
+<p>사용한 곳
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/MediaWiki" title="MediaWiki">MediaWiki</a>'s edit pages use OCC. The conflict resolution algorithm is described <a href="http://en.wikipedia.org/wiki/Help:Edit_conflict" class="extiw" title="w:Help:Edit_conflict">here</a>.</li>
+<li><a href="http://en.wikipedia.org/wiki/Bugzilla" title="Bugzilla">Bugzilla</a> uses OCC; conflicts are called "mid-air collisions". <a href="http://wiki.mozilla.org/Bugzilla:FAQ:Administrative_Questions#Does_Bugzilla_provide_record_locking_when_there_is_simultaneous_access_to_the_same_bug." class="external autonumber" title="http://wiki.mozilla.org/Bugzilla:FAQ:Administrative_Questions#Does_Bugzilla_provide_record_locking_when_there_is_simultaneous_access_to_the_same_bug." rel="nofollow">[1]</a></li>
+<li>The <a href="http://en.wikipedia.org/wiki/Ruby_on_Rails" title="Ruby on Rails">Ruby on Rails</a> framework has an API for OCC. <a href="http://api.rubyonrails.com/classes/ActiveRecord/Locking.html" class="external autonumber" title="http://api.rubyonrails.com/classes/ActiveRecord/Locking.html" rel="nofollow">[2]</a></li>
+<li>Most <a href="http://en.wikipedia.org/wiki/Revision_control" title="Revision control">revision control</a> systems support the "merge" model for concurrency, which is OCC.</li>
+</ul>

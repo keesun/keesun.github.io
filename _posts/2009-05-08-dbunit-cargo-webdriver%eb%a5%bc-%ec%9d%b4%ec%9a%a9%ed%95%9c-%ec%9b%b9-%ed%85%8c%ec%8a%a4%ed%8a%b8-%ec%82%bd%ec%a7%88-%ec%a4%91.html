@@ -1,0 +1,112 @@
+---
+layout: post
+title: DBUnit + Cargo + Webdriver를 이용한 웹 테스트 삽질 중
+date: 2009-05-08 10:15:44.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Cargo
+- DbUnit
+- webdriver
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322962707'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>하려던 것은 간단합니다.</p>
+<p>1. DBUnit으로 테스트 데이터를 넣고,<br />
+2. Cargo로 톰캣6를 돌리고<br />
+3. Webdriver로 HTML, IE, Firefox에서 CRUD+S(검색) 테스트를 하는 겁니다.</p>
+<p>이게 되면 PageObject 패턴을 도입해서 테스트를 만들어 볼까 했는데, 아직 이 늪을 못 벗어나고 있습니다.</p>
+<p>일단, Webdriver를 이용한 단독 테스트는 성공적이었습니다. 물론 아직 PageObject 패턴을 도입하진 않았었죠. 이 녀석이 해주는 일은 화면에 있는 정보를 쉽게 참조할 수 있게 도와주는 API를 제공해 주는 것입니다. 따라서 화면 테스트를 보다 쉽게 작성할 수 있곘죠. 그밖에 동일한 URI를 파이어폭스, 인터넷익스플로러, HTML, 사파리 드라이버를 이용하여 참조할 수 있어서 다기종 브라우저를 지원하는 자동화 테스트를 작성할 때 매우 유용할 것으로 보입니다.</p>
+<p>Cargo는 서버를 조작할 수 있는 API를 제공하며, 여러 종류의 서버를 설정하고, WAR 파일을 배포하는 작업등을 할 수 있습니다. 자세히는 모릅니다. 매우 다양한 서버를 지원하며, 웹 테스트를 자동화 할 때 필수 도구로 보입니다. 또한 다양한 모드로 서버를 실행할 수가 있습니다.</p>
+<p>DBUnit은 많이들 아실 것으로 생각하고 생략하겠습니다.</p>
+<p>저는 먼저 Webdriver부터 실습해봤습니다. 홈페이지로 시작하기 같은 문서를 찾아서 살펴봤습니다. 그리고 바로 테스트를 작성해 봤습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; WebDriver driver = new HtmlUnitDriver();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; driver.get("http://localhost:8080/springsprout/index.do");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; WebElement element = driver.findElement(By.linkText("Login"));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertNotNull(element);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertEquals("/login.do", element.getAttribute("href"));</p>
+<p>음.. 잘 동작하네! API를 익혀야겠군...@_@ 이제 PageObject 패턴을 어떻게 도입해야 하나~</p>
+<p>고민할 새도 없이 다음은 Cargo를 시작했습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Deployable war = new WAR("target/springsprout.war");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; LocalConfiguration configuration = new Tomcat6xStandaloneLocalConfiguration("target/springsprout");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; configuration.addDeployable(war);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container = new Tomcat6xInstalledLocalContainer(configuration);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.setHome("c:/apps/apache-tomcat-6.0.18");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.start();<br />
+...<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.stop();</p>
+<p>이런식으로 서버를 동작 시킬 수 있었습니다. 저 ... 안에 위에 작성한 웹 드라이버를 넣어보니 잘 동작했습니다. 문제는 이렇게 서버를 매번 올리고 내리는 작업을 테스트케이스마다 하면 굉장히 테스트가 오래 걸리고 비효율적이라는 겁니다. 따라서 이 작업은 반드시 Cargo 메이븐 플러긴을 이용해서 모든 테스트를 실행하기 전에 테스트 서버를 올렸다가 내리도록 해야겠습니다. 아직 해보진 않았습니다 @_@</p>
+<p>일단 또 다시 고민할 새 없이 바로 DBUnit 까지 적용해 봤습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; private void insertXMLData() throws IOException, DataSetException, DatabaseUnitException, SQLException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; InputStream sourceStream = new ClassPathResource("testData.xml", getClass()).getInputStream();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IDataSet dataset = new FlatXmlDataSet(sourceStream);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DatabaseOperation operation = DatabaseOperation.CLEAN_INSERT;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; operation.execute(new DatabaseConnection(DataSourceUtils.getConnection(dataSource)), dataset);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이런 메서드를 이용해서 testData.xml에 만들어 둔 테스트 데이터를 DB에 넣고 Cargo로 서버를 돌리고 Webdriver로 화면에 출력된 데이터를 검증하면 되리라 생각했습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void listMember() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXMLData();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold; color: rgb(227, 22, 0);">assertEquals(2, memberRepository.getMemberList().size());</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Deployable war = new WAR("target/springsprout.war");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; LocalConfiguration configuration = new Tomcat6xStandaloneLocalConfiguration("target/springsprout");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; configuration.addDeployable(war);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container = new Tomcat6xInstalledLocalContainer(configuration);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.setHome("c:/apps/apache-tomcat-6.0.18");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.start();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; WebDriver driver = new HtmlUnitDriver();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; driver.get("http://localhost:8080/springsprout/member/list.do");</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // logging<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(driver.getTitle());<br />
+&nbsp;<span style="color: rgb(92, 127, 176); font-weight: bold;">&nbsp;&nbsp; &nbsp;&nbsp;<span style="color: rgb(227, 22, 0);"> assertEquals(2, memberRepository.getMemberList().size());</span></span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println(driver.getPageSource());</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: rgb(48, 88, 210); font-weight: bold;">WebElement element = driver.findElement(By.linkText("keesun@whiteship.me"));</span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertNotNull(element);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; element.getAttribute("href");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; container.stop();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이런 식으로 말이죠. 하지만 결과는 참담했습니다. 분명히 빨간색 줄은 테스트가 assertion이 됩니다. Cargo로 서버도 잘 동작합니다. 하지만 WebDriver로 접근해 봤을 때 DB에 넣었던 데이터가 화면에 나와야 하는데 나오지 않습니다. sysout으로 HTML을 찍어 봤지만, 정말로 데이터가 없었습니다.</p>
+<p>1. WAR로 배포한 애플리케이션과 테스트 코드가 다른 DB를 사용한다.</p>
+<p>이런... 그렇치..mvn package로 묶었을 때 그 안에 들어가는 건 src에 있는 설정 파일이지 test가 아니니깐, 지금 test할 때 사용하는 DB랑은 다른 걸 쓸꺼 아냐 ㅠ.ㅠ 이런 바로.. 그럼 일단 src랑 test랑 같은 DB를 사용하게 설정해보자.(원래 이럼 안되는 건데..)</p>
+<p>2. 같은 DB를 사용하지만 여전히 동일한 상황.</p>
+<p>@_@ 뭐지.. 왜 이럴까? DBUnit이 데이터를 넣고 확인하는 DB와 서버가 참조하는 DB가 완전히 별개 인 것처럼 보이는데, 트랜잭션이 아예 달라서 그런건가. @_@ 어찌해야 되나.. 아 괴룹네요. 괴로워..</p>

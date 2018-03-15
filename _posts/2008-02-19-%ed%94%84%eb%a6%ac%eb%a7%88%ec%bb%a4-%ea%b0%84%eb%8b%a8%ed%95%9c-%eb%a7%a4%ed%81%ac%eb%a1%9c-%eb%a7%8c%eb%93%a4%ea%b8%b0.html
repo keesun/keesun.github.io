@@ -1,0 +1,61 @@
+---
+layout: post
+title: 프리마커 간단한 매크로 만들기
+date: 2008-02-19 10:29:02.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Freemarker
+tags:
+- freemarker
+- 매크로
+- 프리마커
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323157207'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>탬플릿 기술인 프리마커를 사용해서 마치 JSP의 커스텀 태그와 비슷한 녀석을 만들 수 있습니다. 그런 녀석을 매크로라고 부릅니다.</p>
+<p>프리마커를 사용한 기존의 코드는 다음과 같습니다. 아.. 이런 안타깝게도 순수 프리마커 지시자는 보이지 않습니다. 스프링이 지원하는 커스텀 지시자(매크로)만 보입니다.</p>
+<div style="BORDER-RIGHT: #90e0ff 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #90e0ff 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #90e0ff 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #90e0ff 1px solid; BACKGROUND-COLOR: #d2f2ff">&lt;#import "/spring.ftl" as spring /&gt;<br />&lt;html&gt;<br />&lt;head&gt;<br />&lt;title&gt;회원 가입&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />회원 정보 입력<br />&lt;form action"" method="POST"&gt;<br />Name: <strong>&lt;@spring.bind "member.name" /&gt; &lt;@spring.formInput "member.name" /&gt; &lt;@spring.showErrors "" /&gt;</strong>&lt;br/&gt;<br />&lt;input type="submit" value="submit" /&gt;<br />&lt;/from&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;</div>
+<p>뭐 상관없죠.&nbsp; 위에서 저 검은색 부분은 왠지 항상 세트로 나올 것만 같은 코드 입니다. 매번 타이핑하기도 귀찮고 <strong>&lt;@bindInputError field="member.name" /&gt;</strong> 이렇게 하나의 태그로 줄여서 사용하고 싶습니다.</p>
+<p>그럼 먼저 새로운 ftl 파일을 하나 만듭니다.</p>
+<div style="BORDER-RIGHT: #cccccc 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #cccccc 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #cccccc 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #cccccc 1px solid; BACKGROUND-COLOR: #e7e7e7">&lt;#import "/spring.ftl" as spring /&gt;<br />&lt;#macro bindInputError field&gt;<br />&nbsp;&lt;@spring.bind "${field}" /&gt; &lt;@spring.formInput "${field}" /&gt; &lt;@spring.showErrors "" /&gt;<br />&lt;/#macro&gt;</div>
+<p>간단하죠. 태그 파일 만들듯이 만들면 됩니다. field라는 변수에는 어떤 값이 들어오는 값을 매크로 안에서 EL 표기법 같은 interpolation이라고 하는 것으로 그 안에 있는 값을 참조할 수있 습니다. 그리고 저 매크로를 사용하려면 다음과 같이 맨 위에 import로 매크로 파일을 추가해주고 사용하면 됩니다.</p>
+<div style="BORDER-RIGHT: #90e0ff 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #90e0ff 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #90e0ff 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #90e0ff 1px solid; BACKGROUND-COLOR: #d2f2ff"><strong>&lt;#import "lib.ftl" as lib /&gt;</strong><br />&lt;#import "/spring.ftl" as spring /&gt;<br />&lt;html&gt;<br />&lt;head&gt;<br />&lt;title&gt;회원 가입&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />회원 정보 입력<br />&lt;form action"" method="POST"&gt;<br />Name: <strong>&lt;@lib.bindInputError field="member.name" /&gt;</strong>&lt;br/&gt;<br />&lt;input type="submit" value="submit" /&gt;<br />&lt;/from&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;</div>

@@ -1,0 +1,29 @@
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">import static org.easymock.EasyMock.*;<br />
+import org.junit.*;<br />
+import net.webapp2.member.dao.MemberDao;<br />
+import net.webapp2.member.domain.Member;</p>
+<p>public class MemberRepositoryTest {</p>
+<p> &nbsp; &nbsp;MemberDao mockMemberDao;<br />
+ &nbsp; &nbsp;MemberRepository memberRepository;</p>
+<p> &nbsp; &nbsp;@Before<br />
+ &nbsp; &nbsp;public void setup(){<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)"><br />
+ &nbsp; &nbsp; &nbsp; &nbsp;mockMemberDao = createMock(MemberDao.class);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;memberRepository = new MemberRepositoryImpl();</span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"><br />
+ &nbsp; &nbsp; &nbsp; &nbsp;<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">memberRepository.setMemberDao(mockMemberDao);</span></span><br />
+ &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;@Test<br />
+ &nbsp; &nbsp;public void add(){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;final Member member = new Member();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;mockMemberDao.add(member);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">replay(mockMemberDao);</span><br />
+ &nbsp; &nbsp; &nbsp;&nbsp; memberRepository.add(member);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">verify(mockMemberDao);</span><br />
+ &nbsp; &nbsp;}<br />
+}</div>
+<p>
+먼저 Test할 대상 클래스와 Mock 테스트를 할 클래스 타입의 객체를 만듭니다.(하늘색) 그리고 memberRepository에서 memberDao객체를 사용해야 하기 때문에 setter를 사용하여 위에서 만든 Mock 객체로 setting 해줍니다.(첫번째 분홍색)</p>
+<p>그리고 시나리오를 생각해 봅니다.<br />
+"Member를 추가하는 기능이기 때문에 memberRepository의 add(Member)를 호출하면 memberDao의 add(Member)가 호출이 되서 DB에 들어가겠구나 리턴값은 없고..."</p>
+<p>다음 테스트 메소드를 작성하기 시작하는데 먼저 시나리오에 해당하는 부분(두번째 분홍색 윗부분)에서 Mock 객체(mockMemberDao)에게 일어날 일을 생각합니다. mockMemberDao.add(member); 이것 밖에 없네요.</p>
+<p>이제 시나리오 대로 돌아가는지 replay(Mock 객체) 시켜봅니다. replay 시키면서 당연히 "액션"을 취해 줘야 하는데 이 "액션"이 여기서는 memberRepository.add(member) 가 됩니다.</p>
+<p>그리고 시나리오 대로 액션이 이뤄졌는지 verify(Mock 객체)를 합니다.</p>

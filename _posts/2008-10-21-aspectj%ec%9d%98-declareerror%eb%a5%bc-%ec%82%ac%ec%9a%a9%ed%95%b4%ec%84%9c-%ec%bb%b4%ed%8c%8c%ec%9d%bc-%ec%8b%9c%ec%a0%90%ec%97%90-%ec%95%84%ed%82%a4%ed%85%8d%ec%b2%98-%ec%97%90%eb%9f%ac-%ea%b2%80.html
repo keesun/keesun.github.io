@@ -1,0 +1,59 @@
+---
+layout: post
+title: AspectJ의 @DeclareError를 사용해서 컴파일 시점에 아키텍처 에러 검증하자.
+date: 2008-10-21 02:26:55.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- "@DeclareError"
+- AOP
+- AspectJ
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323163116'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a tip="" href="http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Spring%20Architectures;talk=20676612" target="_blank">http://www.parleys.com/display/PARLEYS/Home#slide=1;title=Spring%20Architectures;talk=20676612</a></p>
+<p>위 발표자료 내용 주에 아주 잼나는 코드를 건졌습니다. 지난 번 KSUG에서 발표한 내용과 겹치는데 아래 코드는 그때 제가 보여드린 코드보다 좀 더 좋은 것 같아서 가져왔습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Aspect<br />public class SystemArchitecture {<br />&nbsp; @Pointcut("execution(* configurator.*.*(..))")<br />&nbsp; public void configuratorLogic () {}<br />&nbsp; @Pointcut("execution(* dao.*.*(..))")<br />&nbsp; public void dao() {}<br />&nbsp; @Pointcut("within(*.dao.*)")<br />&nbsp; public void inDaoLayer() {}<br />&nbsp; @Pointcut("call(* *.service.*.*(..))")<br />&nbsp; public void callServiceLayer() {}<br />}</div>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Aspect<br />public class Layering {<br /><span style="color: rgb(0, 102, 153);">&nbsp; </span><span style="font-weight: bold; color: rgb(0, 102, 153);">@DeclareError("SystemArchitecture.inDaoLayer() &amp;&amp; "+</span><br style="font-weight: bold; color: rgb(0, 102, 153);" /><span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp;&nbsp; "SystemArchitektur.callServiceLayer() ")</span><br style="font-weight: bold; color: rgb(0, 102, 153);" /><span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp;</span><span style="color: rgb(0, 102, 153);"> public static final String DAOsNotFromServices =</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp;&nbsp; "DAO must not call Service!";</span><br />&nbsp;<span style="font-weight: bold; color: rgb(0, 102, 153);">@DeclareError(" (call(* java.sql.*.*(..)) &amp;&amp; " +</span><br style="font-weight: bold; color: rgb(0, 102, 153);" /><span style="font-weight: bold; color: rgb(0, 102, 153);">&nbsp; "!within(*.dao.*) ) ")</span><br />&nbsp; public static final String JdbcOnlyInDAOs =<br />&nbsp;&nbsp; "JDBC only in DAOs!";<br />}</div>
+<p>좋은 건 이Aspectj를 사용하면 @DecalreError를 사용해서, 컴파일 시점에 아키텍처 에러를 검증할 수 있다는 것입니다. 제가 준비했던 코드는 cflow를 사용해서 런타임에 검증하는 방법이었습니다. 따라서 테스트 하지 않고 그냥 커밋하면 뭐 어떻게 찾아낼 방법이 없었습니다. 그런데 이 방법을 쓰면 코딩할 때 문제되는 코드를 발견할 수 있으니 훨씬 좋은 것 같습니다. 캬.. 귿..</p>
+<p></p>

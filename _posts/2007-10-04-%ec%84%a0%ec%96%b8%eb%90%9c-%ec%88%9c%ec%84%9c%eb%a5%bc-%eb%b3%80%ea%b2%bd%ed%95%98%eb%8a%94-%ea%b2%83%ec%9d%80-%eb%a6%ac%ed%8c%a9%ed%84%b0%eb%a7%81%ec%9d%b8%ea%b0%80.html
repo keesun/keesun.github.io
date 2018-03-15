@@ -1,0 +1,59 @@
+---
+layout: post
+title: 선언된 순서를 변경하는 것은 리팩터링인가?
+date: 2007-10-04 04:25:15.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Koreanization
+tags:
+- Martin Fowler
+- 리팩터링
+- 번역
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322766013'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://martinfowler.com/bliki/IsDeclarationOrderingRefactoring.html" target="_blank">IsDeclarationOrderingRefactoring</a> &nbsp;&nbsp; &nbsp;<a href="http://martinfowler.com/bliki/refactoring.html" target="_blank">refactoring</a> &nbsp;&nbsp; &nbsp;<span style="font-weight: bold;">1 September 2004</span></p>
+<p><a href="http://martinfowler.com/bliki/RefactoringBoundary.html" target="_blank">RefactoringBoundary</a>.</p>
+<p><span style="font-weight: bold;">자바 프로그램 내부에 있는 메소드와 필드가 선언된 순서를 변경하는 것은 리팩터링인가요?</span></p>
+<p>근래의 프로그래밍 언어들은 내부에 선언되어 있는 요소들의 순서가 프로그램에 전혀 영향을 주지 않는다. 만약 텍스트 파일 내부에 있는 두 개의 메소드 위치를 서로 바꾸더라도, 프로그램은 아무런 영향을 받지 않는다. 이것을 리팩터링이라고 할 수 있는 이유는 변경으로 인해서 프로그램이 동작하는 방법에 영향을 주지 않기 때문이다. 이것은 설계를 변경하지 않으며, 만약 설계가 바뀐다면 리팩터링이라고 할 수 없다.</p>
+<p><a href="http://whiteship.tistory.com/1187" target="_blank">리팩터링 정의</a>에서, “이해하기 쉽고 수정하는 비용을 최소화 하도록” 이라는 구문을 사용했다. 선언된 위치를 변경하는 것이 이에 해당하는가? 몇몇 경우에 그럴 수 있다고 생각한다. 클래스 내부에서 서로 관련되어 있는 속성들을 묶어두는 것이 좋다. 그러한 방법으로 속성들을 정렬하면 클래스가 어떻게 동작하는지 이해하는데 도움이 된다. 특히 테스트 케이스를 작성할 때 유용하다. (비록 특정 xunit 구현체에서는, 순서가 실행 결과에 영향을 줄 수 있지만 말이다.) 결국 코드의 이해도를 높여주기 때문에, 선언된 순서 변경을 리팩터링이라고 볼 수 있다.</p>
+<p>이것이 내부 구현을 변경하지 않는다는 사실은 중요하지 않다. 메소드의 이름 변경은 실행하는 내용을 변경하지는 않는다. 하지만 이름 변경은 프로그램의 이해도를 높이는 매우 중요한 리팩터링이다.</p>

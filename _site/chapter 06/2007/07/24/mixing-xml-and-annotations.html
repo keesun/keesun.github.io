@@ -1,0 +1,12 @@
+<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2/reference/html/mixing-configurations.html" target="_blank">Chapter 6. Mixing XML and annotations</a></p>
+<p>Java 설정과 XML 설정은 상호 베타적이지 않다. 하나의 Spring 애플리케이션에서 모두 사용될 수 있다. XML 파일에 있는 bean을 가져오기 위해서는, Spring 컨테이너를 사용해야 한다. 이전에 언급했다시피, @ExternalBean 애노테이션(추천하는 방식)을 사용하여 그렇게 할 수 있다. 이렇게 하고 싶지 않거나 이런 방법이 부적절한 경우네는, @Configuration 클래스에의해 사용되는 beanFacotry에 접근할 수 있다. 이렇게 하려면, 설정 클래스가 ConfigurationSupport 를 상속하거나 BeanFacrtoryAware 인터페이스를 구현하도록 하면 된다.</p>
+<p>다음의 XML 설정을 살펴보자.</p>
+<p>&lt;bean id="myBean" class="MyBean"/&gt;</p>
+<p>myBean을 Java에서 참조하려면 다음과 같이 작성할 수 있다.</p>
+<p>@Configuration<br />public class MyConfig extends ConfigurationSupport {</p>
+<p>&nbsp; @Bean<br />&nbsp; public ExampleBean anotherBean() {<br />&nbsp; &nbsp;&nbsp; ExampleBean bean = new ExampleBean("anotherBean");<br />&nbsp; &nbsp;&nbsp; bean.setDep(getBean("myBean")); // use utility method to get a hold of 'myBean'<br />&nbsp; &nbsp;&nbsp; return bean;<br />&nbsp; }<br />}</p>
+<p>@Configuration<br />public class MyOtherConfig implements BeanFactoryAware {<br />&nbsp; private BeanFactory beanFactory;</p>
+<p>&nbsp; public void setBeanFactory(BeanFactory beanFactory) {<br />&nbsp; &nbsp;&nbsp; // get access to the owning bean factory<br />&nbsp; &nbsp;&nbsp; this.beanFactory = beanFactory;<br />&nbsp; }</p>
+<p>&nbsp; @Bean<br />&nbsp; public ExampleBean yetAnotherBean() {<br />&nbsp; &nbsp;&nbsp; ExampleBean bean = new ExampleBean("yetAnotherBean");<br />&nbsp; &nbsp;&nbsp; bean.setDep(beanFactory.getBean("myBean")); // use dependency lookup<br />&nbsp; &nbsp;&nbsp; return bean;<br />&nbsp; }<br />}</p>
+<p>다시 한 번 강조하지만, ConfigurationSupport나 BeanFacrtoryAware를 사용하기 전에 똑같은 기능을 제공하는 (offers the same capability in a refactoring friendly manner) @ExternalBean을 사용하고 싶지는 않은지 재고하기 바란다.</p>
+<p>JavaConfig 배포판에 변경된 Petclinic 예제에 보면 몇몇 XML 설정 부분을 Java와 Groovy로 교체한 것이 있다. 샘플 폴더를 살펴보길 바란다.</p>

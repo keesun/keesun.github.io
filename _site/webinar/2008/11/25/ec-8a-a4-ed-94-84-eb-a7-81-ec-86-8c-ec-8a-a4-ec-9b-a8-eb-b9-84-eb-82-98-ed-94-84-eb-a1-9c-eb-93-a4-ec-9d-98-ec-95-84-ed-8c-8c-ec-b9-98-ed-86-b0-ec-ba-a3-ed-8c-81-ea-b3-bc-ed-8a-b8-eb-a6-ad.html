@@ -1,0 +1,116 @@
+<p>마크 토마스 랑 ...<br />
+- 톰캣 커비터로 5년 넘게 일해왔다.<br />
+- 아파치 멤버<br />
+- 시니어 소프트웨어 엔지니어 이자 컨선턴트<br />
+- 스프링소스 Covalent 부서<br />
+- 성능, 트러블슈팅, 보안 전문가</p>
+<p>톰캣 버전 얘기<br />
+- 6.0.x가 최신 버전<br />
+- 7.x가 슬슬 수면위로 들어나고 있다.(서블릿 3.0 스펙, ..)</p>
+<p>주요 안건<br />
+- 대규모 개발에서 톰캣<br />
+- 톰캣 &amp; JVM 업그레이드<br />
+- ...</p>
+<p>setenv.sh - 여기서 커스텀 옵션<br />
+- JAVA_HOME<br />
+- JAVA_OPTS<br />
+- CATALINA_OPTS<br />
+- ...<br />
+- 이 파일은 톰캣이 기본으로 제공하는게 아니니깐 복사해서 가지고 다니면서 수정하라.<br />
+- 여기서 자바 버전 설정하면 톰캣 스트립트 수정하지 않아도 된다.<br />
+- 인스턴스 데이터를 분리해낼 수 있다.(별도의 톰캣 서버 인스턴스)<br />
+- 톰캣이나 JVM을 변경할 때 이 파일을 이용하면 편하다.<br />
+- RPM을 사용하면 롤백 과정이 복잡하다.</p>
+<p>Production 세팅 </p>
+<p>server.xml<br />
+- &lt;Server port="8005" shutdown="SHUTDOWN" &gt; : will allow unauthorized shut-down of Tomcat instance<br />
+- &lt;Server port="-1" shutdown="SHUTDOWN" &gt; : 셧다운 포트 disable.<br />
+- 톰캣 멈추기: kill &lt;pid&gt;</p>
+<p>애플리케이션 제거하기<br />
+- ROOT - 제공할 애플리케이션으로 대체하기<br />
+- 다음 폴더는 제거하는게 보안 최선책(security best practice)이다.<br />
+- /examples<br />
+- /docs<br />
+- /manager(원격 배포를 할 수 없게 된다.)<br />
+- /host-manager(원격 호스트 관리를 할 수 없게 된다.)</p>
+<p>로깅<br />
+- conf/loggin.properties: 핸들러 등록<br />
+.handlers = \1catalina.org.apache.juli.FileHandler<br />
+- 파일에만 로깅한다.<br />
+- 개발할 때 가끔은 stdou/stderr가 더 쉬울때도 있다.</p>
+<p>Rotating catalina.out(모르는 거)<br />
+- http://www.cronolog.org - 예제 도구<br />
+&gt;&gt; "$CATALINA_BASE" /logs/catalina.out 2&gt;&amp;1 &amp;<br />
+-&nbsp; 하루 주기로 로테이트<br />
+2&gt;&amp;1 | /bin/cronlog/ ... </p>
+<p>접근 로깅(이것도 모르는거..)<br />
+- valve를 사용해서 접근 로깅을 할 수 있다.</p>
+<p>글로벌 기본값<br />
+- ex) 커넥션 풀<br />
+- 모든 기본 값은 conf/context.xml 또는 conf/web.xml 에 설정할 수 있다.<br />
+- 기본값은 애프리케이션에서 설정한 값이 재정의할 수 있다.</p>
+<p>Templating<br />
+- catalina.properties의 값을 server.xml에서 사용할 수 있다.</p>
+<p>배포 방법<br />
+- server.xm에서 &lt;Context&gt; 엘리먼트 사용하기<br />
+- WAR 파일 자동 배포<br />
+- 디렉토리 자동 배포<br />
+- XML 파일 자동 배포<br />
+- 원격 배포<br />
+- Best Practice는 한 가지 선호하는 방법을 사용하는 것이다. 여러 방법을 혼용하면 얘상치 못한 상황을 보게 될지도 모른다.</p>
+<p>Building Tomcat Native(이것도 모르는 거)<br />
+- OpenSSL 소스 distro 압축 풀기<br />
+- APR 소스 distro 압출 풀기<br />
+- APR Util 소스 disto 압축 풀기<br />
+- tomcat-nartive.tar.gz distro 압축 풀기<br />
+- setenv.sh (64비트로 컴파일 했으면 64 비트 JVM 사용하도록 설정해야 한다.)</p>
+<p>커넥터 선택하기(아파치 커넥터 얘기하는건가?)<br />
+- BIO(Blocking IO)<br />
+- NIO(None-blocking IO)<br />
+- 왜 NIO 커넥터를 사용하려는가?<br />
+- 네이티브(APR) 커넥터는 솔라시스에서 안정적이지 않다.<br />
+- NIO는 순수 자바 솔루션이다.<br />
+- SSL로 NIO와 BIO를 교환하는 건 간단하다.<br />
+<img src="/assets/492c121568f16DP.png" class="aligncenter" width="600" height="497" alt="" filename="그림1.png" filemime="" /></p>
+<p>버추얼 호스팅은 무엇인가?<br />
+- 단일 톰캣 인스턴스에 여러 호스트 이름 주는거<br />
+- http://a.foo.com<br />
+- http://b.foo.com</p>
+<p>호스트 정의<br />
+- server.xml에 호스트 설정<br />
+- 자신만의 appBase 필요함<br />
+- ...</p>
+<p>버추어 호스팅 컨텍스트 정의<br />
+- 표준 방법 적용 http://apache.org/tomcat-6.0-doc/config/context.html</p>
+<p>버추어 호스팅 사용이 적당한 경우<br />
+- DNS 가 설정되어 있지 않을 때<br />
+- docBase == appBase<br />
+- ROOT.war 사용하지 않을 때<br />
+- ...</p>
+<p>문서화되어 있지 않은 옵션<br />
+- W3C Extended 로그 파일 포맷<br />
+- 캐싱 - private chaching을 권장한다.</p>
+<p>스프링소스에서 아파치 톰캣 지원<br />
+<img src="/assets/492c12159beceDR.png" class="aligncenter" width="600" height="502" alt="" filename="그림2.png" filemime="" /><img src="/assets/492c1215ca880DI.png" class="aligncenter" width="600" height="502" alt="" filename="그림3.png" filemime="" /><br />
+질문 답변</p>
+<p>Q: mod_jk vs mod_proxy_ajp ? Which is preferred for Apache2.2 to Tomcat6.0.x?<br />
+A: We recommend them in the following order <br />
+&nbsp;mod_proxy_http, mod_jk, mod_proxy_ajp<br />
+&nbsp;we prefer the HTTP protocol, if you want AJP, mod_jk is more stable than mod_proxy_ajp (which is the newest addition)</p>
+<p>Q: mysql-connector: why not shared/lib?<br />
+A: since connection pool library doesn't have access to shared/lib<br />
+&nbsp;if you want mysql jars in the webapp, you can add a connection pool library in your webapp and configure it there. Tomcat has to follow the class loader rules</p>
+<p>Q: Currently we see that with 3 apache servers having each 100 clients (prefork + mod_jk) each tomcat server (10) has also 100 threads. Which doesn't look logical. Is there a mod_jk config option which could change this behaviour?<br />
+A: in httpd.conf - <br />
+&nbsp;JkOptions +DisableReuse<br />
+&nbsp;this will turn of AJP keep alive, and you no longer have to balance threads</p>
+<p>Q: Is Log Valves a tomcat6 feature?<br />
+A: AccessLogValves have been around in Tomcat since Tomcat 5 (possible 4) Can be found under the Valves section of the Tomcat Configuration Reference</p>
+<p>Q: does the connector preference also apply to AJP connections (using mod_jk)?<br />
+A: Yes, with the exception of SSL. No SSL support on AJP, but you can keep more connections than threads using APR/AJP, so you no longer have to carefully balance maxThreads(Tomcat) with MaxClients(httpd)</p>
+<p>Q: Is there a way to solve the problem of "PermGen memory error" that usually arises after many reloads of the contexts?<br />
+A: PermGen error, are very hard to resolve, as they are very subtle bugs in the web applications<br />
+&nbsp;If the bug can't be fixed, increase -XX:MaxPermSize large enough to be able to reload applications during the day and then do a restart of tomcat at night</p>
+<p>Q: If you are passing .jsp pages to Tomcat from Apache , do the Tomcat docBase and the Apache Document root need to be the same for the given Virtual Server ?<br />
+A: For security reasons, you don't want httpd to have access to the Tomcat file system (webapps), as one can exploit your configuration to download your code</p>
+<p>ps: 큰일이네;; PPT에 집중하니까 귀는 하나도 안 들리네;;</p>

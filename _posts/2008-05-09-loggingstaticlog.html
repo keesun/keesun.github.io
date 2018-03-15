@@ -1,0 +1,101 @@
+---
+layout: post
+title: Logging/StaticLog
+date: 2008-05-09 13:00:20.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Commons Loggin
+- j2ee container
+- java.util.logging
+- SLF4J
+- static
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322941468'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : http://wiki.apache.org/jakarta-commons/Logging/StaticLog</p>
+<p>로깅을 보통 두 가지 방법 중 하나를 사용할 것이다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Foo {<br />&nbsp; private Log log = LogFactory.getLog(Foo.class);<br />&nbsp; ....<br />}</div>
+<p>그리고 </p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Foo {<br />&nbsp; private static Log log = LogFactory.getLog(Foo.class);<br />&nbsp; ....<br />}</div>
+<p>static 키워드를 사용하는 것이 특정 상황에서는 이익이 될 수도 있지만, 그렇지 않은 경우 예상치 못한 문제를 발생시킬 수 있다. 여기서 각각이 어떤 경우에 유용한지 살펴본다.</p>
+<p><font size="4"><span style="font-weight: bold;">Static 문제</span></font></p>
+<p>static 사용의 기술적인 결과는 매우 명백하다. 해당 클래스 타입의 여러 객체들 사이에서 단일 Log 레퍼런스를 공유해서 사용한다. 분명히 메모리를 효율적으로 사용할 수 있다. 딱 하나의 레퍼런스(4 또는 8 바이트)만 있으면 몇 개의 객체를 생성하든 아무 상관없다. 그리고 CPU 효율도 좋다. 왜냐면 Log 인스턴스를 딱 한 번만 찾아서 가져오면Look up 되기 때문이다.</p>
+<p>독립적인 애플리케이션 코드에서 static을 사용하는 괜찮은 생각이다.</p>
+<p>하지만 자바 코드를 라이브러리 형태로 J2EE 서버같은 컨테이너에 배포해야 한다면 문제가 발생할 수 있다. 보통 컨테이너는&nbsp; 클래스 로더 계층 구조를 가지고 있다. 배포된 애플리케이션 마다 자바 ClassLoader 객체 하나씩과 컨테이너에 배포된 모든 애플리케이션들이 공유하는 클래스로더의 최상위 클래스로더Ancestry ClassLoader로 공유 클래스로더를 가지고 있다. 이때 애플리케이션 수준의(j2ee 컨테이너 또는 서블릿의 "webapp" 수준) 클래스 로더에서 Log 객체에 대한 static 레퍼런스를 참조하면 아무런 문제가 없다. 만약 여러 개의 애플리케이션이 해당 클래스를 배포하더라도 그들 각각의 복사체를 가지고 있게 될 뿐 애플리케이션 사이에서는 아무런 문제가 없다.</p>
+<p>하지만 "private static Log log = ..."식의 코드를 사용하는 클래스가 여러 독립적인 애플리케이션들의 최상위 클래스로더에 배포될 수도 있다. 이 경우, log 멤버 변수는 딱 한 번만 초기화 된다. 왜냐면 클래스 로더는 딱 하나의 클래스 복사체만 가질 수 있으니까. 이 초기화는 해당 클래스의 객체를 만들려고 하거나 static 메소드를 호출할 때 한다. 클래스 초기화가 발생할 때 log 멤버는 어떤 값으로 설정 될까?
+<ul>
+<li>각각의 "애플리케이션"에 상관 없이 "컨네이너" 레벨에 있는 계층 구조의 일부에 있는 Log 객체에 대한 레퍼런스</li>
+<li>현재 애플리케이션과 관계 있는 계층 구조의 일부에 있는 Log 객체에 대한 레퍼런스</li>
+<li>log 메소드를 호출할 때마다 "현재 애플리케이션"이 무엇인지 판단하고 그에 해당하는 Log 객체로 위임하는 "프록시" 객체에 대한 레퍼런스</li>
+</ul>
+<p>첫 번째 옵션은 로깅이 각각 애플리케이션 수준으로 설정되지 못한다는 것을 뜻한다. 로깅 설정이 뭐라고 설정되어 있건간에 모든 애플리케이션이 동일한 Log 레퍼런스를 사용하는 것이다. 그럼 모든 애플리케이션의 로그정보가 섞여서 출력될 것이다. 이게 가장 큰 문제다.</p>
+<p>두 번째 옵션은 Log 객체가 자기를 맨 처음 호출한 애플리케이션에 설정된다는 것을 뜻한다. 컨테이너에 들어있는 다른 애플리케이션들의 로그 메시지는 모두 첫 번째 애플리케이션이 설정해둔 목적지로 보낼 것이다. 이것도 분명히 큰 문제다.</p>
+<p>세번째 옵션은 각각의 애플리케이션 로깅 설정을 허용하고 각각의 필요한 로그 메시지들을 바르게 출력하고 필터링 한다. 하지만 성능 문제가 심각하다. 이것도 그다지 허용할 만한 방법이 아니다.</p>
+<p>이 문서에서 "쓰레드 컨텍스트 클래스로더"나 다른 기술적인 문제는 언급하고 있지 않다. 문제는 그렇게 자세한 부분이 아니라 일반적인 개념에 있다. Log 객체를 여러 애플리케이션에서 공유할 때 애플리케이션 마다의 설정을 적용하는 것이 불가능하며 타당한 성능을 보장할 수 없다.</p>
+<p>이 모든 문제의 진짜 핵심은 독립적이어야 하는 "애플리케이션"들에서 공유하는 데이터(클래스에 있는 static 멤버)가 있다는 것이다. 애플리케이션들 사이에 공유하는 클래스가 없다면 아무런 문제도 없다. 하지만 컨테이너 밴더들은 계속해서 공유 클래스를 쓰길 권하고 개발자들은 계속 그렇게 사용하고 있다.(이건 저자의 개인적인 생각)</p>
+<p>그 해결책은 공유 클래스패스에 배포될 가능성이 있는 코드에서 Log 객체에 대한 "static" 레퍼런스를 사용하지 않는 것이다. </p>
+<p><font size="4"><span style="font-weight: bold;">SLF4J 도 이런 문제를 가지고 있는가?</span></font></p>
+<p>그렇다. SLF4J도 위에 나열한 것과 동일한 문제를 겪고 있으며 권장하는 방법은 동일하다. 공유 클래스패스에 배포될 코드에서는 log 객체에 대한 static 레퍼런스를 사용하지 말아라.</p>
+<p>...중략...</p>
+<p><font size="4"><span style="font-weight: bold;">java.util.logging도 이 문제를 가지고 있는가?</span></font></p>
+<p>그렇다. java.util.logging API도 위에 나열한 것과 동일한 문제를 겪고 있으며 권장하는 방법은 동일하다. 공유 클래스패스에 배포될 코드에서는 log 객체에 대한 static 레퍼런스를 사용하지 말아라.</p>
+<p>...중략...</p>
+<p><font size="4"><span style="font-weight: bold;">Static logger 대안책</span></font></p>
+<p>static을 떼어내라.</p>
+<p>...중략...</p>
+<p>그럼 static 메소드는 어떻게 하냐?</p>
+<p>&nbsp; public static void doStuff(...) {<br />&nbsp; &nbsp; Log log = LogFactory.getLog("stuff");<br />&nbsp; &nbsp; log.warn(...);<br />&nbsp; }</p>
+<p>...중략...</p>
+<p><font size="4"><span style="font-weight: bold;">컨테이너가 지원하는 로깅</span></font></p>
+<p>몇몇 컨테이너는 위의 문제를 해결하려고 노력했다. 특히 JBoss는 커스텀 log4j 필터를 제공해서 어쩌구 저쭈구 생략..</p>
+<p><font size="4"><span style="font-weight: bold;">기존의 라이브러리 코드 수정하기</span></font></p>
+<p>이 문서를 읽고나서 static Log를 static이 아닌 Log 객체를 사용하도록 고치려는 시도를 할 수 있는데, 이 때 주의할 것이 있다. 클래스의 직렬화 형식이 바뀐다는 것이다. 클래스의 serialVersionID를 꼭 바꿔주어라. 그래야 옛날 클래스 대신 새 클래스를 로딩할 것이다.</p>
+<p>다음과 같이 스레드 세이프 싱글톤 객체를 사용하도록 할 수 있음.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; private transient Log log;<br />&nbsp; private Log getLog() {<br />&nbsp; &nbsp; if (log == null)<br />&nbsp; &nbsp; &nbsp; log=LogFactory.getLog(Some.class);<br />&nbsp; &nbsp; return log;<br />&nbsp; }</p>
+<p>&nbsp; // old code<br />&nbsp; // log.debug("foo");</p>
+<p>&nbsp; // new code<br />&nbsp; getLog().debug("foo");</div>
+<p>또다른 대안으로는 readResolve 메소드를 만들어서 역직렬화 시에 자동으로 호출하게 할 수도 있다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; private transient Log log = LogFactory.getLog(Some.class);<br />&nbsp; private Object readResolve() {<br />&nbsp; &nbsp;&nbsp; log = LogFactory.getLog(Some.class);<br />&nbsp; &nbsp;&nbsp; return this;<br />&nbsp; }</div>
+<p>====================================</p>
+<p>아 어려워.<br />어쨋거나 static Log 쓰지 말라는 것..<br />JEE 컨테이너들의 클래스 로더 구조 땜시 희한한 문제가 발생할 수 있음.</p>

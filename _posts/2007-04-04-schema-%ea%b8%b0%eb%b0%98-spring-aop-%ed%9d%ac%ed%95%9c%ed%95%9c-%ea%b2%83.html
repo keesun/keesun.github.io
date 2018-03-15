@@ -1,0 +1,60 @@
+---
+layout: post
+title: Schema 기반 Spring AOP 희한한 것
+date: 2007-04-04 23:47:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- "&lt;aop:pointcut&gt;"
+- Schema-based AOP
+- Spring Reference 6장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323158588'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; &lt;aop:config&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:aspect id="cinema" ref="aspect"&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:pointcut id="sellTicket" expression="execution(* sell*(..))" /&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:before method="welcome" pointcut="execution(* sell*(..))"/&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/aop:aspect&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/aop:config&gt;</div>
+<p>이렇게 포인트컷 하나, 어드바이스 다수 일 경우에는 실행이 되는데요.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; &lt;aop:config&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:aspect id="cinema" ref="aspect"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:pointcut id="sellTicket" expression="execution(* sell*(..))" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:pointcut id="sellTicket2" expression="execution(* sell*(..))" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket2" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/aop:aspect&gt;<br />&nbsp; &nbsp; &lt;/aop:config&gt;</div>
+<p>이렇게 포인트컷이 둘 이상일 경우에는 에러가 발생합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">org.springframework.beans.factory.BeanDefinitionStoreException: Line 42 in XML document from class path resource [aop/newStyle/schemaConfiguration.xml] is invalid; nested exception is org.xml.sax.SAXParseException: cvc-complex-type.2.4.a: Invalid content was found starting with element 'aop:pointcut'. One of '{"http://www.springframework.org/schema/aop":before, "http://www.springframework.org/schema/aop":after, "http://www.springframework.org/schema/aop":after-returning, "http://www.springframework.org/schema/aop":after-throwing, "http://www.springframework.org/schema/aop":around}' is expected.</div>
+<p>흠...in-line 포인트컷은 되는데 왜 그냥 포인트컷은 하나밖에 못쓸까요. 희한하군요.</p>

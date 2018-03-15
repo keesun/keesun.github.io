@@ -1,0 +1,68 @@
+---
+layout: post
+title: EJ2E Item 1. 생성자 대신 static 팩토리 메소드 사용을 고려하라.
+date: 2008-10-27 08:52:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- effective java
+- Item 1
+- static factory method
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323082162'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: Effective Java 2nd Edition. Item 1: Consider static factory methods instead of constructor</p>
+<p>static factory method는 Factory Method 디자인 패턴이랑 같은 것이 아니다. 직접적인 관계는 없다.</p>
+<p>장점<br />
+- 이름을 가질 수 있다.<br />
+- 매번 새로운 객체를 만들 필요가 없어진다.<br />
+- 하위 타입을 반환할 수 있다. -&gt; service provider framework<br />
+- 타입 매개변수를 가진 클래스 객체를 생성할 때 간결하게 쓸 수 있다. -&gt; type inference</p>
+<p>Service Provider Framework<br />
+- Servide interface: 공급자가 구현할 인터페이스. ex) Connection<br />
+- Provider registration API: 시스템이 구현체를 등록할 때 사용. ex) DriverManager.registerDriver<br />
+- Service access API: 사용자가 서비스 객체를  얻어올 때 사용. == fexible static factory. ex) DriverManager.getConnection<br />
+- (option) Service provider interface: 공급자가 서비스 구현체의 객체를 생성할 때 구현한다. ex) Driver</p>
+<p>단점<br />
+- public 또는 protected 생성자 없이 static factory method만 제공하는 클래스는 상속할 수 없다.<br />
+- 다른 static factory method랑 확연하게 구분이 안 된다. -&gt; 이름을 잘 짓자.(valueOf, of, getInstance, newInstance, getType, newType)</p>

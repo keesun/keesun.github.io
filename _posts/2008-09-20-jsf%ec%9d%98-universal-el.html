@@ -1,0 +1,59 @@
+---
+layout: post
+title: JSF의 universal EL
+date: 2008-09-20 02:21:43.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- JSF
+- universal EL
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322797786'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.ibm.com/developerworks/edu/j-dw-java-jsf1-i.html" target="_blank">http://www.ibm.com/developerworks/edu/j-dw-java-jsf1-i.html</a></p>
+<p>JSP의 EL은 JavaBean 스펙에 따른 게터, 세터만 사용하는데 비해, JSF의 universal EL은 다른 메소드 호출도 됩니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;table&gt;<br />&lt;tr&gt;<br />&lt;td&gt;&lt;h:outputLabel value="First Number" for="firstNumber" /&gt;&lt;/td&gt;<br />&lt;td&gt;&lt;h:inputText id="firstNumber"<br />value=<span style="font-weight: bold;">"#{calculator.firstNumber}</span>" required="true" /&gt;&lt;/td&gt;<br />&lt;td&gt;&lt;h:message for="firstNumber" /&gt;&lt;/td&gt;<br />&lt;/tr&gt;<br />&lt;tr&gt;<br />&lt;td&gt;&lt;h:outputLabel value="Second Number" for="secondNumber" /&gt;<br />&lt;/td&gt;<br />&lt;td&gt;&lt;h:inputText id="secondNumber"<br />value=<span style="font-weight: bold;">"#{calculator.secondNumber}</span>" required="true" /&gt;&lt;/td&gt;<br />&lt;td&gt;&lt;h:message for="secondNumber" /&gt;&lt;/td&gt;<br />&lt;/tr&gt;<br />&lt;/table&gt;</div>
+<p>굵게 표시한 부분이 universal EL인데, 뒷단 빈의 속성 값과 연결해 줍니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;div&gt;<br />&lt;h:commandButton action="<span style="font-weight: bold;">#{calculator.add}</span>" value="Add" /&gt;<br />&lt;h:commandButton action="<span style="font-weight: bold;">#{calculator.multiply}</span>" value="Multiply" /&gt;<br />&lt;h:commandButton action="<span style="font-weight: bold;">#{calculator.clear}</span>" value="Clear" immediate="true"/&gt;<br />&lt;/div&gt;</div>
+<p>그리고 위 코드에 있는 EL은 add(), multyply() 등의 메소드를 호출해줍니다. 모든 액션 메소드를 호출하기 전에 폼 검증 단계를 거치는데, immediate="true"를 사용하면 그 과정을 생략하고 바로 메소드를 호출합니다.</p>
+<p>꺄오.. JSF 괜찮은거 같은데~ </p>

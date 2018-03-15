@@ -1,0 +1,63 @@
+---
+layout: post
+title: DisplayTag 써보기
+date: 2007-01-30 10:04:47.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- DisplayTag
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323151834'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 :<br /><a href="http://displaytag.sourceforge.net/11/" target="_blank">http://displaytag.sourceforge.net/11/</a><br /><a href="http://blog.naver.com/jdkim528?Redirect=Log&amp;logNo=140011759837" target="_blank">http://blog.naver.com/jdkim528?Redirect=Log&amp;logNo=140011759837</a></p>
+<p>DispalyTag의 기능들을 사용해 보기 위한 기본 환경 세팅은 두번째 참조 링크에 있는 소스를 이용했습니다.</p>
+<p><span style="font-weight: bold;">1. 기본적인 테이블 출력 &lt;display:table name="members" /</span>&gt;</p>
+<p>&lt;%<br />&nbsp; &nbsp; request.setAttribute( "members", new MemberManager().getMembers(100) );<br />%&gt;</p>
+<p>&lt;display:table name="members" /&gt;</p>
+<p><img src="{{ site.baseurl }}/assets/bm234.jpg" class="aligncenter" width="500" height="137" alt="사용자 삽입 이미지" /><br /><span style="font-weight: bold;">2. 컬럼 이름을 명시적으로 주고 싶을 때는  &lt;display:column property="멤버변수" title="Alias" /&gt;</span></p>
+<p>&lt;display:table name="members"&gt;<br />&nbsp; &nbsp; &lt;display:column property="name" title="이름" /&gt;<br />&nbsp; &nbsp; &lt;display:column property="email" title="이메일" /&gt;<br />&lt;/display:table&gt;</p>
+<p><img src="{{ site.baseurl }}/assets/bm235.jpg" class="aligncenter" width="460" height="223" alt="사용자 삽입 이미지" /><br /><span style="font-weight: bold;">3. 페이징 처리를 하고 싶을 때는 &lt;display:table name="members" pagesize="10"&gt;</span></p>
+<p>&lt;display:table name="members" pagesize="10"&gt;<br />&nbsp; &nbsp; &lt;display:column property="name" title="이름" /&gt;<br />&nbsp; &nbsp; &lt;display:column property="email" title="이메일" /&gt;<br />&lt;/display:table&gt;</p>
+<p><img src="{{ site.baseurl }}/assets/bm236.jpg" class="aligncenter" width="500" height="213" alt="사용자 삽입 이미지" /><br style="font-weight: bold;" /><span style="font-weight: bold;">4. 컬럼 별로 Soring이 가능하도록 설정 &lt;display:column sortable="true"&gt;</span></p>
+<p>&lt;display:table name="members" pagesize="10"&gt;<br />&nbsp; &nbsp; &lt;display:column property="name" title="이름" sortable="true" /&gt;<br />&nbsp; &nbsp; &lt;display:column property="email" title="이메일" /&gt;<br />&lt;/display:table&gt;</p>
+<p><img src="{{ site.baseurl }}/assets/bm237.jpg" class="aligncenter" width="414" height="315" alt="사용자 삽입 이미지" /><br />이밖에도 여러 기능을 할 수 있습니다.</p>

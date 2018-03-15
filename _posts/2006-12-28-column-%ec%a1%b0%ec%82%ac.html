@@ -1,0 +1,55 @@
+---
+layout: post
+title: "@Column 조사"
+date: 2006-12-28 09:49:27.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- "@Column"
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323132147'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://java.sun.com/javaee/5/docs/api/javax/persistence/Column.html" target="_blank">http://java.sun.com/javaee/5/docs/api/javax/persistence/Column.html</a><br />JPA에 포함되어 있는 어노테이션으로 POJO위에 해당 필드가 DB의 컬럼과 매핑이 되도록 설정하는데 사용했었습니다.</p>
+<p>사용할 수 있는 속성들로는 다음과 같은 것들이 있습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bk96.bmp" class="aligncenter" width="297" height="206" alt="사용자 삽입 이미지">bk96.bmp</a><br />위 속성들은 전부 Optional 이기 때문에 설정하지 않아도 됩니다. 그럴 때는 각 속성들의 default값들로 설정됩니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">columnDefinition은 해당 컬럼을 생성할 때의 SQL이라고 하는데 잘 모르겠네요. 기본값은 ""<br />inserttable은 inset가 가능한지 여부를 나타내며 기본 값은 true<br />length는 해당 컬럼의 길이며 기본 값은 255<br />name은 이 필드와 매칭 될 컬럼의 이름이며 기본 값은 필드 명으로 들어갑니다.(기본 값은 ""이렇게 써있는데..)<br />nullable은 필드가 null값을 허용하는지 여부이며 기본 값은 true<br />precision과 scale은 실수를 나타낼 때 사용하며 기본 값은 0<br />table은 컬럼이 어느 테이블에 만들어질지 정하는 것 같습니다. 기본값은 primary table이라고 적혀있는데 현재 소속된 클래스의 테이블로 들어가는 것 같습니다.<br />unique는 해당 컬럼이 uniauq key인지 나타내며 기본값은 false<br />updatable은 UPDATE sql이 사용가능한지 여부이며 기본값은 true</div>
+<p>전부 기본적인 세팅이라서 마치 Java의 멤버 변수들의 기본값 처럼 쉽게 머릿속에 들어옵니다. <br />하지만 몇몇은 기본값이 "" 라고 되어 있지만 그렇치 않은 것들이 있네요.<br />columnDefinition(요건 뭔지 잘 모르겠지만), name, table은 기본 값이 ""가 아니고 필드명과 필드가 속해있는 클래스의 테이블명이 되는 것 같습니다.</p>

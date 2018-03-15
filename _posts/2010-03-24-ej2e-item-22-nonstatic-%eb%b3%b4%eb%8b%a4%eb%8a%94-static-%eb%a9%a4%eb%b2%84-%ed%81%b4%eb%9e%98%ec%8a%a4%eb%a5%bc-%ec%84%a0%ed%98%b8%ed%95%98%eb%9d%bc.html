@@ -1,0 +1,242 @@
+---
+layout: post
+title: EJ2E Item 22. nonstatic 보다는 static 멤버 클래스를 선호하라
+date: 2010-03-24 02:16:17.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- anonymous class
+- effective java 2nd edition
+- local class
+- nested class
+- nonstatic member class
+- static member class
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323118557'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span class="Apple-style-span" style="color: rgb(80, 80, 80); font-family: Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif; line-height: 22px; font-size: 13px; " id="">참조: Effective Java 2nd Edition. Item 22: Favor static member class over nonstatic</span>
+<div>
+<span class="Apple-style-span" style="color: rgb(80, 80, 80); font-family: Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif; line-height: 22px; font-size: 13px; " id=""><br />
+</span></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">중첩 클래스(nested class)에는 네 종류가 있다.</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- static member class</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- nonstatic member class</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- anonymous class</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- local class</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">Static Member Class</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">public class SpringSprout {</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">&nbsp;&nbsp; static class Whiteship {</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;private String name;&nbsp;</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;...</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">&nbsp;&nbsp; &nbsp;}</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">}</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 다른 클래스 내부에 선언된 클래스로 가장 많이 사용된다.</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 자신을 가지고 있는 클래스의 모든 멤버에 접근할 수 있다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 보통 helper 클래스로 사용된다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- enclosing instance 유무와 상관없이 독립적으로 사용될 수 있다.</span></font></div>
+</div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"></span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id=""></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">Nonstatic Member Class</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><span class="Apple-style-span" style="color: rgb(51, 51, 51); font-family: 굴림; line-height: 18px; font-size: 12px; ">
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; ">public class SpringSprout {</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; " id="">&nbsp;&nbsp; class Whiteship {</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; ">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;private String name;&nbsp;</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; ">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;...</span></font></div>
+<div>
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; ">&nbsp;&nbsp; &nbsp;}</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px; ">}</span></font></div>
+<p></span></span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- 암묵적으로 자신을 감싸는 클래스의 인스턴스(enclosing instance)와 연관을 맺는다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- nontatic member class와 enclosing instance와의 연관 관계는 enclosing instance에서 nonstatic member class의 객체를 만들 때 생긴다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- 이 연관 관계로 인해 nonstatic member class 인스턴에 필요한 공간과 생성 시간이 소비된다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- 보통 Adapter를 정의할 때 사용된다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- Map의 keySet, entrySet, values 메서드가 반환하는 콜렉션 뷰들과 Set, List에서 Iterator를 구현할 때 nonstatic member class를 사용한다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">AbstractList 코드</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">
+<div id="">
+&nbsp;&nbsp; &nbsp;public Iterator&lt;E&gt; iterator() {</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>return new Itr();</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;private class Itr implements Iterator&lt;E&gt; {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;...</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;}</div>
+<p></span></font></div>
+</div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">
+<div id="">
+</div>
+<div id="">
+
+</div>
+<p></span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">=&gt; enclosing instance에 접근할 필요가 없는 member class는 static으로 선언하자.</span></font></div>
+<div id="">
+</div>
+</div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id=""></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">Anonymous Class</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 이름도 없고 enclosing class의 멤버도 아니다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 표현식을 사용할 수 있는 곳이라면 어디서든 익명 클래스를 사용할 수 있다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- nonstatic 문맥에서만 enclosing instance를 가진다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- static 문맥에서는 static 멤버를 가질 수 없다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 주로 함수 객체를 만들 때 사용한다.</span></font></div>
+<div id="">
+</div>
+</div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id=""></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">Local Class</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">- 익명 클래스랑 거의 같은데 클래스 이름 줄 수 있고 인스턴스 여러 번 만들어 사용할 수 있다.</span></font></div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">- 걍 생략;</span></font></div>
+<div id="">
+</div>
+</div>
+<div id="">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"></span></font></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(159, 211, 49); border-right-color: rgb(159, 211, 49); border-bottom-color: rgb(159, 211, 49); border-left-color: rgb(159, 211, 49); background-color: rgb(231, 253, 181); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">요약</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 중첩 클래스가 특정 메서드 외부에서도 사용될 피룡가 있거나 메서드 내부에 있기에는 너무 길다면 멤버 클래스로 만든다.</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 만약 멤버 클래스의 인스턴스가 enclosing instance를 참조할 필요가 있다면 nonstatic으로 만든다. 그렇지 않으면 static으로 만든다.</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">- 클래스가 메서드 내부에 속해 있으며 딱 한번만 사용할거면 익명 클래스로 만들고, 그렇지 않으면 로컬 클래스로 만든다.</span></font></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></span></font></div>

@@ -1,0 +1,15 @@
+<p><span style="font-weight: bold;">11.1. Introduction</span></p>
+<p>Spring 프레임워크의 JDBC 추상화 계층이 제공하는 장점들은 다음과 같으며 저 중에서도 굵은 글자 부분만이 개발 할 때 코딩이 필요한 부분입니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">connection 정보 정의 하기<br />connection 열기<br /><span style="font-weight: bold;">statement 만들기(쿼리 작성)</span><br />statement 객체 준비하고 실행하기<br />resultSet 을 이터레이션 돌기 위한 루프 세팅<br /><span style="font-weight: bold;">각 이터레이션 마다 작업 하기</span><br />예외 처리<br />트랜잭션 처리<br />connectino 닫기</div>
+<p>JDBC 추상화 프레임웤쪽의 패키지 구조를 살펴봅니다.(이전 까진 패키지 구조 살펴본적이 없었던 것 같은데.. 신기하군요. 허헐)</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">org.springframework.jdbc.core :: JdbcTemplate 클래스가 포함되어 있고 콜백 인터페이스들과 관련된 클래스들이 있습니다.</p>
+<p>org.springframework.jdbc.datasource :: DataSource 에 편하게 접근하기 위한 utility 클래스들과 DataSourceTransactionManager 를 제공합니다.</p>
+<p>org.springframework.jdbc.object :: RDBMS에서 사용하는 쿼리, 업데이트 등을 나타내는 클래스들을 제공합니다.</p>
+<p>org.springframework.jdbc.support :: SQLException 을 바꾸기 위한 클래스들과 몇몇 유틸을 제공합니다.</p></div>
+<p><span style="font-weight: bold;">11.2. Using the JDBC Core classes to control basic JDBC processing and error handling</span></p>
+<p>JdbcTemplate, NamedParameterJdbcTemplate, SimpleJdbcTemplate, DataSource, SQLExceptionTranslator 클래스들 사용법을 살펴 봅니다.</p>
+<p><span style="font-weight: bold;">11.3. Controlling database connections</span></p>
+<p>DataSourceUtils 클래스와 다양한 DataSource 클래스들을 살펴 봅니다.</p>
+<p><span style="font-weight: bold;">11.4. Modeling JDBC operations as Java objects</span></p>
+<p>org.springframework.jdbc.object 패키지의 클래스들은 DB를 보다 OO적인 방식으로 접근할 수 있도록 도와줍니다.</p>
+<p>SqlQuery, MappingSqlQuery, SqlUpdate, StoredProcedure, SqlFunction 클래스를 살펴 봅니다.</p>

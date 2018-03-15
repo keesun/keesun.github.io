@@ -1,0 +1,29 @@
+<p><a title="[http://tuckey.org/urlrewrite/manual/3.0/]로 이동합니다." target="_blank" href="http://tuckey.org/urlrewrite/manual/3.0/">http://tuckey.org/urlrewrite/manual/3.0/</a></p>
+<p>일욜에 보던건데. 이제서야 다시 정리하고 싶어져서;; 쿨럭;;</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; &lt;?xml version="1.0" encoding="utf-8"?&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!DOCTYPE urlrewrite<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "http://tuckey.org/res/dtds/urlrewrite3.0.dtd"&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;urlrewrite&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;rule&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;from&gt;^/some/olddir/(.*)$&lt;/from&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;to type="redirect"&gt;/very/newdir/$1&lt;/to&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/rule&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;rule match-type="wildcard"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;from&gt;/blog/archive/**&lt;/from&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;to type="redirect"&gt;/roller/history/$1&lt;/to&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/rule&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;/urlrewrite&gt;</p></div>
+<p>파일 이름은 urlrewrite.xml로 해야하고 위와 같은 형태로 작성하면 됩니다. urlrewrite 엘리먼트가 반드시 들어있어야 하며, 그 안에는 최소한 한 개의 rule 엘리먼트가 들어있어야 합니다.</p>
+<p>rule 엘리먼트 안에는 from과 to가 각각 하나씩 반드시 있어야 하며, condition와 set 엘리먼트는 없거나 여러 개 있어도 됩니다.</p>
+<p>rule 안에 정의한 condition이 만족하면 from이 요청 URL에 적용되고 set 엘리먼트가 실행되고 to가 적용 됨.</p>
+<p>아래는 수도 코드</p>
+<p>&nbsp;&nbsp;&nbsp; Pattern.compile(&lt;from&gt; element);<br />
+&nbsp;&nbsp;&nbsp; pattern.matcher(each request url);<br />
+&nbsp;&nbsp;&nbsp; matcher.replaceAll(&lt;to&gt; element);<br />
+&nbsp;&nbsp;&nbsp; if ( &lt;condition&gt; elements match &amp;&amp; pattern matched ) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; execute &lt;run&gt; elements (if any)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; perform &lt;to&gt; element (if any)<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p></p>

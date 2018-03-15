@@ -1,0 +1,63 @@
+---
+layout: post
+title: 메이븐으로 원격 저장소에 라이브러리 배포하기
+date: 2008-09-08 09:10:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- deploy
+- 메이븐
+- 배포하기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323169580'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>팀에서 사용하는 공통의 메이븐 저장소에 jar 파일을 패키징해서 올려야 다른 PC에 있는 사람들도 해당 프로젝트를 다운받아서 다른 패키지의 라이브러리로 이용할 수 있습니다. 그러려면 배포를 해야죠. 배포 방법은 간단합니다. </p>
+<p>mvn deploy </p>
+<p>depoly는 라이프싸이클의 거의 끝자락인지 완전 끝인지.. 그 쯤에 있습니다. 그래서 컴파일 부터 테스트까지 모든 과정을 통과하고 로컬에도 배포하고 원격에 최종적으로 배폴르 합니다. 물론 그렇게 흘러가다 하나라도 잘 못되면 원격에 배포가 되지 않습니다.</p>
+<p>배포할 원격 저장소를 설정해야합니다. 원격 저장소 설정은 pom.xml에서 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/jk250000000000.jpg" class="aligncenter" width="600" height="412" alt="사용자 삽입 이미지" /><br />m2eclipse 플러긴을 쓰면 pom 편집기에서 간ㄷ나하게 등록할 수 있습니다. 캬~ m2eclipse가 q4e를 물리친 것 같네요. 하지만 전 왠지.. 그냥 pom.xml을 편집하는게 편하더군요.</p>
+<div style="BORDER-RIGHT: #90e0ff 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #90e0ff 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #90e0ff 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #90e0ff 1px solid; BACKGROUND-COLOR: #d2f2ff">&nbsp;&lt;distributionManagement&gt;<br />&nbsp; &lt;repository&gt;<br />&nbsp; &nbsp;&lt;id&gt;release&lt;/id&gt;<br />&nbsp; &nbsp;&lt;url&gt;http://www.opensprout.org:8082/nexus/content/repositories/releases&lt;/url&gt;<br />&nbsp; &lt;/repository&gt;<br />&nbsp; &lt;snapshotRepository&gt;<br />&nbsp; &nbsp;&lt;id&gt;snapshots&lt;/id&gt;<br />&nbsp; &nbsp;&lt;url&gt;http://www.opensprout.org:8082/nexus/content/repositories/snapshots&lt;/url&gt;<br />&nbsp; &lt;/snapshotRepository&gt;<br />&nbsp;&lt;/distributionManagement&gt;</div>
+<p>이런식으로 직접 pom.xml에 등록해도 됩니다.</p>
+<p>그리고 해당 저장소에 로긴할 수 있는 id를 settings.xml에 설정합니다. 이 파일은 로컬 리파지토리 루트에 있습니다. 보통 로컬 리파지토리 루트는 홈계정/.m2 폴더에 들어있습니다. 히든폴더기 때문에 잘 찾아보시기 바랍니다.</p>
+<div style="BORDER-RIGHT: #90e0ff 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #90e0ff 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #90e0ff 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #90e0ff 1px solid; BACKGROUND-COLOR: #d2f2ff">&lt;settings&gt;<br />&nbsp; ...<br />&nbsp; &lt;servers&gt;<br />&nbsp; &nbsp; &lt;server&gt;<br />&nbsp; &nbsp; &nbsp; &lt;id&gt;releases&lt;/id&gt;<br />&nbsp; &nbsp; &nbsp; &lt;username&gt;deployment&lt;/username&gt;<br />&nbsp; &nbsp; &nbsp; &lt;password&gt;deployment123&lt;/password&gt;<br />&nbsp; &nbsp; &lt;/server&gt;&nbsp; <br />&nbsp; &nbsp; &lt;server&gt;<br />&nbsp; &nbsp; &nbsp; &lt;id&gt;snapshots&lt;/id&gt;<br />&nbsp; &nbsp; &nbsp; &lt;username&gt;deployment&lt;/username&gt;<br />&nbsp; &nbsp; &nbsp; &lt;password&gt;deployment123&lt;/password&gt;<br />&nbsp; &nbsp; &lt;/server&gt;&nbsp; <br />&nbsp; &nbsp; &lt;server&gt;<br />&nbsp; &nbsp; &nbsp; &lt;id&gt;thirdparty&lt;/id&gt;<br />&nbsp; &nbsp; &nbsp; &lt;username&gt;deployment&lt;/username&gt;<br />&nbsp; &nbsp; &nbsp; &lt;password&gt;deployment123&lt;/password&gt;<br />&nbsp; &nbsp; &lt;/server&gt; <br />&nbsp; &lt;/servers&gt;<br />&nbsp; ...<br />&lt;/settings&gt;</div>
+<p>이런 식으로 등록하면 됩니다. 간단 간단..</p>

@@ -1,0 +1,55 @@
+---
+layout: post
+title: 4.5. Accessing the BundleContext
+date: 2008-04-11 22:58:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- Chpater 4
+- Spring DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322797649'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 DM을 사용하면 OSGi API에 의존하지 않아도 된다.<br />- 정말로 OSGi의 BundleContext 객체에 접근하고 싶다면, 스프링이 도와줄 것이다.<br />- Extender가 만들어준 application context에는 BundleContext 타입의 bean 하나를 bundleContext라는 이름으로 항상 가지고 있다.<br />- 이 bean을 application context내의 다른 bean에 얼마든지 중입inject 할 수 있다.<br />- 거기다가, BundleContextAware라는 인터페이스까지 마련해 뒀다.<br />- 이 인터페이스를 구현한 bean들은 스프링이 bundleContext를 끼워넣어줄 것이다. 이 기능을 사용하려면, org.springframework.osgi.context 패키지를 import 해야한다.</p>
+<pre class="programlisting"><div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);"><span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> BundleContextAware {<br />  <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setBundleContext(BundleContext context);<br />}</div></pre>
+<p></p>

@@ -1,0 +1,70 @@
+---
+layout: post
+title: EJ2E Item 3. 싱글톤 속성은 private 성성자 또는 enum 타입으로
+date: 2008-10-28 00:41:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- effective java
+- enum
+- item 3
+- Singleton
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323173959'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>싱글톤은 객체를 딱 한번만 생성하는 클래스.</p>
+<p>1.5 전에 싱글톤을 구현하는 방법은 두 개였다. 둘 다 private 생성자와 public static 멤버를 노출한다.</p>
+<p><font size="4"><span style="font-weight: bold;">첫 번째 방법: public static filed</span></font> </p>
+<p>public class Elvis {<br />&nbsp; public static final Elvis INSTANCE = new Elvis();<br />&nbsp; private Elvis(){...}<br />&nbsp; ...<br />}</p>
+<p>private 생성자는 딱 한 번 static final 필드인 Elvis.INSTANCE를 초기화할 때만 호출한다. 한 가지 주의 할 것이 있는데...<br />
+<blockquote>a privileged client can invoke the private constructor reflectively<br />(Item 53) with the aid of the AccessibleObject.setAccessible method</p></blockquote>
+<p>이 부분 잘 모르겠슴.</p>
+<p><font size="4"><span style="font-weight: bold;">두 번째 방법: public static factory method</span><br style="font-weight: bold;" /></font><br />public class Elvis {<br />&nbsp; private static final Elvis INSTANCE = new Elvis();<br />&nbsp; private Elvis(){...}<br />&nbsp; public static Elvis getInstance() { return INSTANCE; }<br />&nbsp; ...<br />}</p>
+<p>위에서 잘 모르는 부분의 문제가 이렇게 하면 발생하지 않아. (OSAF도 이런식으로 싱글톤을 만들었쥐.) 좀 더 유연하게 변경할 수 있다. Generic 타입을 고려할 수 있다.(Item 27) 이것도 모르겠군.</p>
+<p>위의 두 가지 방법은 Serializable 하지 못한다. (static 필드는 직렬화 안 되니깐) 따라서 모든 객체 필드를 transient로 선언하거나 readResolve 메소드(Item 77)를 제공해야 한다.</p>
+<p><font size="4"><span style="font-weight: bold;">세 번째 방법: Enum singleton</span></font></p>
+<p>1.5 부터 사용할 수 있는 싱글톤 구현 방법. 캬.. 드디어 새로운 방법 등장이구나.</p>
+<p>public enum Elvis {<br />&nbsp; INSTANCE;<br />&nbsp; ...<br />}</p>
+<p>이 방법은 기능적으로는 public filed 접근 방법과 동일하지만, 간결하고, 여러 객체를 생성할 여지도 없으며, 직렬화도 제공한다는 점에서 차이가 있다. <br />
+<blockquote>a single-element enum type is the best way to implement a singleton</p></blockquote>
+<p>저자가 이 정도로 권장할 정도니까.. 사용해 봐야겠다.</p>

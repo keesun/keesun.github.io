@@ -1,0 +1,17 @@
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt"><font size="2"><font face="바탕"><span lang="EN-US"><span lang="EN-US" style="font-size: 10pt; font-family: 바탕; mso-bidi-font-size: 12.0pt; mso-hansi-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: KO; mso-bidi-language: AR-SA"><v:shapetype id="_x0000_t75" stroked="f" filled="f" path="m@4@5l@4@11@9@11@9@5xe" o:preferrelative="t" o:spt="75" coordsize="21600,21600"><br />
+<img src="/assets/1306975925.jpg" class="aligncenter" width="550" height="418" alt="" /> </v:shapetype></span></span></font></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt"><font size="2"><font face="바탕"><span lang="EN-US"><span lang="EN-US" style="font-size: 10pt; font-family: 바탕; mso-bidi-font-size: 12.0pt; mso-hansi-font-family: 'Times New Roman'; mso-bidi-font-family: 'Times New Roman'; mso-font-kerning: 1.0pt; mso-ansi-language: EN-US; mso-fareast-language: KO; mso-bidi-language: AR-SA"><v:shapetype id="_x0000_t75" stroked="f" filled="f" path="m@4@5l@4@11@9@11@9@5xe" o:preferrelative="t" o:spt="75" coordsize="21600,21600"></v:shapetype></span></span></font></font> <span style="padding-right: 1px; padding-left: 1px; padding-bottom: 0px; color: #202020; padding-top: 3px; background-color: #ffdaed">Obsever Pattern은 1대 다 관계를 정의합니다.</span> 따라서 한 객체의 상태가 바뀌면 다른 것들이 자동적으로 정보를 업데이트 받습니다.</p>
+<p><font color="#993366" size="4">Participant Correspondence:</font></p>
+<ul>
+<li>auctioneer가 Subject에 해당합니다. Observer들은 그에게 등록을 해야하기 떄문에 당연히 그는 observer들을 알고 있습니다.</li>
+<li>현재 경매가(current bid)는 ConcreteSubject에 해당합니다. Observer들은 이것의 상태에 관심이 있습니다.</li>
+<li>경매 참가자(bidder)들은 Observer에 해당합니다. 그들은 현재 경매가가 어떻게 변하는지 알고 싶어합니다.</li>
+<li>각 개개인의 경매 참가자들은 ConcreteObservers에 해당하며 서로 다른 tolerance(한계)를 가지고 있습니다.</li>
+</ul>
+<p><font color="#993366" size="4">Consequences:</font></p>
+<ul>
+<li>subject와 observer는 추상적으로 묶여 있습니다. actioneer가 아는 것은 경매 참여자(bidder)들이 단지 경매(bid)를 할 것이라는 것 뿐입니다. 개개인의 경매 참여자들이 돈을 얼마나 가지고 있는지는 모릅니다.</li>
+<li>의사소통을 위한 방송을 지원합니다. actioneer가 현재 물품가격을 발표하면 이 정보에 관심이 있는 모든 경매 참여자들에게 알려질 것입니다.</li>
+<li>경매 참여자들은 또한 예측 불가능한 가격 상승을 겪을 수 있습니다. subject의 상한가를 모르기 때문입니다. 따라서 50$까지만 가격을 불러보고 그만 둘 수도 있습니다.</li>
+</ul>
+<p></p>

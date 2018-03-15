@@ -1,0 +1,7 @@
+<p>&lt;list /&gt; 엘리먼트는 Java의 List에 대응 합니다. 다음과 같이 설정할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="keesun3" class="beanConfiguration.Member"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="wishList"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;NDS&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;Wii&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;WOW&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>순서대로 NDS가 첫번째 WOW가 세번째 입니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void list(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun = (Member) bf.getBean("keesun3");<br />&nbsp; &nbsp; &nbsp; &nbsp; List&lt;String&gt; wishList = keesun.getWishList();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("NDS", wishList.get(0));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("Wii", wishList.get(1));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("WOW", wishList.get(2));<br />&nbsp; &nbsp; }</div>
+<p>위의 테스트 코드로 확인할 수 있습니다.</p>
+<p>번외로.. Eclipse 자동 완성 기능 정말 좋네요.<br /><img src="/assets/ck65.jpg" class="aligncenter" width="500" height="147" alt="사용자 삽입 이미지" /></p>
+<p></p>

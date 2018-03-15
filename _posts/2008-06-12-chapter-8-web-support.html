@@ -1,0 +1,57 @@
+---
+layout: post
+title: Chapter 8. Web Support
+date: 2008-06-12 13:30:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 08
+tags:
+- Chapter 8
+- 스프링 DM
+- 스프링 DM 레퍼런스
+- 스프링 DM 웹 지원
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323109293'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1.1.0 배포판 부터 도입된 주요 기능은 웹 애플리케이션 지원이고 이로인해 웹 애플리케이션을 OSGi에 배포하기 쉬워졌다.</p>
+<p>웹 애플리케이션을 OSGi 위에서 돌리는 가장 큰 문제는 클로스로딩이다. 웹 애플리케이션에는 번들 영역(Bundle Space)라던지 가져온 패키지(Imported pachages)라는 개념이 없다. 각각의 웹 컨테이너들은 자신만의 클래스 로딩 계층구조를 가지고 있는 클래스패스를 사용하여 OSGi 공간과 출돌을 발생시킬 수 있다. 스프링 DM은 이런 문제들을 웹 컨테이너와 OSGi 공간 사이에 다리 역할을 하여 로딩이 더이상 문제가 되지 않도록 하고 있다. 그 기능과는 별개로, 스프링DM에서 웹 지원은 웹 컨테이너와 직접 통합하여 WAR 처리가 말그대로 서버에서 처리된다. 모든 설정과 기능(non-blocking vs blocking IO, thread pool, specification support(Servlet 2.3, 2.4, 2.5) 등등등)이 가용하다. 모든 타겟 컨테이너의 커스텀 설정 파일과 web.xml 문법이 모두 사용 가능하다.(스프링 DM은 전혀 이걸 파싱하지 않는다.) 요약하자면, 타겟 컨테이너가 지원하는 모든 것들이 스프링 DM을 사용한 OSGi WAR로 가용하다는 것이다.</p>
+<p></p>

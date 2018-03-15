@@ -1,0 +1,63 @@
+---
+layout: post
+title: Maven으로 Spring DM Project 만들기(Eclipse에서 import 가능)
+date: 2008-05-13 09:03:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- OSGi web
+- Spring DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322722849'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조<br /><a href="http://www.springframework.org/node/361" target="_blank">http://www.springframework.org/node/361</a><br /><a href="http://www.springframework.org/node/360" target="_blank">http://www.springframework.org/node/360</a><br /><a href="http://opensource.atlassian.com/confluence/spring/display/DOC/HowTo+build+Spring-Osgi+using+Maven+2" target="_blank">http://opensource.atlassian.com/confluence/spring/display/DOC/HowTo+build+Spring-Osgi+using+Maven+2</a><br /><a href="http://static.springframework.org/osgi/docs/1.1.0-m2/reference/html/appendix-archetype.html" target="_blank">http://static.springframework.org/osgi/docs/1.1.0-m2/reference/html/appendix-archetype.html</a></p>
+<p>기본 명령어는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">mvn archetype:create \<br />-DarchetypeGroupId=org.springframework.osgi \<br />-DarchetypeArtifactId=spring-osgi-bundle-archetype \<br />-DarchetypeVersion=${version} &nbsp; \<br />-DgroupId=&lt;your-project-groupId&gt;&nbsp; \<br />-DartifactId=&lt;your-project-artifactId&gt; \<br />-Dversion=&lt;your-project-version&gt; </div>
+<p>${version} 에는 배포된 스프링 DM 프로젝트 버전을 설정해주면 됩니다. 최신 버전인 1.1.0-m2 라고 설정하시면 되겠죠.</p>
+<p>your-group-gourpId, your-project-artifactId, your-project-version 이 값들은 뭔지 아시리라.. 생각하고 생략하겠습니다.</p>
+<p>그럼 대충 이런걸 타이핑해야 하는데... 정말 끔찍한 일이죠. </p>
+<p>mvn archetype:create -DarchetypeGroupId=org.springframework.osgi -DarchetypeArtifactId=spring-osgi-bundle-archetype -DarchetypeVersion=1.1.0-m2 -DgroupId=whiteship -DartifactId=springdmweb -Dversion=1.0 </p>
+<p>이걸 어떻게 오타없이 타이핑하죠? 그래서 전 그냥 텍스트 파일에 붙여넣은 다음 확장자를 bat 파일로 바꿔서 dos 커맨드 창에서 createSpringDMProject.bat를 실행시킵니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/jk1.bat" class="aligncenter">jk1.bat</a>필요하신 분들은 다운 받으신 다음에 groupdId와 artifactId 등을 수정하신 다음 사용하시면 됩니다. 그렇게 생성된 프로젝트는 이클립스에서 바로 import 해서 사용할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ik2.png" class="aligncenter" width="336" height="611" alt="사용자 삽입 이미지" />기본으로 테스트 클래스들까지 만들어 줍니다. 멋져부러...</p>

@@ -1,0 +1,119 @@
+---
+layout: post
+title: String[] getAliases(String name) 메소드 구현 살펴보기
+date: 2006-10-26 03:37:50.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mission
+tags:
+- AbstractBeanFactory
+- BeanFactory
+- getAliases()
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323202694'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p class="MsoNormal"><span lang="EN-US">BeanFactory 인터페이스에 있는 메소드들을 어떻게 구현했나 살펴보고 있습니다.<br />
+</span></p>
+<p class="MsoNormal">
+<p>[#M_ more.. | less.. | <br />
+public String[] getAliases(String name) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String beanName = transformedBeanName(name);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; List aliases = new ArrayList();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; boolean factoryPrefix = name.startsWith(FACTORY_BEAN_PREFIX);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String fullBeanName = beanName;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (factoryPrefix) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fullBeanName = FACTORY_BEAN_PREFIX + beanName;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (!fullBeanName.equals(name)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; aliases.add(fullBeanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; synchronized (this.aliasMap) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (Iterator it = this.aliasMap.entrySet().iterator(); it.hasNext();) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Map.Entry entry = (Map.Entry) it.next();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (entry.getValue().equals(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String key = (factoryPrefix ? FACTORY_BEAN_PREFIX : "") + entry.getKey();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!key.equals(name)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; aliases.add(key);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (!containsSingleton(beanName) &amp;&amp; !containsBeanDefinition(beanName)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BeanFactory parentBeanFactory = getParentBeanFactory();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (parentBeanFactory != null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; aliases.addAll(Arrays.asList(parentBeanFactory.getAliases(fullBeanName)));<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return StringUtils.toStringArray(aliases);<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+if (!fullBeanName.equals(name)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; aliases.add(fullBeanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+저는 이부분이 이해가 잘 안가네요.</p>
+<p>name은 매개변수로 받아온 이름이고 만약에 그 name이 &amp;로 시작을 하면 fullBeanName은  transformedBeanName(String) 메소드 호출하여 반환 된 값을 참조하는 beanName에 &amp;를 붙인 값이 됩니다.</p>
+<p>그런데 transformedBeanName(String) 메소드는 아래에 보시다시피 &amp;로 시작하는 name이 오면 맨 앞에 &amp;를 제외한 상태로 문자열을 반환하게 됩니다.</p>
+<p>transformedBeanName(String) 메소드</p>
+<p>[#M_ more.. | less.. | <br />
+protected String transformedBeanName(String name) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String beanName = BeanFactoryUtils.transformedBeanName(name);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; // Handle aliasing.<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; synchronized (this.aliasMap) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String canonicalName = (String) this.aliasMap.get(beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return (canonicalName != null ? canonicalName : beanName);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; }</p>
+<p>//BeanFactoryUtils class</p>
+<p>public static String transformedBeanName(String name) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Assert.notNull(name, "Name must not be null");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String beanName = name;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (beanName.startsWith(BeanFactory.FACTORY_BEAN_PREFIX)) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; beanName = beanName.substring(BeanFactory.FACTORY_BEAN_PREFIX.length());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return beanName;<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+그렇게 때문에 if (!fullBeanName.equals(name)) 여기서 어떻게 name하고 fullName하고 달라질 수가 있는지.. 모르겠네요.</p>
+<p>이 메소드에서 호출되는 다른 메소드 들도 <a href="http://whiteship.tistory.com/94">containsBean(String) 메소드</a>에서 확인바 있습니다.</p>
+<p>
+ps : 이 메소드에서도 역시 제가 아직 풀지 못한 수수께끼.. FACTORY_BEAN_PREFIX&nbsp; 이 변수와 관련해서 name으로 받아온 String의 제일 앞 글자가 &amp;로 시작하면 무슨일이 벌어지는 걸까요...</p>
+<p></p>

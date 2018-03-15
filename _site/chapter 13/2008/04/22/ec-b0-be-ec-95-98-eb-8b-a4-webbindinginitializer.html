@@ -1,0 +1,9 @@
+<p>이 녀석이 였구나.. 여러 컨트롤러에 PropertyEditor 적용할 때 필요한 녀석이..</p>
+<p>레퍼런스를 저 키워드로 뒤지면 다음과 같은 코드가 나옵니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"&gt;<br />&nbsp; &nbsp; &lt;property name="cacheSeconds" value="0" /&gt;<br />&nbsp; &nbsp; &lt;property name="webBindingInitializer"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;bean class="org.springframework.samples.petclinic.web.ClinicBindingInitializer" /&gt;<br />&nbsp; &nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
+<p>헤헷 이것만 가지고는 뭐.. 어쩌라는 건지 알 수 없죠. 저 클래스를 찾아봐야 합니다. 저 클래스를 찾는 방법은 여러 방법이 있지만, 제가 올려드리죠.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class ClinicBindingInitializer implements WebBindingInitializer {</p>
+<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; private Clinic clinic;</p>
+<p>&nbsp; &nbsp; public void initBinder(WebDataBinder binder, WebRequest request) {<br />&nbsp; &nbsp; &nbsp; &nbsp; SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");<br />&nbsp; &nbsp; &nbsp; &nbsp; dateFormat.setLenient(false);<br />&nbsp; &nbsp; &nbsp; &nbsp; binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));<br />&nbsp; &nbsp; &nbsp; &nbsp; binder.registerCustomEditor(String.class, new StringTrimmerEditor(false));<br />&nbsp; &nbsp; &nbsp; &nbsp; binder.registerCustomEditor(PetType.class, new PetTypeEditor(this.clinic));<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>우왕~~ 귿이다~~ 이제 컨트롤러 마다 똑같은 프로퍼티 에디터 등록 안해도 되겠당.</p>

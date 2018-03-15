@@ -1,0 +1,113 @@
+---
+layout: post
+title: 3.4. Bean scopes
+date: 2007-03-09 05:19:06.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Bean Scopes
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323138337'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>설정 파일에서 bean들을 정의하고 다른 bean들 과의 종속성을 정의 하는 것 말고도 각각 bean들의 scope을 설정해 줄 수 있습니다.</p>
+<table summary="Bean scopes" border="1">
+<thead>
+<tr>
+<th align="center">Scope</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-singleton" title="3.4.1. The singleton scope">singleton</a></p>
+</td>
+<td>
+<p>Spring Ioc 컨테이너 내에서 bean 정의 당 하나의 객체</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-prototype" title="3.4.2. The prototype scope">prototype</a></p>
+</td>
+<td>
+<p>매번 같은 Type의 새로운의 객체</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-request" title="3.4.3.2. The request scope">request</a></p>
+</td>
+<td>
+<p>Http request 당 하나 씩, web-aware ApplicationContext</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-global-session" title="3.4.3.4. The global session scope">session</a></p>
+</td>
+<td>
+<p>Http session 당 하나 씩, web-aware ApplicationCotext</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-scopes-global-session" title="3.4.3.4. The global session scope">global session</a></p>
+</td>
+<td>
+<p>Scopes a single bean definition to the lifecycle of a<br />
+							global HTTP <tt class="interfacename">Session</tt>. Typically<br />
+							only valid when used in a portlet context. Only valid in the<br />
+							context of a web-aware Spring<br />
+							<tt class="interfacename">ApplicationContext</tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.1. The singleton scope</span></p>
+<p>Container 당 하나의 객체라는 의미에서 singleton 입니다.[footnote]JVM의 classloader당 하나의 객체라는 의미의 GoF의 Singleton과는 다릅니다.[/footnote]<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.2. The prototype scope</span></p>
+<p>bean을 요청 할 때[footnote]DI 되거나 getBean(String)에 의해 호출 될 때[/footnote] 마다 새로운 객체를 만들어 줍니다.</p>
+<p><a href="../../../../545">Singleton &amp; Prototype</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.4.3. The other scopes</span></p>
+<p>request, session, grobalSession은 web-based ApplicationContext에서 사용할 수 있습니다.[footnote]<a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/WebApplicationContext.html" target="_blank">WebApplicationContext </a>인터페이스를 구현한 클래스들을 말하는 것이 아닐지 생각해 봤습니다.[/footnote]</p>
+<p><span style="font-weight: bold;">3.4.4. Custom scopes</span><br style="font-weight: bold;" /><br />새로운 Scope을 만들거나 기존의 Scope을 변경할 수 있습니다.</p>

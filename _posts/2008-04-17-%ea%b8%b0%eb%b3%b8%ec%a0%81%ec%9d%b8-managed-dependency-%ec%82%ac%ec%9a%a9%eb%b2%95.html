@@ -1,0 +1,70 @@
+---
+layout: post
+title: 기본적인 managed dependency 사용법
+date: 2008-04-17 06:22:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- managed dependency
+- maven
+- Maven 2.0.9
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322791694'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/ek040000000000.png" class="aligncenter" width="600" height="391" alt="사용자 삽입 이미지" /></p>
+<p>A BOM은 오타가 아닙니다. Bill Of Material 이라는 뜻입니다. B POM은 그냥 보통의 POM 입니다. 위의 경우 A BOM(얘도 결국은 packing이 POM입니다.)을 B POM이 상속 받고 있습니다. 상속 받으면 모든 부모의 모든 속성을 자식 입장에서 사용할 수 있습니다. 따라서 A에 정의한 DM(dependecy management) 섹션도 B POM으로 상속이 됩니다.</p>
+<p>B POM에서는 한 개의 라이브러리를 추가합니다. 그런데 버전과 스콥을 명시하지 않고 있습니다. 오호.. 이러면 안 되죠. 원래는 버전까지는 꼭 명시해줘야 합니다. 버전을 적어주지 않으면 메이븐이 종속성 추가하닥 에러 납니다. 그런데 위의 경우에는 에러가나지 않습니다. 명시한 groupId와 artifactId에 해당하는 종속성의 Bill Of Material이 DM 안에 들어있기 때문입니다. DM을 보구서.. 아항..whiteship의 a라는 라이브러리는 1.0이고 runtime scope으로 추가해야 하는 군... 이라고 알아챕니다.</p>
+<p>이런게 언제 유용할 까요.</p>
+<p>whiteship의 a라는 라이브러리를 runtime scope으로 참조하는 다른 프로젝트들 C POM, D POM, E POM 등이 있을 때 매번 C, D, E에도 다음과 같은 코드가 들어갈 겁니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;dependency&gt;<br />&lt;groupId&gt;whiteship&lt;/groupId&gt;<br />&lt;artifactId&gt;a&lt;/artifactId&gt;<br />&lt;version&gt;1.0&lt;/version&gt;<br />&lt;scope&gt;runtime&lt;/version&gt;<br />&lt;/dependency&gt;</div>
+<p>그런데 위의 A BOM을 상속 받으면 </p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">
+&lt;dependency&gt;<br />
+&lt;groupId&gt;whiteship&lt;/groupId&gt;<br />
+&lt;artifactId&gt;a&lt;/artifactId&gt;<br />
+&lt;/dependency&gt;</div>
+<p>이렇게만 설정해 됩니다.</p>
+<p>그런데.. Spring BOM, Hinbernate BOM, Test BOM과 같이 여러 종류의 BOM이 있으면 어떻게 해야 할까요? 단일 상속 밖에 안 되는데.. 그럼 managed dependency는 못 쓰는걸까요?</p>
+<p>네 못 씁니다. Maven 2.0.9 이전까지는 그냥 일일히 버전과 scope 명시해 줘야 합니다. 그런데 몇일전에 2.0.9가 나왔죠. 캬캬캬. 몇일동안 끙끙 앓고있던 문제인데 풀고나니 별거 아니네요. 이론...</p>
+<p>&nbsp;이제 남은일은 이 기능을 이용해서 어떻게 효율적인 BOM과 POM을 구성하느냐 입니다.</p>
+<p>봄폼봄폼봄폼봄폼봄폼폼폼봄봄봄폼봄폼봄봄봄폼폼</p>

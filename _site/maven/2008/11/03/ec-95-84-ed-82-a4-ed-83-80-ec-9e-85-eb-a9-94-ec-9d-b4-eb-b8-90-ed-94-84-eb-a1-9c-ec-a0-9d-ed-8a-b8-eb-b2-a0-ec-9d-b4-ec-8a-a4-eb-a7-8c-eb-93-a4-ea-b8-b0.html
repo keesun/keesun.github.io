@@ -1,0 +1,33 @@
+<p>메이븐에는 아주 괜찮아 보이는 기능이 하나 있습니다. 프로젝트 기본 구조를 생성해주는 아키타입이라는 기능입니다. 매번 프로젝트 시작할 때마다 pom.xml에 필요한 라이브러리 정의한 것조차 매우 귀찮습니다. 웹 프로젝트일 경우에는 자주 사용하는 설정 파일들까지도 매번 다른 프로젝트에서 복사해서 붙여 넣던지 이클립스에 등록한 템플릿 코드를 사용해서 찍어내다시피 합니다. 이런 것들을 전부 처음부터 프로젝트 시작할 때 가지고 있는 상태에서 시작한다면...정말 좋겠죠? ㅎㅎ 하지만 공짜는 없었습니다.</p>
+<p>OSAF 웹 애플리케이션 샘플을 아키타입으로 만들어서 OSAF를 사용한 웹 개발을 편리하게 할 수 있는 기능을 제공하려고 마음 먹고 아키타입 개발을 시작했습니다. (원래 오전에 할려고 했는데 블로깅하다보니. 밥먹을 시간이고 밥먹고 좀 놀다보니;;; 어느새 2시..ㄷㄷㄷㄷ)</p>
+<p><a href="http://maven.apache.org/plugins/maven-archetype-plugin-1.0-alpha-7/examples/archetype.html" target="_blank">http://maven.apache.org/plugins/maven-archetype-plugin-1.0-alpha-7/examples/archetype.html</a></p>
+<p>위 링크에 나와있는 맨땅에서 아키타입을 만드는 방법은 완전 완전 완전 완전 완전 노가다입니다. pom.xml 만 살짝 수정하는 아키타입을 만들꺼라면 상관없는데.. 제가 만들고자 하는 아키타입을 기본으로 제공할 파일들이 엄청나게 많습니다. 그럴 때 저런 방법으로 아키타입을 만드는건.. 그냥... 너 좀 고생해봐라.. 라는 것 밖에 안 됩니다.</p>
+<p>제가 선택한 방법은 <br />
+<a href="http://maven.apache.org/plugins/maven-archetype-plugin/advanced-usage.html" target="_blank"><br />
+http://maven.apache.org/plugins/maven-archetype-plugin/advanced-usage.html</a></p>
+<p>링크에서부터 느껴지는 포스. 어드밴스드.. 하지만 이 녀석으로 아키타입 만드는 방법도 노가다가 필요합니다. 그다지 행복하진 않았습니다.</p>
+<p>만드는 방법을 보죠. 아주 간단합니다.<br />
+<img src="/assets/nk4.png" class="aligncenter" width="400" /><img src="/assets/mk5.png" class="aligncenter" width="400" /><img src="/assets/nk5.png" class="aligncenter" width="400" /></p>
+<p></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);"><span style="font-weight: bold;">0. 프로젝트 정리</span></p>
+<p>기존 프로젝트에서 아키타입에 포함시키지 않을 폴더와 파일을 제거합니다. 버전 관리를 하고 있는게 안전하겠죠.</p>
+<p>특<br />
+히 제거해야 할 폴더는 이클립스 빌드 패스에 output 폴더로 지정되어 있는 폴더 그걸 삭제해 줍니다. 그럼 폴더만 다시<br />
+생기고 그 안에 있는 파일과 폴더들은 삭제됩니다. 기본적으로 그 폴더는 Package Explorer에선 안 보이고<br />
+Navigator에서 봐야 보일 겁니다.<br />
+<span style="font-weight: bold;"><br />
+1. mvn archetype:create-from-project</span></p>
+<p>아키타입으로 만들 프로젝트로 이동해서 위 명령을 입력해 줍니다. 아.. 아닙니다. 주의할 것이 있는 프로젝트 기본 인코딩이 UTF-8이면 그냥 저렇게 실행해도 되지만, 저처럼 euc-kr이면 -DdefaultEncoding=euc-kr 옵션을 추가합니다.</p>
+<p><span style="font-weight: bold;">2. 생성된 파일들 확인(노가다)</span></p>
+<p>위 명령을 실행하면 target/generated~~/archytype/ 밑에 아키타입에 추가할 파일들이 쫙 보입니다. 그 파일들을 전부 열어서 원하는 대로 생성될지 확인합니다. 특히 인코딩과 ${packageInPathFormat} 같은걸 제대로 확인합니다.</p>
+<p><span style="font-weight: bold;">3. 로컬 저장소에 설치합니다.</span></p>
+<p>target/generated~~/archytype/ 폴더로 이동해서 mvn install을 실행합니다. 그럼 로컬 저장소에 아키타입이 설치됩니다.</p>
+<p><span style="font-weight: bold;">4. 로컬 저장소의 아키타입을 이용해서 프로젝트를 생성합니다.</span></p>
+<p>mvn archetype:generate -DarchetypeCatalog=local</p>
+<p>이 명령어를 사용하면 아키타입 목록을 메이븐 중앙 저장소가 아니라 로컬 저장소에서 읽어옵니다. 이 목록에 위에서 설치한 아키타입이 보일 겁니다. 그 번호를 선택해줍니다.</p>
+<p>그리고 필요한 정보를 줘서 프로젝트를 생성하면 됩니다.<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;">5. 원격 저장소에 배포</span></p>
+<p>최종적으로 프로젝트를 확인하고 원하는대로 생성이되면 원격 저장소에 배포해서 다른 개발자도 이용할 수 있게하면 되겠습니다.</p>
+<p>배포하는 방법은 mvn install하던 장소로 이동해서 mvn deploy를 하면 되겠죠. 간단 간단.</p></div>
+<p>ps: 한글 문제는 해결했지만, 패키지가 동적으로 안 바뀌는 문제가 남아있습니다. -_-;; 흠... 이상하네. package명을 주면 만들 때 알아서 바껴야지 왜 패키지는 고정적으로 만들고 import 문에 있는 package만 바뀌는거얌.. 어쩌라구 ㅠ.ㅠ</p>
+<p></p>

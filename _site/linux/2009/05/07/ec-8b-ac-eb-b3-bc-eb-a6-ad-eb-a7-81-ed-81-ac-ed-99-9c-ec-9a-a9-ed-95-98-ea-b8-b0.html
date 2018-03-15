@@ -1,0 +1,6 @@
+<p>홈 디렉토리의 bash_profile 이나 /etc/profile에서 path 설정을 할 때 심볼릭 링크를 걸어둔 폴더로 path 설정을 하고, 해당 폴더가 참조하는 폴더를 변경하는 것으로 버전업을 하는 방법이 아주 유용하더군요.</p>
+<p><img src="/assets/cfile2.uf.122591094A029DF27454AC.png" class="aligncenter" width="600" height="247" alt="" filename="2.png" filemime="image/png" /><br />
+Ant, Maven, Java 버전업을 하라는 지시를 받고 역시 작업에 착수했습니다. 사부님이 폴더 정리를 잘 해두셔서 어떻게 링크가 걸려있고 Path가 어디에 걸려있는지 한 눈에 들어왔습니다. 물론 명시적으로 확인하려면 ls -al로 보면 되죠.</p>
+<p>ln -s 링크대상 링크이름</p>
+<p>이런식으로 심볼릭 링크를 만들면 되더군요. 편했습니다. 단, Maven은 심볼릭 링크로 관리하고 있지 않아서 maven 심볼릭 링크를 만들고 해당 심볼링 링크를 path에 등록해 주었습니다. 다음에 버전업을 할 때는 이 심볼릭 링크만 수정해 주면 됩니다. 캬~~ 귿!!!</p>
+<p></p>

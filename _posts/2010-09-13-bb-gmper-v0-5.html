@@ -1,0 +1,65 @@
+---
+layout: post
+title: "[BB] GMPer v0.5"
+date: 2010-09-13 11:13:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323162511'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>시작이 반이니까 이제 절반 했다고 볼 수 있겠다. 우선, 초반에 난항을 겪었던 Feed URL 문제는 아직 해결하지 못했고 그 대안이 될 만한 방법을 찾아놨다.</p>
+<p>Feed는 XML 형태인데 이걸 JSON으로 바꿔주는 서비스가 있었다. 없으면 내가 만들까 했지만 역시나 검색해보니 이미 만들어져 있었다.</p>
+<p><a href="http://www.blastcasta.com/convert-feed-to-json.aspx">http://www.blastcasta.com/convert-feed-to-json.aspx</a></p>
+<p>여기서 내가 필요한 Feed URL을 입력하면 JSON으로 Feed를 받을 수 있는 URL을 만들어 준다. 자바스크립트에서는 그 URL을 사용해서 JSON을 받아와서 사용하면 되겠다. 난 DOM API를 쓰기보단 JSON을 사용하는게 좀 더 편한것 같고 저 URL을 썼을 때 만약 Feed URL이 호출 안되던 문제만 해결된다면 일단 Feed 목록 Listing은 해결할 수 있겠다고 생각했다.</p>
+<p>그래서 일단 진도를 다음으로 넘어갔다. 다음 진도는 가장 중요한 기능은 feed에 들어있는 MP3 파일을 저장하거나 실행하는 일이었는데 이건 보통의 데스크탑 브라우저에서는 기본으로 지원되는 액션이지만 블랙베리 브라우저에서는 어떻게 되는지 예측할 수 없었다. 그래서 일단 해봤는데..</p>
+<p>처음엔 해당 MP3 파일에 접근할 수 없다는 에러가 나온다.. config.xml에서 해당 MP3 파일 주소를 domain으로 추가해줘서 해결했다. 물론 MP3 파일을 일일히 등록할 필요 없이 도메인 부분만 등록하고 해당 도메인의 하위 도메인을 전부 허용한다는 옵션을 줬다.</p>
+<p>이제 어떻게 되는지 다시 시뮬레이터로 돌려봤다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/12.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="1" border="0" alt="1" src="{{ site.baseurl }}/assets/1_thumb2.jpg" width="137" height="244" /></a> <a href="http://whiteship.me/wp-content/uploads/2010/09/2.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="2" border="0" alt="2" src="{{ site.baseurl }}/assets/2_thumb.jpg" width="137" height="244" /></a> </p>
+<p>우선 접근이 허용된 MP3 파일 주소를 클릭하면 저렇게 기본 브라우저가 동작하면서 저장할지 열지를 물어본다.</p>
+<p>열기를 누르면..</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/3.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="3" border="0" alt="3" src="{{ site.baseurl }}/assets/3_thumb.jpg" width="137" height="244" /></a> </p>
+<p>바로 재생된다. 그런데 아래있는 컨트롤은 제대로 동작하지 않는다. 뒤로가기 버튼을 누르면 다시 웹 앱으로 돌아간다. 이번엔 저장을 눌러보자.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/4.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="4" border="0" alt="4" src="{{ site.baseurl }}/assets/4_thumb.jpg" width="137" height="244" /></a> <a href="http://whiteship.me/wp-content/uploads/2010/09/5.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="5" border="0" alt="5" src="{{ site.baseurl }}/assets/5_thumb.jpg" width="137" height="244" /></a> </p>
+<p>저장할 폴더를 선택하라고 하고 Save를 누르면 파일 다운로드가 진행된다. ㅇㅋ</p>
+<p>이제 저장된 파일 목록을 읽어서 보여주는 탭을 구현하고.. 배포만 하면 V1.0 구현이 끝날 것 같다. 아참;; Feed를 뿌리는 방법을 아까 JSON Feed URL로도 바꿔야겠다. 오늘 안에 다 해버리자. 파이팅…</p>

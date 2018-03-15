@@ -1,0 +1,10 @@
+<p>오늘 테스트를 "제대로" 만들어야 함을 배웠습니다. 개발하고 배우고 느끼고 공부하고 혼나고 가끔 이렇게 공유도 하고 재밌습니다.</p>
+<p>제가 만든 클래스는 제네릭 프로퍼티 에디터로, 특정 객체 타입이 오면 해당 객체가 가지고 있는 id 값을 화면에 보여주기 위한 클래스입니다. 즉 ${member} 라고 JSP에 적어두면 member 객체의 id를 사용합니다.</p>
+<p>구현도 잘 했고, 테스트도 잘 했다고 생각해서 기분이 좋았었습니다. 그런데 이게 왠걸.. 실제로 돌아가는걸 보니까 잘 안 되는 것입니다. 제가 만든건 GenericPropertyEditor 입니다. 코드는 공개 안 하려고 했지만 어쩔 수 없네요.ㅋㅋ</p>
+<p>아래가 구현한 코드입니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public String getAsText() {<br />&nbsp; &nbsp; &nbsp; &nbsp; T entity = (T) this.getValue();<br />&nbsp; &nbsp; &nbsp; &nbsp; logger.info("entity = " + entity);<br />&nbsp; &nbsp; &nbsp; &nbsp; if (entity == null)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return "";<br />&nbsp; &nbsp; &nbsp; &nbsp; else<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return String.valueOf(SimpleReflectionUtils.getValue(entityClass, entity, "id"));<br />&nbsp; &nbsp; }</div>
+<p>저걸 테스트 해보려고 다음과 같은 코드를 작성했습니다.
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void getAsText() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Supp supp = new Supp();<br />&nbsp; &nbsp; &nbsp; &nbsp; int id = 10;<br />&nbsp; &nbsp; &nbsp; &nbsp; supp.setId(id);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; suppPropertyEditor.setValue(supp);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(String.valueOf(id), suppPropertyEditor.getAsText());<br />&nbsp; &nbsp; }</div>
+<p>잘 돌아갑니다.</p>
+<p>그런데 분명 위의 코드에는 문제가 있습니다. 무슨 문제인지는 비밀입니다. 스프링, 하이버, @ManyToOne,Lazy Initialization, Proxy, id, getter, field 등을 조합해서 생각하면 문제를 발견하실 수도 있으실 테지만, 전 상상도 못했었습니다.</p>
+<p>테스트를 기계적으로 만들지 말고 해당 클래스가 어떤 상황에서 어떤 역할을 하는지 고려해서 작성해야 한다는 걸 느꼈습니다.</p>

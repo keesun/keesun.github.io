@@ -1,0 +1,12 @@
+<p>자, 드디어 토비님의 @Enable* 발표 끝판 왕. Configurer 패턴을 볼차례다.</p>
+<p>먼저, 확장 가능한 포인트를 인터페이스로 정의한다.</p>
+<p>[gist id=1633571 file=NameConfigurer.java]</p>
+<p>그리고 HelloConfig에서는 이 인퍼테이스 타입의 빈을 주입받아 사용하도록 코드를 변경한다.</p>
+<p>[gist id=1633571 file=HelloConfig.java]</p>
+<p>EnableHello는 이제 더이상 별도의 속성이 필요없다.</p>
+<p>[gist id=1633571 file=EnableHello.java]</p>
+<p>그리고 AppConfig가 확장 포인트를 구현하도록 한다.</p>
+<p>[gist id=1633571 file=AppConfig.java]</p>
+<p>자, 이렇게 하면, AppConfig 자체도 @Configuration이니까 빈으로 등록될테고, 이 빈은 확장 가능한 포인트인 NameeConfigurer의 구현체니까, HelloConfig에 @Autowired로 주입이 되고, 그 안에서 확장 포인트가 호출되어, 빈의 특정 부위를 확장할 수 있는 형태가 된다. 바로 이 구조가 @EnableMVC의 구조와 같고, 이런 구조를 스프링에서는 Configurer 패턴이라고 부른다.</p>
+<p>아.. 정말 스프링 DI의 끝을 모르겠다. 죽여준다.</p>
+<p>마지막으로.. 감기 때문에 고생이신데도, 이렇게 멋지고 좋은 내용을 발표해주신 토비님,정말 감사합니다.</p>

@@ -1,0 +1,64 @@
+---
+layout: post
+title: 유용한 OSGi 팁
+date: 2008-07-10 01:58:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Appendix E
+tags:
+- Fragment
+- OSGi
+- Spring DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168430'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">E.1. OSGi Fragments</span></p>
+<p>OSGi R4에 포함된, fragment는 매우 유용하면서도 강력한 기능이다. fragment는 "호스트 번들에 붙일 수 있는 번들"로써, 대상 번들에 컨텐츠를 추가할 수 있다. fragment는 자신의 클래스로더나 bundle activator를 사용할 수 없으며 호스트에 존재하는 정보를 재정의할 수 없다. 간략하게 fragment 번들을 사용해서 번들을 확장 할 수 있다. 따라서 resource, 클래스, 또는 manifest 요소들까지도 확장 가능한 형태가 된다. 스펙을 다시 인용하면 다음과 같다. "fragment의 주요 사용처는 로케일에 따른 번역 파일 제공이다. 이 것을 사용하여 주요 애플리케이션 번들에서 독립적으로 번역된 파일을 사용할 수 게 해준다."</p>
+<p>Spring DM에서 이 기능은 extender와 같은 컴포넌트들을 설정할 때 매우 유용하다. 간단하게 추가할 리소스를 번들로 묶고 Manifest에 한 줄을 추가하면 된다.</p>
+<p>Fragment-Host: &lt;host bundle symbolic name&gt;</p>
+<p>위 설정을 가지고 있는 번들은 fragment이고 저기에 기술한 symbolic name을 가진 호스트 번들에 구성물들이 첨가가 된다. fragment와 host 번들 symbolic name은 달라야 한다. 예를 들어, Spring DM extender에 fragment를 추가하려면, 다음과 같은 manifest를 작성하면 된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Manifest-Version: 1.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (1)<br />Bundle-ManifestVersion: 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (2)<br />Fragment-Host: org.springframework.bundle.osgi.extender &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (3)<br />Bundle-SymbolicName: org.mydomain.project.fragment &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (4)<br />Bundle-Name: my-fragment &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (5)<br />Bundle-Description: Fragment attached to Spring-DM extender &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (6)</div>
+<p>1 &nbsp;&nbsp; Manifest 버전<br />2 &nbsp;&nbsp; OSGi 번들 버전. 기본값인 1이면 OSGi R3 번들이고 2면 OSGi R4 번들이라 뜻.<br />3 &nbsp;&nbsp; 이 번들을 부착할 번들의 symbolic name. 여기서는 spring-osgi-extender.jar를 가리키는 org.springframework.bundle.osgi.extender로 설정 함. Fragment-Host를 사용하여 OSGi 플랫폼에 자신이 fragment라는 특별한 번들임을 알려줌.<br />4 &nbsp;&nbsp; fragment symbolic name.<br />5 &nbsp;&nbsp; bundle name - 부가적이지만 유용한 헤더(가독성 측면에서)<br />6 &nbsp;&nbsp; bundle 설명 - OSGi 플랫폼이 사용하기 위한 것이 아니라, bundle name 처럼, 사람이 읽기 편한 헤더. 번들의 목적을 확인하기 위한 용도로 사용.</p>
+<p>같은 symbolic name을 가진 호스트 번들이 여러 개일 때는 버젼을 명시해서 하나를 선택할 수 있다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">Fragment-Host: org.springframework.bundle.osgi.extender;bundle-version=1.1.0</div>
+<p>버전의 기본값은 [0.0.0,∞) 다.</p>
+<p></p>

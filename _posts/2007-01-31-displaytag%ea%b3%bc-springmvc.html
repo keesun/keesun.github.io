@@ -1,0 +1,61 @@
+---
+layout: post
+title: DisplayTag과 SpringMVC
+date: 2007-01-31 04:23:05.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- DisplayTag
+- springmvc
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323093635'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>SpringMVC의 컨트롤러에서 원하는 페이지 이름(여기서는 index)으로 memberList 객체를 memberList라는 이름으로 전해 줬습니다.<br />[#M_ more.. | less.. | &nbsp; &nbsp; protected ModelAndView handleRequestInternal(HttpServletRequest request,<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpServletResponse response) throws Exception {</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; List&lt;Member&gt; memberList = memberRepository.getAllMembers();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return new ModelAndView("index", "memberList", memberList);<br />
+ &nbsp;&nbsp; }_M#]그리고 .jsp로 가도록 View Reslover를 등록 해뒀기 때문에 index -&gt; index.jsp에 membeList객체를 들고 찾아갑니다. 그래서 index.jsp에서는 다음 처럼 dispalyTag에 바로 이 memberList 라는 이름을 사용했더니 어젯밤에 잠들기 전에 본것과 같은 화면이 출력됐습니다.<br />[#M_ more.. | less.. | &nbsp; &nbsp; &lt;display:table name="memberList" pagesize="5" export="true"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="name" title="이름" sortable="true" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="email" autolink="true" sortable="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="phone" title="연락처" sortable="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="blogAddress" title="Blog" autolink="true" sortable="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;display:column property="messengerId" title="MSN" sortable="true"/&gt;<br />&nbsp; &nbsp; &lt;/display:table&gt;_M#]위 코드는 컬럼명을 원하는 이름으로 주고(title), 페이징을 하고(pagesize), 컬럼별로 정렬이 가능하도록(sortable) 했습니다. 아. 그리고 exel, pdf, cvs(?), rtf(?) 형식의 파일로 데이타를 추출해 낼 수 있도록 했습니다.(export=true)<br /><img src="{{ site.baseurl }}/assets/bm245.jpg" class="aligncenter" width="500" height="214" alt="사용자 삽입 이미지" />이런 화면이 보입니다. 원하는 대로 된 것 같지만... 페이지 번호를 눌러보고 메뉴별로 눌러서 정렬을 해보려고 하면 다음과 같은 에러를 만나게 됩니다.<br /><img src="{{ site.baseurl }}/assets/bm246.jpg" class="aligncenter" width="500" height="182" alt="사용자 삽입 이미지" />=&gt; page 번호 클릭 했을 때 발생하는 에러</p>
+<p><img src="{{ site.baseurl }}/assets/bm247.jpg" class="aligncenter" width="500" height="159" alt="사용자 삽입 이미지" />=&gt; 컬럼이름을 눌러서 정렬하고 싶었는데 발생한 현상</p>
+<p>다음과 같이 수정을 하면 원하는 대로 동작합니다.<br />[#M_ more.. | less.. | <br /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp;&lt;jsp:scriptlet&gt;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Object foo = session.getAttribute( "members" );</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if( foo == null ) {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;java.util.List memberList = (java.util.ArrayList)request.getAttribute("memberList");</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;session.setAttribute( "members", memberList );</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp;&nbsp; &nbsp;&lt;/jsp:scriptlet&gt;</span></p>
+<p>&nbsp;&nbsp; &nbsp;&lt;h2&gt;All Member's Info&lt;/h2&gt;</p>
+<p>&nbsp;&nbsp; &nbsp;&lt;display:table name="<span style="color: rgb(255, 0, 0);">sessionScope.members</span>" pagesize="5" export="true"&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;display:column property="name" title="이름" sortable="true" /&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;display:column property="email" autolink="true" sortable="true"/&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;display:column property="phone" title="연락처" sortable="true"/&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;display:column property="blogAddress" title="Blog" autolink="true" sortable="true"/&gt;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;display:column property="messengerId" title="MSN" sortable="true"/&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/display:table&gt;_M#]추가 or 수정한 부분을 빨간표시를 했습니다.</p>

@@ -1,0 +1,111 @@
+---
+layout: post
+title: "[ClassLoader 퀴즈 3] Whiteship은 Whiteship일까 아닐까?"
+date: 2010-02-19 07:46:37.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- ClassCastException
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322833824'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>퀴즈 2번 문제의 정답을 맞추신 분이라면 클래스패스와 클래스로더의 관계에 대해 잘 알고 계신 것 같습니다. temp 폴더는 클래스패스에 들어있지 않다고 했었죠. 따라서 URLClassLoader.loadClass를 실행했을 때 그것의 상위 클래스로더인 AppClassLoader가 읽어오지 못하고 자기 자신이 가져오게 됩니다.&nbsp;
+<div id="">
+
+</div>
+<div>
+따라서 결국 제가 원하던대로 whiteshipClass1과 whtieshipClass2는 각각 다른 클래스로더(uCL1, uCL2)들이 가져오게 됐습니다.</div>
+<div>
+
+</div>
+<div>
+이쯤 말씀드렸으니.. 정답은 뭐... 당연한 거니까 패스.</div>
+<div>
+
+</div>
+<div id="">
+<div id="">
+&nbsp;&nbsp; &nbsp;@Test(expected = ClassCastException.class)</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public void classCastException() throws Exception {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;URL url = new URL("file:C:/intellij9-workspace/springsprout2/temp/");</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;URLClassLoader uCL1 = new URLClassLoader(new URL[]{url});</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Class whiteshipClass1 = uCL1.loadClass("Whiteship");</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Object whiteship1 = whiteshipClass1.newInstance();</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;URLClassLoader uCL2 = new URLClassLoader(new URL[]{url});</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Class whiteshipClass2 = uCL2.loadClass("Whiteship");</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Object whiteship2 = whiteshipClass2.newInstance();</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(whiteshipClass1, is(not(whiteshipClass2)));</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;whiteshipClass1.cast(whiteship2);</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+이번에는 주관식입니다.</div>
+<div>
+
+</div>
+</div>
+<div id="">
+위 테스트는 통과 합니다.왜 통과하는 걸까요?&nbsp;</div>
+<div id="">
+즉, 왜 ClassCastException이 발생하는 걸까요?</div>
+</div>

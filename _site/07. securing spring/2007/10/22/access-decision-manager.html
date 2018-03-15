@@ -1,0 +1,27 @@
+<p>AccessDecisionManager 인터페이스를 사용하여 보안이 필요한 자원에 접근하는 사용자가 접근 권한이 있는지<br />
+확인합니다. AccessDecisionManager는 여러개의 AccessDecisionVoter 에게 실제 권한 확인 역할을<br />
+위임하며, 그 결과를 가지고 자원의 공개 여부를 결정합니다.</p>
+<p>Acegi는 AccessDecisionManager의 구현체로 여러 Voter들의 투표 결과를 가지고 판단하는 방법에 따라 세<br />
+개의 클래스를 제공합니다. AffirmativeBased(Voter들 중에 하나라도 허락 하면 공개),<br />
+ConsensusBased(Voter들의 결과가 일치하면 공개), UnanimousBased(모든 Voter들이 허락하면 공개)<br />
+클래스입니다. </p>
+<p>AccessDecisionVoter 인터페이스의 핵심 메소드는 vote() 메소드로, 실제 요청한 자원에 대한 접근의 허가 여부를 결정하는 메소드입니다. 이 메소드는 결과값으로 세 개의 값 중 하나를 반환합니다.</p>
+<p>ACCESS_GRANTED : 보안이 필요한 자원에 접근을 허용.</p>
+<p>ACCESS_DENIED : 보안이 필요한 자원에 접근을 거부.</p>
+<p>ACCESS_ABSTAIN : 나는 모르겠다.</p>
+<p>Acegi가 제공하는 AccessDecisionVoter 인터페이스 구현체 중에 하나인 RoleVoter는 vote() 메소드에<br />
+전달되는 인자 중에 하나인 ConfigAttribute를 바탕으로 해당 자원에 대한 접근 권한이 있는지 Role 정보를 통해서<br />
+판단합니다.</p>
+<p>ConfigAttribute는 필터나 다른 곳에서 설정할 것이고, RoleVoter에서 최소로 설정할 것은 Role 정보를<br />
+가져오는 방법입니다. 기본으로 Role_ 접두어가 붙어있는 녀석들을 읽어오는데, 이 접두어를 변경할 수 있으며, 아예 입력하지<br />
+않을 수도 있습니다.(이 방법은 비추하고 있습니다.)[footnote]An empty role prefix means that<br />
+the voter will vote for every ConfigAttribute. When there are different<br />
+categories of ConfigAttributes used, this will not be optimal since the<br />
+voter will be voting for attributes which do not represent<br />
+roles.[/footnote]</p>
+<p>정리하자면, access decision manager를 등록할 때는 어떠한 방식으로 투표 결과를 처리할 것인지에 따라<br />
+AccessDecisionManager 구현체를 선택하고, RoleVoter에 Role을 나타낼 때 사용한 접두어를 설정해<br />
+줍니다.</p>
+<p><img src="/assets/co417.jpg" class="aligncenter" width="600" height="244" alt="사용자 삽입 이미지" /></p>
+<p>bean 설정은 다음과 같이 간단한 편입니다.<br />
+<img src="/assets/do410.jpg" class="aligncenter" width="502" height="255" alt="사용자 삽입 이미지" /></p>

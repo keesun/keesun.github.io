@@ -1,0 +1,75 @@
+---
+layout: post
+title: WebTUnit 사용 시나리오 2. 웹 테스트 + 테스트 메서드 단위 데이터 관리
+date: 2009-05-15 03:50:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 시나리오
+- 웹투리
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322836033'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 이전 시나리오와 비슷하지만, 테스트 데이터를 클래스 단위가 아니라 메서드 단위 즉, JUnit에서 테스트 단위로 관리하는 방법입니다. 아직은 미완성이라고 볼 수 있는데, 지금 상태에서도 아래와 같이 코딩을 한다면, 이 시나리오가 가능합니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+@RunWith(WebTestRunner.class)<br />
+@WarConfiguration("springsprout")<br style="color: rgb(92, 127, 176); font-weight: bold;" /><span style="color: rgb(92, 127, 176); font-weight: bold;">//@DataConfiguration(fileName="testData.xml")</span><br />
+public class SampleWebTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void sinario1(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DataManager dm = new DefaultDataManager("integration/sample/testData1.xml", DataType.XML);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dm.insertTestData();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("test1");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @WebTest<br />
+&nbsp;&nbsp;&nbsp; public void sinario2(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DataManager dm = new DefaultDataManager("integration/sample/testData2.xml", DataType.XML);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dm.insertTestData();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.out.println("test2");<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p></div>
+<p>
+@DataConfiguration을 클래스에서 제거하면 되고, 소스코드에서 직접 DataManager API를 사용하여, 테스트 데이터를 넣을 수 있습니다. 위 예제에서는 두 개의 테스트에서 각각 다른 테스트 데이터를 넣고 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile2.uf.13054A0C4A0CE62163D237.png" class="aligncenter" width="600" height="319" alt="" filename="1.png" filemime="image/png" /><br />
+테스트 데이터를 매번 지우고 싶다면, deleteTestData() 메서드를 이용해도 되지만, insertTestData가 내부적으로 DBUnit의 CLEAN_INSERT를 이용하기 때문에 그럴 필요는 없습니다.</p>
+<p>이 코드는 차후에 JUnit 4.7의 인터셉터 기능을 이용해서 개선할 예정입니다. 지금은 스냅샷 정도록 생각해주세요</p>

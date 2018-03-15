@@ -1,0 +1,170 @@
+---
+layout: post
+title: Lesson 1. Getting Started
+date: 2006-09-25 09:13:28.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323126620'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font style="color: rgb(212, 26, 1); font-family: verdana,arial,helvetica,sans-serif" size="6">Lesson 1. Getting Started</font></p>
+<p>1장에서 배울 것은 :
+<ul>
+<li>간단한 Java class 만들기</li>
+<li>Java class를 가지고 노는 test class 만들기</li>
+<li>JUnit famework 사용하기</li>
+<li>생성자에 대해 배우기</li>
+<li>위에서 작성한 code 리팩토링하기.</li>
+</ul>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif; color: rgb(255, 118, 53)" size="5"><br />
+Testing</font></p>
+<p class="docText"><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">Test-driven development means that you will write tests for virtually every bit of code.</span> It also means that you will write the tests first. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">The tests are a means of specifying what the code needs to do.</span> After writing the corresponding code, the tests are run to ensure that the code does what the tests specify.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">The production classes you build should know nothing about the tests written for them.<br />
+</span><br />
+<font style="color: rgb(255, 118, 53)" size="5">Design</font></p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">You start by building only high-level designs, not highly detailed specifications.</span> You will continually refine the design as you understand more about the customer needs. You will also update the design as you discover what works well and what doesn't work well in the Java code that you build. The power of <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">object-oriented development can allow you this flexibility, the ability to quickly adapt your design to changing conditions.</span></p>
+<p><font style="color: rgb(255, 118, 53)" size="5">A Simple Test</font></p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">You must designate the class as <tt>public</tt> in order for the testing framework JUnit to recognize it.</span>
+<p class="docText">The classpath is a list of locations separated by semicolons under Windows or colons under Unix. You supply the classpath to both the compiler and the Java VM.<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> A location can be either a </span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">JAR file</span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> (which contains compiled class files by definition) or </span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">a directory</span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> that contains compiled class files.</span></p>
+<p>ex) javac -classpath c:\junit3.8.1\junit.jar StudentTest.java(the abbreviated keyword <tt>-cp</tt>.)</p>
+<p><font style="color: rgb(255, 118, 53)" size="5">JUnit</font></p>
+<p>Not only does the Java compiler need to know where the JUnit classes are, but the Java VM also needs to be able to find these classes at runtime so it can load them up as needed.</p>
+<pre>java -cp .;c:\junit3.8.1\junit.jar junit.awtui.TestRunner StudentTest<br />
+</pre>
+<p><img src="{{ site.baseurl }}/assets/1073318009.jpg" class="aligncenter" width="507" height="444" alt="" /><br />
+<font style="color: rgb(255, 118, 53)" size="5">Adding a Test</font></p>
+<pre>public class StudentTest extends junit.framework.TestCase {<br />
+   <span class="docEmphStrong">public void testCreate() {</span><br />
+   }<br />
+}<br />
+</pre>
+<ul>
+<li>
+<p class="docList">the method must be declared <tt>public</tt>,</p>
+</li>
+<li>
+<p class="docList">the method must return <tt>void</tt> (nothing),</p>
+</li>
+<li>
+<p class="docList">the name of the method must start with the word <tt>test</tt>, in lowercase letters, and</p>
+</li>
+<li>
+<p class="docList">the method cannot take any arguments <tt>().</tt></p>
+</li>
+</ul>
+<p><img src="{{ site.baseurl }}/assets/1306772597.jpg" class="aligncenter" width="509" height="449" alt="" /></p>
+<table style="color: rgb(255, 118, 53); font-family: arial,helvetica,sans-serif" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td valign="top">
+<h3 class="docSection1Title"><font size="5">Creating a Student</font></h3>
+</td>
+</tr>
+</tbody>
+</table>
+<blockquote><p><span class="docEmphStrong">new Student("Jane Doe");</span></p></blockquote>
+<p>You terminate each statement with a semicolon <tt>(;)</tt>.
+<p class="docText">You place the <tt>new</tt> <span class="docEmphasis">keyword</span> before the name of the class to instantiate.</p>
+<p class="docText">String literals represent object instances of the predefined Java class java.lang.String.</p>
+<p class="docText">When the Java VM executes the <tt>new</tt> <em><a class="docLink" href="app01.html#app01gloss01entry160">operator</a></em> in this statement, it allocates an area in memory to store a representation of the Student object. The VM uses information in the Student class definition to determine just how much memory to allocate.</p>
+<p></p>
+<h3 style="font-family: arial,helvetica,sans-serif; color: rgb(255, 118, 53)" class="docSection1Title" id="460482-876"><font size="5">Creating the Student Class</font></h3>
+<p>
+class Student {}</p>
+<table style="font-family: arial,helvetica,sans-serif; color: rgb(255, 118, 53)" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td valign="top">
+<h3 class="docSection1Title"><font size="5">Constructors</font></h3>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A constructor looks a lot like a method. It can contain any number of statements and can take any number of arguments like a method. However,<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> you must always name a constructor the same as the class in which it is defined.</span> Also, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">you never provide a return value for a constructor, not even <tt>void</tt>.</p>
+<p></span>Local Variables</p>
+<blockquote><p><span class="docEmphStrong">Student student =</span> new Student("Jane Doe");</p></blockquote>
+<p class="docText">When the Java VM executes this statement, it executes the code to the right-hand side of the assignment operator (<tt>=</tt>) first, creating a Student object in memory. The VM takes note of the actual memory address where it places the new Student object. Subsequently, the VM assigns this address to a reference on the left-hand side, or first half, of the statement.</p>
+<p>
+<img src="{{ site.baseurl }}/assets/1288829236.jpg" class="aligncenter" width="517" height="280" alt="" /></p>
+<table style="color: rgb(255, 118, 53)" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td valign="top">
+<h3 class="docSection1Title"><font size="5">Returning a Value from a Method</font></h3>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="docEmphStrong">String studentName = student.getName();</span></p>
+<p>you are sending a message to the Student object, using the <tt>student</tt> reference assigned to in the previous statement.<br />
+<span class="docEmphStrong"><br />
+</span> <span class="docEmphStrong">String getName() {</span>   <span class="docEmphStrong">}</span></p>
+<p>This <tt>getName</tt> method specifies instead a return type of String.</p>
+<p><span class="docEmphStrong">return "";</p>
+<p></span>The <tt>return</tt> statement here returns an empty String objecta String with nothing in it.</p>
+<table style="color: rgb(255, 118, 53)" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td valign="top">
+<h3 class="docSection1Title"><font size="5">Refactoring</font></h3>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The first step is to eliminate the unnecessary local variables.<br />
+The second step: It is considered poor programming practice to embed String literals throughout your code. One reason is that the code can be difficult to follow if it is not clear what each String literal represents.</p>
+<table style="color: rgb(255, 118, 53)" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody>
+<tr>
+<td valign="top">
+<h3 class="docSection1Title"><font size="5"><tt>this</tt></font></h3>
+</td>
+</tr>
+</tbody>
+</table>
+<p>There are two ways to ensure that the value of the formal parameter is assigned to the field:<br />
+The first approach means you must rename either the parameter or the field.<br />
+The second approach for disambiguating the two is to use the same name for both, but where necessary refer to the field by prefixing it with the Java keyword <tt>this</tt>.</p>
+<p><span class="docEmphStrong"><br />
+</span></p>

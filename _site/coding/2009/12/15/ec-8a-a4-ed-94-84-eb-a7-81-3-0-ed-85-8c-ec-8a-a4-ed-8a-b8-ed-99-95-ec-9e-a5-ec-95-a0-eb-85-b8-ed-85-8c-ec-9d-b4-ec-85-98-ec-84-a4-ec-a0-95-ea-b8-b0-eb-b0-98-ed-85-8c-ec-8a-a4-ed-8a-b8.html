@@ -1,0 +1,9 @@
+<p>스프링 3.0 @Configuration에 대한 학습 테스트를 만들다 제일 먼저 찾게 된 것이 애노테이션 설정 기반 테스트 러너입니다. 스프링 XML 설정 파일 말고 애노테이션 설정 자바 파일만 주면 되는게.. 있을 줄 알았습니다.</p>
+<p>하지만 없었습니다. 그래서 만들기로 마음 먹었습니다. 그리고 잘 만들어지면 스프링 이슈에 올려서 소스 코드를 기증할 생각도 가지고 있습니다.(받아 준다면 말이죠.ㅋ)</p>
+<p>일단 처음 할 일은 적당한 확장 지점을 찾는 일인데, 이게 아주 재밌있습니다. <a title="[http://toby.epril.com/?p=946]로 이동합니다." target="_blank" href="http://toby.epril.com/?p=946">어제 사부님이 올려주신 주옥같은 글</a>에서 스프링 내부에서의 DI 활용이 얼마나 멋진가를 보여주셨는데, 테스트 쪽에서도 그런 모습을 볼 수 있습니다.</p>
+<p><img src="/assets/cfile1.uf.1166E30D4B27310137987A.jpg" class="aligncenter" width="600" height="305" alt="" filename="1.jpg" filemime="image/jpeg" /><br />
+스프링 최신 코드(3.0 RC3) 기준이기는 한데 2.5에 추가된 것들이고 그 후에는 변화가 없었습니다. 제가 만들려는 기능과 관련이 있는 클래스만 보고 있습니다. 소스 분석까지 쓰면 너무 길어지고 힘들기 때문에;; 그냥 바로 결론으로 넘어가겠습니다.</p>
+<p>1. 처음에는 AGCL 화장을 시도했지만, AnnotationConfigApplicationContext가 내부에서 사용하고 있는 AnnotatedBeanDefinitionReader와 Scanner는 스프링의 BeanDefinitionReader 인터페이스를 따르고 있지 않아서 그럴 수가 없었습니다.</p>
+<p>2. 한단계 올라가 AbstractContextLoader를 확장하기로 했습니다.</p>
+<p>흠.. 다음은 시나리오를 좀 더 구체적으로 생각해봐야겠습니다. </p>
+<p></p>

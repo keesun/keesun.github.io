@@ -1,0 +1,61 @@
+---
+layout: post
+title: 제 3회 스프링 세미나 토비님 발표 예제 따라하기
+date: 2007-07-31 07:49:44.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 그냥 놀아
+tags:
+- Spring Annotation
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322797701'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>소스 코드<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/cn323.zip" class="aligncenter">cn323.zip</a>먼저 클래스들은 다음과 같은 구조로 되어 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dn312.png" class="aligncenter" width="477" height="60" alt="사용자 삽입 이미지" />Controller는 Service에 Service는 Dao에 종속성을 가지고 있습니다. 예전 같으면 XML의 설정 파일을 사용하여 다음과 같이 종속성 주입을 했을 것 입니다.</p>
+<p>&lt;bean id="controller" class="s21.Controller"&gt;<br />&nbsp; &nbsp; &lt;property name="service" ref="service" /&gt;<br />&lt;/bean&gt;</p>
+<p>또는 2.0의 p 스키마를 이용하여</p>
+<p>&lt;bean id="controller" class="s21.Controller" p:service-ref="service" /&gt;</p>
+<p>또는 autowiring을 사용해서</p>
+<p>&lt;bean id="controller" class="s21.Controller" autowire="byType" /&gt;</p>
+<p>이 밖에도 여러가지 종속성을 설정할 수 있는 방법이 있지만 지금 보신 세가지 방법 중에서도 맨 마지막 방법을 Spring 2.1부터 @Autowired 애노테이션으로 대체 할 수 있습니다.</p>
+<p>현재는 M2 에서 required 속성 하나가 추가가 됐고 타입으로만 종속성을 주입하지만 정식 버전이 나올 때는&nbsp; 더 많은 속성을 지원 해 주지 않을까 예상해 봅니다.<br /><img src="{{ site.baseurl }}/assets/cn324.png" class="aligncenter" width="234" height="144" alt="사용자 삽입 이미지" />적어도 기존의 XML 설정에서 할 수 있었던 저 정도의 설정들은 모두 가능하게 해줘야 하지 않을까 생각합니다.</p>
+<p>Anyway, 토비님 예제 코드를 보고 기억나는 부분을 더듬어서(패키지 이름까지..ㅋ) 만들어 보았습니다. 세미나에 불참하셨거나, 참석하신 분들 중에서 소스 코드를 보고 싶으신 분들은 다운로드 하여 이것 저것 변경해보시면 되겠습니다.</p>

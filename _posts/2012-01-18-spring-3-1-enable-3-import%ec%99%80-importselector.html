@@ -1,0 +1,34 @@
+---
+layout: post
+title: "[Spring 3.1 @Enable] 3. @Import와 ImportSelector"
+date: 2012-01-18 21:59:01.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.1'
+tags:
+- "@Enable"
+- "@Import"
+- ImportSelector
+- spring 3.1
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 새로운 @Configuration을 하나 추가해보죠. 예를 들어, @EnableHello의 type이라는 속성값이 "korean"일때는 HelloKoreanConfig라는 @Configuration을 사용하고, type이 "english"일때는 HelloConfig를 사용하도록 하는거죠.</p>
+<p>[gist id=1633244 file=HelloKoreanConfig.java]</p>
+<p>그리고 ImportSelector 인터페이스 구현체를 만들어서, 특정 애노테이션 속성에 따라 원하는 자바 설정 파일 이름을 리턴해 줍니다. 여기서 '왜 Class 타입이 아니라 String 타입의 배열을 리턴할까요?'라고 질문을 했었는데, 아마도 컴파일 시점에 참조할 수 없는 자바 설정도 동적으로 참조할 수 있도록 하려는 것이 아닌가 싶다는 답변을 들을 수 있었습니다.</p>
+<p>[gist id=1633244 file=HelloSelector.java]</p>
+<p>이제는 @EnableHello 애노테이션에 ImportSelector 구현체에서 사용할 속성을 추가하고, @Import에다 HelloConfig가 아닌 ImportSelector 구현체를 설정합니다.</p>
+<p>[gist id=1633244 file=EnableHello.java]</p>
+<p>그럼 이제 AppConfig에 붙인 @EnableHello의 type 속성을 사용해서 전혀 다른 빈 집합이 등록되게 할 수 있습니다.</p>
+<p>[gist id=1633244 file=AppConfig.java]</p>
+<p>그런데, 만약에 옵션에 따라 너무도 다양한 빈 조합이 생긴다면, 이렇게 일일히 여러 빈 설정을 만드는 것도 상당히 번거로울 수 있습니다. 오히려 옵션에 따라 코딩으로 빈을 등록하는 방법도 필요할 수 있겠죠.</p>

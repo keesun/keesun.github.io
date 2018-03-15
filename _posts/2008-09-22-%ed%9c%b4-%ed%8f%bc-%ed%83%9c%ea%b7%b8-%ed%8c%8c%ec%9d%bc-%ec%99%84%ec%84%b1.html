@@ -1,0 +1,78 @@
+---
+layout: post
+title: 휴.. 폼 태그 파일 완성.
+date: 2008-09-22 02:59:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JSP
+- OSAF
+- 태그 파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323101123'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+&lt;o:popuppage title="사원등록"&gt;<br />
+&nbsp;&nbsp; &nbsp;&lt;o:buttons&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:savebtn /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:cancelbtn /&gt;<br />
+&nbsp;&nbsp; &nbsp;&lt;/o:buttons&gt;<br />
+&nbsp;&nbsp; &nbsp;<br />
+&nbsp;&nbsp; &nbsp;&lt;o:form&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:ftext label="이름" path="name" size="10" maxlength="20" /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:ftext label="아이디" path="loginId" size="15" maxlength="20" desc="최대 20자리까지 입력 할 수 있습니다." /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:fpassword label="패스워드" path="password" size="10" maxlength="16" desc="최대 16자리까지 입력 할 수 있습니다." /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:fradiobuttons label="성별" path="sex" items="${ref.sexType}" /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:fcheckboxes label="취미" path="hobbies" items="${ref.hobbyType}" /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:fselect label="국적" path="location" items="${ref.locations}" isCOV="yes" /&gt;<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;o:ftextarea label="메모" path="memo" rows="3" cols="50" /&gt;<br />
+&nbsp;&nbsp; &nbsp;&lt;/o:form&gt;<br />
+&lt;/o:popuppage&gt;</div>
+<p>이게 추가와 수정시에 사용할 JSP 페이지 코드입니다. JSP를 몰라도 금방 태그 파일 몇개만 익히면 쉽게 페이지를 찍어낼 수 있습니다. 이 페이지에서 사용하고 있는 태그 파일들은 다음과 같습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/hk330000000000.jpg" class="aligncenter" width="216" height="274" alt="사용자 삽입 이미지" /><br />
+흠냐~ 이 녀석들로 만들어 낸 화면입니다.<br />
+<img src="{{ site.baseurl }}/assets/ik320000000000.jpg" class="aligncenter" width="600" height="369" alt="사용자 삽입 이미지" /><br />
+물론 CSS도 가미가 되어 있습니다. CSS는 잘 몰라서 사부님이 만들어 둔 걸 그대로 쓰고 있습니다. 저기 items 뿌리는 부분의 label 스타일을 좀 변경하고 싶은데;; 일단 스타일은 나중에 변경하기로.. ㅋㅋ</p>
+<p><img src="{{ site.baseurl }}/assets/hk330000000001.jpg" class="aligncenter" width="600" height="369" alt="사용자 삽입 이미지" /><br />
+업데이트 뷰에서도 위와 동일한 태그를 사용하면 됩니다. 흠.. 버튼을 하나 추가해서 삭제버튼을 달아야겠군요.</p>
+<p>이것으로 폼 태그 파일들은 다 준비가 됐습니다. 이제 그리드 태그 파일만 완성하면... 드디어 OSAF를 출시할 수 있게 됩니다. 캬오~~</p>

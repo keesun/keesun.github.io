@@ -1,0 +1,76 @@
+---
+layout: post
+title: 쿼리에서 사용할 Entity 이름 설정하기
+date: 2008-01-20 04:24:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- 맵핑 설정
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323186056'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>기본으로 모든 클래스 이름들이 자동으로 HQL의 네임스페이스로 import 된다.</li>
+</ul>
+<ul>
+<li>즉, HQL에서 패키지 이름을 제외한 클래스 이름을 사용할 수 있다.</li>
+</ul>
+<ul>
+<li>서로 다른 패키지에 같은 이름의 클래스가 존재한다면, auto-import를 끄거나, 명시적으로 네임스페이스를 설정해야 한다.</li>
+</ul>
+<h1>설정하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>HQL에서 사용할 네임스페이스 설정하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity(name=<span class="code-quote">"AuctionItem"</span>)<br /><span class="code-keyword">public</span> class Item {<br /><br />}</pre>
+</div>
+</div>
+<h1>모르는 것</h1>
+<ul>
+<li>애노테이션을 사용해서 auto-import를 끄는 방법은?</li>
+</ul>
+<ul>
+<li>auto-import를 끄면 패키지 이름이 붙어있는 클래스 이름을 네임스페이스로 사용하는 건가?</li>
+</ul>

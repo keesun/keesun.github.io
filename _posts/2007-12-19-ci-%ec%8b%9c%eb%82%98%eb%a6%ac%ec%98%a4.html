@@ -1,0 +1,64 @@
+---
+layout: post
+title: CI 시나리오
+date: 2007-12-19 13:54:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 1
+tags:
+- Continuouse Integration
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323097937'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.amazon.com/Continuous-Integration-Improving-Addison-Wesley-Signature/dp/0321336380/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1198072354&amp;sr=8-1" target="_blank">Continuous Integration</a>(아마존 별 다섯)</p>
+<p>Countinuous Integration은 다음과 같이 매우 간단한 원리로 동작합니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">1. 개발자가 코드를 버전 관리 저장소에 커밋한다. 그 즉시, 통합 빌드 머신에 있는 CI 서버는 저장소의 변경사항을 꺼내온다.</p>
+<p>2. 커밋이 완료 된 후, CI 서버는 버전 관리 저장소에 발생한 변화를 확인하고, 저장소에서 최신 버전의 소스를 받은 뒤에 소프트웨어를 통합하는 빌드를 실행한다.</p>
+<p>3. CI 서버는 이메일로 빌드의 결과를 프로젝트 구성원에게 알려준다.</p>
+<p>4. CI 서버는 계속해서 버전 관리 저장소의 변화를 주시한다.</p></div>
+<p><img src="{{ site.baseurl }}/assets/ek16.png" class="aligncenter" width="600" height="329" alt="사용자 삽입 이미지" /><br />개발자<br />&nbsp; &nbsp; 해야할 작업을 완료하는데 필요한 코드들을 변경한 뒤, 개인적인 빌드(이 빌드에는 버전 관리 저장소에서 최신 코드를 업데이트 하는 과정이 포함되어 있다.)를 수행한다. 그 뒤에 자신의 소스를 버전 관리 저장소에 커밋을 한다. 이 순간까지는 위에서 살펴봤던 CI 프로세스에 어떠한 영향도 끼치지 않는다. 왜냐면, 통합 빌드는 버전 관리 저장소에 변경사항이 적용 된 후에 실행될 테니까.. 이 일들은 모두 IDE를 통해서 할 수도 있고 그냥 콘솔에서도 할 수 있다.</p>
+<p>버전 관리 저장소<br />&nbsp; &nbsp; CI를 하려면 반드시 필요하다. 사실, CI를 하지 않더라도, 버전 관리 저장소는 모든 프로젝트에서 필수요소다. 버번 관리 저장소의 목적은 소스 코드와, 소프트웨어 Asset(문서 같은)의 변경 사항을 관리하기 위한 것이다. CVS, Subversion, Perforce, PVCS, ClearCase, MKS, Visual SourceSafe 같은 여러 종류의 소프트웨어 형상 관리 툴SCM이 있다.</p>
+<p>CI 서버<br />&nbsp; &nbsp; CI 서버는 버전 관리 저장소에 커밋이 발생할 때마다 통합 빌드를 수행한다. CI 서버가 버전 관리 저장소를 알 수 있도록 설정해야 한다. CI 서버는 정해진 추기 마다 빌드를 수행하도록 설정할 수도 있다. CI 서버는 보통 빌드 결과를 알려주는 게시판을 제공한다. CI를 하기 위해서 반드시 CI 서버를 사용해야 하는 것은 아니다. 수작업으로 해도 된다.(굳이 라이터를 놔두고 부싯돌로 불을 켜야 하나 -_-;;) 다수의 CI 서버가 무료로 오픈소스 형태로 제공된다. CruiseControl, ...</p>
+<p>빌드 스크립트<br />&nbsp; &nbsp; 빌드 스크립트는 여러 스크립트의 집합체로, 컴파일, 테스트, inspect, 소프트웨어 배포 등을 위해서 사용한다. Ant, NAnt, make, Rake, Maven, Raven등을 사용할 수 있다. 소프트웨어 빌드 사이클을 자동화 할 수 있는 수단을 제공하지만 그들 스스로 지속적인 통합CI을 수행하지는 못한다.</p>
+<p>피드백 매카니즘<br />&nbsp; &nbsp; CI의 주요 목적은 통합 빌드에 대한 결과를 생성하는 것이다. 가능한한 빨리 빌드 결과를 알고 싶을 것이다. 문제를 빨리 발견할수록 빨리 고칠 수 있을테니까.. 이메일, 문자SMS, RSS등으로 결과를 받을 수 있다.</p>
+<p>통합 빌드 머신<br />&nbsp; &nbsp; 오직 소프트웨어 통합을 위한 별도의 머신이다.이 머신에서 CI 서버와 CI 서버가 주시할 버전 관리 저장소를 돌린다.</p>
+<p>ps : visa 카드만 오면... 바로 지를 책 중 1</p>

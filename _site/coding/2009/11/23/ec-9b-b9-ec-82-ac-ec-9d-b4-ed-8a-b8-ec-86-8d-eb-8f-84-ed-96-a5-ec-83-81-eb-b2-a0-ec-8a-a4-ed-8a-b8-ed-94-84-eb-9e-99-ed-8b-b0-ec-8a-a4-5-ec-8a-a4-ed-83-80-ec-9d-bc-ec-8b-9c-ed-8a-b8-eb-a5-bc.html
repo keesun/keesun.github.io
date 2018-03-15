@@ -1,0 +1,7 @@
+<p><a title="[http://developer.yahoo.com/performance/rules.html#css_top]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#css_top">http://developer.yahoo.com/performance/rules.html#css_top</a></p>
+<p>Put Stylesheets at the Top</p>
+<p>tag: css</p>
+<p>야후에서 성능 조사를 하는 동안, 스타일 시트를 문서의 HEAD로 옮기는 것이 페이지 로딩을 더 빠르게 해준다는 것을 발견했다. 스타일 시트를 HEAD에 놓음으로써, 페이지 랜더링이 더 빨라지기 때문이다.</p>
+<p>성능을 고려하는 화면 엔지니어는 페이지 로딩이 빨라지길 원한다. 즉, 브라우저가 어떤 내용이던지 가능한 빨리 보여주길 원한다. 이것은 느린 인터넷 연결을 사용하는 사용자와 보여줄 내용이 많은 페이지에서 특히 중요하다. 진행 상태 표시와 같은 시각적인 피드백을 주는 것의 중요함에 대해서는 설문조사가 잘 되어 있고 잘 <a title="[http://www.useit.com/papers/responsetime.html]로 이동합니다." target="_blank" href="http://www.useit.com/papers/responsetime.html">문서</a>화 되어 있다. 우리의 경우 HTML 페이지가 곧 진행 상태 표시기이다! 브라우저는 페이지 헤더를 빠르게 로딩할 때 네비게이션 바, 화면 윗 부분의 로고 등 모든 시각적인 피드백을 해당 페이지를 기다리는 사용자에게 제공한다. 그런식으로 전반적인 사용자 경험을 향상시킬 수 있다.</p>
+<p>스타일시트를 문서의 바닥으로 넣는 것의 문제는 IE를 포함한 대부분의 브라우저에서 빠른 랜더링을 방해하기 때문이다. 이들 브라우저는 문서의 스타일이 바뀌면 페이지의 요소들을 다시 그려야 하는 것을 방지하기 위해 랜더링을 막아둔다. 그 때 사용자는 하얀색의 빈 화면에 머물러 있게 된다.</p>
+<p><a title="[http://www.w3.org/TR/html4/struct/links.html#h-12.3]로 이동합니다." target="_blank" href="http://www.w3.org/TR/html4/struct/links.html#h-12.3">HTML 표준</a>은 분명히 스타일시트를 페이지의 HEAD에 포함시킬 것을 기술하고 있다. "[LINK]는 얼마나 많이 있던 문서의 HEAD 부분에만 있어야 한다." 그 어떠한 대안도 비어있는 하얀 화면이나 스타일이 없는 내용으로 채워진 플래시 등의 위험을 감당할 만한 가치가 없다. 최적의 해결책은 HTML 표준을 따라 스타일시트를 문서 HEAD 안에서 로딩하는 것이다.</p>

@@ -1,0 +1,81 @@
+---
+layout: post
+title: 1장 리팩토링, 첫 번째 예제
+date: 2006-10-02 16:01:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 1~4장
+tags:
+- Martin Fowler
+- Refactoring
+- 리팩토링
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322985979'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>먼저 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">리팩토링이란? 외부 동작을 바꾸지 않으면서 내부 구조를 개선하는 방법</span>으로, 소프트웨어 시스템을 변경하는 프로세스이다. 이것은<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> 버그가 끼어 들 가능성을 최소화하면서 코드를 정리</span>하는 정형화된 방법이다.</p>
+<div style="margin-left: 40px">"코드가 작성된 후에 디자인을 개선한다."
+</div>
+<p>
+물론 그 코드는 디자인을 거쳐 작성이 되었겠지만 코드가 디자인을 잘 따르지 않았거나 디자인이 잘 못 됐을 수도 있기 때문에 어감이 반대로 된 듯해도 맞는 말이다.</p>
+<blockquote><p>새로운 기능을 추가해야 하는데 프로그램의 코드가 새로운 기능을 추가하기 쉽도록 구조화되어 있지 않은 경우에는 먼저 리팩토링을 해서 프로그램에 기능을 추가하기 쉽게 하고, 그 다음에 기능을 추가한다.</p></blockquote>
+<p>
+유지보수에는 네 종류의 유지보수가 있는데 기억이 가물가물 하지만 억지로라도 떠올려 보면<br />
+에러가 발생하여 수정하는 유지보수(corrective maintanance)<br />
+환경의 변화에 따라 적응시키는 유지보수(adaptive maintanance)<br />
+미래에 발생할 문제를 미리 예방하는 유지보수<br />
+완벽을 기하기 위한 기능을 추가하는 유지보수 가 있다고 배웠다.(시스템 분석 및 설계 시간에...)<br />
+여기서는 네번째 유지보수 측면을 고려한 듯하다. 하긴 리팩토링 자체를 유지보수로 본다면 위 네가지 모두 고려대상인 듯하다.</p>
+<blockquote><p>리팩토링을 시작하기 전에 견고한 테스트 세트를 가지고 있는지 확인하라. 이 테스트는 자체 검사여야 한다.</p></blockquote>
+<p>
+테스트의 중요함을 할 수 있다. 요새 Agile Java 책을 스터디 하면서 TDD(Test Driven Development)를 공부하고 있는데 하나의 습관인지라 역시 쉽지 않다. 습관을 바꾸는게 가장 힘든일인듯 하다.(내 글씨는 악필인데 초등학교 때 서예학원도 다녀보고 맞기도 엄청 맞았지만 아직도 악필이다 --)</p>
+<blockquote><p>리팩토링은 작은 단계로 나누어 프로그램을 변경한다. 실수를 하게 되더라도 쉽게 버그를 찾을 수 있다.</p></blockquote>
+<p>
+조금씩 고쳐 나갈 때마다 계속해서 test를 해줘야 한다. 그래야 쉽게 버그도 찾을 수 있고 오히려 한번에 왕창 해두고 버그가 발생해서 어디가 문제인지 찾는데 시간이 더 오래 걸린다.</p>
+<blockquote><p>컴퓨터가 이해할 수 있는 코드는 어느 바보나 다 짤 수 있다. 좋은 프로그래머는 사람이 이해할 수 있는 코드를 짠다.</p></blockquote>
+<p>
+아~ 감명깊은 말이다. 주석의 중요함에 대해 써있는 책을 몇 번 봤었다. 그러나 주석이 잘 달린 프로그램 보다는 주석이 없어도 이해가 되는 프로그램인 듯하다. 물론 주석도 없고 이해도 안되는 코드는...최악이겠지만 말이다. 그러려면 역시 작명에도 신경을 잘 써야 하지만 대부분의 프로그램 언어가 영어인 관계로 작명+작문 이 합쳐지게 된다는 태생적인 문제가 있다.(영어 공부도 열심히?ㅋ)</p>
+<p>오늘은 여기까지 보고 자야겠다. 내일 데이트를 해야한다.</p>
+<p>Good Night!</p>
+<p>1장을 다 보았다.(자랑인가? ㅋ) 보기만 했고 손으로 안따라 해봤기 때문에 아직 제대로 본건 아니다. </p>
+<p>추가할 요약사항이 있어서 수정한다.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">리팩토링의 리듬!</p>
+<p>테스트 -&gt; 조금 수정 -&gt; 테스트 -&gt; 조금 수정</span></p>

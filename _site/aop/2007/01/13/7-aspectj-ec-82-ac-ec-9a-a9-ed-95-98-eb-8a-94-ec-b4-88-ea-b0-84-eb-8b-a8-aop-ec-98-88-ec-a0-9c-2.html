@@ -1,0 +1,7 @@
+<p><a href="http://whiteship.tistory.com/360" target="_blank">@AspectJ 를 사용하는 초간단 AOP 예제</a>에서 Pointcut을 선언하고 Advice들에서 해당 Pointcut을 불러가며 사용했었습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Pointcut("execution(public * ex1.Human.sayName(..))")<br />&nbsp; &nbsp; public void greeting() {<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @AfterReturning("greeting()")<br />&nbsp; &nbsp; public void doBeforeOne() {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("AOP 죽~ 여~ 줍니다~");<br />&nbsp; &nbsp; }</div>
+<p>이렇게 했었는데요. AspectJ에서는 Anonymous Pointcut이라고 하는데 Spring AOP(중에서도@AspectJ)에서도 사용할 수 있습니다. 다음과 같이 Pointcut 이름을 적을 필요 없이 바로 적용될 부분은 Advice에 명시해 주면 됩니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @AfterReturning("execution(public * Human.sayName(..))")<br />&nbsp; &nbsp; public void doBeforeOne() {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("AOP 죽~ 여~ 줍니다~");<br />&nbsp; &nbsp; }</div>
+<p>두 개의 차이점은 위에 기존에 사용해 봤던 방식은 당연히 재사용이 편하다는 것. 그리고 아래의 것은 재사용하기 불편하다는 차이밖에 없는 것 같습니다. :)</p>
+<p><span style="color: rgb(255, 0, 0);">Spring AOP를 JDK 6.0 에서 돌리지 마세요 ㅠ.ㅠ</span> Pointcut이 있는데도 없다고 나옵니다. 이것 때문에 정말 황당해 하며 1시간 가량을...'저번에는 분명히 됐는데;; 왜이러지..' 하면서 괴로워 했습니다.<br />참조 : <a href="http://forum.springframework.org/showthread.php?p=92737" target="_blank">http://forum.springframework.org/showthread.php?p=92737</a></p>

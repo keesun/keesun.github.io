@@ -1,0 +1,56 @@
+---
+layout: post
+title: 4.7. Stopping the extender bundle
+date: 2008-04-13 03:41:33.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- Chapter 4
+- Spring DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322680462'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Extender 번들이 멈추게stop 되면, Extender가 만든 모든 application context가 제거 될 것이다. Application context가 제거되는 순서는 다음과 같다.</p>
+<p>1. 어떤 서비스도 export하지 않았거나, export 했지만 다른 번들들이 참조하지 않고 있는 application context를 가장 먼저 없앤다. 없앨 때는 번들 id의 역순으로 가장 최근에 설치된 번들의 application context부터 없앤다.</p>
+<p>2. 1번 과정에서 import한 서비스들에 대한 레퍼런스가 끊기면서 새롭게 다시 1번 과정이 대상이 되는 application context가 생길것이다. 그렇다면 1번을 다시 수행한다.</p>
+<p>3. 더이상 동작 중인 application context가 없다면, 멈춘다. 만약 여전히 남아있는 application context가 있다면, 이건 상호 참조cyclic depedency of references가 있다는 것이다. 이 경우에는 서비스 랭킹을 확인해서 랭킹이 낮은 녀석을 내린다. 그리고 1번부터 다시 한다.</p>

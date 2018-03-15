@@ -1,0 +1,54 @@
+---
+layout: post
+title: 9.5.1. Understanding the Spring Framework's declarative transaction implementation
+date: 2007-04-12 02:47:01.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322992926'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>트랜잭션 관리 대상이 되는 클래스에 @Transactional 어노테이션을 붙이고 설정 파일에는 &lt;tx:annotation-driven/&gt;요렇게 추가하면 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dl131.jpg" class="aligncenter" width="500" height="290" alt="사용자 삽입 이미지" />그렇게 하면 내부에서는 AOP를 사용하여 타겟에 대한 호출은 (1)AOP 프록시를 호출하게 되고 그 다음 (2)트랜잭션을 만들고 (3)트랜잭션 내에서 원하는 작업을 하고 (4)실제 작업을 한 뒤에 다시 (3)또 해당 작업이 끝난 뒤 원하는 작업을 하고 (2)해당 트랜잭션을 커밋 하거나 롤백하고 (5)최종 결과를 호출한 녀석에게 돌려 줍니다.</p>

@@ -1,0 +1,28 @@
+<p>참조 : <br /><a href="http://www.infoq.com/articles/API-Design-Joshua-Bloch" target="_blank">http://www.infoq.com/articles/API-Design-Joshua-Bloch</a><a href="http://www.infoq.com/presentations/effective-api-design;jsessionid=E80287C669787CA7AD3F810A3850932B" target="_blank"><br />http://www.infoq.com/presentations/effective-api-design;jsessionid=E80287C669787CA7AD3F810A3850932B</a></p>
+<p>Public API(아마 인터페이스를 말하는듯)는 영원한거다. 그만큼 신중하게 만들어야 함.</p>
+<p>좋은 API 특징. 문서 없이도 잘 이해가 되는 API</p>
+<p><span style="font-weight: bold;">API 설계 프로세스</span></p>
+<p>요구사항을 분명히 할 것</p>
+<p>모두를 만족 시킬 순 없다. 모두를 똑같이 실망시켜라.<br />- 실수 할 수도 있다. API를 진화시켜라.</p>
+<p>미심쩍은 것은 무조건 빼내라. 나중에 추가하긴 쉽지만, 빼는 건 불가능에 가깝다.</p>
+<p>구현에 대한 세부 사항이 API에 영향을 주지 않게 한다.</p>
+<p>최소한의 접근성<br />- default 접근 지시자가 protected보다 엄격하다. 엄하게 구분해놔야 테스트하기 좋다.</p>
+<p>작명은 중요하다.<br />- 마치 영어 문장처럼 읽히는 코드를 작성하라.</p>
+<p>문서화 중요하다.<br />- 모든 클래스, 메소드, 필드, 파라메터, 예외에 대해 문서화하라.</p>
+<p>API 성능에 신경써라.<br />- Dimension Component.getSize() 같은 API는 매번 새로운 mutable한 Dimention 객체를 생성해내서 성능이 안 좋다.</p>
+<p><span style="font-weight: bold;">클래스 설계</span></p>
+<p>mutable은 최대한 최소화하라. 되도록이면 immutable.<br />- Date랑 Calandar 안 좋아. 변할 수 있는데 왜 안 변해. TimerTask 처럼 좀 변하란 말야.</p>
+<p>상속은 리스코프 원칙에 맞게 사용할 것<br />- is-a 관계 일 때만 사용하기.</p>
+<p><span style="font-weight: bold;">메소드 설계</span></p>
+<p>모듈이 할 수 있는 걸 고객이 직접 하게 하지 말아라.<br />- boilerplate 코드 작성할 필요를 없애라.</p>
+<p><a href="http://en.wikipedia.org/wiki/Principle_of_least_astonishment" target="_blank">Principle of least astonishment</a>를 위배하지 말라.<br />- Thread의 interrpt의 경우 안 좋은 예에 해당한다. 인터럽트 할 때 현재 상태 정보를 클리어 해버린다. 따라서 clearAndInterrupt라고 하는게 낫겠다.</p>
+<p>Fail-Fast<br />- 컴파일 타임에 에러나면 좋고, 실행 중엔 첫 번째 메소드 호출에서 바로 fail하도록..<br />- Generic 쓰면 컴파일 타입에 타입 체크 할 수 있으니 좋다.</p>
+<p>문자열로 데이터 보여주는 API를 제공하라.<br />- 안그럼 고객이 직접 작성해야 한다.<br />- StrackTraceElement 객체의 같은 거 좋다.</p>
+<p>오버로딩 사용에 신중하라.<br />- 오버로딩 할 때는 같은 기능을 제공해야 한다.<br />- TreeSet의 생성자는 안 좋은 예에 해당한다. 넘겨주는 인자에 따라 행위가 다르다.</p>
+<p>파라미터와 리턴타입<br />- float으로 화폐단위 표시하지 말것. 부정확하다.<br />- 인터페이스 타입을 사용하면 유연하고 성능에좋다.<br />- 구체적인 타입일 수록 컴파일 타임에 에러를 잡을 수 있다.<br />- 문자열 보단 특정 타입을 사용할 수 있도록하자. 문자열은 에러 발생할 여지가 많다.(흠.. 문자열을 써야 할 경우엔 해당 문자열을 상수화해서 쓰면 괜찮지 않을까.)</p>
+<p>너무 긴 매개변수 리스트는 피하라.<br />- 메소드를 나누던가, 헬퍼 클래스를 만들어서 줄여라.</p>
+<p>에러 발생 시킬 반환값을 피하라.<br />- null말고, 비어있는 리스트나 배열을 반환하라.</p>
+<p>예외로 흐름 제어 하지 말아라.<br />- 제어문으로 해라~. 예외는 예외적인 상황일때 그것을 알려주기 위해 사용하라.</p>
+<p>언체크드 익셉션을 선호하라.<br />- checked exception - 사용자가 반드시 복구해야 할 때 사용<br />- unchecked exception - 프로그래밍 에러<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">API 설계 리팩토링하기</span></p>
+<p>Vector의 indexOf 메소드<br />- Vector, List<br />- ThreadLocal의 string -&gt; Key</p>
+<p></p>

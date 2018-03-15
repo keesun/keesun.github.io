@@ -1,0 +1,59 @@
+---
+layout: post
+title: EJ2E Item 17. 상속에 대한 설계와 문서화를 제대로 하지 않을 거면 아예 상속을 허용하지 말라.
+date: 2009-01-13 13:38:36.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- effective java
+- inheritance
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322869142'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: Effective Java 2nd Edition Item 17: Design and document for inheritance or else prohibit it.</p>
+<p>오버라이딩이 가능한 메소드에는 반드시 문서화를 해야 한다. <br />&nbsp;- "This implementation ~~" 즉 "이 구현체에서는.." 이라는 식으로 다음 배포 때는 다르게 구현할 수도 있다는 의미를 내포하는 문서화와 그 내용을 자세히 알려줘야 한다.</p>
+<p>상속을 고려한 클래스를 테스트하는 유일한 방법은 하위클래스를 작성하는 것이다.<br />- 배포하기 전에 반드시 하위클래스를 작성해서 테스트 해봐야 한다.</p>
+<p>생성자에서 오버라이딩이 가능한 메소드를 직접적으로든 간접적으로든 호출하면 안 된다.<br />- 상위 클래스 생성자에서 하위 클래스가 오버라이딩한 메소드를 호출하다가 아직 필드 초기화도 안 된 하위 클래스의 필드를 사용해서 원치 않던 결과가 발생할 수 있다.</p>
+<p>Cloneable과 Serializable 인터페이스를 구현한 클래스가 상위클래스가 될 여지가 있다면<br />- 생성자와 마찬가지로 clone과 readObject에서 오버라이딩이 가능한 메소드를 호출하지 않도록 한다.</p>
+<p>안전하게 상속하도록 문서화 하거나 설계하지 않은 클래스를 상속할 수 없도록 하는 것이 최선책이다.<br />- 두 가지 방법 중에서 쉬운 방법은 클래스를 final로 만드는 것이다.<br />- 두 번째 방법은 모든 생성자를 private 또는 package-private으로 만들고 public static 팩터리를 추가한다. 이 방법은 내부적으로 상속이 가능해서 약간 더 유연하다. Item 15에서 다뤘다.</p>
+<p></p>

@@ -1,0 +1,14 @@
+<p><a title="[http://developer.yahoo.com/performance/rules.html#gzip]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#gzip">http://developer.yahoo.com/performance/rules.html#gzip</a></p>
+<p>Gzip Components</p>
+<p>tag: server</p>
+<p>HTTP 요청과 응답을 네트워크로 전송하는데 걸리는 시간을 화면 개발자들과의 논의를 통해 극적으로 줄일 수 있다. 물론 최종 사용자의 인터넷 속도는 개발 팀과 관계없는 인터넷 서비스 제공처와 접근하려는 곳과의 거리에 따라 달라지기는 한다. 하지만 그 외밖에도 응답 시간에 영향을 주는 변수들이 있다. 압축을 기용하면 HTTP 응답의 크기를 줄여서 응답 시간을 빠르게 할 수 있다.</p>
+<p>HTTP/1.1 부터, 웹 클라이언트는 HTTP 요청의 Accept-Encoding 헤더를 사용하여 압축 형태를 지원한다는 것을 알려줄 수 있게 되었다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Accept-Encoding: gzip, deflate</p>
+<p>만약에 웹서버가 요청에 들어있는 이 헤더를 본다면, 응답을 클라이언트가 나열한 방법으로 압축할 수가 있다. 웹 서버는 웹 클라이언트에게 응답의 Content-Encoding 헤더를 사용하여 사용한 방법을 알려준다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Encoding: gzip</p>
+<p>Gzip은 근래 가장 유명하고 효율적인 압축 기술로, GNU 프로젝트에 의해 만들어졌으며 RFC 1952로 표준화 되었다. 다른 압축 기술중 여러분이 보고 싶어하는 것으로 deflate가 있지만 Gzip에 비해서 덜 효율적이며 덜 알려져있다.</p>
+<p>Gzip 압축은 응답의 크기를 약 70% 가량 쥴여준다. 아마도 근래의 브라우저를 떠돌고 있는 인터넷 트래픽 중 90%는 gzip을 지원한다고 선언해 두었을 것이다. 만약 아파치를 사용하고 있다면, gzip 모듈 설정 방법은 버전에 따라 다르다. 아차피 1.3은 <a title="[http://sourceforge.net/projects/mod-gzip/]로 이동합니다." target="_blank" href="http://sourceforge.net/projects/mod-gzip/">mod_gzip</a>을 사용하고 아파치 2는 <a title="[http://httpd.apache.org/docs/2.0/mod/mod_deflate.html]로 이동합니다." target="_blank" href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html">mod_deflate</a>를 사용한다.</p>
+<p>브라우저와 프록시를 사용할 때 브라우저가 예상한 것과 실제로 압축하여 받은 내용이 일치하지 않는 이슈가 있다. 다행히도, 구 버전 브라우저 사용이 점차 줄어듬에 따라 그런 이슈도 줄어들고 있다. 아파치 모듈은 Vary 응답 헤더를 사용하여 자동으로 적절한 타입을 찾도록 도와준다.</p>
+<p>서버는 파일 타입에 따라 무엇을 gzip으로 압축할지 선택하지만, 실제로 무엇을 압축할지 결정한 것을 보면 매우 제한적이다. 대부분의 웹 사이트는 그들의 HTML 문서를 gzip으로 압축한다. 스크립트와 스타일시트도 압축할 만한 가치가 있는데 대부분의 사이트는 이것을 간과한다. 사실, 응답에 들어가는 모든 XML, JSON, 이미지, PDF 파일 등은 압축하지 말아야 한다. 이미 압축되어있는 형태기 때문이다. 그것들을 압축하는 것은 CPU를 낭비하는 것일 뿐 아니라 잠재적으로 파일 사이즈를 늘리는거나 마찬가지다.</p>
+<p>Gzip으로 가능한 많은 타입을 압축하는 것은 페이지의 무게를 줄이고 사용자 경험을 가속화하는 쉬운 방법이다.</p>
+<p></p>

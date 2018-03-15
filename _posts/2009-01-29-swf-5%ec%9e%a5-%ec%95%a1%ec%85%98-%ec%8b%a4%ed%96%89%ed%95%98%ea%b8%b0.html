@@ -1,0 +1,116 @@
+---
+layout: post
+title: SWF 5장 액션 실행하기
+date: 2009-01-29 16:16:23.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- Spring Web Flow 2
+- swf
+- 레퍼런스
+- 번역
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322635934'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>5.1. 소개</p>
+<p>이번 장에서는 action-state 엘리먼트를 사용하여 플로우 내에서 특정 시저에 액션 실행을 제어하는 방법을 살펴본다. 또한 decision-state 엘리먼트를 사용하여 플로우 방향을 결정하는 방법도 살펴본다. 마지막으로 플로우 내에서 가능한 다양한 지점에서 액션을 호출하는 예제를 다룰 것이다.</p>
+<p>5.2. 액션 스테이트 정의하기</p>
+<p>액션을 호출하고 싶을 때 action-state 엘리먼트를 사용하면 액션의 결과에 기반하여 다른 상태로 전이한다.</p>
+<p>&lt;action-state id="moreAnswersNeeded"&gt;<br />&nbsp; &nbsp; &lt;evaluate expression="interview.moreAnswersNeeded()" /&gt;<br />&nbsp; &nbsp; &lt;transition on="yes" to="answerQuestions" /&gt;<br />&nbsp; &nbsp; &lt;transition on="no" to="finish" /&gt;<br />&lt;/action-state&gt;</p>
+<p>위의 action-state를 사용하여 인터뷰를 완성하는데 더 많은 질문이 필요한지 확인하는 인터뷰 플로우는 다음과 같다.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;on-start&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" /&gt;<br />&nbsp; &nbsp; &lt;/on-start&gt;</p>
+<p>&nbsp; &nbsp; &lt;view-state id="answerQuestions" model="questionSet"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;on-entry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/on-entry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="submitAnswers" to="moreAnswersNeeded"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="interview.recordAnswers(questionSet)" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/transition&gt;<br />&nbsp; &nbsp; &lt;/view-state&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &lt;action-state id="moreAnswersNeeded"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="interview.moreAnswersNeeded()" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="yes" to="answerQuestions" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="no" to="finish" /&gt;<br />&nbsp; &nbsp; &lt;/action-state&gt;</p>
+<p>&nbsp; &nbsp; &lt;end-state id="finish" /&gt;<br />&nbsp; &nbsp; <br />&lt;/flow&gt;</p>
+<p>5.3. 의사결정 상태 정의하기</p>
+<p>decision-state 엘리먼트를 action-state 대신 사용하여 편리한 if/else 문법을 사용하여 경로 결정을 할 수 있다. 아래 예제는 위에서 봤던 moreAnswersNeeded 상태를 action-state 대신 의사결정 상태로 구현한 것이다.</p>
+<p>&lt;decision-state id="moreAnswersNeeded"&gt;<br />&nbsp; &nbsp; &lt;if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" /&gt;<br />&lt;/decision-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.4. 액션 결과 이벤트 맵핑</p>
+<p>액션은 보통 일반 자바 객체의 매서드를 호출한다. action-state와 decision-state에서 호출한 매서드는 뷰 상태를 전이할 때 사용할 값을 반환한다. 전이는 이벤트에 의해 발생하기 때문에 매서드의 반환값은 반드시 먼저 Event 객체로 맵핑되어야 한다. 다음 표는 흔한 반환값을 어떻게 Event 객체로 맵핑하는지 보여준다.</p>
+<p>표 5.1. 액션 매서드 반환 값을 이벤트 id로 맵핑하기</p>
+<p>|| 매서드 반환 값 || 맵핑한 이벤트 식별자 표현식 ||<br />| java.lang.String | 문자열 값 |<br />| java.lang.Boolean | (true 면) yes, (false 면) no |<br />| java.lang.Enum | Enum 이름 |<br />| 그밖에 다른 타입 | success |</p>
+<p>아래 예제의 액션 스테이트에서 매서드가 boolean 값을 반환한다는 것을 알 수 있다.</p>
+<p>&lt;action-state id="moreAnswersNeeded"&gt;<br />&nbsp; &nbsp; &lt;evaluate expression="interview.moreAnswersNeeded()" /&gt;<br />&nbsp; &nbsp; &lt;transition on="yes" to="answerQuestions" /&gt;<br />&nbsp; &nbsp; &lt;transition on="no" to="finish" /&gt;<br />&lt;/action-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />5.5. 액션 구현</p>
+<p>액션 코드를 POJO 로직으로 작성하는 것이 가장 일반적이지만, 다른 액션 구현 방법도 있다. 가끔은 액션 코드에서 플로우 컨텍스트에 접속할 필요가 있을 것이다. 이 때 POJO를 호출하고 거기에 flowRequestContext를 EL 변수로 넘겨줄 수 있다. 또는, Action 인터페이스를 구현하거나 MultiAction 기본 클래스를 상속받을 수도 있다. 이러한 대안들이 보다 강한 타입 안전성을 제공하여 여러분의 액션 코드와 스프링 웹 플로우 API 사이를 자연스럽게 연결해준다. 아래에서 이들 각각에 대한 예제를 살펴보자.</p>
+<p>5.5.1. POJO 액션 호출하기</p>
+<p>&lt;evaluate expression="pojoAction.method(flowRequestContext)" /&gt; &nbsp;&nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>public class PojoAction {<br />&nbsp; &nbsp; public String method(RequestContext context) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ... <br />&nbsp; &nbsp; }<br />}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.5.2. 커스텀 Action 구현체 호출하기</p>
+<p>&lt;evaluate expression="customAction" /&gt; &nbsp;&nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>public class CustomAction implements Action {<br />&nbsp; &nbsp; public Event execute(RequestContext context) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ... <br />&nbsp; &nbsp; }<br />}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.5.3. MultiAction 구현체 호출하기</p>
+<p>&lt;evaluate expression="multiAction.actionMethod1" /&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>public class CustomMultiAction extends MultiAction {<br />&nbsp; &nbsp; public Event actionMethod1(RequestContext context) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ... <br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public Event actionMethod2(RequestContext context) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ... <br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; ...<br />}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.6. 액션 예외</p>
+<p>액션은 보통 복잡한 비즈니스 로직을 캡슐화한 서비스를 호출한다. 이러한 서비스는 액션 코드가 처리해야 할 비즈니스 에외를 던질 수도 있다.</p>
+<p>5.6.1. 비즈니스 예외를 POJO 액션에서 처리하기</p>
+<p>다름 예제는 비즈니스 예외를 잡는 액션을 호출하고, 에러 메시지를 컨텍스트에 추가하고, 결과 이벤트 식별자를 반환한다. 결과는 호출한 플로우가 반응할 수 있는 플로우 이벤트로 간주한다.</p>
+<p>&lt;evaluate expression="bookingAction.makeBooking(booking, flowRequestContext)" /&gt; &nbsp;&nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>public class BookingAction {<br />&nbsp;&nbsp; public String makeBooking(Booking booking, RequestContext context) {<br />&nbsp; &nbsp; &nbsp;&nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; BookingConfirmation confirmation = bookingService.make(booking);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; context.getFlowScope().put("confirmation", confirmation);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; return "success";<br />&nbsp; &nbsp; &nbsp;&nbsp; } catch (RoomNotAvailableException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; context.addMessage(new MessageBuilder().error().<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; .defaultText("No room is available at this hotel").build());<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; return "error";<br />&nbsp; &nbsp; &nbsp;&nbsp; }<br />&nbsp;&nbsp; }<br />}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.6.2. 비즈니스 예외를 MultiAction으로 처리하기</p>
+<p>다음 예제는 기능적으로 위에 것과 같지만 POJO 액션이 아니라 MultiAction으로 구현했다. MultiAction은 ${methodName}(RequestContext) 형태의 액션 매서드를 필요로 하며 강한 타입 안전성을 제공한다. 반면 POJO 액샨은 더 많은 자유를 제공한다.</p>
+<p>&lt;evaluate expression="bookingAction.makeBooking" /&gt; &nbsp;&nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>public class BookingAction extends MultiAction {<br />&nbsp;&nbsp; public Event makeBooking(RequestContext context) {<br />&nbsp; &nbsp; &nbsp;&nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; Booking booking = (Booking) context.getFlowScope().get("booking");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; BookingConfirmation confirmation = bookingService.make(booking);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; context.getFlowScope().put("confirmation", confirmation);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; return success();<br />&nbsp; &nbsp; &nbsp;&nbsp; } catch (RoomNotAvailableException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; context.getMessageContext().addMessage(new MessageBuilder().error().<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; .defaultText("No room is available at this hotel").build());<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; return error();<br />&nbsp; &nbsp; &nbsp;&nbsp; }<br />&nbsp;&nbsp; }<br />}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.7. 기타 액션 호출 예제</p>
+<p>5.7.1. on-start</p>
+<p>다음 예제는 서비스의 매서드를 호출하여 새로운 Booking 객체를 만드는 액션을 보여준다.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;input name="hotelId" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;on-start&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result="flowScope.booking" /&gt;<br />&nbsp; &nbsp; &lt;/on-start&gt;</p>
+<p>&lt;/flow&gt;<br />&nbsp; &nbsp; </p>
+<p>5.7.2. on-entry</p>
+<p>다음 예제는 상태 진입 액션으로 특별한 fragments 변수를 정의하여 view-state가 뷰의 일부만 랜더링 하도록 하고 있다.</p>
+<p>&lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;<br />&nbsp; &nbsp; &lt;on-entry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;render fragments="hotelSearchForm" /&gt;<br />&nbsp; &nbsp; &lt;/on-entry&gt;<br />&lt;/view-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>5.7.3. on-exit</p>
+<p>다음 예제는 상태 종료(exit) 액션으로 편집중이던 레코드에 대한 롹을 해제하고 있다.</p>
+<p>&lt;view-state id="editOrder"&gt;<br />&nbsp; &nbsp; &lt;on-entry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.selectForUpdate(orderId, currentUser)"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result="viewScope.order" /&gt;<br />&nbsp; &nbsp; &lt;/on-entry&gt;<br />&nbsp; &nbsp; &lt;transition on="save" to="finish"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.update(order, currentUser)" /&gt;<br />&nbsp; &nbsp; &lt;/transition&gt;<br />&nbsp; &nbsp; &lt;on-exit&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.releaseLock(order, currentUser)" /&gt;<br />&nbsp; &nbsp; &lt;/on-exit&gt;<br />&lt;/view-state&gt;</p>
+<p>5.7.4. on-end</p>
+<p>다음 예제는 위와 같은 객체 롹킹을 플로우 시작과 종료(end) 액션으로 하는 것을 보여준다.</p>
+<p>&lt;flow xmlns="http://www.springframework.org/schema/webflow"<br />&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp; xsi:schemaLocation="http://www.springframework.org/schema/webflow<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"&gt;</p>
+<p>&nbsp; &nbsp; &lt;input name="orderId" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;on-start&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.selectForUpdate(orderId, currentUser)"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result="flowScope.order" /&gt;<br />&nbsp; &nbsp; &lt;/on-start&gt;</p>
+<p>&nbsp; &nbsp; &lt;view-state id="editOrder"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;transition on="save" to="finish"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.update(order, currentUser)" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/transition&gt;<br />&nbsp; &nbsp; &lt;/view-state&gt;</p>
+<p>&nbsp; &nbsp; &lt;on-end&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="orderService.releaseLock(order, currentUser)" /&gt;<br />&nbsp; &nbsp; &lt;/on-end&gt;<br />&nbsp; &nbsp; <br />&lt;/flow&gt;</p>
+<p>5.7.5. on-render</p>
+<p>다음 예제는 랜더 액션으로 뷰를 랜더링 하기 전에 보여줄 호텔 목록을 로딩한다.</p>
+<p>&lt;view-state id="reviewHotels"&gt;<br />&nbsp; &nbsp; &lt;on-render&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="bookingService.findHotels(searchCriteria)"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result="viewScope.hotels" result-type="dataModel" /&gt;<br />&nbsp; &nbsp; &lt;/on-render&gt;<br />&nbsp; &nbsp; &lt;transition on="select" to="reviewHotel"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;set name="flowScope.hotel" value="hotels.selectedRow" /&gt;<br />&nbsp; &nbsp; &lt;/transition&gt;<br />&lt;/view-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.7.6. on-transition</p>
+<p>다음 예제는 하위플로우 결과 이벤트 속성을 컬렉션에 추가하는 트랜지션 액션을 보여준다.</p>
+<p>&lt;subflow-state id="addGuest" subflow="createGuest"&gt;<br />&nbsp; &nbsp; &lt;transition on="guestCreated" to="reviewBooking"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="booking.guestList.add(currentEvent.attributes.newGuest)" /&gt;&nbsp; <br />&nbsp; &nbsp; &lt;/transition&gt;<br />&lt;/subfow-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />5.7.7. Names actions</p>
+<p>다음 예제는 하나의 action-state 내에서 액션 체인을 호출하는 방법을 보여준다. 각각의 액션 이름은 액션 결과 이벤트에 대한 식별자가 된다.</p>
+<p>&lt;action-state id="doTwoThings"&gt;<br />&nbsp; &nbsp; &lt;evaluate expression="service.thingOne()"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;attribute name="name" value="thingOne" /&gt;<br />&nbsp; &nbsp; &lt;/evaluate&gt;<br />&nbsp; &nbsp; &lt;evaluate expression="service.thingTwo()"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;attribute name="name" value="thingTwo" /&gt;<br />&nbsp; &nbsp; &lt;/evaluate&gt;<br />&nbsp; &nbsp; &lt;transition on="thingTwo.success" to="showResults" /&gt;<br />&lt;/action-state&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />이 예제에서, 플로우는 thingTwo가 무사히 완료되면 showResults로 전이할 것이다.</p>

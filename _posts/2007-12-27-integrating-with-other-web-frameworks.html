@@ -1,0 +1,73 @@
+---
+layout: post
+title: Integrating with other web frameworks
+date: 2007-12-27 13:29:59.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 15
+tags:
+- 스프링과 웹 프레임워크 연동
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323160430'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1<span style="font-weight: bold;">5.1. Introduction</span></p>
+<p>이번 챕터는 스프링과 제 3의 웹 프레임워크인 Struts, JSF, Tapestry, WebWork와의 연동에 해대 다룹니다. 스프링 프레임워크가 가지고 있는 핵심 가지 중에 하나가 바로 <span style="font-weight: bold;">선택이 가능하다</span>는 것입니다. 스프링은 어떠한 방법론, 아키텍처, 프레임워크도 강요하지 않으며, 그저 개발자나 개발팀에게 익숙한 것들을 사용하면 됩니다.</p>
+<p><span style="font-weight: bold;">15.2. Common configuration</span></p>
+<p>각각의 프레임워크와의 연동을 살펴보기 전에, 어떤 프레임워크를 선택하든지 상관없이 꼭 필요로 하는 설정을 살펴봅니다.</p>
+<p><span style="font-weight: bold;">15.3. JavaServer Faces</span></p>
+<p>JavaServer Faces (JSF)는 컴포넌트 기반의 인기 급상승 중인 이벤트 주도 웹 프레임워크입니다. Spring과 JSF 연동에서 핵심적인 클래스는 DelegatingVariableResolver 클래스입니다..</p>
+<p><span style="font-weight: bold;">15.4. Struts</span></p>
+<p>Struts는 자바 애플리케이션의 사실상 표준de facto  웹 프레임워크입니다. 2001년 6월 출시된 이후 오랜 시간 사용되고 있기 때문입니다.</p>
+<p>Craig McClanahan가 만들었으며, Struts Apache Software Foundation이 호스팅하는 오픈소스 프로젝트 입니다.</p>
+<p>Spring과 Struts 연동에는 두 가지 방법이 있습니다.
+<ul>
+<li>&nbsp; &nbsp; Action을 bean으로 스프링에서 관리하도록 설정하는 방법 : ContextLoaderPlugin을 사용하고 그들간의 종속성을 스프링 설정 파일에서 설정.</li>
+</ul>
+<ul>
+<li>&nbsp; &nbsp; 스프링의 ActionSupport 클래스의 하위 클래스를 작성하고 스프링이 관리하는 빈을 getWebApplicationContext() 메소드를 사용하여 명시적으로 얻어가는 방법</li>
+</ul>
+<p><span style="font-weight: bold;">15.5. Tapestry</span></p>
+<p>&nbsp; Tapestry is an open-source framework for creating dynamic, robust, highly scalable web applications in Java. Tapestry complements and builds upon the standard Java Servlet API, and so it works in any servlet container or application server. </p>
+<p><span style="font-weight: bold;">15.6. WebWork</span></p>
+<p>&nbsp;WebWork is a Java web-application development framework. It is built specifically with developer productivity and code simplicity in mind, providing robust support for building reusable UI templates, such as form controls, UI themes, internationalization, dynamic form parameter mapping to JavaBeans, robust client and server side validation, and much more</p>
+<p><span style="font-weight: bold;">15.7. Further Resources</span></p>
+<p><a href="http://struts.apache.org/" target="_blank">Struts 홈페이지</a><br /><a href="http://java.sun.com/javaee/javaserverfaces/" target="_blank">JSF 홈페이지</a><br /><a href="http://jakarta.apache.org/tapestry/" target="_blank">Tapestry 홈페이지</a><br /><a href="http://www.opensymphony.com/webwork/" target="_blank">WebWork 홈페이지</a><br /><a href="http://wiki.apache.org/struts/StrutsTi" target="_blank">StrutsTI 프로젝트 위키</a></p>

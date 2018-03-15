@@ -1,0 +1,62 @@
+---
+layout: post
+title: Mockito - 아규먼트 Matcher
+date: 2008-08-12 01:17:46.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Argument Matcher
+- Mockito
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323145319'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Mockito.html" target="_blank">http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Mockito.html</a></p>
+<p>&nbsp; // 내장된 anyint() 아규먼트 매처를 사용해서 스텁 만들기.<br />&nbsp; stub(mockedList.get(anyInt())).toReturn("element");<br />&nbsp; <br />&nbsp; // hamcrest가 제공하는 매처를 사용해서 스텁 만들기.<br />&nbsp; stub(mockedList.contains(argThat(isValid()))).toReturn("element");<br />&nbsp; <br />&nbsp; // 다음은 "element"를 출력한다.<br />&nbsp; System.out.println(mockedList.get(999));<br />&nbsp; <br />&nbsp; // 아규먼트 매처를 사용해서 verify()를 할 수도 있다.<br />&nbsp; verify(mockedList).get(anyInt());<br />&nbsp;<br />아규먼트 매처는 flexible한 검증과 스텁을 제공한다. 전체 매처는 <a href="http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Matchers.html" target="_blank">여기</a>서 확인할 수 있다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">주의할 것:</p>
+<p>아규먼트 매처를 하나 사용하면, 다른 아규먼트들도 모두 매처로 표현해야 한다.</p></div>
+<p>예:</p>
+<p>&nbsp;&nbsp; verify(mock).someMethod(anyInt(), anyString(), eq("third argument"));<br />&nbsp;&nbsp; // 위와 같이 사용해야 한다. eq()도 아규먼트 매처니까 괜찮다.<br />&nbsp;&nbsp; <br />&nbsp;&nbsp; verify(mock).someMethod(anyInt(), anyString(), "third argument");<br />&nbsp;&nbsp; // 이렇게 하면 안 된다. 아규먼트 매처없이 사용한 세번째 아규먼트 때문에 예외가 발생할 것이다.</p>
+<p><span style="font-weight: bold;">Whiteship's Exercise</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; @Test<br />&nbsp;&nbsp; &nbsp;public void ilike() {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Criteria c = mock(Criteria.class);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; CriteriaUtils.ilike(c, "name", "keesun", MatchMode.ANYWHERE);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; verify(c).add(<span style="color: rgb(0, 102, 153); font-weight: bold;">(Criterion) anyObject()</span>);<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@Test<br />&nbsp;&nbsp; &nbsp;public void ilikeWithNullValue() {<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Criteria c = mock(Criteria.class);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; CriteriaUtils.ilike(c, "name", null, MatchMode.ANYWHERE);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; verify(c, never()).add(<span style="color: rgb(0, 102, 153); font-weight: bold;">(Criterion) anyObject()</span>);<br />&nbsp;&nbsp; &nbsp;}</div>
+<p></p>

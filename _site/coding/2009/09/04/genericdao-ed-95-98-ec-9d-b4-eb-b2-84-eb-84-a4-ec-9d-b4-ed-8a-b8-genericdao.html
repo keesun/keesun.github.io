@@ -1,0 +1,150 @@
+<p>먼저, GenericDao를 만들어 쓰면 좋은 이유를 생각해보겠습니다.<br />
+- 모든 DAO에서 중복되거나 반복되는 코드를 상당량 줄일 수 있습니다.<br />
+- 테스트도 그만큼 줄일 수 있습니다.<br />
+- 개발이 좀 더 빨라집니다.<br />
+- 비슷한 기능을 하는 메서드 이름을 통일할 수 있습니다.</p>
+<p>Entity 당 DAO를 쓰면 좋은 점과 타입-안정성을 제공하는 DAO 패턴을 사용하면 좋은 점 등은 <a title="[http://blog.xebia.com/2009/03/09/jpa-implementation-patterns-data-access-objects/]로 이동합니다." target="_blank" href="http://blog.xebia.com/2009/03/09/jpa-implementation-patterns-data-access-objects/">이 글</a>에 정리되어 있으니 궁금하신 분들은 참고하세요</p>
+<p>TDD로 다 만든 다음, 맨 마지막에 이클립스 리팩터링 기능 중에 extract interface로 뽑아 낸 인터페이스는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public interface GneericDao&lt;E&gt; {</p>
+<p>&nbsp;&nbsp;&nbsp; void add(E entity);</p>
+<p>&nbsp;&nbsp;&nbsp; List&lt;E&gt; getAll();</p>
+<p>&nbsp;&nbsp;&nbsp; E getById(Serializable id);</p>
+<p>&nbsp;&nbsp;&nbsp; void delete(E entity);</p>
+<p>&nbsp;&nbsp;&nbsp; void update(E entity);</p>
+<p>&nbsp;&nbsp;&nbsp; void flush();</p>
+<p>&nbsp;&nbsp;&nbsp; E merge(E entity);</p>
+<p>}</p></div>
+<p>이것을 구현한 실제 DAO 구현체는 이렇게 생겼습니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public class HibernateGenericDao&lt;E&gt; implements GneericDao&lt;E&gt; {</p>
+<p>&nbsp;&nbsp;&nbsp; protected Class&lt;E&gt; entityClass;</p>
+<p>&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public HibernateGenericDao() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Type type = genericSuperclass.getActualTypeArguments()[0];<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (type instanceof ParameterizedType) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.entityClass = (Class) ((ParameterizedType) type).getRawType();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.entityClass = (Class) type;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired<br />
+&nbsp;&nbsp;&nbsp; protected SessionFactory sessionFactory;</p>
+<p>&nbsp;&nbsp;&nbsp; public void add(E entity) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; getCurrentSession().save(entity);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private Session getCurrentSession() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return sessionFactory.getCurrentSession();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public List&lt;E&gt; getAll() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return getCurrentSession().createCriteria(entityClass)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .list();<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public E getById(Serializable id){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return (E) getCurrentSession().get(entityClass, id);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public void delete(E entity){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; getCurrentSession().delete(entity);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public void update(E entity){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; getCurrentSession().update(entity);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public void flush(){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; getCurrentSession().flush();<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public E merge(E entity){<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return (E) getCurrentSession().merge(entity);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p></div>
+<p>
+특징이라고 할 수 있는 걸 꼽자면..<br />
+- 하이버네이트 SessionFactory를 사용하는 GenericDAO 라는 것.<br />
+- 별도로 엔티티 타입을 인자로 넘겨줄 필요가 없다는 것.<br />
+- 타입-안전성을 보장하기 때문에 별도의 캐스팅 등이 필요없고, 컴파일 시점에 체크 가능하다는 것.</p>
+<p>이 클래스는 다음과 같은 테스트 클래스를 이용해서 TDD로 만들었습니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration(locations="/testContext.xml")<br />
+@Transactional<br />
+public class HibernateGenericDaoTest extends DBUnitSupport{</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired TestDao dao;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void add() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TestDomain entity = new TestDomain();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dao.add(entity);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getAll().size(), is(1));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void getAll() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getAll().size(), is(2));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void getById() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getById(1).getName(), is("keesun"));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void delete() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TestDomain entity = dao.getById(1);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dao.delete(entity);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getAll().size(), is(1));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void update() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // entity is (similar)detached object<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TestDomain entity = new TestDomain();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setId(1);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setName("whiteship");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dao.update(entity);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // now, entity has been persistent object<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setName("helols");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dao.flush();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getById(1).getName(), is("helols"));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void merge() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; insertXmlData("testData.xml");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // entity is detached object<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TestDomain entity = new TestDomain();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setId(1);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setName("whiteship");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TestDomain newEntity = dao.merge(entity);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // newEntity is persistent object, but entity is still detached object<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; newEntity.setName("helols");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; entity.setName("nije");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dao.flush();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(dao.getById(1).getName(), is("helols"));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+}</div>
+<p>
+이 테스트의 특징은 다음과 같습니다.<br />
+- 하이버네이트의 update()와 merge()의 특징과 그 차이점을 이해할 수 있도록 작성했습니다.<br />
+- 스프링 테스트 컨텍스트를 사용했습니다.<br />
+- DBUnit과 그것을 확장한 클래스를 이용했습니다.</p>
+<p><img src="/assets/cfile9.uf.180734144AA0B1D2561FE4.png" class="aligncenter" width="600" height="185" alt="" filename="1.png" filemime="image/png" /><br />
+생각해볼 것<br />
+- GenericDao에 있는 update(), merge(), flush()는 Generic하지 않다는 생각이 듭니다.<br />
+- (위에는 보여드리지 않았지만)테스트에 사용된 TestDomain 클래스와 TestDao를 GenericDaoTest 내부에 포함 시키는 것이 좋치 않을까?<br />
+- 어떤 기능을 더 추가할 수 있을까?</p>
+<p></p>

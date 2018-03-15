@@ -1,0 +1,45 @@
+<p style="clear: both;"><a href="http://blog.springsource.com/2010/11/19/spring-into-mobile-application-development/">http://blog.springsource.com/2010/11/19/spring-into-mobile-application-development/</a></p>
+<p style="clear: both;">스프링 모바일(Spring Mobile) 프로젝트는 스프링 MVC 확장을 제공해 모바일 웹 개발을 도와주고 스프링 안드로이드(Spring Adroid) 프로젝느는 스프링 기반 백 엔드를 사용하는 네이티브 안드로이드 클라이언트 개발을 지원한다.</p>
+<h2>스프링 모바일</h2>
+<p style="clear: both;">스마트폰에 웹 브라우저는 있지만 화면이 너무작다. 이 문제에 대한 해결 책 두가지.</p>
+<p style="clear: both;">1. 장치를 인식한 다음 웹 요청을 모바일 서비스용 사이트로 보내는 방법(서버단에서 감지)<br />
+2. 단일 사이트를 사용하되 CSS 3 미디어 쿼리와 자바스크립트를 사용해서 점진적으로 개선하는 방법(클라이언트단에서 감지)</p>
+<p style="clear: both;"><a href="https://greenhouse.springsource.org/">Greenhouse</a> 예제는 서버단 감지를 사용했다. 모바일 장치에서 온 요청은 전혀 다른 페이지 레이아웃으로 보여주는 걸 목표로 했다. 이 기능을 스프링 모바일 1.0.0.M1에서는 이 기능을 "Device Resolver Abstraction"이라는 이름하에 제공하며 다음과 같은 주요 기능을 제공한다.</p>
+<ol>
+<li>DeviceResolver를 사용해서 장치를 감지하고 현재 HttpServletRequest를 우회시킬 HandlerInterceptor 제공.</li>
+<li>감지한 장치를 @Controller의 메서드와 뷰 템플릿에 주입하여 장치 종류에 따라 로직을 달라지도록 할 수 있다.</li>
+</ol>
+<p style="clear: both;">다음은 Greenhouse 예제에서 사용한 예제 코드다. 먼저 /WEB-INF/spring/appServlet/serlvet-context.xml의 인터셉터 정의를 살펴보자.</p>
+<p>[xml]<br />
+&lt;interceptors&gt;<br />
+    &lt;!-- On pre-handle, detect the device that originated the web request --&gt;<br />
+    &lt;beans:bean class=&quot;org.springframework.mobile.device.mvc.DeviceResolvingHandlerInterceptor&quot; /&gt;<br />
+&lt;/interceptors&gt;<br />
+[/xml]</p>
+<p style="clear: both;">이번에는 현재 장치가 모바일 장치가 아닐경우다른 것을 출력하는 JSP 템플릿이다.</p>
+<p>[xml]<br />
+Please try again&lt;c:if test=&quot;${!currentDevice.mobile}&quot;&gt; or &lt;a href=&quot;&lt;c:url value=&quot;/signup&quot; /&gt;&quot;&gt;sign up&lt;/a&gt;&lt;/c:if&gt;.<br />
+[/xml]</p>
+<p style="clear: both;">마지막으로 현재 장치가 모바일이면 바뀌는 타일즈 기반 페이지 레이아웃이다.</p>
+<p>[xml]<br />
+&lt;definition name=&quot;page&quot; templateExpression=&quot;/WEB-INF/layouts/${currentDevice.mobile ? 'mobile/' : 'standard/'}page.jsp&quot; /&gt;<br />
+[/xml]</p>
+<p style="clear: both;">이런 기능과 더불어 스프링 모바일 1.0.0.M1에는 다음과 같은 기능이 들어있다.</p>
+<ol>
+<li>모바일 장치를 사용한 방문객을 다른 URL로 보내는 HandlerInterceptor. 이것을 사용하면 완전히 별개의 애플리케이션으로 모바일 사이트를 제공할 수 있다. 예를 들어 플리커 같은경우 모바일로 www.flickr.com에 접속하면 m.flickr.com으로 리다이렉트 된다.</li>
+<li>요청이 온 장치에 대한 정보를 감지할 수 있도록 WURFL을 사용한 DeviceResolver 구현체를 제공한다.</li>
+</ol>
+<p style="clear: both;">최근에는 클라이언트단 감지를 제공하기 위해 <a href="http://www.webmonkey.com/2010/09/make-a-big-splash-on-small-screens-with-media-queries/">CSS 3 미디어 쿼리</a>와 <a href="http://www.quirksmode.org/blog/archives/2010/08/combining_media.html#more">자바스크립트</a>를 사용하는 방법도 연구중이다. 이 방법은 서버단 작업이 필요치 않다는 장점이 있지만 모든 브라우저에서 지원될 수 있는 방법은 아니다. 하지만 웹킷 기반 브라우저를 사용하는 스마트폰을 타겟으로 한다면 대안이 될 수 있다.</p>
+<h2>스프링 안드로이드</h2>
+<p style="clear: both;">안드로이드 클라이언트로 오면 문제가 달라진다. HTTPS를 사용한 REST로 데이터를 가져오며 장치에다 username과 password를 저장해야 하는 Basic Auth 보다는 보통 OAuth를 사용한다.</p>
+<p style="clear: both;">OAuth는 토큰 기반 인증 방식을 제공한다. username과 password로 인증이 되면 access 토큰을 받게되고 이 access 토큰을 사용해 보안된 리소스를 요청하게 된다. 즉 모바일 장치에 access 토큰만 저장해 두면 "remember me" 같은 기능을 사용할 수 있는것이다. 또한 이 방법을 사용하면 클라이언트에서 username과 password를 알고 있을 필요가 없다. 마지막으로 사용자 모바일 장치를 도둑맞더라도 username과 password 노출 걱정할 필요없이 access 토큰만 유효하지 않도록 처리될 것이다.</p>
+<p style="clear: both;">REST API는 <a href="http://blog.springsource.com/2009/03/27/rest-in-spring-3-resttemplate/">RestTemplate</a>을 사용하고 OAuth 클라이언트는 <a href="http://static.springsource.org/spring-security/oauth/index.html">스프링 시큐리티</a>를 사용한다.</p>
+<p style="clear: both;">다음과 같이 RestTemplate을 안드로이드 애플리케이션에서 REST 클라이언트로 사용할 수 있다.</p>
+<p>[java]<br />
+RestTemplate restTemplate = new RestTemplate(new CommonsClientHttpRequestFactory());<br />
+Event event = restTemplate.getForObject(&quot;https://myapp.com/event/{name}&quot;, Event.class, &quot;springone2gx&quot;);<br />
+[/java]</p>
+<p style="clear: both;">이후에는 아마 스프링 시큐리티 OAuth 클라이언트 같은 안드로이드 환경에 필요한 스프링 프레임워크 기능을 제공할 것이다.</p>
+<h2>시작하기</h2>
+<p style="clear: both;">Greenhouse 예제를 직접로컬개발 환경에서 동작시켜 보는 것이다. Greenhouse는 스프링 안드로이드, 스프링 모바일, 스프링 MVC, 스프링 시큐리티, 스프링 소셜, 스프링 인테그레이션을 사용하고 있다. <a href="http://www.springsource.org/greenhouse">프로젝트 홈페이지</a>에서 가이드를 따라 쉽게 웹 애플리케이션, 아이폰 클라이언, 안드로이드 클라이언트를 로컬 개발 환경에서 실행하는 <a href="http://www.springsource.org/greenhouse/guide">가이드</a>를 찾아 볼 수 있다.</p>
+<p><br class="final-break" style="clear: both;" /></p>

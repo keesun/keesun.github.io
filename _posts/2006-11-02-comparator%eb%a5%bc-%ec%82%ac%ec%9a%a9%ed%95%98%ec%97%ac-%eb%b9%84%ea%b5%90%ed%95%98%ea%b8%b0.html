@@ -1,0 +1,90 @@
+---
+layout: post
+title: Comparator를 사용하여 비교하기.
+date: 2006-11-02 07:07:26.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Comparable
+- Comparator
+- compare()
+- Sorting
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322818706'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이 전글에서 보았던 Arrays.sort()와 Collection.sort() 메소드에는 공통적으로 Comparator를 추가적으로 인자로 받아들이는 메소드들이 있습니다.</p>
+<p>public static &lt;T&gt; void sort(T[] a, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">Comparator&lt;? super T&gt; c</span>)&nbsp; &lt;- Arrays 클래스에 있는 메소드</p>
+<p>public static &lt;T&gt; void sort(List&lt;T&gt; list, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">Comparator&lt;? super T&gt; c</span>) &lt;- Collections 클래스에 있는 메소드.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157);">sort를 할 때 보통은 Comparator는 주지 않고 정렬할 대상만을 전해 줍니다. </span>그렇게 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157);">전달 받은 대상의 타입이 Comparable 인터페이스를 구현하지 않았다면 컴파일 에러가 발생합니다.</span> 이 부분은 Agile Java에도 나와 있지요.( Session 클래스가 Comparable 인터페이스를 구현하지 않은 채 Collection.sort(sessions) 와 같은 호출을 하여 에러가 발생하여 이 문제를 해결한 적이 있습니다.)</p>
+<p>하지만 위의 방식대로 했을 때 발생할 수 있는 문제는.. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255);">만약에 Student를 이름으로 정렬하지 않고 학번으로 정렬하고 싶다면 어떻게 하느냐</span> 입니다. 즉 정렬을 하는 알고리즘만 살짝 바뀔 뿐인데 그렇다고 Comrable 인터페이스에 있는 comareTo() 메소드 안에 계속 if문을 심어 넣으면 변화에 닫혀있지 않는 코드가 되는 것입니다. 새로운 정렬 알고리즘은 추가 되고(확장에 열려있고 Opended) 소스코드의 변화는 최소화 하는(변화에 닫혀있는 Closed) OCP를 달성하려면&nbsp; <a href="http://whiteship.tistory.com/12">Strategy Pattern</a>을 사용하여 문제를 해결 할 수도 있겠습니다. 그리고 이런한 문제를 <a href="http://whiteship.tistory.com/42">엔터프라이즈 수업 과제</a>로 다룬적이 있었습니다.</p>
+<p>Comparator 인터페이스를 구현한 클래스들을 만들고 이것을 sort 메소드의 인자로 넘겨주면 Comparator의 compare 메소드를 사용하여 두 원소를 비교하게 됩니다.</p>
+<table summary="" border="1" cellpadding="3" cellspacing="0" width="100%">
+<tbody>
+<tr class="TableHeadingColor" bgcolor="#ccccff">
+<th colspan="2" align="left"><font size="+2"><strong>Method Summary</strong></font></th>
+</tr>
+<tr class="TableRowColor" bgcolor="white">
+<td align="right" valign="top" width="1%"><font size="-1"><code> int</code></font></td>
+<td><code><strong><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Comparator.html#compare%28T,%20T%29">compare</a></strong>(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Comparator.html" title="type parameter in Comparator">T</a> o1,        <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Comparator.html" title="type parameter in Comparator">T</a> o2)</code><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Compares its two arguments for order.</td>
+</tr>
+<tr class="TableRowColor" bgcolor="white">
+<td align="right" valign="top" width="1%"><font size="-1"><code> boolean</code></font></td>
+<td><code><strong><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Comparator.html#equals%28java.lang.Object%29">equals</a></strong>(<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Object.html" title="class in java.lang">Object</a> obj)</code><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Indicates whether some other object is "equal to" this Comparator.</td>
+</tr>
+</tbody>
+</table>
+<p>
+Comparator 인터페이스에 있는 메소드 입니다.</p>
+<p>예를 들어 학생의 이름으로 정렬하는 Comparator를 만들고 싶다면 이 인터페이스를 구현하면 됩니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">public class NameComparator implements Comparator&lt;Student&gt; {<br />
+ &nbsp;&nbsp; public int compare(Student s1, Student s2){<br />
+ &nbsp;&nbsp; &nbsp;&nbsp;  return s1.getName().compareTo(s2.getName());<br />
+ &nbsp;&nbsp; }<br />
+}</div>
+<p>
+이렇게 구현 해두고.. 이제 정렬을 할때</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">Collection.sort(students, NameComparator);</div>
+<p>
+이렇게 호출을 하면 Student가 Comparable을 구현하고 compareTo에서 학번으로 비교를 한다고 해도 그 메소드는 무시되고 이름으로 정렬하게 됩니다.</p>

@@ -1,0 +1,11 @@
+<p>참조: <a title="[http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Mockito.html]로 이동합니다." target="_blank" href="http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Mockito.html">http://mockito.googlecode.com/svn/branches/1.4/javadoc/org/mockito/Mockito.html</a></p>
+<p>링크에 있는 글대로 작성 해 보면</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stubVoid(mockWarManager).toThrow(new WarPackgingException()).on().packaging();</p>
+<p>이렇게 됩니다. </p>
+<p>"누가 뭘 던 진다 뭐 할 때."</p>
+<p>새로운 형태로 작서한 코드는 다음과 같습니다.<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; doThrow(new WarPackgingException()).when(mockWarManager).packaging();</p>
+<p>"이걸 던진 다. 누가 뭐 할 때"</p>
+<p>후자가 조금 더 짧죠. </p>
+<p>ps: 매녈 좀 업데이트 해주시지 말입니다. 스프링은 매녈이 소스 코드를 앞서 간다는데...</p>

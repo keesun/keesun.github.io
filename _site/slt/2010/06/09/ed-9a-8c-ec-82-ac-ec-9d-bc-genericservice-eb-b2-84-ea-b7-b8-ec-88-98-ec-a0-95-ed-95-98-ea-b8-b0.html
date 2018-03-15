@@ -1,0 +1,142 @@
+<p>앞에서 만들었던 GenericService에는 버그가 있었습니다. 저걸 적용한 뒤에 애플리케이션을 실행해보니까 제대로 동작하지 않더군요. 제길... 테스트를 만들껄.. 후회했습니다. &nbsp;대부분의 코드가 단순 위임이라고 해서 테스트를 무시하면 안됩니다. 사실 Service 코드에서 하는 일은 DAO로 단순 위임하는 코드밖에 없어 보이지만 그 이상으로 복잡합니다.
+<div>
+</div>
+<div>그 중 하나가 DAO를 주입 받는 일이죠. '주입 하는 일'도 아니고 '주입 받는 일'을 무시했네요.&nbsp;</div>
+<div>
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+@RunWith(SpringJUnit4ClassRunner.class)</div>
+<div>@ContextConfiguration("/testContext.xml")</div>
+<div>@Transactional</div>
+<div>public class CodeServiceImplTest {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired CodeService codeService;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Test</div>
+<div>&nbsp;&nbsp; &nbsp;public void di(){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(codeService, is(notNullValue()));</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+</div>
+<div id="">
+}</div>
+</div>
+<div id="">
+</div>
+</div>
+<div>
+</div>
+<div id="">
+초간단 테스트를 만듭니다. codeService 자체를 DI 받을 수 있는지... 빈 팩토리에서 저 빈을 만들 수 있는지 확인합니다.</div>
+<div>
+</div>
+<div>
+에러가 납니다.. ㅋ</div>
+<div>
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No unique bean of type [osaf.dao.GenericDao] is defined: expected single matching bean but found 2: [codeDaoImpl, memberDaoImpl]</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:779)</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:686)</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:478)</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>... 43 common frames omitted</div>
+</div>
+<div id="">
+</div>
+</div>
+<div>
+</div>
+<div id="">
+핵심적인 에러 메시지는 이 부분이다. 뭔 내용인지는 해설하지 않겠습니다. 퀴즈 삼아 맞춰보시죠.</div>
+<div>
+</div>
+<div>
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class GenericServiceImpl&lt;D extends GenericDao&lt;E, S&gt;, E, S&gt; implements GenericService&lt;E, S&gt; {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired ApplicationContext applicationContext;</div>
+<div>&nbsp;&nbsp; &nbsp;private Class&lt;D&gt; daoClass;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;GenericDao&lt;E, S&gt; dao;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public GenericServiceImpl(){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Type type = genericSuperclass.getActualTypeArguments()[0];</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (type instanceof ParameterizedType) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.daoClass = (Class&lt;D&gt;) ((ParameterizedType) type).getRawType();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} else {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.daoClass = (Class&lt;D&gt;) type;</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void add(E e) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.add(e);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public List&lt;E&gt; list(PageParam pageParam, S s) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.initCurrentPageInfosWith(dao.totalSize(s));</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dao.list(pageParam, s);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public E getById(int id) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return dao.getById(id);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void update(E e) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.update(e);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public void deleteBy(int id) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;dao.deleteBy(id);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@PostConstruct</div>
+<div>&nbsp;&nbsp; &nbsp;public void setUpDao(){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.dao = this.applicationContext.getBean(daoClass);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>}</div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+GenericService 구현체를 위와같이 수정했습니다. dao를 생성자에서 바로 연결하지 않고 @PostConstruct에서 연결한 것도 설명하지 않겠습니다. 요것도 심심하신 분 계시면 퀴즈 삼아 맞춰보시기 바랍니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+퀴즈1. 에러가 난 원인은?</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">퀴즈2. 왜 생성자에서 applicationContext.getBean(daoClass)를 하면 안된느가?</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>

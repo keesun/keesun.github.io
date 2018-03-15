@@ -1,0 +1,73 @@
+<table summary="&lt;tx:method/&gt; settings" border="1">
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Required?</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><tt class="literal">name</tt></td>
+<td>Yes</td>
+<td>&nbsp;</td>
+<td>
+<p>The method name(s) with which the transaction attributes<br />
+                                    are to be associated. The wildcard (*) character can be used to<br />
+                                    associate the same transaction attribute settings with a number<br />
+                                    of methods; for example, <tt class="literal">'get*'</tt>,<br />
+                                    <tt class="literal">'handle*'</tt>,<tt class="literal"> 'on*Event'</tt>, etc.</p>
+</td>
+</tr>
+<tr>
+<td><tt class="literal">propagation</tt></td>
+<td>No</td>
+<td>REQUIRED</td>
+<td>The transaction propagation behavior</td>
+</tr>
+<tr>
+<td><tt class="literal">isolation</tt></td>
+<td>No</td>
+<td>DEFAULT</td>
+<td>The transaction isolation level</td>
+</tr>
+<tr>
+<td><tt class="literal">timeout</tt></td>
+<td>No</td>
+<td>-1</td>
+<td>The transaction timeout value (in seconds)</td>
+</tr>
+<tr>
+<td><tt class="literal">read-only</tt></td>
+<td>No</td>
+<td>false</td>
+<td>Is this transaction read-only?</td>
+</tr>
+<tr>
+<td><tt class="literal">rollback-for</tt></td>
+<td>No</td>
+<td>&nbsp;</td>
+<td>
+<p>The <tt class="literal">Exception(s)</tt> that will trigger<br />
+                                    rollback; comma-delimited. For example,<br />
+                                    <tt class="literal">'com.foo.MyBusinessException,ServletException'</tt></p>
+</td>
+</tr>
+<tr>
+<td><tt class="literal">no-rollback-for</tt></td>
+<td>No</td>
+<td>&nbsp;</td>
+<td>
+<p>The <tt class="literal">Exception(s)</tt> that will<br />
+                                    <span class="emphasis"><em>not</em></span> trigger rollback; comma-delimited.<br />
+	                                For example,<br />
+	                                <tt class="literal">'com.foo.MyBusinessException,ServletException'</tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>트랜잭션 어드바이(&lt;tx:advice/&gt;)에 설정할 수 있는 트랜잭션 설정입니다. name 속성만 필수도 나머지 속성들은 설정해 주지 않으면 디폴트 값을 가지게 됩니다.</p>
+<p>propagation과 isolation 에는 어떤 값을 줄 수 있고 주는 값들에 따라 어떻게 변한다는 설명이 없네요. 궁금한데;;</p>
+<p>timeout 의 기본값이 -1 이라는 무슨 뜻일까요? 0 도 아니고.. -1 은...뭐지.. 아~ timeout이 없다는 뜻일까요?</p>
+<p>찾아봐야겠습니다.</p>

@@ -1,0 +1,54 @@
+---
+layout: post
+title: 4.6. Application Context Destruction
+date: 2008-04-13 03:34:12.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- Chapter 4
+- Spring DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322686135'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>application context의 삶은 자신이 포함되어 있는 번들에 달려있다. 따라서 만약에 번들을 제거uninstall 하면, application context도 제거되고, export 했던 서비스들도 레지스트리에서 내리고, import 했던 서비스들도 제거한다.</p>
+<p>번들만 별도로 닫히거나 전체 OSGi 플랫폼을 끄는 것과 같은 매우 큰 이벤트의 일부로 닫힐 수가 있다. 이런 경우이거나 extender 번들이 닫히는 경우에는, 서비스들 사이의 종속성에 근거하여 관리하에 닫게 된다. 자세한 내용은 다음 섹션에서...</p>

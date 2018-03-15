@@ -1,0 +1,26 @@
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; private MimeMessage makeTestMimeMessage() throws MessagingException,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AddressException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MimeMessage message = javaMailSender.createMimeMessage();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">MimeMessageHelper </span>helper = new MimeMessageHelper(message);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">helper.setTo</span>("whiteship2000@gmail.com");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">helper.setFrom</span>("s2cmailer@gmail.com");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">helper.setSubject</span>("This is the Subject Line!");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">helper.setText</span>("&lt;h1&gt;This is actual message&lt;/h1&gt;&lt;a href=\"ads\"&gt;hi&lt;/a&gt;", true);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return message;<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; private MimeMessage makeTestConfirmMimeMessage() throws MessagingException,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AddressException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MimeMessage message = javaMailSender.createMimeMessage();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message.setFrom(new InternetAddress("s2cmailer@gmail.com"));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message.addRecipient(Message.RecipientType.TO,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new InternetAddress("whiteship2000@gmail.com"));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message.setSubject("This is the Subject Line!");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message.setContent("&lt;h1&gt;This is actual message&lt;/h1&gt;&lt;a href=\"ads\"&gt;hi&lt;/a&gt;",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "text/html" );<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return message;<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>둘 중에 어떤 코드를 쓰느냐는 코딩하는 사람 맘이겠지만, 위에 있는 것이 훨씬 깔끔해 보이지 않나요. Helper를 이용해서 좀 더 직관적인 메서드 이름과 편리한 인터페이스로 MimeMessage를 작성할 수 있습니다.</p>
+<p>애용하세요~</p>

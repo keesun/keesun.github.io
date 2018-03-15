@@ -1,0 +1,73 @@
+<p>@Test<br />
+ &nbsp; &nbsp;public void plusTest() {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;for (int i = 0; i &lt; 10; i++) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;plus();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;}</p>
+<p>plus() 코드 보기<br />
+[#M_ more.. | less.. | <br />
+&nbsp; private void plus() {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;long t1 = System.currentTimeMillis();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;int i = 0;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;while (i &lt; 100000000) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;i++;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;}<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;long t2 = System.currentTimeMillis();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;System.out.println("plus using i++ :" + (t2 - t1));</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;long t3 = System.currentTimeMillis();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;int j = 0;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;while (j &lt; 100000000) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;j = j + 1;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;}<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;long t4 = System.currentTimeMillis();<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;System.out.println("plus using i=i+1 :" + (t4 - t3));<br />
+ &nbsp; &nbsp;}<br />
+_M#]<br />
+결과 보기<br />
+[#M_ more.. | less.. | <br />
+plus using i++ :406<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :172<br />
+plus using i++ :188<br />
+plus using i=i+1 :187<br />
+plus using i++ :172<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :172<br />
+plus using i++ :188<br />
+plus using i=i+1 :187<br />
+plus using i++ :188<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :188<br />
+plus using i++ :187<br />
+plus using i=i+1 :188<br />
+plus using i++ :297<br />
+plus using i=i+1 :218<br />
+_M#]<br />
+생각해 보건데 맨 처음 루프를 돌 때만 심각한 속도 차이가 발생하고 그 이후로는 속도차이가 거의 없거나 매우 미묘하게 보입니다. 따라서 혹시 i++ 가 i = i + 1 보다 느린 것이 아니라 i++ 가 이 프로그램을 실행시킬 때 맨 앞에 있어서 그런 건 아닐까.. 하는 생각이 들었습니다.</p>
+<p>그래서 연산자만 위 아래를 바꾸고 다시 test를 해보았습니다.<br />
+[#M_ more.. | less.. | <br />
+plus using i=i+1 :390<br />
+plus using i++ :172<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :219<br />
+plus using i++ :219<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :188<br />
+plus using i++ :172<br />
+plus using i=i+1 :187<br />
+plus using i++ :188<br />
+plus using i=i+1 :172<br />
+plus using i++ :187<br />
+plus using i=i+1 :188<br />
+plus using i++ :187<br />
+plus using i=i+1 :172<br />
+plus using i++ :188<br />
+_M#]<br />
+와오!!! 추측이 맞긴 했지만 역시.. 그래도 중반 부분을 보니까 i = i + 1 로 연산하는 것이 미묘하긴 하지만 i++ 보다 빠른 경우가 많군요.</p>

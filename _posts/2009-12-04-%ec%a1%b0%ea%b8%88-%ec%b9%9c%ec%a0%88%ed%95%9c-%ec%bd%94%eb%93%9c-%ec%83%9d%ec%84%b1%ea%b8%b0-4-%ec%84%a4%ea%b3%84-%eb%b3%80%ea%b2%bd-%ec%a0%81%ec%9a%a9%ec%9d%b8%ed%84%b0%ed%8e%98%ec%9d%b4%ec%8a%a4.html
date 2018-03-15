@@ -1,0 +1,186 @@
+---
+layout: post
+title: 조금 친절한 코드 생성기 4 - 설계 변경 적용(인터페이스)
+date: 2009-12-04 05:02:03.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 코드 생성기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323193943'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 ControllerSettings라는 마커 인터페이스를 도입하여 설계를 변경해보겠습니다. 이번에도 저는 TDD 프로가 아니라서;; 테스트 코드 부터 수정하진 못했습니다.. (흑흑.. 다음 부턴;; 테스트부터;???)</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+public interface CodeGenerationService {</p>
+<p>&nbsp;&nbsp;&nbsp; void generateController(ControllerSettings settings, Class domainClass) throws CodeGenerationException;</p>
+<p>}</p></div>
+<p>
+ControllerSettings 라는 인터페이스에는 아무것도 없습니다. 단순히 타입만 맞추가 위한 거죠.</p>
+<p>그리고 FreemarkerControllerSettings 구현체를 만듭니다. 여기에 실제 프리마커 코드 생성기가 필요로 하는 인자값들이 들어갑니다. 이전 글에서 Map이 하던 역할을 이녀석이 하는거죠.</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+public class FreemarkerControllerSetting implements ControllerSettings {</p>
+<p>&nbsp;&nbsp;&nbsp; private String module;</p>
+<p>&nbsp;&nbsp;&nbsp; private String templateFileName;</p>
+<p>&nbsp;&nbsp;&nbsp; private String destinationDirPath;</p>
+<p>&nbsp;&nbsp;&nbsp; public FreemarkerControllerSetting(String module, String templateFileName, String destinationDirPath) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.module = module;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.templateFileName = templateFileName;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.destinationDirPath = destinationDirPath;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public String getModule() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return module;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public String getTemplateFileName() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return templateFileName;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public String getDestinationDirPath() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return destinationDirPath;<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}
+</div>
+<p>
+별도의 세터는 없어서 변경을 막고, 생성자를 이용해서 강제적으로 세 값 모두 받도록 했습니다. (이렇게 해도 널 체크는 하긴 해야겠지만... 아 이 귀찮은 널 체크... 하긴.. 어차피 뭔가가 null이면 어디선가 에러가 날테니 굳이 안해도 되겠네요. 캬캬캬)</p>
+<p>그리고 이제 프리마커 코드 생성기 코드를 수정합니다.</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+public class FreemarkerCodeGenerationService implements CodeGenerationService {</p>
+<p>&nbsp;&nbsp;&nbsp; private Configuration configuration;<br />
+&nbsp;&nbsp;&nbsp; private Stack&lt;File&gt; createdFilesWhileGenerateController;<br />
+&nbsp;&nbsp;&nbsp; private Stack&lt;File&gt; createdFilesWhileGenerateDao;</p>
+<p>&nbsp;&nbsp;&nbsp; public FreemarkerCodeGenerationService(Configuration configuration){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.configuration = configuration;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public void generateController(ControllerSettings settings, Class domainClass) throws CodeGenerationException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FreemarkerControllerSetting fcSettings = (FreemarkerControllerSetting)settings;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String module = fcSettings.getModule();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String templateFileName = fcSettings.getTemplateFileName();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String destinationDirName = fcSettings.getDestinationDirPath();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map&lt;String, String&gt; map = new HashMap&lt;String,&nbsp; String&gt;();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String className = domainClass.getSimpleName();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map.put("module", module);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map.put("domainClass", className);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map.put("domainName", ClassUtils.getShortNameAsProperty(domainClass));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createdFilesWhileGenerateController = new Stack&lt;File&gt;();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Template controllerTemplate = null;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; controllerTemplate = configuration.getTemplate(templateFileName);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException e) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new CodeGenerationException("template file loading fail with [" + templateFileName + "]", e);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File desticationFolder = new File(destinationDirName);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boolean created = desticationFolder.mkdir();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(created)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createdFilesWhileGenerateController.push(desticationFolder);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; desticationFolder = new File(destinationDirName + "/" + module);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; created = desticationFolder.mkdir();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(created)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createdFilesWhileGenerateController.push(desticationFolder);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File destinationFile = new File(destinationDirName + "/" + module + "/" + className + "Controller.java");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileWriter writer = null;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; writer = new FileWriter(destinationFile);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; controllerTemplate.process(map, writer);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; writer.flush();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; writer.close();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(destinationFile.getAbsolutePath()&nbsp; + " created");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createdFilesWhileGenerateController.push(destinationFile);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException e) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new CodeGenerationException("destincation file creation fail", e);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (TemplateException e) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new CodeGenerationException("template processing fail", e);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } finally {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; writer.close();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException e) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>...</p>
+<p>}</p></div>
+<p>
+음.. 확실히 Map에서 꺼내올 때에 비해서 뭔가 편합니다. 대체 Map에 어떤 키 값으로 데이터들이 들어있는지 애매한데다, 자쳇해서 스펠링이라도 틀리면;; 아무래도 그냥 이 방법으로 가야겠습니다.</p>
+<p>마지막으로 테스트를 해봅니다. 물론 약간 고쳐야 하죠.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+public class FreemarkerCodeGenerationServiceTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void generationTst() throws IOException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Configuration configuration = new Configuration();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setObjectWrapper(new DefaultObjectWrapper());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setDirectoryForTemplateLoading(new FileSystemResource("doc/template").getFile());</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertNotNull(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FreemarkerCodeGenerationService service = new FreemarkerCodeGenerationService(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.generateController(new FreemarkerControllerSetting("test", "controller.ftl", "test/springsprout/modules"), Study.class);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertTrue(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.deleteController();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertFalse(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}
+</div>
+<p>
+잘 돌아갑니다. 그다지 여러 경우를 테스트하고 있지는 않지만 나름대로 최소한의 기능 보장은 해주기 때문에 안심하고 코딩을 계속할 수 있겠습니다.</p>
+<p>
+<img src="{{ site.baseurl }}/assets/cfile4.uf.197ED7164B1896F271772B.jpg" class="aligncenter" width="600" height="480" alt="" filename="1.jpg" filemime="image/jpeg" /><br />
+현재 상태에서 커버리지를 색으로 표시해봤습니다. 몇가지 특수한 상황에 대한 테스트가 안 된 부분이 있는데 저 부분에 대한 테스트는 나중에 만들기로 하고 테스트 코드에 요약해 둡니다.</p>
+<p>public class FreemarkerCodeGenerationServiceTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void generationTst() throws IOException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Configuration configuration = new Configuration();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setObjectWrapper(new DefaultObjectWrapper());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setDirectoryForTemplateLoading(new FileSystemResource("doc/template").getFile());</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertNotNull(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FreemarkerCodeGenerationService service = new FreemarkerCodeGenerationService(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.generateController(new FreemarkerControllerSetting("test", "controller.ftl", "test/springsprout/modules"), Study.class);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertTrue(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.deleteController();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertFalse(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; //TODO template file loading fail test<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; //TODO destination file make fail test<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; //TODO template processing fail test<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; //TODO destination folder mkdir test<br />
+}</p>
+<p>자 이제서야;; 본격적으로 Dao 코드 생성 작업에 들어갈 수 있겠군요.</p>

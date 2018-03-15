@@ -1,0 +1,22 @@
+<p>기대는 하지 마시구요. @_@ 기존 틀(빈약한 도메인 객체 + 두꺼운 서비스 계층)에서 벗어난다는게 이렇게 머리 아픈 일인지 몰랐습니다. DDD 공부라도 제대로 했었어야 하는데.. 역시 개념없는 코드와 코드 없는 개념은 아무것도 아닌 것 같아요. 힘 없는 정의와 정의없는 힘처럼... 각설하고.. 오늘 구현해볼 아키텍처를 그려봤습니다.</p>
+<p><img src="/assets/cfile3.uf.17124D0F4A31B5DB210230.png" class="aligncenter" width="400" /><img src="/assets/cfile23.uf.160F100F4A31B5DC32E274.png" class="aligncenter" width="400" /><img src="/assets/cfile1.uf.200C860F4A31B5DC63E173.png" class="aligncenter" width="400" /><img src="/assets/cfile4.uf.130A590F4A31B5DD5B4D97.png" class="aligncenter" width="400" /><img src="/assets/cfile24.uf.1410320F4A31B5DD36B3C2.png" class="aligncenter" width="400" /></p>
+<p>일단 Web 계층에서는 Application 계층에 있는 Thin Facade 내지 서비스를 호출할 겁니다. </p>
+<p>Thin Facade는 도메인 객체로 대부분의 역할을 위임할 겁니다.</p>
+<p>도메인 계층에서는 Thin Facade로 부터 어떤 일을 위임 받은 도메인 객체는 비즈니스 로직을 담당할 것이고 <br />
+- 컬렉션에 저장, 조회 등의 작업을 할 때는 계층에 위치한 Repository를 이용할 겁니다. 여기서 Repository는 DAO와는 개념이 다르다(참조: <a title="[http://aeternum.egloos.com/1160846]로 이동합니다." target="_blank" href="http://aeternum.egloos.com/1160846">http://aeternum.egloos.com/1160846</a>)는 것에 주의해 주세요. <br />
+- Repository는 모든 Entity가 아닌, Entry Point에 해당하는 Entity에 대한 것만 만들 겁니다.<br />
+- Email, JMS 등의 기능이 필요하다면 Infrastructure에서 제공하는 서비스를 이용할 겁니다.</p>
+<p><span style="font-weight: bold;">시나리오 1: User</span></p>
+<p><img src="/assets/cfile23.uf.1711CF0D4A31BAB2414216.png" class="aligncenter" width="413" height="664" alt="" filename="6.png" filemime="image/png" /><br />
+UserController가 요청을 받으면 UserFacade가 이 요청을 받아서 User의 특정 메서드를 호출하고, User는 UserRepository를 사용하여 원하는 작업을 한다.</p>
+<p><span style="font-weight: bold;">시나리오 2: User-&gt;Address</span></p>
+<p><img src="/assets/cfile3.uf.1415100F4A31BAC81B3753.png" class="aligncenter" width="499" height="663" alt="" filename="7.png" filemime="image/png" /><br />
+위 상황에서 Value 타입인 Address가 추가 됐을 때 모습으로 별반 달라진 건 없음. Value 타입이 Entity 타입과 어떤 차이가 있는지 보여주는 시나리오.</p>
+<p><span style="font-weight: bold;">시나리오 3: User-&gt;Address, Order</span></p>
+<p><img src="/assets/cfile23.uf.171EF50E4A31B9E4655631.png" class="aligncenter" width="600" height="547" alt="" filename="8.png" filemime="image/png" /><br />
+Order라는 새로운 Entity이자 Entry Type이 추가되자 Controller, Facde, Repository, Dao가 추가된다. User와 Order는 양방향 관계로 서로가 서로를 참조한다. 비즈니스 요구사항에 따라 방향성은 달라질 수 있다. 또한 현재는 각자가 자신의 Repository만 참조하고 있는데, 이 모습도 비즈니스 요구사항에 따라 달라질 수 있다. 중요한 건, 비즈니스 요구사항에 따라 도메인 객체만 변경하면 될 뿐, 나머진 그대로라는 것이다. </p>
+<p>주의 할 것은 전체 아키텍처에서도 그렸듯이 도메인 계층에서 Application 계층을 참조하지 않는다는 것이다. Application 계층을 참조할 일이 있다는 것은 도메인 계층이 다시 Application 계층으로 일을 넘긴다는 것인데, 그렇게 되면 Thin Facade라는 가정이 어긋나게 되고 비즈니스 로직이 Application 계층쪽으로 새어나가게 될 것이다.</p>
+<p><span style="font-weight: bold;">시나리오 4: User-&gt;Address, Order-&gt;OrderLine</span></p>
+<p><img src="/assets/cfile3.uf.1222000E4A31B9E447E6F8.png" class="aligncenter" width="600" height="567" alt="" filename="9.png" filemime="image/png" /><br />
+이번에는 새로운 Entity OrderLine을 추가했다. 하지만 이 Entity는 Entry Point가 아니라 Order에 종속된 생명주기를 지나고 있다. 따라서 Order가 OrderLine까지 같이 관리하며 OrdeLineRepository는 만들지 않는다. 대신 Infrastructure에 OrderLineDao를 추가하여 OderRepository가 OrderLine을 DB에 넣을 때 이용할 수 있게 도와준다.</p>
+<p>이제 구현해보는 일만 남았군요. 캬~~ 코딩하기 전에 그림 그려보는 것도 좀 도움이 되네요. 코딩하면서 계속 디자인을 바꾸니깐.. 테스트고 뭐고.. @_@ 일단 저렇게 큰그림 잡고 조금씩 테스트 해 가면서 기왕이면 TDD로 ㄱㄱ 해보렵니다! 파이팅!! 오늘은 이거 못 만들면 퇴근 못하니깐...ㄷㄷㄷㄷㄷ... 내일 스터디는 밤새고 가야할지도...??? 헤헷 후딱 하고 퇴근해버려야지~</p>

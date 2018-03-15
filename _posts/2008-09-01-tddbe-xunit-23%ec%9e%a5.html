@@ -1,0 +1,63 @@
+---
+layout: post
+title: TDDBE - xUnit 23장
+date: 2008-09-01 11:37:23.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- xUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323147116'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>드디어 마지막이군요.</p>
+<p>ToDo<br />테스트 여러 개 실행하기</p>
+<p>여러 개 테스트를 한 번에 묶어서 실행합니다. 테스트 코드를 실행하던 메인 메소드를 보고 그 중복을 제거하려는 시도에서 비롯된 거 같습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">new TestCaseTest("testTemplateMethod").run().summary();<br />new TestCaseTest("testResult").run().summary();<br />new TestCaseTest("testFailedResultFormatting").run().summary();<br />new TestCaseTest("testFailedResult").run().summary();</div>
+<p>바로 이 코드를 </p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; &nbsp; &nbsp; TestSuite suite = new TestSuite();<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new TestCaseTest("testTemplateMethod"));<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new TestCaseTest("testResult"));<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new TestCaseTest("testFailedResultFormatting"));<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new TestCaseTest("testFailedResult"));<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new TestCaseTest("testSuite"));<br />&nbsp; &nbsp; &nbsp; &nbsp; TestResult result = new TestResult();<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.run(result);<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(result.summary());</div>
+<p>이렇게 바꿀 겁니다.</p>
+<p>그래서 일단 testSuite이라는 테스트 클래스를 작성합니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public void testSuite(){<br />&nbsp; &nbsp; &nbsp; &nbsp; TestSuite suite = new TestSuite();<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new WasRun("testMethod"));<br />&nbsp; &nbsp; &nbsp; &nbsp; suite.add(new WasRun("testBrokenMethod"));<br />&nbsp; &nbsp; &nbsp; &nbsp; TestResult result = new TestResult(); <br />&nbsp; &nbsp; &nbsp; &nbsp; suite.run(result);<br />&nbsp; &nbsp; &nbsp; &nbsp; assert result.summary().equals("2 run, 1 failed");<br />&nbsp; &nbsp; }</div>
+<p>이 클래스는 Composite 패턴을 구현할 생각이라고 합니다. 따라서 TestSuite에 있는 run()과 TestCase()에 있는 run() 메소드는 똑 같은 모양을 해야합니다. 그러다 보니, run() -&gt; run(TestResult)로 설계상의 변화를 줍니다. 그 결과 이미 기존에 존재하는 코드를 수정해야 하는 일이 생겼습니다. 하지만, 테스트 코드가 있었기 때문에 매우 안전하게 변화를 줄 수 있었습니다. 시간도 그만큼 단축이 되는거겠죠. </p>
+<p>간단에 TDD의 달콤함을 다시 맛 볼 수 있었던 좋은 시간이었습니다. 이제는 JUnit 1.0 코드를 볼 차례로군요.. 그건 내일;;</p>

@@ -1,0 +1,31 @@
+<p>&nbsp;&nbsp;&nbsp; @Transactional<br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void crud() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Emp emp = new Emp();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; emp.setName("ks");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ed.save(emp);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(ed.getAll().size(), is(1));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(ed.get(emp.getId()).getName(), is("ks"));<br />
+<br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; emp.setName("tb");</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ed.update(emp);</span><br style="font-weight: bold; color: rgb(92, 127, 176);" /><span style="font-weight: bold; color: rgb(92, 127, 176);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(ed.get(emp.getId()).getName(), is("tb"));</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ed.delete(emp);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(ed.getAll().size(), is(0));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이런 테스트가 있는데, 콘솔 창에 쿼리를 봤더니.</p>
+<p>Hibernate: insert into Emp (id, dept_id, name) values (null, ?, ?)<br />
+Hibernate: call identity()<br />
+Hibernate: select emp0_.id as id4_, emp0_.dept_id as dept3_4_, emp0_.name as name4_ from Emp emp0_<br />
+Hibernate: delete from Emp where id=?<br />
+Hibernate: select emp0_.id as id4_, emp0_.dept_id as dept3_4_, emp0_.name as name4_ from Emp emp0_</p>
+<p>update문이 빠져있다. 여기서 발생하는 의문점이 한 두가지가 아니다.</p>
+<p>1. DB에 update가 되지도 않았는데 테스트는 어떻게 통과한 것일까?</p>
+<p>2. 왜 update 문은 날아가지 않은 것일까?</p>
+<p>3. 역으로, 왜 insert와 delete는 날아간 것일까?</p>
+<p>이 세 가지 의문을 해결하려면 위에서 작성한 코드를 좀 더 자세히 살펴볼 필요가 있다. 바로 ed.save(), ed.get(), ed.getAll(), ed.update(), ed.delete()&nbsp; 들이다. 이 녀석들이 어떻게 구현되어 있는지 보지 않고서는 알 수 없다. 또하나 Flush 모드 역시 알아야 한다. </p>
+<p>- Flush 모드는 기본 모드인 AUTO를 사용했다.<br />
+- save(), get(), update(), delete()는 하이버네이트의 <a title="[https://www.hibernate.org/hib_docs/v3/api/org/hibernate/Session.html]로 이동합니다." target="_blank" href="https://www.hibernate.org/hib_docs/v3/api/org/hibernate/Session.html">Session</a> API와 동일하다고 생각하면 되며, getAll()은 다음과 비슷하게 구현되어 있다. session.createQuery("from Emp"); 실제로는 이 모든게 GenericDao 구현체에 들어있어서 약간 다르긴 하지만, 본질은 그렇다.<br />
+- 테스트는 @Transactional한 녀석으로 기본으로 rollback될 녀석이다.</p>
+<p>자.. 이제 위 세가지 질문에 대답할 수 있을 것이다. 그랬다면, 다음 퀴즈도 덤으로 풀어보자.<br />
+update 쿼리를 볼 수 있는 방법은 현재 두 가지 정도가 떠오른다.</p>
+<p>4. 위 테스트 코드에서 한 줄을 삭제하여 update 쿼리가 콘솔에 찍히게 해보자.</p>
+<p>5. 위 코드에 ed.flush()를 어디에 추가하면 update문을 볼 수 있을까?</p>
+<p>정답은 비공개.. 영원히..</p>

@@ -1,0 +1,71 @@
+---
+layout: post
+title: Easymock 연습하기 3탄
+date: 2006-12-06 01:50:55.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- EasyMock
+- 단위 테스트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322790071'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.tistory.com/238">Easymock 연습하기 2탄</a>에서는 mock 객체를 이용해서 void 형태의 메소드를 테스트 했습니다. 즉 올바른 인자가 들어가는지 확인을 한것입니다.</p>
+<p>이번에는 나오는 값도 테스트를 해보겠습니다. 나오는 값을 테스트하기 위해서는 expect라는 메소드와 andReturn메소드를 사용합니다.</p>
+<p>소스보기<br />
+[#M_ more.. | less.. | <br />
+@Test<br />
+ &nbsp;&nbsp; public void get(){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; final Member member = new Member();</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; mockMemberDao.add(member);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">expect(mockMemberDao.get(1)).andReturn(member);</span></p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; replay(mockMemberDao);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; memberRepository.add(member);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertEquals(member, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">memberRepository.get(1)</span>);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; verify(mockMemberDao);<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+expect를 이용해서 리턴값이 있는 메소드를 감싸고 그 뒤에 andReturn을 호출하면서 반활 될 타입의 객체를 지정해 줍니다. =&gt; "memberDao에 get메소드를 호출하면 member가 나온다."</p>
+<p>그리고 replay를 실행하여 실제로 member를 추가한 뒤에 memberRepository를 이용해서 get을 호출하면 memberRepository 안에 있는 memberDao의 Mock 객체가 member를 반환해주게 됩니다. 따라서 시나리오와 액션이 일치하게 되며 verify를 이용해서 확인할 수 있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1148699871.bmp" class="aligncenter" width="412" height="376" alt="">1148699871.bmp</a><br />
+위 메소드의 내용을 한번 그려봤습니다. Dao 쪽은 Mock으로 처리하고 Service만 test를 할 수 있게 되었습니다.</p>

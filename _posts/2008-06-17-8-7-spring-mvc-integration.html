@@ -1,0 +1,65 @@
+---
+layout: post
+title: 8.7. Spring-MVC Integration
+date: 2008-06-17 13:00:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 08
+tags:
+- Chapter 8
+- 스프링 DM
+- 스프링 DM 레퍼런스
+- 스프링 MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323080349'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1.1부터 스프링 DM은 스프링 MVC 프레임워크와 밀접하게 통홥되었다. 이번 섹션에서 어떻게 스프링 MVC 애플리케이션을 OSGi 환경에서 실행할 수 있는지 살펴보겠다.</p>
+<p>OSGi 플랫폼에서 제대로 사용되려면, 스프링 MVC를 새로운 환경으로 이전해야 한다. 스프링 DM은 OSGi를 인식하는 application context를 제공한다.(OsgiBundleXmlWebApplicationContext) 이것은 스프링 MVC의 XmlApplicationContext와 동일한 역할을 한다. application context는 웹 애플리케이션 BundleContext를 알고 있고 따라서 OSGi 영역에 있는 자원들을 읽고 OSGi 서비스를 공개하고 BundleContextAware를 지원하고 클래스패스에 포함되어있는 번들들을 컴포넌트스캔할 수 있다.</p>
+<p>이 애플리케이션 컨텍스트를 사용하려면 스프링의 ContextLoaderListener의 contextClass라는 파라미터와 DispatcherServlet을 사용하면 된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">&lt;context-param&gt;<br />&nbsp; &lt;param-name&gt;contextClass&lt;/param-name&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (1)<br />&nbsp; &lt;param-value&gt;<br />org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext<br />&lt;/param-value&gt; &nbsp;&nbsp; (2)<br />&lt;/context-param&gt;</p>
+<p>&lt;listener&gt;<br />&nbsp; &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (3)<br />&lt;/listener&gt;</p>
+<p>&lt;servlet&gt;<br />&nbsp; &lt;servlet-name&gt;petclinic&lt;/servlet-name&gt;<br />&nbsp; &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (4)<br />&nbsp; &lt;load-on-startup&gt;2&lt;/load-on-startup&gt;<br />&nbsp; &lt;init-param&gt;<br />&nbsp; &nbsp; &lt;param-name&gt;contextClass&lt;/param-name&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (5)<br />&nbsp; &nbsp; &lt;param-value&gt;<br />org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext<br />&lt;/param-value&gt;&nbsp; (2)<br />&nbsp; &lt;/init-param&gt;<br />&lt;/servlet&gt;</p>
+<p>(1) 스프링의 ContextLoaderListner가 최상위 웹 애플리케이션 컨텍스트 타입을 알기 위한<br />context-param 이름<br />(2) OSGi를 인식하는 web application context 풀네임<br />(3) 스프링 설정 읽어들이는 리스너<br />(4) 스프링 MVC 젤 앞단 컨트롤러<br />(5) 스프링의 DispatcherServlet이 웹 애플리케이션 컨텍스트 타입을 알기 위한 init-param</div>
+<p>위와같이 설정하면,&nbsp; 스프링 DM 번들은 구동중인 BundleContext를 가져다 사용할 수 있으며 OSGi 환경을 인식할 수 있다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">노트</p>
+<p>물론 스프링 MVC 애플리케이션에는 적절한 import 문들이 들어가있어야 한다. 즉 WAR도 번들이기 때문에 manifest 파일에 적절하게 설정되어 있지 않으면, 클래스패스가 맞지 않게되고 따라서 제대로 동작하지 않을 것이다.</p></div>
+<p></p>

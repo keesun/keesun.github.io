@@ -1,0 +1,130 @@
+---
+layout: post
+title: XmlBeanFactory 클래스 살펴보기
+date: 2006-11-02 01:53:30.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mission
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322976476'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>package org.springframework.beans.factory.xml;</p>
+<p>import org.springframework.beans.BeansException;<br />
+import org.springframework.beans.factory.BeanFactory;<br />
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;<br />
+import org.springframework.core.io.Resource;</p>
+<p>public class XmlBeanFactory extends DefaultListableBeanFactory {</p>
+<p> &nbsp;&nbsp; private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);<br />
+ &nbsp;&nbsp; <br />
+ &nbsp;&nbsp; public XmlBeanFactory(Resource resource) throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this(resource, null);<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; super(parentBeanFactory);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.reader.loadBeanDefinitions(resource);<br />
+ &nbsp;&nbsp; }</p>
+<p>}</p>
+<p>멤버 변수 하나.. 생성자 두개.. 매우 Simple한 클래스입니다. 상속 구조는 다음과 같습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1179800511.bmp" class="alignleft" width="261" height="328" alt="">1179800511.bmp</a>AbstractBeanFactory는 지난 번에 살펴본적이 있기 때문에 이 위로는 생략하였습니다. 그리고 꽤 많은 인터페이스들이 오른쪽에 얽혀 있는데 클래스의 상속 구조에만 집중하기 위해 짤랐습니다.</p>
+<p>AbstractBeanFactory와 XmlBeanFactory사이의 두 개의 클래스에서 많은 인터페이스들을 구현해주고 있는 모습을 확인 할 수 있습니다.(물론 AbstractBeanFactory도&nbsp; BeanfFactory, ConfigurableBeanFactory, HierarchicalBeanFactory 인터페이스를 구현했습니다.)</p>
+<p>XmlBeanFactory의 생성자에서 호출하는 reader.loadBeanDefinitions(resource); 메소드를 보겠습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1198282148.bmp" class="aligncenter" width="299" height="50" alt="">1198282148.bmp</a><br />
+public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return loadBeanDefinitions(new EncodedResource(resource));<br />
+}</p>
+<p>loadBeanDefinitions() 소스코드 보기<br />
+[#M_ more.. | less.. | <br />
+/**<br />
+ &nbsp;&nbsp; &nbsp;* Load bean definitions from the specified XML file.<br />
+ &nbsp;&nbsp; &nbsp;* @param encodedResource the resource descriptor for the XML file,<br />
+ &nbsp;&nbsp; &nbsp;* allowing to specify an encoding to use for parsing the file<br />
+ &nbsp;&nbsp; &nbsp;* @return the number of bean definitions found<br />
+ &nbsp;&nbsp; &nbsp;* @throws BeanDefinitionStoreException in case of loading or parsing errors<br />
+ &nbsp;&nbsp; &nbsp;*/<br />
+ &nbsp;&nbsp; public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Assert.notNull(encodedResource, "EncodedResource must not be null");<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; if (logger.isInfoEnabled()) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; logger.info("Loading XML bean definitions from " + encodedResource.getResource());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; InputStream inputStream = encodedResource.getResource().getInputStream();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; try {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; InputSource inputSource = new InputSource(inputStream);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (encodedResource.getEncoding() != null) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; inputSource.setEncoding(encodedResource.getEncoding());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return doLoadBeanDefinitions(inputSource, encodedResource.getResource());<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; finally {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; inputStream.close();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; catch (IOException ex) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new BeanDefinitionStoreException(<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "IOException parsing XML document from " + encodedResource.getResource(), ex);<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; }<br />
+_M#]<br />
+EncodedResource.getResource() 메소드가 Xml configuration Metadata를 읽어 들이는 핵심 부분인듯 합니다.</p>
+<p>메소드 호출 순서를 보겠습니다.</p>
+<ol>
+<li>new XmlBeanFactory( ~, ~)</li>
+<ol>
+<li>reader.loadBeanDefinitions(resource)</li>
+</ol>
+<ol>
+<ol>
+<li>Assert.notNull(encodedResource, "Message")</li>
+<li>logger.isInfoEnabled()</li>
+<li>logger.info("Message" + encodedResource.getResource())</li>
+<li>encodedResource.getResource().getInputStream()</li>
+<li>encodedResource.getEncoding()</li>
+<li>위 5번의 반환값이 null이 아니면</li>
+<li>inputSource.setEncoding(encodedResource.getEncoding())</li>
+<li><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">return doLoadBeanDefinitions(inputSource, encodedResource.getResource()</span></li>
+<li>inputStream.close()</li>
+<li>위 4번 부터 9번 사이에 IOException이 발생하면</li>
+<li>throw new BeanDefinitionStoreException("Message" + encodedResource.getResource(), ex)</li>
+</ol>
+</ol>
+</ol>

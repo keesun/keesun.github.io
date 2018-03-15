@@ -1,0 +1,135 @@
+---
+layout: post
+title: POM
+date: 2007-11-26 02:05:47.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323023152'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Maven은 두 개의 주요 개념에 기반하여 프로젝트를 관리하고 있습니다. 하나는 "Object" 또 하나는 "Tasks" 입니다. Object는 프로젝트 자체를 하나의 개체로 보겠다는 것이고 이 개념이 Ant에는 없고 단지 Task만 있습니다. Task는 Maven 용어 정리에서 살펴봤었던 Goal이나 Action 또는 Verb(Phase와 같은 뜻으로 사용하는 듯)입니다.</p>
+<p>오늘은 위의 두 개념중에 첫 번째인 Object(프로젝트 자체를 나타내는 개체)에 대해 살펴봅니다. POM은 다음 그림과 같이 프로젝트와 관련된 모든 정보를 담고 있습니다. 프로젝트 하나 당 POM 파일 하나가 존재합니다.<br /><img src="{{ site.baseurl }}/assets/fk1.png" class="aligncenter" width="535" height="273" alt="사용자 삽입 이미지" />물론 Maven에서는 프로젝트와 관련된 정보 외에도 추가로 필요한 정보(빌드 서버의 인증 정보와 같은)가 있기 때문에 settings.xml 이라는 파일도 존재합니다. 하지만 일단은 POM만 집중해서 살펴보겠습니다.</p>
+<p>다음은 참조 문서에 있는 예제 POM 파일입니다.</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">&lt;project&gt;<br />&nbsp; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br />&nbsp;
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;parent&gt;<br />&nbsp; &nbsp; &lt;groupId&gt;com.training.killerapp&lt;/groupId&gt;<br />&nbsp; &nbsp; &lt;artifactId&gt;killerapp&lt;/artifactId&gt;<br />&nbsp; &nbsp; &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;<br />&nbsp; &lt;/parent&gt;</div>
+<p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&nbsp; &lt;artifactId&gt;killerapp-stores&lt;/artifactId&gt;<br />&nbsp; &lt;name&gt;Killer App Stores&lt;/name&gt;<br />&nbsp; &lt;packaging&gt;pom&lt;/packaging&gt;</div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &lt;dependencies&gt;<br />&nbsp; &nbsp; &lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &lt;groupId&gt;com.training.killerapp&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &lt;artifactId&gt;killerapp-api&lt;/artifactId&gt;<br />&nbsp; &nbsp; &lt;/dependency&gt;<br />&nbsp; &lt;/dependencies&gt;</div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &lt;modules&gt;<br />&nbsp; &nbsp; &lt;module&gt;killerapp-store-memory&lt;/module&gt;<br />&nbsp; &nbsp; &lt;module&gt;killerapp-store-xstream&lt;/module&gt; &nbsp; <br />&nbsp; &lt;/modules&gt;</div>
+<p>&lt;/project&gt;</div>
+<p>크게 두 부분, 세밀하게는 네 부분으로 나누어 살펴볼 수 있습니다.</p>
+<p><span style="font-weight: bold;">1. General Project Information</span></p>
+<p>위 예제에서 분홍색 부분에 해당합니다.</p>
+<p>이 부분은 이 전에 간단하게 살펴본 적이 있는 것 같습니다. 이 부분에 있는 정보들 중에 groupId, artifactId, packaging, version 네 개를 조합하여 프로젝트 식별자로 사용합니다. 그런데 위의 예제는 groupId와 version이 명시되어 있지 않습니다. 명시하지 않으면, 부모 POM의 version과 groupId를 사용합니다.</p>
+<p>상속받을 수 있는 정보들은 다음과 같습니다.
+<ul>
+<li>종속성 dependencies</li>
+<li>개발자과 기여자 developers and contributors </li>
+<li>플러그인 목록 plugin lists </li>
+<li>리포트 목록 reports lists </li>
+<li>플러그인 실행 plugin executions with matching ids</li>
+<li>플러그인 설정 plugin configuration</li>
+</ul>
+<p><span style="font-weight: bold;">버전</span></p>
+<p>버전의 다음의 순서대로 표시합니다.<br />major.minor.bug_fix-qualifier-build_number</p>
+<p><span style="font-weight: bold;">스냅샷 snapshot</span></p>
+<p>버전 뒤에 붙여주는 이 표시는 현재 개발중이라는 표시입니다.</p>
+<p>예) 1.3.5-alpha-1-SNAPSHOT</p>
+<p><span style="font-weight: bold;">2. Project Relationships</span><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">SuperPOM</span></p>
+<p>SuperPOM은 모든 프로젝트에서 공통으로 사용하는 정보를 모아 둡니다. 예를들어 빌드 정보와 같은 것을 다음과 같이 담아 두고 모든 프로젝트에서 이 POM을 상속하여 사용하도록 할 수 있습니다.<br />
+<textarea name="code" class="xml" cols="60" rows="10"><br />
+&lt;project&gt;<br />
+  ...<br />
+  &lt;build&gt;<br />
+    &lt;!-- the base directory where build artifacts are placed --&gt;<br />
+    &lt;directory&gt;target&lt;/directory&gt;</p>
+<p>    &lt;!-- where compiled files are placed --&gt;<br />
+    &lt;outputDirectory&gt;target/classes&lt;/outputDirectory&gt;</p>
+<p>    &lt;!-- The name of the final artifact sans extension (or possible classifiers) --&gt;<br />
+    &lt;finalName&gt;${artifactId}-${version}&lt;/finalName&gt;</p>
+<p>    &lt;!-- where compiled test files are placed --&gt;<br />
+    &lt;testOutputDirectory&gt;target/test-classes&lt;/testOutputDirectory&gt;</p>
+<p>    &lt;!-- Where the Java source files are expected to be --&gt;<br />
+    &lt;sourceDirectory&gt;src/main/java&lt;/sourceDirectory&gt;</p>
+<p>    &lt;!-- Where non-Java script source files are expected to be --&gt;<br />
+    &lt;scriptSourceDirectory&gt;src/main/scripts&lt;/scriptSourceDirectory&gt;</p>
+<p>    &lt;!-- Where the test Java source files are expected to be --&gt;<br />
+    &lt;testSourceDirectory&gt;src/test/java&lt;/testSourceDirectory&gt;<br />
+    &lt;resources&gt;<br />
+      &lt;resource&gt;<br />
+        &lt;!-- Where non-compiled files reside (such as .properties file). They are put into the outputDirectory --&gt;<br />
+        &lt;directory&gt;src/main/resources&lt;/directory&gt;<br />
+      &lt;/resource&gt;<br />
+    &lt;/resources&gt;<br />
+    &lt;testResources&gt;<br />
+      &lt;testResource&gt;<br />
+        &lt;!-- Where non-compiled files reside. They are put into the testOutputDirectory --&gt;<br />
+        &lt;directory&gt;src/test/resources&lt;/directory&gt;<br />
+      &lt;/testResource&gt;<br />
+    &lt;/testResources&gt;<br />
+  &lt;/build&gt;<br />
+  ...<br />
+&lt;/project&gt;<br />
+</textarea><br />
+<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">종속성 관리 엘리먼트</span></p>
+<p>위 예제에는 없지만, &lt;dependencyManagement&gt; 라는 엘리먼트를 사용하며, 하위 프로젝트들이 종속성을 가지는 프로젝트들에 대한 정보를 미리 기술해 둘 수 있습니다. 그러면, 하위 프로젝트에서는 종속성을 가지는 프로젝트의 groupId와 artifactId만 명시해두면됩니다. version 정보는 SuperPOM의 저 엘리먼트를 참조하여 원하는 프로젝트를 참조하게 됩니다.</p>
+<p><span style="font-weight: bold;">종속성</span></p>
+<p>프로제트 간의 관계를 관리할 수 있습니다. 종속성은 해당 프로젝트가 어떤 기능을 수행하기 위해서 필요로 하는 프로젝트들을 나타냅니다. &lt;dependencies&gt; 엘리먼트를 사용하여 나타내며, JUnit을 사용한다면 다음과 같이 나타낼 수 있습니다.<br />
+<textarea name="code" class="java" cols="60" rows="10"><br />
+  &lt;dependencies&gt;<br />
+    &lt;dependency&gt;<br />
+      &lt;groupId&gt;junit&lt;/groupId&gt;<br />
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;<br />
+      &lt;version&gt;3.8.1&lt;/version&gt;<br />
+      &lt;scope&gt;test&lt;/scope&gt;<br />
+    &lt;/dependency&gt;<br />
+  &lt;/dependencies&gt;<br />
+</textarea><br />
+<br />종속성을 나타낼 때 scope을 명시할 수 있는데, 컴파일 할 때만 사용할지, 테스트 할 때만 사용할지 등을 나타냅니다. scope에는 다음의 값들을 사용할 수 있습니다.</p>
+<p>compile<br />provided<br />runtime<br />test<br />system</p>
+<p><span style="font-weight: bold;">멀티 모듈</span></p>
+<p>&lt;modules&gt; 엘리먼트안에 여러 개의 &lt;module&gt; 엘리먼트를 사용하여 나타내며, POM 파일에 이 엘리먼트를 가지고 있는 프로젝트는 멀티 모듈 프로젝트라고 합니다. 이 프로젝트는 자신을 빌드하는 것이 아니라, 여러 개의 다른 프로젝트들을 빌드합니다. 따라서 이 프로젝트의 packaging 타입은 pom으로 설정합니다.</p>
+<p></p>

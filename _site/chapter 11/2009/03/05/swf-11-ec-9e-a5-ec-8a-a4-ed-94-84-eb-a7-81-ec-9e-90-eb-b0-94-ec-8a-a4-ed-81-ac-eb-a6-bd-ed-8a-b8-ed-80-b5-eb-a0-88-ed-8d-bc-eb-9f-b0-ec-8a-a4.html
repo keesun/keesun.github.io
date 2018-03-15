@@ -1,0 +1,68 @@
+<p>11.1 도입</p>
+<p>스프링 자바스크립트(spring-js)는 Dojo 같이 자주 사용하는 자바스크립트 툴킷에 대한 경량<br />
+추상화다. 목표는 공통의 클라인트-쪽 프로그래밍 모델을 제공하여 웹 페이지를 리치 위젯과 애이작스 리모팅으로 급격히 개선하는<br />
+것이다.</p>
+<p>11.2. 자바스크립트 리소스 제공하기</p>
+<p>스프링 JS는 웹 애플리케이션 루트 디렉토리와 jar<br />
+파일에서 자바스크립트와 CSS 파일 같은 웹 리소스를 서빙하는 ResourceServlet를 제공한다. 이 서블릿은<br />
+Spring.js 파일을 여러분 페이지에 공급하는 편리한 방법을 제공한다. 이 서블릿을 배포하려면 web.xml에 다음과 같이<br />
+설정하라.</p>
+<p>&lt;!-- Serves static resource content from .jar files such as spring-js.jar --&gt;<br />&lt;servlet&gt;<br />&nbsp; &nbsp; &lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &lt;servlet-class&gt;org.springframework.js.resource.ResourceServlet&lt;/servlet-class&gt;<br />&lt;/servlet&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&lt;!-- Map all /resources requests to the Resource Servlet for handling --&gt;<br />&lt;servlet-mapping&gt;<br />&nbsp; &nbsp; &lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;<br />&nbsp; &nbsp; &lt;url-pattern&gt;/resources/*&lt;/url-pattern&gt;<br />&lt;/servlet-mapping&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />11.3. 스프링 자바스크립트를 페이지에 포함시키기</p>
+<p>스프링 JS는 자신의 API 구현체를 유명한 자바스크립트 툴킷으로 빌드 할 수 있게 설계됐다. Spring.js 기본 구현체는 Dojo 툴킷을 기반으로 한다.</p>
+<p>스<br />
+프링 자바스크립트를 페이지에서 사용하려면 보통 기반으로 하는 툴킷, Spring.js 기반 인터페이스 파일, 스프링-(라이브러리<br />
+구현체).js 파일을 포함시킬 필요가 있다. 예를 들어 다음은 ResourceServlet를 사용하여 Dojo 구현체를 가져온다.</p>
+<p>&lt;script type="text/javascript" src="&lt;c:url value="/resources/dojo/dojo.js" /&gt;"&gt; &lt;/script&gt;<br />&lt;script type="text/javascript" src="&lt;c:url value="/resources/spring/Spring.js" /&gt;"&gt; &lt;/script&gt;<br />&lt;script type="text/javascript" src="&lt;c:url value="/resources/spring/Spring-Dojo.js" /&gt;"&gt; &lt;/script&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />기<br />
+반 라이브러리의 위젯 시스템을 사용하면 보통 여러분은 반드시 원하는 룩앤필(look and feel)을 얻기 위해 CSS<br />
+리소스를 포함시킬것이다. booking-mvc 레퍼런스 애플리케이션은 Dojo의 tundra.css를 포함시킨다.</p>
+<p>&lt;link type="text/css" rel="stylesheet" href="&lt;c:url value="/resources/dijit/themes/tundra/tundra.css" /&gt;" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />11.4. 스프링 자바스크립트 데코레이션</p>
+<p>스<br />
+프링 자바스크립트의 주요 개념은 기존 DOM 노드에 데코레이션을 적용하는 개념이다. 이 기술은 기능이 좋치 않은 브라우저에서도<br />
+여전히 동작할 페이지 같은 웹 페이지를 혁신적으로 개선할 때 사용한다. addDecoration 매서드는 데코레이션을 적용할 때<br />
+사용한다.</p>
+<p>다음 예제는 스프링 MVC의 &lt;form:input&gt; 태그에 풍부한 제안 기능을 가능하게 하는 것을 보여준다.</p>
+<p>&lt;form:input id="searchString" path="searchString"/&gt;<br />&lt;script type="text/javascript"&gt;<br />&nbsp; &nbsp; Spring.addDecoration(new Spring.ElementDecoration({<br />&nbsp; &nbsp; &nbsp; &nbsp; elementId: "searchString",<br />&nbsp; &nbsp; &nbsp; &nbsp; widgetType: "dijit.form.ValidationTextBox",<br />&nbsp; &nbsp; &nbsp; &nbsp; widgetAttrs: { promptMessage : "Search hotels by name, address, city, or zip." }}));<br />&lt;/script&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />ElementDecoration<br />
+는 리치 위젯 기능을 기존의 DOM 노드에 추가할 때 사용한다. 이 데코레이션 타입은 기반으로 하는 툴킷을 완전히 감추는 것을<br />
+목표로 하지 않는다. 따라서 툴킷의 네이티브 위젯 타입과 속성을 직접 사용한다. 이 방법은 공통의 데코레이션 모델을 사용하여<br />
+기반하는 툴킷의 모든 위젯을 일관적인 방법으로 통합하기 위한 것이다. booking-mvc 레퍼런스 애플리케이션에서 제안에서<br />
+부터 클라이언트쪽 검증까지 데코레이션을 적용하는 많은 예제를 참조하라.</p>
+<p>ElementDecoration를 사용하여 리치 검증 기능을 갖춘 위젯을 적용할 때 일반적인 요구 사항은 폼이 검증을 통과하기 전까지는 서브밋하지 않는 것이다. ValidateAllDecoration으로 그것을 할 수 있다.</p>
+<p>&lt;input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" /&gt;<br />&lt;script type="text/javascript"&gt;<br />&nbsp; &nbsp; Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick' }));<br />&lt;/script&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>이것은 "Proceed" 버튼을 클라이언트 쪽 검증을 하고 성공적으로 패스 할 때 까지 폼 서브밋을 허용하지 않는 특별한 onclick 이벤트 핸들러로 데코레이트한다.</p>
+<p>AjaxEventDecoration는 원격 애이작스 요청을 서버로 보내는 클라이언트쪽 이벤트 리스너를 적용한다. 또한 응답할 때 자동으로 콜백 함수를 링크에 등록한다.</p>
+<p>&lt;a id="prevLink" href="search?searchString=${criteria.searchString}&amp;page=${criteria.page - 1}"&gt;Previous&lt;/a&gt;<br />&lt;script type="text/javascript"&gt;<br />&nbsp; &nbsp; Spring.addDecoration(new Spring.AjaxEventDecoration({<br />&nbsp; &nbsp; &nbsp; &nbsp; elementId: "prevLink",<br />&nbsp; &nbsp; &nbsp; &nbsp; event: "onclick",<br />&nbsp; &nbsp; &nbsp; &nbsp; params: { fragments: "body" }<br />&nbsp; &nbsp; }));<br />&lt;/script&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />이<br />
+것은 "Previous Results" 링크의 onclick 이벤트를 응답시에 특정 조각을 다시 랜더링하도록 특별한 매개변수와<br />
+함께 애이작스 호출로 꾸며준다. 이 링크는 클라이언트에서 자바스크립트를 사용할 수 없는 경우에도 여전히 동작한다는 것에<br />
+주목하라. (<a href="http://static.springframework.org/spring-webflow/docs/2.0.x/reference/html/ch11s05.html" target="_blank">애이작스 요청 다루기</a>에서 서버에 요청을 어떻게 다루는지 자세히 살펴보라.)</p>
+<p>또한 하나의 엘리먼트에 여러 개의 데코레이션을 적용하는 것도 가능하다. 다음 예제는 애이작스와 validate-all 서브밋 금지를 같이 적용한 버튼에 대한 예제다.</p>
+<p>&lt;input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" /&gt;&nbsp; <br />&lt;script type="text/javascript"&gt;<br />&nbsp; &nbsp; Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));<br />&nbsp;<br />
+&nbsp; Spring.addDecoration(new<br />
+Spring.AjaxEventDecoration({elementId:'proceed',<br />
+event:'onclick',formId:'booking', params:{fragments:'messages'}}));<br />&lt;/script&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />Dojo의 쿼리 API를 사용하여 한 줄로 여러 엘리먼트에 하나의 데코레이션을 적용하는 것도 가능하다. 다음 예제는 체크박스 집합을 Dojo Checkbox 위젯으로 꾸민다.</p>
+<p>&lt;div id="amenities"&gt;<br />&lt;form:checkbox path="amenities" value="OCEAN_VIEW" label="Ocean View" /&gt;&lt;/li&gt;<br />&lt;form:checkbox path="amenities" value="LATE_CHECKOUT" label="Late Checkout" /&gt;&lt;/li&gt;<br />&lt;form:checkbox path="amenities" value="MINIBAR" label="Minibar" /&gt;&lt;/li&gt;<br />&lt;script type="text/javascript"&gt;<br />&nbsp; &nbsp; dojo.query("#amenities input[type='checkbox']").forEach(function(element) {<br />&nbsp; &nbsp; &nbsp; &nbsp; Spring.addDecoration(new Spring.ElementDecoration({<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; elementId: element.id,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; widgetType : "dijit.form.CheckBox",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; widgetAttrs : { checked : element.checked }<br />&nbsp; &nbsp; &nbsp; &nbsp; }));<br />&nbsp; &nbsp; });<br />&lt;/script&gt;<br />&lt;/div&gt;</p>
+<p>11.5. 애이작스 요청 다루기</p>
+<p>스프링 자바스크립트의 클라이언트 쪽 애이작스 응답 다루기는 서버에서 "조각" 받기 개념을 기반으로 했다. 이들 조각은 단순한<br />
+표준 HTML로 기존 페이지의 일부를 교체할 의도를 가지고 있다. 서버에서 필요한 핵심 조각은 전체 응답 중에서 어떤 조각을<br />
+일부만 랜더링 해야 하는지 판단할 때 사용한다.</p>
+<p>전체 응답 중에 일부 조각만 랜더링 하려면 전체 응답은 반드시 응답 구성할 때 컴포지션을 사용할 수 있고 그 컴포지션의 구성<br />
+요소들은 개별적으로 참조하거나 랜더링 할 수 있는 템플릿 기술을 사용해서 만들어야 한다. 스프링 자바스크립트는<br />
+타일즈(Tiles)를 사용하는 간단한 스프링 MVC 확장을 통해 이것을 달성한다. 컴포지션을 지원하는 어떤 템플릿 시스템이든지<br />
+이론적으로는 같은 기술로 사용할 수 있다.</p>
+<p>스프링 자바스크립트의 애이작스 리모팅 기능은 애이작스 요청을 다루는 코드가 일반 브라우저 요청과 다르지 않아야 한다는 개념을<br />
+기반으로 한다. 따라서 애이작스 요청에 대한 별도의 지식은 코드에서 직접적으로 필요하지 않고 동일한 핸들러를 두 가지 스타일의<br />
+요청에 모두 사용할 수 있다.</p>
+<p>11.5.1. 스프링 MVC 컨트롤러로 애이작스 요청 다루기</p>
+<p>애이작스 요청을 스프링 MVC 컨트롤러로 다루려면 스프링 MVC 확장이 제공하는 설정을 여러분의 스프링 애플리케이션 컨텍스트에 일부 응답을 랜더링 하도록 추가하면 된다.</p>
+<p>&lt;bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"&gt;<br />&nbsp; &nbsp; &lt;property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/&gt;<br />&lt;/bean&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />
+이것은 AjaxUrlBasedViewResolver를 설정하여 애이작스 요청을 분석하고 FlowAjaxTilesView 객체를<br />
+만들어서 적절한 부분을 랜더링하는 것을 처리하게 한다. FlowAjaxTilesView는 웹 플로우와 순수 스프링 MVC 요청을<br />
+모두 랜더링하는 작업을 할 수 있다. 조각은 타일즈 뷰 정의의 개별 속성에 대응한다. 예를 들어, 다음의 타일즈 뷰 정의를 보자.</p>
+<p>&lt;definition name="hotels/index" extends="standardLayout"&gt;<br />&nbsp; &nbsp; &lt;put-attribute name="body" value="index.body" /&gt;<br />&lt;/definition&gt;</p>
+<p>&lt;definition name="index.body" template="/WEB-INF/hotels/index.jsp"&gt;<br />&nbsp; &nbsp; &lt;put-attribute name="hotelSearchForm" value="/WEB-INF/hotels/hotelSearchForm.jsp" /&gt;<br />&nbsp; &nbsp; &lt;put-attribute name="bookingsTable" value="/WEB-INF/hotels/bookingsTable.jsp" /&gt;<br />&lt;/definition&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />
+애이작스 요청은 "body", "hotelSearchForm", "bookingsTable"를 기술하여 요청에서 일부를 랜더링할 수 있다.</p>
+<p>11.5.2. 스프링 MVC + 스프링 웹 플로우에서 애이작스 요청 다루기</p>
+<p>스프링 웹 플로우는 조각의 부가적인 랜더리을 플로우 정의 언어에서 render 엘리먼트로 직접 다룬다. 이 방법의 장점은 조각의<br />
+선택이 클리이언트 쪽 코드와 완전히 분리 된다는 것이다. 스프링 MVC 컨트롤러 접근 방법에서 사용하듯이 요청에 넘겨주는 별도의<br />
+매개변수가 필요 없다. 예를 들어, 만약 앞선 예제 타일즈 뷰를 리치 자바스크립트 팝업으로 "hotelSearchForm"<br />
+조각을 랜더링 하고 싶다면 다음과 같이 할 수 있다.</p>
+<p>&lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;<br />&nbsp; &nbsp; &lt;on-entry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;render fragments="hotelSearchForm" /&gt;<br />&nbsp; &nbsp; &lt;/on-entry&gt;<br />&nbsp; &nbsp; &lt;transition on="search" to="reviewHotels"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;evaluate expression="searchCriteria.resetPage()"/&gt;<br />&nbsp; &nbsp; &lt;/transition&gt;<br />&lt;/view-state&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; </p>

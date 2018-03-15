@@ -1,0 +1,209 @@
+<p><font class="Apple-style-span" color="#333333" face="굴림"><a href="http://java.sun.com/javase/6/docs/api/java/lang/ClassLoader.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/ClassLoader.html]로 이동합니다.">http://java.sun.com/javase/6/docs/api/java/lang/ClassLoader.html</a></font>
+<div>
+</div>
+<div id="">클래스를 로딩하는 책임을 지니고 있는 추상 클래스.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+기본전략: <b>바이너리 이름(</b>String)을 받아서 파일 이름으로 바꾸고 파일 시스템에서 해당하는 이름의 클래스 파일을 읽어들인다.</div>
+<div id="">
+</div>
+<div id="">
+위임 모델(delegation model)을 사용하여 클래스와 리소스를 찾는다. 각각의 ClassLoader 인스턴스는 연관된 상위(parent) 클래스 로더를 가지고 있다. 자신이 찾아 보기전에 상위 클래스 로더에 요청하여 먼저 찾아본다. VM 내장 클래스 로더인 "부트스트랩 클래스 로더"는 상위 클래스 로더가 없고 자신이 다른 ClassLoader 인스턴스의 상위가 된다.</div>
+<div id="">
+</div>
+<div id="">
+보통 JVM은 플랫폼-독립적인 방식으로 로컬 파일 시스템에서 클래스를 읽어들인다. 예를 들어 유닉스 시스템에서 VM은 CLASSPATH 환경 변수에 정의되어 있는 디렉토리에서 클래스를 로딩한다.</div>
+<div id="">
+</div>
+<div id="">
+하지만 어떤 클래스들은 파일에서 읽어오지 않고 네트워크에서 가져오거나 애플리케이션이 동작하면서 만들어지는 것도 있다. <b>defineClass </b>메서드는 바이트 배열을 Class 클래스 인스턴스로 변환한다.&nbsp;Class.newInstance를 사용하여&nbsp;그렇게 새로 정의된 클래스 인스턴스를 만들 수 있다.</div>
+<div id="">
+</div>
+<div id="">
+클래스로더에 의해 만들어지는 객체의 메소드와 생성자는 다른 클래스를 참조할 수도 있다. 그렇게 참조하는 클래스들을 판단하기 위해&nbsp;VM은 원래 클래스를 생성한 클래스 로더의 <b>loadClass</b> 메서드를 호출한다.</div>
+<div id="">
+</div>
+<div id="">
+예를 들어 네트워크 클래스 로더를 만들어 다른 서버에서 클래스 파일을 다운로드 할 수도 있다. 다음은 예제 코드다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">ClassLoader loader = new NetworkClassLoader(host, port);</div>
+<div id="">Object main = loader.<b>loadClass</b>("Main", true).newInstance();</div>
+<div id="">
+</div>
+<div id="">
+네트워크 클래스 로더는 반드시 findClass와 네트워크에서 클래스를 읽어올 loadClassData를 정의해야한다. 바이트코드를 다운로드 한다음 defineClass를 사용하여 class 인스턴스를 만들어야 한다. 다음은 예제 구현체다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp; class NetworkClassLoader extends ClassLoader {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; String host;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; int port;</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; public Class <b>findClass</b>(String name) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; byte[] b = loadClassData(name);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return defineClass(name, b, 0, b.length);</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; private byte[] loadClassData(String name) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // load the class data from the connection</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;. . .</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; }</div>
+<div id="">&nbsp;&nbsp; &nbsp; }</div>
+<div id="">&nbsp;</div>
+</div>
+<div id="">
+</div>
+<div id=""><b>바이너리 이름</b></div>
+<div id="">
+</div>
+<div id="">
+클래스로더에 전달되는 문자열로 표현한 클래스 이름은 다음에 정의된 <a href="http://java.sun.com/docs/books/jls/" target="_blank" title="[http://java.sun.com/docs/books/jls/]로 이동합니다.">자바 언어 표준</a>을 따라야 한다.</div>
+<div id="">
+</div>
+<div id="">
+예)</div>
+<div id="">&nbsp;&nbsp;&nbsp;"java.lang.String"</div>
+<div id="">&nbsp;&nbsp; "javax.swing.JSpinner$DefaultEditor"</div>
+<div id="">&nbsp;&nbsp; "java.security.KeyStore$Builder$FileBuilder$1"</div>
+<div id="">&nbsp;&nbsp; "java.net.URLClassLoader$3$1"</div>
+<div>
+</div>
+<div id="">
+<b>defineClass</b></div>
+<div id="">
+</div>
+<div id="">
+-&nbsp;protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len) throws ClassFormatError</div>
+<div id="">
+</div>
+<div id="">
+바이트를 Class 클래스의 인스턴스로 변환한다. Class는 resolve를 한 다음에 사용해야 한다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+<b>loadClass</b></div>
+<div id="">
+</div>
+<div id="">
+- public Class&lt;?&gt; loadClass(String name) throws ClassNotFountException</div>
+<div id="">
+</div>
+<div id="">
+loadClass(naem, false); 호출</div>
+<div id="">
+</div>
+<div id="">
+- public Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFountException</div>
+<div id="">
+</div>
+<div id="">
+기본 동작은 다음과 같다.</div>
+<div id="">1. findLoadedClass(String)을 호출하여 클래스가 이미 로딩되었는지 확인한다.</div>
+<div id="">2. 상위 클래스 로더의 loadClass 메서드를 호출한다. 만약 상위 클래스 로더가 null이면 VM 내장 클래스 로더를 사용한다.</div>
+<div id="">3. findClass(String) 메서드를 사용하여 클래스를 찾는다.</div>
+<div id="">
+</div>
+<div id="">
+만약에 위 과정을 통해 클래스를 찾은 뒤에 resolve 플래그가 true면 반환받은 Class 객체를 사용하여resolveClass(Class) 메서드를 호출한다.</div>
+<div id="">
+</div>
+<div id="">
+클래스로더의 하위 클래스들은 이 메서드가 아니라 findClass(String)을 재정의 할 것을 권한다.</div>
+<div id=""><font class="Apple-style-span" color="#5FB636">(이런걸 지켜야 리스코프 원칙을 지켰다고 하던가...)</font></div>
+<div id="">
+</div>
+<div id="">
+<b>findLoadedClass</b></div>
+<div id="">
+</div>
+<div id="">
+- protected final Class&lt;?&gt; findLoadedClass(String name)</div>
+<div id="">
+</div>
+<div id="">
+만약 이 클래스로더가 JVM에 <b>initiating 로더</b>로 기록되어 있다면 name에 해당하는 클래스를 반환한다. 그렇지 않으면 null을 반환한다.</div>
+<div id="">
+</div>
+<div id="">
+<b>findClass</b></div>
+<div id="">
+</div>
+<div id="">
+- protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException</div>
+<div id="">
+</div>
+<div id="">
+기본 구현체는 ClassNotFoundException을 던진다. 따라서 클래스 로더를 확장하는 클래스가 이것을 구현하여 delegation 모델을 따르는 구현체를 만드는데 사용해야 한다. loadClass 메서드에서 상위 클래스 로더를 확인 한 뒤에 호출된다.</div>
+<div id=""><font class="Apple-style-span" color="#5FB636">(그냥 클래스만 찾으면 되지 꼭 delegation 모델을 따라야 하는건가... 사실 loadClass가 public이라 그것도 재정의하면 그만인것을. 강요하려면 하고 말려면 말지 어중간한거 아닌가..)</font></div>
+<div id="">
+</div>
+<div id="">
+<b id="">resolveClass</b></div>
+<div id="">
+</div>
+<div id="">
+-&nbsp;protected final void resolveClass(Class&lt;?&gt; c)</div>
+<div id="">
+</div>
+<div id="">
+해당 클래스를 <b>링크</b>한다. 이 메서드는 클래스 로더가 클래스를 링크할 때 사용된다. 만약 클래스 c가 이미 링크되어 있다면 이 메서드는 그냥 끝난다. 그렇지 않은 경우라면 자바 언어 스팩의 "Execution" 챕터에 기술되어 있는대로 클래스를 링크한다.</div>
+<div id="">
+</div>
+<div id="">
+<b>링크</b></div>
+<div id="">
+</div>
+<div id="">
+<a href="http://java.sun.com/docs/books/jls/third_edition/html/execution.html#12.3" target="_blank" title="[http://java.sun.com/docs/books/jls/third_edition/html/execution.html#12.3]로 이동합니다.">http://java.sun.com/docs/books/jls/third_edition/html/execution.html#12.3</a></div>
+<div id="">
+</div>
+<div id="">
+링크하기(Linking)란 클래스 또는 인터페이스 타입의 바이너리를 가져와서 JVM의 런타임에 연결하여 실행 할 수 있는 상태로 만드는 것이다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+링크 과정은 세 가지 세부 활동으로 구성된다:&nbsp;<b>verification, preparation,&nbsp;resolution</b></div>
+<div id="">
+</div>
+<div id="">
+링크 활동 구현내용은 달라질 수 있다. 예를 들어 클래스가 사용되는 순간에 개별적으로 클래스나 인터페이스에 있는 <b id="">심볼릭 레퍼런스</b>를 확정하거나(lazy or late resolution), 검증하고나서 바로 확정할 수도 있다.(static). 즉 어떤 구현체에서는 클래스나 인터페이스를 초기화 한 이후에도 확정(resolution) 프로세스가 계속 될 수 있다는 것이다.</div>
+<div id="">
+</div>
+<div id="">
+<b>Verification, Preparation, Resolution</b></div>
+<div id="">
+</div>
+<div id="">
+<a href="http://java.sun.com/docs/books/jvms/second_edition/html/Concepts.doc.html#22574" target="_blank" title="[http://java.sun.com/docs/books/jvms/second_edition/html/Concepts.doc.html#22574]로 이동합니다.">http://java.sun.com/docs/books/jvms/second_edition/html/Concepts.doc.html#22574</a></div>
+<div id="">
+</div>
+<div id="">
+Verification: 클래스나 인터페이스의 바이너리가 구조적으로 올바른지 확인한다. 검증에 실패하면 <a href="http://java.sun.com/javase/6/docs/api/java/lang/LinkageError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/LinkageError.html]로 이동합니다." id=""><b>LinkageError</b></a>의 하위 클래스 중 하나인 <a href="http://java.sun.com/javase/6/docs/api/java/lang/VerifyError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/VerifyError.html]로 이동합니다." id=""><b>VerifyError</b></a>가 발생한다.</div>
+<div id="">
+</div>
+<div id="">
+Preparation: 클래스나 인터페이스의 static 필드를 만들고 그런 필드들을 기본 값으로 초기화 하는 과정이 포함된다. 이 과정 중에 JVM 코드를 실행할 필요가 없다. 명시적인 static 필드 initializer는 이 과정이 아니라 initialization 과정에서 실행된다.</div>
+<div id="">
+</div>
+<div id="">
+Resolution: 심볼릭 레퍼런스는 resolution단계를 지나야지 사용될 수 있다. 심볼릭 레퍼런스가 유효하고 반복적으로 사용되면 <b>다이렉트 레퍼런스</b>로 교체되어 보다 효율적으로 처리된다.</div>
+<div id="">
+</div>
+<div id="">
+만약 이 단계를 지나다가&nbsp;<a href="http://java.sun.com/javase/6/docs/api/java/lang/IncompatibleClassChangeError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/IncompatibleClassChangeError.html]로 이동합니다." id=""><b>IncompatibleClassChangeError</b></a>를 포함한 이 하위 에러들이 발생할 수 있다.&nbsp;<a href="http://java.sun.com/javase/6/docs/api/java/lang/IllegalAccessError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/IllegalAccessError.html]로 이동합니다." id=""><b>IllegalAccessError</b></a>,&nbsp;<a href="http://java.sun.com/javase/6/docs/api/java/lang/InstantiationError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/InstantiationError.html]로 이동합니다." id=""><b>InstantiationError</b></a>, <a href="http://java.sun.com/javase/6/docs/api/java/lang/NoSuchFieldError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/NoSuchFieldError.html]로 이동합니다." id=""><b>NoSuchFieldError</b></a>, <a href="http://java.sun.com/javase/6/docs/api/java/lang/NoSuchMethodError.html" target="_blank" title="[http://java.sun.com/javase/6/docs/api/java/lang/NoSuchMethodError.html]로 이동합니다." id=""><b>NoSuchMethodError</b></a></div>
+<div id="">
+</div>
+<div id="">
+추가적으로 구현체를 찾을 수 없는 native 메서드를 선언한 클래스에서는 <b id="">UnsatisfiedLinkError</b>가 발생할 수 있다.&nbsp;</div>
+<div id="">
+</div>
+<div id="cjabiokabamngnbigeeibddnihgllkggmousedown-target-element">
+하악 하악.. 오늘은 여기까지.</div>
+</div>

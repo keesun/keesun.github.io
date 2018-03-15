@@ -1,0 +1,11 @@
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">@Aspect<br />public class CinemaAspect {</p>
+<p>&nbsp;&nbsp; &nbsp;@Pointcut("execution(* sellTicket(..))")<br />&nbsp;&nbsp; &nbsp;public void sellTicketPointcut() {<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@Before("aop.newStyle.aspect.CinemaAspect.sellTicketPointcut()")<br />&nbsp;&nbsp; &nbsp;public void weblcomeAdvice(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("안녕하세요. 어떤 영화를 보시겠습니까?");<br />&nbsp;&nbsp; &nbsp;}<br />}</div>
+<p>설정파일에 이 Aspect를 bean으로 등록합니다. pointcut의 이름에 해당하는 public void sellTicketPointcut() 부분에서 리턴타입은 항상 void여야 합니다. 접근지시자는 다른 Aspect에서 해당 포인트컷을 참조 할 수 있는 범위를 나타내게 됩니다. 일반적인 메소드 접근지시자와 동일하게 사용됩니다.<br /><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">@Aspect 가 붙은 클래스들 끼리 상속을 하게 되면 어떻게 되나?</span> - 포인트 컷과 어드바이스도 상속이 되는건가? 일단 지금은 초간단 이니까 바로 다음 글에 이어서 실험하도록 하겠습니다. [footnote]이건 마치 무슨 '호기심 천국'이나 '스펀지 연구소'가 된 분위기가 납니다. 물론 쏠로로 진행하지만 말이죠.ㅋㅋ[/footnote]</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;!-- @Aspect 시작 --&gt;<br />&nbsp; &nbsp; &lt;aop:aspectj-autoproxy/&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="myAspect" class="aop.newStyle.aspect.CinemaAspect" /&gt;</p></div>
+<p>테스트 코드에서 sellTicket을 호출하게 되는 buyTicket을 호출 합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void sellTicket() {<br />&nbsp; &nbsp; &nbsp; &nbsp; hein.buyTicket(cinema, movie);<br />&nbsp; &nbsp; }</div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">안녕하세요. 어떤 영화를 보시겠습니까?</div>
+<p>원하는 결과를 확인할 수 있습니다.</p>

@@ -1,0 +1,62 @@
+---
+layout: post
+title: Double.MAX_VALUE는 좀 특이하군요 @_@
+date: 2009-05-19 12:07:16.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- DOUBLE
+- MAX_VALUE
+- 자바
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323022452'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>System.out.println(Double.compare(Double.MAX_VALUE, Double.MAX_VALUE - 1.0));</p>
+<p>이렇게 하면 무슨 값이 출력 될까요? 앞에 있는 인자가 더 크니까 양수가 나와야 합니다.<br />
+그러나 해보시면 아시겠지만, 0이 나옵니다.</p>
+<p>난 너무 커서 1 같이 작은 수는 빼봤자 그게 그거야... </p>
+<p>라는 건가요.. 이건 좀 @_@<br />
+왜이러는 걸까요?<br />
+정확하게 비교하려면 어떻게 해야 할까요?</p>
+<p>한가지 찾은 방법은 longValue() 이용해서 long으로 바꾼 다음에 계산하는 겁니다.<br />
+그러나.. 불편하자나요~</p>

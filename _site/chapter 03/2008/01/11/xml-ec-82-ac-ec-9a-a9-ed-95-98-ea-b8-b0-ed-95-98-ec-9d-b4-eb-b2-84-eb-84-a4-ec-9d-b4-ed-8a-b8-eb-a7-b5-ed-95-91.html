@@ -1,0 +1,29 @@
+<h1>단점</h1>
+<ul>
+<li>Metadata is not, by nature, more flexible or maintainable than plain Java code.</li>
+</ul>
+<ul>
+<li>Many existing metadata formats weren't designed to be<br />
+readable and easy to edit by hand. 적절한 기본값을 제공해주지 않아서 필요 이상의 타이핑이 필요하다.<br />
+속성없이 엘리먼트만 사용하는 경우도 있다.</li>
+</ul>
+<ul>
+<li>Good XML editors, especially in IDEs, aren't as common as<br />
+good Java coding environments. DTD가 제공되지 않아서 자동완성과 검증 기능을 사용하지 못하는 경우가<br />
+있다.</li>
+</ul>
+<h1>하이버네이트의 XML</h1>
+<ul>
+<li>위의 모든 단점을 고려했다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span>?&gt;</span><br />&lt;!DOCTYPE hibernate-mapping PUBLIC<br /><span class="code-quote">"-//Hibernate/Hibernate Mapping DTD//EN"</span><br /><span class="code-quote">"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"</span>&gt;<br /><br /><span class="code-tag">&lt;hibernate-mapping&gt;</span><br /><br /><span class="code-tag">&lt;class name=<span class="code-quote">"auction.model.Category"</span> table=<span class="code-quote">"CATEGORY"</span>&gt;</span><br />    <span class="code-tag">&lt;id name=<span class="code-quote">"id"</span> column=<span class="code-quote">"CATEGORY_ID"</span> type=<span class="code-quote">"long"</span>&gt;</span><br />    <span class="code-tag">&lt;generator class=<span class="code-quote">"native"</span>/&gt;</span><br />    <span class="code-tag">&lt;/id&gt;</span><br />    <span class="code-tag">&lt;property name=<span class="code-quote">"name"</span> column=<span class="code-quote">"NAME"</span> type=<span class="code-quote">"string"</span>/&gt;</span><br /><span class="code-tag">&lt;/class&gt;</span><br /><br /><span class="code-tag">&lt;/hibernate-mapping&gt;</span></pre>
+</div>
+</div>
+<ul>
+<li>여러 클래스 맵핑 정보를 하나의 파일 안에 모두 두는 것도 가능하지만 클래스 당 매핑 파일 하나를 권장한다.</li>
+</ul>
+<ul>
+<li>맵핑 파일은 클래스와 같은 패키지에 놓는것을 권장한다.</li>
+</ul>

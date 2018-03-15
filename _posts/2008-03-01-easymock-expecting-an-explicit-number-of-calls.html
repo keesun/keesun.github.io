@@ -1,0 +1,57 @@
+---
+layout: post
+title: EasyMock - Expecting an Explicit Number of Calls
+date: 2008-03-01 02:53:37.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- EasyMock
+- expextLastCall().times()
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323124695'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>같은 메소드 호출을 여러번 하는 경우 그런 행위를 녹화하기 위해서, 메소드를 여러번 호출할 수도 있지만.</p>
+<pre>    public void testAddAndChangeDocument() {<br />        mock.documentAdded("Document");<br />        mock.documentChanged("Document");<br />        mock.documentChanged("Document");<br />        mock.documentChanged("Document");<br />        replay(mock);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        verify(mock);<br />    }</pre>
+<p>이런 코드를<span style="font-family: monospace;"> </span>expectLastCall().times(3); 를 사용해서 코드를 줄일 수 있다.</p>
+<pre>    public void testAddAndChangeDocument() {<br />        mock.documentAdded("Document");<br />        mock.documentChanged("Document");<br />       <span style="color: rgb(255, 0, 0);"> expectLastCall().times(3);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; replay(mock);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        classUnderTest.addDocument("Document", new byte[0]);<br />        verify(mock);<br />    }</pre>
+<p></p>

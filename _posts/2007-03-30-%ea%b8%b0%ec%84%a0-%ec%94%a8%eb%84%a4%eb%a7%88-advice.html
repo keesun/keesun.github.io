@@ -1,0 +1,72 @@
+---
+layout: post
+title: '기선 씨네마 :: Advice'
+date: 2007-03-30 04:01:39.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- Spring AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322716962'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>만드는 방법은 <a href="http://whiteship.tistory.com/628" target="_blank">이전</a>에도 살짝 살펴봤지만 소스는 아래와 같습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class WelcomeAdvice implements MethodBeforeAdvice {</p>
+<p>&nbsp; &nbsp; public void before(Method method, Object[] args, Object target) throws Throwable {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("어떤 영화를 보시겠습니까?");<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class ThankYouAdvice implements AfterReturningAdvice {</p>
+<p>&nbsp; &nbsp; public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("감사합니다.");<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>Advice만 만든 상태에서 이걸 ProxyFactoryBean에 주입시킵니다.
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">&nbsp; &nbsp; &lt;!-- Advice --&gt;<br />&nbsp; &nbsp; &lt;bean id="welcome" class="aop.oldStyle.advice.WelcomeAdvice" /&gt;<br />&nbsp; &nbsp; &lt;bean id="thanks" class="aop.oldStyle.advice.ThankYouAdvice" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- AOP cinema --&gt;<br />&nbsp; &nbsp; &lt;bean id="AOP씨네마" class="org.springframework.aop.framework.ProxyFactoryBean" &gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="proxyInterfaces" value="aop.oldStyle.domain.Cinema" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="interceptorNames"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;welcome&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;thanks&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="target" ref="기선씨네마" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>이제 테스트를 해봅니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void aopKeesunCinema() {<br />&nbsp; &nbsp; &nbsp; &nbsp; hein.buyTicket(aopCinema, movie);<br />&nbsp; &nbsp; }</div>
+<p>당연히 원한대로의 결과가 나옵니다.
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">어떤 영화를 보시겠습니까?<br />감사합니다.</div>
+<p>그럼 ProxyFactoryBean에 지정한 인터페이스의 다른 메소드들을 호출하면 어떻게 될까요?
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void onlyAdviceTest() {<br />&nbsp; &nbsp; &nbsp; &nbsp; aopCinema.checkTicket(hein, movie);<br />&nbsp; &nbsp; &nbsp; &nbsp; aopCinema.giveMemberShipCard(hein);<br />&nbsp; &nbsp; &nbsp; &nbsp; aopCinema.playMovie(movie);<br />&nbsp; &nbsp; &nbsp; &nbsp; aopCinema.sellTicket(movie, new Date());<br />&nbsp; &nbsp; }</div>
+<p>전혀.. 원하던 결과가 아니게 됩니다.
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">어떤 영화를 보시겠습니까?<br />감사합니다.<br />어떤 영화를 보시겠습니까?<br />감사합니다.<br />어떤 영화를 보시겠습니까?<br />공공의적상영합니다.<br />감사합니다.<br />어떤 영화를 보시겠습니까?<br />감사합니다.</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">ProxyFactoryBean에는 Advice도 등록할 수 있고 포인트컷은 해당 인터페이스에 지정한 모든 메소드가 라는 걸 확인 할 수 있습니다.</span></p>
+<p>이래서 포인트컷으로 원하는 곳에만 Advice가 적용될 수 있도록 지정한뒤, 그것을 Advice와 뭉쳐서 Advisor로 등록하고 그것을 Advice를 등록한 위치(interceptorNames)에 넣어 두면 원하는 곳에만 원하는 일을 추가할 수 있게 되겠습니다.</p>

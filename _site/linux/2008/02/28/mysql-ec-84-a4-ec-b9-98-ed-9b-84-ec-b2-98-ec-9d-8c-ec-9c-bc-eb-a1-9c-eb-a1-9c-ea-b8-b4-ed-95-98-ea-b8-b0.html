@@ -1,0 +1,15 @@
+<p>참조 : <a href="http://itn.pe.kr/ttools/1" target="_blank">http://itn.pe.kr/ttools/1</a></p>
+<p>MySQL을 yum 설치하고나서 접속을 시도합니다.</p>
+<p>mysql -u root -p</p>
+<p>기본으로 root의 암호는 공백이니까 그냥 엔터를 칩니다. 그런데.. 들어가지지는 않고 에러가 나옵니다.</p>
+<p>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)</p>
+<p>아.. 이 끔찍한 에러. 이전에도 몇 번 만난적이 있는데, 그 때 잘 정리해 두지 않고 어찌저찌해서 접속 한 다음에 그냥 사용하고 있다가 다시 오랜만에 서버에 깔다가 만나니.. 참으로 난감한 에러입니다.</p>
+<p>1. 프로세스가 돌고 있지 않아서 에러가 납니다. 그럼 프로세스를 돌려줍니다.&nbsp; mysqld (MySQL 데몬)을 실행하면 되는데, 이 파일이 여러군대에 있더군요. 그중에서 저는</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">/usr/local/mysql/bin/mysqld_safe --user=mysql&amp;</div>
+<p>이렇게 하니까 동작 됐습니다.<br />Starting mysqld daemon with databases from /usr/local/mysql/var 이런 메시지가 출력됩니다.</p>
+<p>2. 그 다음 다시 로그인을 시도하면 또 똑같은 에러가 나타납니다. 이번에는 링크를 만들어 줍니다.<br />temp 폴더에 생성되는 sock 파일을 mysql이 원츄하고 있는 이름으로 심볼릭 링크를 만들어 줍니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">ln -s /tmp/mysql.sock /var/lib/mysql/mysql.sock</div>
+<p>3. 이제 끝. 이제는 로그인이 됩니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Welcome to the MySQL monitor.&nbsp; Commands end with ; or \g.<br />Your MySQL connection id is 1 to server version: 5.0.26</p>
+<p>Type 'help;' or '\h' for help. Type '\c' to clear the buffer.</p>
+<p>mysql&gt;</p></div>

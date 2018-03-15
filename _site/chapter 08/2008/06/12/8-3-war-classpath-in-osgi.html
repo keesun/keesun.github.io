@@ -1,0 +1,27 @@
+<p>서블릿 스펙에는 WAR 내부에 특별한 의미를 지니는 위치와 몇가지 규칙들을 정의하고 있다. 이번 섹션에서는 이것들이 OSGi 환경에서 어떻게 처리되는지 살펴볼 것이다.</p>
+<p><font size="3"><span style="font-weight: bold;">8.3.1. Static Recsources</span></font></p>
+<p>WAR 번들을 설치할 때, static resource들의 경우, 스프링 DM은 번들 영역에서 가용한 것이 무엇인지만 신경쓴다. 이게 무슨 뜻이냐면 번들 jar 내부에 있는 것들과 거기에 붙어있는 fragment만을 사용할 수 있다는 것이다. 서블릿 스펙에 보면, 웹 애플리케이션에 접속한 클라이언트가 아니라 WEB-INF 폴더 이하에 있는 자원들만ServletContext API를 통해 사용 가능하다고 되어있다. 게다가 클래스패스(imported pachages, required bundles 또는 dynamic imports)에 있는 모든 자원은 애플리케이션 코드에서 읽어들여 사용할 수 있지만 그 밖에서는 참조할 수 없다.</p>
+<p><font size="3"><span style="font-weight: bold;">8.3.2. 서블릿</span></font></p>
+<p>기존의 WAR 배포와의 주요 차이점은 서블릿 패키지들을 WAR 번들에서 사용할 수 있도록 명시적으로 import되어야 한다는 것이다. 해당 패지키들을 Import -Package 속성에 추가한다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Import-Package: javax.servlet,javax.servlet.http,javax.servlet.resources</div>
+<p>추가적으로, 서블릿 스펙은 WAR의 클래스패스를 몇몇 미리 정의된 위치에 근거하고 있다. 빠르게 살펴보면 다음과 같다:
+<ul>
+<li>WEB-INF/classes: 모든 리소드들은 WEB-INF/Classes 밑에 있다</li>
+<li>WEB-INF/lib/*.jar: 모든 jar 파일들은 WEB-INF/lib 밑에 있다.</li>
+</ul>
+<p>여기에 추가로, 각각의 컨테이너 구현체들은 WAR 클래스패스에 추가되는 common 라이브러리들을 제공할 수 있다. OSGi 이기 때문에, WAR 클래스패스는 다시 구성한다. 스프링 DM은 미리 정의된 위치는 무시하고 항상 OSGi 클래스패스를 사용한다. 즉 WEB-INF/classes에 포함되어 있거나 WEB-INF/lib에 포함되어 있다 하더라도 WAR 번들이 import한 패키지들만 사용할 수 있다는 것이다. 다시 말하자면, WEB-INF/classes 밑에 있는 모든 클래스들중에 WAR OSGi 클래스패스에서 가용하지 않은 것들은 없는거나 마찬가지다.</p>
+<p>미리 정의된 WAR 위치들을 설정하는 가장 쉬운 방법은, 그것들을 번들 클래스패스에 추가하는 것이다. </p>
+<p>Bundle-Classpath: .,WEB-INF/classes,WEB-INF/lib/some.jar,WEB-INF/lib/lib.jar</p>
+<p>번들 클래스패스에 추가하기 전에 그들을 OSGi 번들로 설치할 수 있는지 없는지 생각해야한다. 그렇게 함으로써 귿르을 다른 WAR에서도 사용할 수 있고 OSGi 버전잉을 할 수 있다. 동일한 VM에 같은 라이브러리의 상이한 버전이 여럿 존재하는 것이 가능해 진다.</p>
+<p><font size="3"><span style="font-weight: bold;">8.3.3. JSP</span></font></p>
+<p>JSP를 처리하려고, 스프링 DM은 Tomcat Jasper2 엔진을 통합했다. 즉 JSP 1.2, 2.0, 2.1을 지원한다는 것이다. OSGi화된 버전들은 스프링 DM 리파지토리에서 가용하다. OSGi 번들이 Jasper 클래스들을 import할 필요가 없다.</p>
+<p><span style="font-weight: bold;">8.3.3.1. 태그 라이브러리들</span></p>
+<p>JSP 스펙은 태그 라이브러리 생성하여 "JSP 페이지에서 재사용할 수 있는 기들을을 모듈화 하여 선언할 수 있도록"했다. 또한 재사용 가능한 taglib들은 자바 클래스들(Tag 구현체)와 어떤 태그들을 사용할 수 있는 기술한 파일을 컴포넌트로 가지고 있다. 스프링 DM은 taglib들을 jar 형태로 WEB-INF/lib 밑에 두거나 풀어져있는 상태로 WEB-INF/classes 밑에 두는 JSP 컨벤션을 확장하여, 번들 클래스패스(imported pachages, required bundles)에 있는 모든 taglib들을 찾아낸다.</p>
+<p>스프링 DM은 번들 클래스패스 내에서 자동으로 taglib 파일(*.tld)들을 찾아서 그들을 Jasper 엔진에서 사용할 수 있게 해준다. 하지만, tag 정의가 자동으로 찾아지는 반면 tag 클래스들은 그렇지 않다. 여기서도 OSGi 클래스패스가 우선한다. 즉, 태그를 사용하려면, war 번들이 tag에 해당하는 클래스를 import 해야한다. 안그러면 태그를 사용할 수 없다.</p>
+<p>많은 태그를 방출하는 라이브리들을 다룰 때, Impoert-Pachage 대신 Required-Bundle 헤더를 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Require-Bundle: org.springframework.osgi.jstl.osgi</div>
+<p>위의 헤더를 사용하면, JSP Standard Tag Library(JSTL)이 내보내는 모든 클래스들을 war 번들이 참조할 수 있고 따라서 JSP 내에서 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">주의할 것</p>
+<p>Require-Bundle을 사용하기 전에 그 용법에 대해 OSGi 스펙 3.13 참조하라.</p></div>
+<p>war 클래스패스에 어떤 매카니즘을 사용하든 상관없이, 여러 WAR들이 그것들을 공유하게 할 수 있다. 각각의 번들들은 오직 패키지만 import 할 수 있고 라이브러리 jar를 통째로 가져오진 못한다. 사실, 다른 번들들이나 Jar에 들어있는 패지키들을 선택적으로 사용하여 원하는 행위를 도출해 낼 수 있다. 매우 막강한 기능으로 웹 애플리케이션 배포를 용이하게 한다.</p>
+<p></p>

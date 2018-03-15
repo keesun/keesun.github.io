@@ -1,0 +1,81 @@
+---
+layout: post
+title: "[JUnit] @Rule TemporaryFolder 사용하기"
+date: 2009-10-16 07:26:56.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- rule
+- TemporaryFolder
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323107343'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public class DBUnitSupportTest {<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; DBUnitSupport dbUnitSupport;</p>
+<p><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; @Rule public TemporaryFolder folder = new TemporaryFolder();</span><br />
+&nbsp;&nbsp;&nbsp; @Autowired DataSource dataSource;<br />
+&nbsp;&nbsp;&nbsp; File tempFile;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Before<br />
+&nbsp;&nbsp;&nbsp; public void setUp() throws Exception{<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport = new DBUnitSupport(dataSource);<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void exportXls() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">tempFile = folder.newFile("temp.xls");</span><br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.setExportedFile(tempFile);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(tempFile.length(), is(0L));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.exportXlsFrom("code", "item", "users", "role", "users_role");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertThat(tempFile.length(), not(0L));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; <br />
+<span style="color: rgb(73, 181, 213);">&nbsp;&nbsp;&nbsp; @After</span><br style="color: rgb(73, 181, 213);" /><span style="color: rgb(73, 181, 213);">&nbsp;&nbsp;&nbsp; public void after(){</span><br style="color: rgb(73, 181, 213);" /><span style="color: rgb(73, 181, 213);">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="font-weight: bold; color: rgb(73, 181, 213);">assertFalse(tempFile.exists());</span><br style="color: rgb(73, 181, 213);" /><span style="color: rgb(73, 181, 213);">&nbsp;&nbsp;&nbsp; }</span></div>
+<p>
+흠.. 좋군요!! 파일이 생겨나는 테스트를 하고 나서 매번 수동이든 코드로든 지워야 하는 번거로움이 없어졌습니다.</p>
+<p>사실 파란색 코드는 지워도 그만인데, 아직은 TemporaryFolder Rule이 어떻게 동작하는지 확실하게 파악된 상태가 아니여서 남겨뒀습니다.</p>
+<p>파일이 delete() 되지 않을 경우에 대비해서 말이죠. 사실 이 아래 글에 작성한 코드에는 치명적인 결함이 있었는데, 그 사실을 이번 테스트를 작성하다가 알게됐습니다. @_@;;</p>
+<p>테스트 작성이 여러모로 도움을 주는군요.</p>
+<p>참조: <a title="[http://www.catosplace.net/blogs/personal/?p=116]로 이동합니다." target="_blank" href="http://www.catosplace.net/blogs/personal/?p=116">http://www.catosplace.net/blogs/personal/?p=116</a></p>

@@ -1,0 +1,57 @@
+---
+layout: post
+title: Spring 설정파일에서  사용하기
+date: 2007-04-29 04:56:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Spring Collection
+- util 네임스페이스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952329'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/dl159.jpg" class="aligncenter" width="500" height="224" alt="사용자 삽입 이미지" />Hibernate + Spring 연동할 때 사용하는 sesstionFactory를 등록하는 설정파일 입니다. 이 곳에서는 Persistence 객체에 대한 정보를 XML 형식이든 어노테이션 형식이든 알아야 합니다. 따라서 파란색 부분에 어노테이션이 붙은 클래스들을 추가해 줍니다. 요걸 아래 처럼 바꿨습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cl182.jpg" class="aligncenter" width="500" height="70" alt="사용자 삽입 이미지" /><img src="{{ site.baseurl }}/assets/dl160.jpg" class="aligncenter" width="398" height="102" alt="사용자 삽입 이미지" /><br />Spring에서 기본으로 List를 위해 사용하는 클래스는 ArrayList입니다.<br />참조 : <a href="http://younghoe.info/492" target="_blank">Collection 형태의 프로퍼티 설정의 이면에서 무슨 결정이 일어날까?</a></p>
+<p>LinkedList를 사용하고 싶을 때는 다음과 같이 list-class 속성을 사용하여 LinkedList를 사용할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;!-- creates a java.util.List instance with values loaded from the supplied 'sourceList' --&gt;<br />&lt;util:list id="emails"&gt;<br />&nbsp; &nbsp; &lt;value&gt;pechorin@hero.org&lt;/value&gt;<br />&nbsp; &nbsp; &lt;value&gt;raskolnikov@slums.org&lt;/value&gt;<br />&nbsp; &nbsp; &lt;value&gt;stavrogin@gov.org&lt;/value&gt;<br />&nbsp; &nbsp; &lt;value&gt;porfiry@gov.org&lt;/value&gt;<br />&lt;/util:list&gt;</div>
+<p></p>

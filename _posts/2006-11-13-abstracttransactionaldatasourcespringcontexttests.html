@@ -1,0 +1,79 @@
+---
+layout: post
+title: AbstractTransactionalDataSourceSpringContextTests
+date: 2006-11-13 04:26:49.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- AbstractTransactionalDataSourceSpringContextTests
+- AbstractTransactionalSpringContextTests
+- JdbcTemplate
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323143789'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>아 굉장히 기다란 클래스 이름입니다. 한글로는 "추상 트랜잭셔널 데이타소스 스프링 컨텍스트 테스츠" 클래스. 일종의 농담입니다. -_-;;</p>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/test/AbstractTransactionalSpringContextTests.html">AbstractTransactionalDataSourceSpringContextTests 클래스 API</a>를 보았습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1386765813.bmp" class="aligncenter" width="600" height="194" alt="">1386765813.bmp</a>분홍색 윗 부분은 JUnit 프레임웍입니다. 이 클래스는 기본적으로 JUnit 프레임웍 기반으로 만들어졌슴을 알 수 있습니다. 그러므로 assertEquals(int a, int b) 와 같은 test에 유용한 JUnit의 메소드들을 사용할 수 있었던 것입니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><font style="font-weight: bold; font-family: verdana,arial,helvetica,sans-serif;" size="3"><span style="color: rgb(0, 153, 102);">JdbcTemplate 클래스 살펴 보기</span></font><br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1109625600.bmp" class="aligncenter" width="389" height="93" alt="">1109625600.bmp</a>그리고 가지고 있는 member 변수로는 jdbcTemplate이 있으며 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html">API</a>를 인용하면 다음과 같습니다.<br />
+This is the central class in the JDBC core package. It simplifies the use of JDBC and helps to avoid common errors. It executes core JDBC workflow, leaving application code to provide SQL and extract results. This class executes SQL queries or updates, initiating iteration over ResultSets and catching JDBC exceptions and translating them to the generic, more informative exception hierarchy defined in the&nbsp; org.springframework.dao.pachage.JDBC 사용을 간편하게 해주는 객체 인듯 합니다. </div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><font style="font-family: verdana,arial,helvetica,sans-serif;" size="3"><span style="color: rgb(0, 153, 102); font-weight: bold;">AbstractTransactionalSpringContextTests 클래스 살펴 보기</span></font></p>
+<p>멤버와 상속구조를 살펴 봐서는 대체 어떤 녀석인지 아직도 감이 잡히지 않습니다. 이 클래스의 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/test/AbstractTransactionalDataSourceSpringContextTests.html">API</a>를 보면&nbsp; "AbstractTransactionalSpringContextTests를 상속받은 클래스로 몇가지 편리한 기능을 추가를 했다. Expects a DataSource to be defined in the Spring application context.(?) 이 클래스는 JdbcTemplate을 가지고 있으며 트랜잭션을 DB에서 지우는 편리한 방법을 제공한다." 라고 나와있습니다.(가운데 문장은 해석이잘 안됨.ㅠ.ㅠ)</p>
+<p>그래서 상위 클래스인 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/test/AbstractTransactionalSpringContextTests.html">AbstractTransactionalSpringContextTests API</a>를 살펴보았습니다.</p>
+<p>트랙잭션이 발생 시키는 테스트를 할 때 유용한 슈퍼 클래스지만 기본적으로 트랜잭션을 각각의 테스트 메소드가 끝날 때 마다 롤백 시킨다.</p>
+<p>다음과 같은 상황일 때 유용하다.
+<ul>
+<li>다른 test에 영향을 주지않고 DB에 data을 넣거나 삭제 할 때.</li>
+<li>
+트랜잭션이 필요한 코드를 위해 transactional context를 제공</li>
+<li>굳이 청소할 필요없이 DB에 아무거나 집어 넣어 볼때.</li>
+</ul>
+<p>다음과 같은 유용한 메소드도 제공합니다.
+<ul>
+<li>setComplete() - 트랜잭션을 롤백 시키고 싶지 않을 때(DB에 추가, 삭제한 결과를 남기고 싶을때 사용)</li>
+<li>endTransaction() - 트랜잭션을 좀더 빨리 끝내고 싶을 때(잘 모르겠네요. O/R mapping의 초기화 지연 기법을 검증할 때 사용할 수 있다는데 O/R mapping이 뭔지 모르겠네요.)</li>
+<li>startNewTransaction() - endTransaction() 호출 뒤에 이전 트랜잭션에 독립적인 새로운 트랜잭션을 시작할때 사용(역시.. endTransaction() 커플로 어떻게 언제 쓰는건지 모르겠습니다.)</li>
+</ul>
+</div>
+<p>
+아직은 뭔가 알아내야 할 것이 많군요. OTL 갈길이 너무 멀다. 멀다 한들 멈추리오..</p>

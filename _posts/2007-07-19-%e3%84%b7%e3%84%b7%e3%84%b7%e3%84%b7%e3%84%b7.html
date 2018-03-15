@@ -1,0 +1,55 @@
+---
+layout: post
+title: ㄷㄷㄷㄷㄷ;;;
+date: 2007-07-19 02:27:24.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 그냥 놀아
+tags:
+- 제발 다른 버그가 없기를;;
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322687891'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이런.. KSUG 접수 프로그램을 사용해서 입금확인과 참가자 관리를 하고 있었는데 심각한 버그를 발견했습니다;<br />부득이하게 서버를 다시 내렸다 올려야 하는 상황이 생겨서 죄송합니다. ㅠ.ㅠ</p>
+<p>먼저 신규 접수자와는 관련이 없고 기존 접수자와 관련된 버그로.. 기존 접수자가 등록을 한 상태임에도 불구하고 검색을 하면 계속해서 이번에도 접수 하시겠냐고 물어보는 버그입니다.</p>
+<p>다행히 조기에 발견하여 처리하였습니다.</p>
+<p>1. 기존 가입자가 이메일로 검색 결과<br /><img src="{{ site.baseurl }}/assets/cn310.png" class="aligncenter" width="537" height="165" alt="사용자 삽입 이미지" /><br />2. 참석 확인 후 추가 설문 사항 입력을 마친 뒤 검색 결과<br /><img src="{{ site.baseurl }}/assets/cn311.png" class="aligncenter" width="600" height="209" alt="사용자 삽입 이미지" /><br />3. 입금 확인 후 검색 결과<br /><img src="{{ site.baseurl }}/assets/cn312.png" class="aligncenter" width="600" height="153" alt="사용자 삽입 이미지" /><br />이렇게 되어야 하는데;;<br />기존 접수자의 정보를 update하지 않고 insert해버려서 중복 데이터가 생겼고 검색 결과는 이전 record를 가져다가 보여줬기 때문에 계속 맨 위 화면만 보여주고 있었습니다. ㄷㄷㄷ;;;</p>

@@ -1,0 +1,102 @@
+---
+layout: post
+title: Fedora Core 6에 톰캣 최신 버전 설치하기
+date: 2007-06-25 12:35:19.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags:
+- chkconfig 설정
+- 리눅스에 tomcat 설치
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323117342'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <br /><a href="http://blog.jidolstar.com/70" target="_blank">http://blog.jidolstar.com/70</a><br /><a href="http://bbuggung.com/tag/%EB%A6%AC%EB%88%85%EC%8A%A4?page=2" target="_blank">http://bbuggung.com/tag/%EB%A6%AC%EB%88%85%EC%8A%A4?page=2</a></p>
+<p>설치는 첫 번째 참조 링크 대로만 따라 하시면 됩니다.</p>
+<p>설치가 끝난 뒤 할 일은 서버를 부팅할 때 tomcat을 자동으로 시작하도록 설정하는 것입니다.<br />부팅시 자동으로 실행하기 위해 스크립트를 직접 작성해야 합니다.<br />웹 서핑 결과 다음의 것이 가장 흔했습니다.</p>
+<p>다음 스크립트를 /etc/rc.d/init.d/ 폴더에 tomcat이라는 이름으로 작성했습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">#!/bin/sh<br />
+#<br />
+#Startup script for Tomcat, the Apache Servlet Engine<br />
+#<br />
+# chkconfig: - 85 15<br />
+# description: Start Tomcat<br />
+#<br />
+# processname: tomcat<br />
+#<br />
+# Source function library.<br />
+. /etc/rc.d/init.d/functions<br />
+export <span style="font-weight: bold;">JAVA_HOME=/usr/local/java</span><br />
+export <span style="font-weight: bold;">CATALINA_HOME=/usr/local/tomcat</span><br />
+export PATH=$PATH:$JAVA_HOME/bin:$CATALINA_HOME/bin<br />
+# See how we were called.<br />
+case "$1" in<br />
+&nbsp; start)<br />
+&nbsp; echo -n "Starting tomcat: "<br />
+&nbsp; daemon $CATALINA_HOME/bin/catalina.sh start<br />
+&nbsp; touch /var/lock/subsys/tomcat<br />
+&nbsp; echo<br />
+&nbsp; ;;<br />
+&nbsp; stop)<br />
+&nbsp; echo -n "Shutting down tomcat: "<br />
+&nbsp; daemon $CATALINA_HOME/bin/catalina.sh stop<br />
+&nbsp; rm -f /var/lock/subsys/tomcat<br />
+&nbsp; echo<br />
+&nbsp; ;;<br />
+&nbsp; restart)<br />
+&nbsp; $0 stop<br />
+&nbsp; sleep 2<br />
+&nbsp; $0 start<br />
+&nbsp; ;;<br />
+&nbsp; *)<br />
+&nbsp; echo "Usage: $0 {start|stop|restart}"<br />
+&nbsp; exit 1<br />
+esac<br />
+exit 0</div>
+<p>위에서 굵은 줄 두 부분만 이전에 설치한 java와 tomcat 홈 디렉토리로 변경해주면 됩니다.</p>
+<p>스크립트를 작성한 다음에 service에 등록합니다.<br /><span style="font-weight: bold;">cd /etc/rc.d/init.d/</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+chmod 755 tomcat</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+chkconfig --add tomcat</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+chkconfig --level 3 tomcat on</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+chkconfig --level 4 tomcat on</span><br style="font-weight: bold;" /><span style="font-weight: bold;"><br />
+chkconfig --level 5 tomcat on</span></p>
+<p>부팅 레빌 3, 4, 5번 일 때 가동 되도록 설정했습니다.</p>

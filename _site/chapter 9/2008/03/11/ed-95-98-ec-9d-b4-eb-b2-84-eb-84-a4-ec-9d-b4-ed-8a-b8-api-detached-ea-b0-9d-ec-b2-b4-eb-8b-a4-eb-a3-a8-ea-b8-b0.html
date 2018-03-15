@@ -1,0 +1,69 @@
+<h1>수정된 detached 객체 reattaching 하기</h1>
+<ul>
+<li>update()를 사용하여 새로운 session에 reattach 할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">item.setDescription(...); <span class="code-comment">// Loaded in previous Session<br /></span><br />Session sessionTwo = sessionFactory.openSession();<br />Transaction tx = sessionTwo.beginTransaction();<br /><br />sessionTwo.update(item);<br /><br />item.setEndDate(...);<br /><br />tx.commit();<br />sessionTwo.close();</pre>
+</div>
+</div>
+<ul>
+<li>update()에 넘겨주는 객체가 그 전에 수정이 되었는지 안 되었는지는 중요하지 않다.</li>
+</ul>
+<ul>
+<li>새로운 Persistent Context에 묶이게 된다는 것이 중요하다.</li>
+</ul>
+<ul>
+<li>새로운 Persistent Context에서는 무조건 dirty로 인식하고 나중에 update문을 날리게 된다.</li>
+</ul>
+<ul>
+<li>DB에서 실제 값과 비교하여 바뀐 부분이 있을 때에만 update문을 날리고 싶으면 select-before-update="true"를 설정한다.</li>
+</ul>
+<ul>
+<li>수정되지 않았다는 것이 활실할 때는 update를 사용하지 않는 reattach 방법을 사용한다.</li>
+</ul>
+<h1>수정되지 않은 detacked 객체를 reattaching 하기</h1>
+<ul>
+<li>lock()을 사용하면 그 시점 부터 DB에 반영을 합니다. 그 이전의 변경 사항은 반영하지 않습니다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Session sessionTwo = sessionFactory.openSession();<br />Transaction tx = sessionTwo.beginTransaction();<br /><br />sessionTwo.lock(item, LockMode.NONE);<br /><br />item.setDescription(...);<br />item.setEndDate(...);<br /><br />tx.commit();<br />sessionTwo.close();</pre>
+</div>
+</div>
+<ul>
+<li>위에서 사용한 LockMode.NONE은 새로운 객체를 Session에 붙일 때, 버전 확인이나 DB 레벨의 롹을 가져오지 않겠다는 설정입니다.</li>
+</ul>
+<h1>detacked 객체를 transient 객체로 만들기</h1>
+<ul>
+<li>update()나 lock()를 호출하열 필요 없이 그냥 delete()를 사용합니다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Session session = sessionFactory.openSession();<br />Transaction tx = session.beginTransaction();<br /><br />session.delete(item); <br /><br />tx.commit();<br />session.close();</pre>
+</div>
+</div>
+<ul>
+<li>그 안에서 해당 객체를 다시 Session에 붙였다가 tx.commit()이 호출되는 시점에 DB에서 삭제합니다.</li>
+</ul>
+<h1>detached 객체 mergeing 하기</h1>
+<ul>
+<li>reattachment의 보완제이자 대체제다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">Session session1 = sessionFactory.openSession();<br />Transaction transaction = session1.beginTransaction();<br /><br />Member member = <span class="code-keyword">new</span> Member();<br />member.setName(<span class="code-quote">"toby"</span>);<br />session1.save(member);<br /><br />transaction.commit();<br />session1.close();<br />		<br />member.setName(<span class="code-quote">"whiteship"</span>);<br /><br />Session session2 = sessionFactory.openSession();<br />Transaction transaction2 = session2.beginTransaction();<br /><br />Member member2 = (Member) session2.get(Member.class, member.getId());<br />Member member3 = (Member) session2.merge(member);<br /><br />member2.setName(<span class="code-quote">"toby"</span>);<br /><br />assertEquals(<span class="code-quote">"toby"</span>, member3.getName());<br /><br />transaction2.commit();<br />session2.close();</pre>
+</div>
+</div>
+<ul>
+<li>NonUniqueObjectException: reattack 할 때, 이미 동일한 레코드를 표현하는 객체가 해당 Persistent Context에 존재할 때 발생하는 예외.</li>
+</ul>
+<ul>
+<li>Persistent Context에 만약, 같은 DB 레코드를 나타내는 객체가 있다면, detached 객체의 값들을 해당 객체로 복사한다.</li>
+</ul>
+<ul>
+<li>Persistent Context에 존재하지 않는 객체일 경우에는, DB에서 같은 id를 가진 녀석을 읽어온 다음에 merge() 한다.</li>
+</ul>
+<ul>
+<li>detached객체나, 기존의 Persisitent Context에 있던 객체의 사용은 지양하고, merge()가 반환하는 객체를 사용하도록 한다.</li>
+</ul>

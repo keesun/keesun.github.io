@@ -1,0 +1,54 @@
+---
+layout: post
+title: Eclipse 3.3에서 Introduce Parameter Object 리팩터링 사용하기
+date: 2007-07-04 07:31:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Introduce Parameter Object 리팩터링
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322748450'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/dm276.png" class="aligncenter" width="600" height="202" alt="사용자 삽입 이미지" /><br />위의 코드는 <a href="http://agilejava.net/tt/576" target="_blank">AJN에서 진행했던 코드 캠프</a>에서 다른 조의 소스코드이자 지난 번 제가 작성했었던 코드와 유사한 코드 입니다. task를 수락 할 때 필요한 정보로 작업자, 시작일, 종료일을 넘겨주고 있습니다. 이 세 가지 정보가 있어야 task는 수락 상태로 변하게 됩니다. 고로 저 세 개의 매개변수를 하나의 객체 타입으로 바꾸는 리팩터링을 적용할 수 있겠습니다.</p>
+<p>위의 그림처럼 객체로 바꿀 인자들을 선택하고 Alt + Shift + T를 클릭하면 다음과 같이 적용할 수 있는 리팩토링 메뉴가 뜨게 되며 여기서 가장 아래에 있고 Eclipse 3.3에 새로 추가된 기능인 Introduce Parameter Object를 선택합니다.<br /><img src="{{ site.baseurl }}/assets/dm275.png" class="aligncenter" width="290" height="253" alt="사용자 삽입 이미지" />그럼 몇 가지 설정할 수 있는 창을 볼 수 있습니다.<br /><img src="{{ site.baseurl }}/assets/cm290.png" class="aligncenter" width="460" height="552" alt="사용자 삽입 이미지" />이 곳에서 새로 만들 객체의 클래스 명과 inner 클래스로 만들 것인지 일반 클래스로 만들 것인지 선택할 수 있습니다. OK를 선택하면 다음과 같이 이 메소드를 사용하던 부분까지 변경 된 것을 확인할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dm277.png" class="aligncenter" width="600" height="136" alt="사용자 삽입 이미지" /></p>

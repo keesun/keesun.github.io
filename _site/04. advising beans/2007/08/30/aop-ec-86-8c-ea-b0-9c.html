@@ -1,0 +1,7 @@
+<p>객체 지향에서의 재사용에 관한 두 가지 기술, 상속(inheritance)과 위임(delegation)의 한계<br />- 상속 : 특정 타입에 얽매이게 된다. "왜 상속이 나쁜가?" 라는 아티클이 있슴.<br />- 위임 : 애플리케이션이 복잡해진다. 데메테르의 법칙에 위배 될 가능성이 높아짐.</p>
+<p>Aspect를 사용하여 상속과 위임을 대체하여 좀 더 나은 애플리케이션을 만들 수 있다.<br />- 크로스 커팅 concern들을 모듈화 할 수 있다.<br />&nbsp; &nbsp; - 흩어져 있는 concern과 관련된 코드를 한 곳에 모을 수 있다.<br />&nbsp; &nbsp; - 서비스 계층이 깨끗해 진다.</p>
+<p>AOP 용어 정리
+<ol>
+<li><a href="../../318"><span class="date">2006/12/29</span> 1. AOP 용어 정리 <span class="cnt">(2)</span></a></li>
+</ol>
+<p>스프링의 AOP 특징<br />- 스프링에서 AOP를 사용할 수 있는 방법은 여러가지다.<br />&nbsp; &nbsp; - 프로그래밍을 통해 프록시 기반 AOP를 사용하는 방법(어떤 버전에서도 사용 가능함)<br />&nbsp; &nbsp; - AspectJ와 연동하여 사용하는 방법(어떤 버전에서도 사용 가능함)<br />&nbsp; &nbsp; - @AsepctJ 를 사용하는 방법(Spring 2.0부터 사용 가능)<br />&nbsp; &nbsp; - 오직 POJO 만을 사용하는 방법(Spring 2.0부터 사용 가능)<br />- AspectJ와 연동하여 사용하는 방법을 제외 하면 모두 프록시 기반이다.<br />- 오직 메소드 호출 조인 포인트만 지원한다.<br />- 스프링 어드바이스는 자바로 작성한다.<br />- 런타임시 프록시 객체를 생성한다.<br />&nbsp; &nbsp; - 프록시 객체를 만드는 두 가지 방법이 있다.<br />&nbsp; &nbsp; &nbsp;&nbsp;  - 인터페이스 기반으로 만들 때 : JDK 의 Proxy 클래스 사용 -&gt; 별도의 라이브러리 필요 없슴.<br />&nbsp; &nbsp; &nbsp;&nbsp;  - Concrete 클래스 기반으로 만들 때 : CGLIB 사용 -&gt; cglib.jar 필요함. -&gt; final 메소드는 어드바이스 될 수 없다.</p>

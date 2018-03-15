@@ -1,0 +1,111 @@
+---
+layout: post
+title: Reference의 위험성
+date: 2006-10-27 03:40:53.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- reference 변수
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323126103'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>어떤 객체가 있습니다. 그리고 그 객체를 참조하고 있는 어떤 변수가 있습니다. 그 변수를 레퍼런스 변수라고 말합니다.</p>
+<p>예를 들어 Data 객체가 있고 그 객체를 참조하는 endDate라는 레퍼런스 변수가 있습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1033865746.bmp" class="aligncenter" width="500" height="208" alt="">1033865746.bmp</a><br />
+그리고 endDate라는 레퍼런스 변수를 누군가 가져다 씁니다.</p>
+<p>pubic class User(){<br />
+ &nbsp;&nbsp; SchoolSession session = new SchoolSession();<br />
+ &nbsp;&nbsp; public void showEndDate(){<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; Date viewDate = session.getEndDate(); //여기서 endDate의 레퍼런스 값을 가져옵니다.<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(endDate);<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>이 경우에 아무런 문제가 없이 그냥 endDate를 가져와서 화면에 뿌려 줍니다. 그런데.. 만약에<br />
+뿌리기 전에.. endDate.set( ~~~ ) 이런 식으로 값을 바꿔버리면 endDate가 참조 하고 있는 객체의 정보가 바뀌게 됩니다. <br />
+(물론 여기서는 Date type으로 얘기를 하고 있어서 메소드 이름이 안맞을 수 있습니다. GregorianCalendar type의 경우 set( int yyyy, int mm, int dd) 와 같은 메소드가 있고 그것도 지금 이 경우에 해당하는 상황이 발생할 수 있습니다.)</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1097768538.bmp" class="aligncenter" width="500" height="438" alt="">1097768538.bmp</a><br />
+어떤 객체의 레퍼런스를 넘겨 주면 그 객체에 이러한 영향을 끼칠 수가 있습니다. 다음 번에 이 객체에 접근 하는 client는 가짜 정보, 잘못된 정보를 가지고 있는 객체에 대한 레퍼런스를 가져가게 되겠죠.</p>
+<p>멤버 변수들을 private으로 설정해 두어도 public 접근 지시자인 setter를 가지고 있는 객체들이라면 모두 이러한 일이 발생할 여지가 있는 것입니다.</p>
+<p>그럼 어찌해야 할까요? <br />
+1. 외부에 어떤 객체에 대한 레퍼런스를 주어도 원래 객체가 가지고 있던 정보를 유지하고 싶을 때가 있고<br />
+2. 어떤 객체의 정보를 변경할 수 있는 권한을 가진 Client만 객체의 setter나 멤버변수에 직접 접근 하게 하고 싶을 때가 있을 수 있겠네요.</p>
+<p>이미 존재하는 API들의 대다수 클래스들이 위와 같은 방식으로 접근이 가능하다는 것은 클래스를 잘 구현하는데서 해결책을 찾아야 하는 것이 아니라 클래스를 어떻게 사용해야 객체와 레퍼런스를 어떻게 사용해야 이러한 위험을 없앨 수 있는지에 생각해 봐야겠습니다.</p>
+<p>한가지 어제 학교에서 스터디 도중 논의된 이야기로..</p>
+<p>원래 있던 객체의 레퍼런스를 통해서 전달할 레퍼런스가 참조하고 있는 객체의 Clone을 만드는 것입니다. 그리고 그 Clone에 대한 레퍼런스를 넘겨 주는 것이죠. 그렇게 하면 Client에서 극 Clone의 정보를 가져가 쓰고 그 Clone의 정보를 마음대로 수정해도.. 원본 객체의 정보에는 전혀 영향을 주지 않게 됩니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1000323790.bmp" class="aligncenter" width="500" height="363" alt="">1000323790.bmp</a><br />
+이 경우에는 오직 endDate 라는 레퍼런스 변수만 원래 객체에 접근할 수 있는 권한을 가지고 있습니다. 그리고 다른 Client들은 원래 객체의 Clone을 레퍼런스 하는 변수만을 가지게 되는 것이죠. 즉 위에서 생각해본 2번의 경우에 해당합니다.</p>
+<p>어떤상황에서도 즉 endDate 레퍼런스 변수 까지도 자신이 참조하고 있는 객체의 정보를 변환하지 않게 하려면.. 그건 방법이 없어보입니다. 적어도 그 클래스에 setter가 없다면 모를까 마땅한 방법이 떠오르지 않습니다.</p>
+<p>소스 코드로 확인해 보겠습니다.</p>
+<p>먼저 endDate를 가지고 있는 Session class를 보겠습니다.<br />
+[#M_ more.. | less.. | <br />
+import java.util.GregorianCalendar;</p>
+<p>public class Session {<br />
+ &nbsp;&nbsp; private final GregorianCalendar endDate = new GregorianCalendar();</p>
+<p> &nbsp;&nbsp; public GregorianCalendar getEndDate() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return endDate;<br />
+ &nbsp;&nbsp; }</p>
+<p>}<br />
+//final은 endDate 객체가 다른 객체를 참조하지 못하고 오로지 맨 처음 생성된 객체만을 //가리키도록 하는 것입니다. 객체의 내용이 바뀌는 것은 막지 못합니다.<br />
+_M#]<br />
+이제 여기 있는 endDate를 가져다 사용하는 Clinet 소스 코드입니다.<br />
+[#M_ more.. | less.. | <br />
+import java.util.GregorianCalendar;</p>
+<p>public class DateClient {</p>
+<p> &nbsp;&nbsp; public static void main(String args[]){<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; Session s = new Session();<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; GregorianCalendar viewDate = s.getEndDate();</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; System.out.println(viewDate);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; viewDate.set(2007, 1, 20);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; System.out.println(viewDate);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; viewDate = s.getEndDate();</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; System.out.println(viewDate);<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]<br />
+실행 결과 입니다.<br />
+[#M_ more.. | less.. | <br />
+java.util.GregorianCalendar[time=1161920158453, ...생략<br />
+java.util.GregorianCalendar[time=?,areFieldsSet ...생략<br />
+java.util.GregorianCalendar[time=?,areFieldsSet ...생략<br />
+_M#]<br />
+실행 결과 역시 endDate가 참조하는 원래 객체의 정보가 바뀐 것을 확인 할 수 있었습니다.</p>

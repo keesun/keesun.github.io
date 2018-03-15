@@ -1,0 +1,13 @@
+<p>오버로딩을 사용해서 같은 이름의 메소드가 세 개 있었습니다.</p>
+<p>보통은 onSubmit(Object command) 이 녀석만 사용했었는데요. 세션에 객체 하나를 담고 싶어서 아래와 같은 코드가 onSubmit() 메소드 안에 추가 되어야 했습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">request.getSession().setAttribute("user", member);</div>
+<p>그러나... request 인자가 onSubmit() 메소드에 없는 것입니다. 그래서 이를 어쩌나..했는데 찬욱군이 onSubmit() 메소드가 세 개가 있는데 그중에 request 객체를 받아오는 녀석이 있다고 알려줘서 찾아봤습니다.</p>
+<p>Spring MVC 155쪽에 나와있는 그림을 보니 어떤 메소드 들이 있고 어떻게 동작하는지 명확히 알 수 있었습니다.<br /><img src="/assets/dl129.jpg" class="aligncenter" width="290" height="298" alt="사용자 삽입 이미지" />인자가 제일 많은 녀석 부터 시작해서 하나 인 녀석 순으로 내부에서 호출하게 되는 것 같습니다. 이 걸 코드로 표현하면 아래 처럼 될 것입니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {<br />&nbsp; &nbsp; //할 일<br />&nbsp; &nbsp; onSubmit(command, errors);<br />}</p>
+<p>protected ModelAndView onSubmit(Object command, BindException errors)<br />
+throws Exception {<br />&nbsp; &nbsp; //할 일<br />&nbsp; &nbsp; onSubmit(command);<br />}</p>
+<p>protected ModelAndView onSubmit(Object command)<br />
+throws Exception {<br />&nbsp; &nbsp; //할 일<br />&nbsp; &nbsp; doSubmitAction(formBean);<br />}</div>
+<p>
+이 중에서 필요한 인자에 따라 필요한 녀석을 오버라이딩해서 사용하면 될 것 같습니다. 사용자(개발자) 편의를 위한 계층화라고 생각되네요.</p>
+<p></p>

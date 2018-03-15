@@ -1,0 +1,38 @@
+<p>참조: <a href="http://en.wikipedia.org/wiki/Principle_of_least_astonishment"></a><a href="http://en.wikipedia.org/wiki/Principle_of_least_astonishment" target="_blank" title="[http://en.wikipedia.org/wiki/Principle_of_least_astonishment]로 이동합니다.">http://en.wikipedia.org/wiki/Principle_of_least_astonishment</a>
+<div>
+
+</div>
+<div>
+astonishment라는 생소한 단어 때문에 뜻을 가늠하기가 어렵습니다. astonishment는 경악, 놀람이라는 뜻으로, "<span class="Apple-style-span" style="font-weight: bold;">최대한 놀래키지 말라</span>는 원칙"입니다. </div>
+<div>
+
+</div>
+<div>
+위키피디아의 정의를 인용하면 다음과 같습니다.</div>
+<div>
+
+</div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px; "><br />
+<blockquote>In <a href="http://en.wikipedia.org/wiki/User_interface" title="User interface" style="text-decoration: none; color: rgb(0, 43, 184); background-image: none; background-repeat: initial; background-attachment: initial; -webkit-background-clip: initial; -webkit-background-origin: initial; background-color: initial; background-position: initial initial; ">user interface</a> design, <a href="http://en.wikipedia.org/wiki/Programming_language" title="Programming language" style="text-decoration: none; color: rgb(0, 43, 184); background-image: none; background-repeat: initial; background-attachment: initial; -webkit-background-clip: initial; -webkit-background-origin: initial; background-color: initial; background-position: initial initial; ">programming language</a> design, and <a href="http://en.wikipedia.org/wiki/Ergonomics" title="Ergonomics" style="text-decoration: none; color: rgb(0, 43, 184); background-image: none; background-repeat: initial; background-attachment: initial; -webkit-background-clip: initial; -webkit-background-origin: initial; background-color: initial; background-position: initial initial; ">ergonomics</a>, the <b>principle</b> (or <b>rule</b> or <b>law</b>) <b>of least astonishment</b> (or <b>surprise</b>) states that, when two elements of an interface conflict, or are ambiguous, the behaviour should be that which will least surprise the human <a href="http://en.wikipedia.org/wiki/User_(computing)" title="User (computing)" style="text-decoration: none; color: rgb(0, 43, 184); background-image: none; background-repeat: initial; background-attachment: initial; -webkit-background-clip: initial; -webkit-background-origin: initial; background-color: initial; background-position: initial initial; ">user</a> or <a href="http://en.wikipedia.org/wiki/Programmer" title="Programmer" style="text-decoration: none; color: rgb(0, 43, 184); background-image: none; background-repeat: initial; background-attachment: initial; -webkit-background-clip: initial; -webkit-background-origin: initial; background-color: initial; background-position: initial initial; ">programmer</a> at the time the conflict arises.</p></blockquote>
+<p></span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;"><br />
+</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;">즉, 두 개의 애매모호 하거나 상이한 인터페이스 요소는 사용자가 프로그래머에게 혼란을 줄 수 있으니 주의하라는 것입니다.</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;"><br />
+</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;">예를 들어, 보통 Ctrl+S는 저장 단축키로 인식되고 있는데, 이 단축키를 창닫기 용으로 사용하면 어떻게 될까요? 좀 더 코딩에 가까운 예를 들면, 오버로딩한 메소드 두 개가 있을 때 그 둘의 행동은 같아야 합니다. 즉, add(Cat)과 add(Dog)은 둘 다 더해주는 객체만 달라질 뿐 내부에서 하는 일은 동일해야 하는거죠. 둘의 행위가 넘겨져온 객체에 따라 상이해질 경우 개발자나 사용자에게 혼란을 줄 수 있을 겁니다.</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;"><br />
+</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;">API 설계시에 주의해야할 원칙인 듯 합니다. OSAF를 다시 한번 검토해봐야겠습니다. Hibernate에는 사실 UPDATE sql을 직접 날릴 필요가 없습니다. 자동으로 dirty checking을 해서 필요한 순간에 flushing(DB와 SessionContext 동기화)를 할 때 필요한 UPDATE 문을 날려주기 때문입니다. 그래도 가끔은 Session의 reattch() 메소드를 사용해서, 원하는 순간에 명시적으로 UPDATE 문을 날리는 것과 비슷한 결과를 만들 수 있습니다. </span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;"><br />
+</span></div>
+<div>
+<span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: -webkit-sans-serif; font-size: 13px; line-height: 19px;">이때, reattach()를 DAO에서는 update()로 감싸야 하는게 좋을지. 그냥 reattch()라고 해야 할지 고민입니다.</span></div>

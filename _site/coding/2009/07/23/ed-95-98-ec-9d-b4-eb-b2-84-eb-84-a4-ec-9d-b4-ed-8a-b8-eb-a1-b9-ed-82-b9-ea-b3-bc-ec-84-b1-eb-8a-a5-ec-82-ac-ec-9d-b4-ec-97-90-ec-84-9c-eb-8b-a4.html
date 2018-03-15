@@ -1,0 +1,26 @@
+<p>하이버네이트에 <a title="[http://docs.jboss.org/hibernate/stable/core/reference/en/html/transactions.html#transactions-optimistic-manual]로 이동합니다." target="_blank" href="http://docs.jboss.org/hibernate/stable/core/reference/en/html/transactions.html#transactions-optimistic-manual">Optimistic 롹킹</a>을 지원해주는 기능으로 버저닝이 라는게 있습니다. version 필드를 하나 만들어 주면 해당 엔티티에 변화가 일어날 때 마다 version 값을 증가시키는데, flush 하기 직전에 해당 객체의 version이 DB에 있는 version 값과 같은지 확인하는 작업입니다. 버전이 같지 않으면 StaleObjectStateException을 던져줍니다.</p>
+<p>하이버네이트의 특징 중 하나로 연관 객체의 id만 알고 있다면, 굳이 DB에서 해당 엔티티를 가져오지 않고, id 만 가지고 있는 (가짜) 객체를 만들어서 세팅해주면, 나중에 flush() 할 때 FK로 잘 들어간다는 겁니다. 이런 특징을 이용해서 다대다, 1대다 관계에 있는 것들을 연결 시켜줄 때, DB에 다녀와야 할 쿼리를 상당 수 줄일 수 있습니다.</p>
+<p>예를 들어, Member 정보를 추가할 때 Member가 속한 Group 정보를 선택한다고 했을 때, Group 목록을 가져오는 쿼리를 보내서 Group 목록을 가져오고.. 그 중에 하나를 선택해서 해당 Group의 id를 알아냈다면, 이제 이 id를 가지고 실제 Group을 가져오는 쿼리를 보내서 Group 객체를 꺼내온 다음에 사용해야겠지만...그러지 않고 그냥 새 Group 객체를 만든 다음 id값만 세팅한 상태로 Member에 추가해주면 되는거죠.</p>
+<p>Fake Object 참조</p>
+<ol>
+<li><a tip="" href="http://whiteship.me/2061"><span class="date">2008/11/27</span> PropertyEditor 활용 예제 <span class="cnt">(8)</span></a></li>
+<li><a tip="" href="http://whiteship.me/2051"><span class="date">2008/11/19</span> 하이버네이트 사용시 Association Fake Object라는 기술을 사용해 보세요. <span class="cnt">(2)</span></a></li>
+</ol>
+<p>
+하지만, 방금 말한 이런 작업은 versioning을 하지 않을 때에나 가능한 이야기 입니다. DB에 flush()가 되는 순간 버전 확인이 이루어지고 version 정보가 없기 때문에 하이버네이트는 이 객체가 transient 객체라는 걸 눈치챕니다. 그리고선 transient를 flush하기 전에 저장하라는 에러를 뱉어내게 되죠.</p>
+<p>@Entity<br />
+@Configurable<br />
+@DomainInfo("권한")<br />
+public class Role {</p>
+<p>&nbsp;&nbsp;&nbsp; @Id<br />
+&nbsp;&nbsp;&nbsp; @GeneratedValue(strategy=GenerationType.AUTO)<br />
+&nbsp;&nbsp;&nbsp; Integer id;<br />
+&nbsp;&nbsp;&nbsp; @Version<br />
+&nbsp;&nbsp;&nbsp; Integer version;</p>
+<p>예를 들어 위와 같은 엔티티가 있는데 이 녀석을 어딘가에서 Fake 객체로 new Role(1); 이런식으로 만들어서 User.addRole(new Role(1)); 이렇게 했다면... 문제가 생기게 됩니다.</p>
+<p>그렇다면, versioning을 하지 않는다면 어떻게 될까요? 위에서 얘기한 것처럼 아무런 에러 없이 잘 동작합니다. 즉, 그냥 DB에 들어가버리죠. 해당 id 값은 FK 필드에 고대로 들어간체 말이죠. 하이버는 이 객체가 transient라는 사실을 모릅니다. id를 가지고 있기 때문에 persistent 상태인 줄 알겠죠.</p>
+<p>결론은.. 그래서 고민입니다. </p>
+<p>version을 그래도 두고 매번 DB에서 가져오도록 할까.. 하지만 version을 빼고 지금처럼 Fake를 사용할지 말이죠.</p>
+<p>하이버네이트를 속여서 미안하지만, DB 쿼리를 줄이고 last commit wins를 선택하고 싶어집니다. 굳이 동시 접근을 막고 싶다면, 애초에 접근 자체를 막아버리고 팝업창으로 현재 다른 사람이 작업 중이라는 메시지 정도를 띄우는 pessimistic locking을 해버리고 말지.. 실컷 입력 다 해놓고 확인.. 누르자마자 에러.. 이건 좀.. 사용자가 많이 짜증날 것 같아서 말이죠.</p>
+<p>update 할 때만 Session.load(Class class, Serialiazle id, LockMode lockMode)&nbsp; 이용해서,&nbsp; LockMode.WRITE)로 가져오게 하면 되지 않을런지.. 흠.. 어찌할까나~</p>
+<p>ps: 하이버네이트 낙관적인 롹팅을 사용하면서 OSIV 쓸 때는 주의할 것이 있더군요. 그건 이따 집에서..</p>

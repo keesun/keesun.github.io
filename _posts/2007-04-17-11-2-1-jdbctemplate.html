@@ -1,0 +1,67 @@
+---
+layout: post
+title: 11.2.1. JdbcTemplate
+date: 2007-04-17 07:07:07.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 11
+tags:
+- Spring JDBC
+- Spring Reference 11장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323087220'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">- query() :: select 문 사용</span><br /><img src="{{ site.baseurl }}/assets/cl153.jpg" class="aligncenter" width="500" height="515" alt="사용자 삽입 이미지" />위와 같이 다양한 query 메소드들을 제공하고 있습니다.</p>
+<p>예제 코드들)
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">int rowCount = this.jdbcTemplate.<span style="color: rgb(255, 0, 0);">queryForInt</span>("select count(0) from t_accrual");</div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">int countOfActorsNamedJoe<br />&nbsp; &nbsp; = this.jdbcTemplate.<span style="color: rgb(255, 0, 0);">queryForInt</span>("select count(0) from t_actors where first_name = ?", new Object[]{"Joe"});</div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">String surname = (String) this.jdbcTemplate<br />&nbsp; &nbsp; .<span style="color: rgb(255, 0, 0);">queryForObject</span>("select surname from t_actor where id = ?", new Object[]{new Long(1212)}, String.class);</div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Actor actor = (Actor) this.jdbcTemplate.<span style="color: rgb(255, 0, 0);">queryForObject</span>(<br />&nbsp; &nbsp; "select first_name, surname from t_actor where id = ?",<br />&nbsp; &nbsp; new Object[]{new Long(1212)},<br />&nbsp; &nbsp; new RowMapper() {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; public Object mapRow(ResultSet rs, int rowNum) throws SQLException {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Actor actor = new Actor();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; actor.setFirstName(rs.getString("first_name"));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; actor.setSurname(rs.getString("surname"));<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return actor;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; });</div>
+<p>메소드에 들어가는 인자로 메소드를 구분할 수 있습니다. <br />(1) 문자열 하나만 들어가는 메소드는 그냥 쿼리문을 날리고 있습니다.<br />(2) 문자열과 객체 배열을 받는 메소드는 ? 에 매칭되는 인자를 배열로 넘깁니다. 좀 더 유연한 쿼리문을 작성할 때 사용할 수 있겠습니다.<br />(3) 클래스 타입을 넘기는 메소드는 쿼리의 결과가 해당 객체의 타입을 알려줍니다.<br />(4) RowMapper 콜백을 넘기는 메소드는 resultSet의 각 요소를 객체에 매핑하는 역할을 합니다.</p>
+<p><span style="font-weight: bold;">- update() :: insert, update, delete 문 사용</span><br /><img src="{{ site.baseurl }}/assets/dl140.jpg" class="aligncenter" width="443" height="183" alt="사용자 삽입 이미지" />사용법은 execute()랑 비슷합니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">this.jdbcTemplate.update("insert into t_actor (first_name, surname) values (?, ?)", new Object[] {"Leonor", "Watling"});</p>
+<p>this.jdbcTemplate.update("update t_actor set weapon = ? where id = ?", new Object[] {"Banjo", new Long(5276)});</p>
+<p>this.jdbcTemplate.update("delete from orders"); // :)</p></div>

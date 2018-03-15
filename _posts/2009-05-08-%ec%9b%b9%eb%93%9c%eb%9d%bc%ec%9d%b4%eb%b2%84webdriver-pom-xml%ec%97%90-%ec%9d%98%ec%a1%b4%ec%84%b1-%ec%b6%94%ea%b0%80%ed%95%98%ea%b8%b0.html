@@ -1,0 +1,96 @@
+---
+layout: post
+title: 웹드라이버(webdriver) pom.xml에 의존성 추가하기
+date: 2009-05-08 06:27:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- pom.xml
+- webdriver
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323146394'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://code.google.com/p/webdriver/wiki/UsingWebDriver]로 이동합니다." target="_blank" href="http://code.google.com/p/webdriver/wiki/UsingWebDriver">http://code.google.com/p/webdriver/wiki/UsingWebDriver</a></p>
+<p>라이브러리가 담겨있는 저장소부터 등록합니다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;id&gt;openqa-releases&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;name&gt;OpenQA Releases&lt;/name&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;url&gt;http://nexus.openqa.org/content/repositories/releases&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;releases&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;enabled&gt;true&lt;/enabled&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/releases&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;snapshots&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;enabled&gt;false&lt;/enabled&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/snapshots&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/repository&gt;</p>
+<p>다음은 사용할 드라이버에 따라 각기 다른 의존성을 추가합니다.</p>
+<p>HTMLUnit 드라이버를 사용할 때는</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.openqa.selenium.webdriver&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;webdriver-htmlunit&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.6.964&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>Firefox 드라이버를 사용할 때는 </p>
+<p>&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.openqa.selenium.webdriver&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;webdriver-firefox&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.6.964&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>IE 드라이버를 사용할 때는</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.openqa.selenium.webdriver&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;webdriver-ie&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.6.964&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>사파리 드라이버를 사용할 때는</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.openqa.selenium.webdriver&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;webdriver-safari&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.6.964&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>
+<p>마지막으로 서포트 클래스들을 사용하고 싶다면 아래 의존성을 추가합니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.openqa.selenium.webdriver&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;webdriver-support&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;0.6.964&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</p>

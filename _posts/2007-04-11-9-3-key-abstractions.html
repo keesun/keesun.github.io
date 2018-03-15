@@ -1,0 +1,76 @@
+---
+layout: post
+title: 9.3. Key abstractions
+date: 2007-04-11 03:17:34.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952764'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring의 트랜잭션 추상화 계층에서 트랜잭션 전략(transaction strategy)이 중요한 개념 중 하나입니다.</p>
+<p>트랜잭션 전략을 위해서 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/PlatformTransactionManager.html" target="_blank">PlatformTransactionManager 인터페이스</a>를 사용합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public interface PlatformTransactionManager {</p>
+<p>&nbsp; &nbsp; TransactionStatus getTransaction(TransactionDefinition definition)<br />&nbsp; &nbsp; &nbsp; &nbsp; throws TransactionException;</p>
+<p>&nbsp; &nbsp; void commit(TransactionStatus status) throws TransactionException;</p>
+<p>&nbsp; &nbsp; void rollback(TransactionStatus status) throws TransactionException;<br />}</div>
+<p>1. 인터페이스 라는 것. <br />= 필요할 때 mock이나 stub을 만들어 사용할 수 있다. =&gt; 테스트 용이함.<br />= 인터페이스를 활용하여 구현 가능. =&gt; OOP 원칙 따름.</p>
+<p>2. 위 인터페이스에 있는 모든 메소드에서 unchecked 예외를 발생시킨다는 것.<br />= 불 필요한 try-catch 문 사용 안 해도 됨.<br />= 물론 잡을 수 도 있지만 치명적이기 때문에 마땅히 할 수 있는 일도 없다. =&gt; 그냥 안 잡는게 타당함.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">PlatformTransactionManager 인터페이스를 구현한 클래스들 입니다.[footnote]HibernateTransactionManager가 두 개 인데요. 이 중에 하나는 Hibernate 3쩜대 용입니다.[/footnote]
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html" title="class in org.springframework.transaction.support">AbstractPlatformTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jca/cci/connection/CciLocalTransactionManager.html" title="class in org.springframework.jca.cci.connection">CciLocalTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/datasource/DataSourceTransactionManager.html" title="class in org.springframework.jdbc.datasource">DataSourceTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate/HibernateTransactionManager.html" title="class in org.springframework.orm.hibernate">HibernateTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate3/HibernateTransactionManager.html" title="class in org.springframework.orm.hibernate3">HibernateTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/jdo/JdoTransactionManager.html" title="class in org.springframework.orm.jdo">JdoTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/connection/JmsTransactionManager.html" title="class in org.springframework.jms.connection">JmsTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/connection/JmsTransactionManager102.html" title="class in org.springframework.jms.connection">JmsTransactionManager102</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/jpa/JpaTransactionManager.html" title="class in org.springframework.orm.jpa">JpaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/JtaTransactionManager.html" title="class in org.springframework.transaction.jta">JtaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/OC4JJtaTransactionManager.html" title="class in org.springframework.transaction.jta">OC4JJtaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/toplink/TopLinkTransactionManager.html" title="class in org.springframework.orm.toplink">TopLinkTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/WebLogicJtaTransactionManager.html" title="class in org.springframework.transaction.jta">WebLogicJtaTransactionManager</a></dd>
+</dl>
+</div>
+<dl>
+<dd></dd>
+</dl>
+<p>첫번째에 있는 메소드를 좀 더 자세히 살펴보겠습니다. </p>
+<p>인자로 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/TransactionDefinition.html" target="_blank">TransactionDefinition 인터페이스</a>를 넘겨 주고 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/TransactionStatus.html" target="_blank">TransactionStatus 인터페이스</a> 타입의 객체를 받아 올 수 있습니다.<br /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/TransactionDefinition.html" target="_blank"><br />TransactionDefinition 인터페이스</a>에서 다음의 트랜잭션 속성을 설정할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">Isolation: 다른 트랜잭션의 작업으로 부터 해당 트랜잭션이 얼마나 고립되어 있는지 정도.<br />ex) 다른 트랙잭션에 의해 쓰여졌지만 커밋은 되지 않은 것을 볼 수 있는가?</p>
+<p>Propagation: 기존에 존재하는 트랜잭션 문맥이 있는 상태에서 어떻게 수행할지 선택할 수 있는 옵션.<br />ex1) 그냥 기존에 있는 트랜잭션 내에서 처리 한다.<br />ex2) 기존의 트랜잭션을 종료하고 새로운 트랜잭션에서 처리한다.</p>
+<p>Timeout: 정해 준 시간이 지날 경우 타임 아웃 되며 자동으로 롤백 됩니다.</p>
+<p>Read-only status: 이 상태로 설정해 주면 어떤 데이타도 수정할 수 없습니다. 최적화를 위해 유용하게 사용할 수 있습니다. (such as when using Hibernate).</p></div>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/TransactionStatus.html" target="_blank">TransactionStatus 인터페이스</a>는 이름 그대로 트랜잭션의 상태에 관한 정보를 가져올 수 있고 예외를 발생하는 방법이 아닌 프로그래밍 적으로 롤백을 설정할 수 있습니다.</p>
+<p></p>

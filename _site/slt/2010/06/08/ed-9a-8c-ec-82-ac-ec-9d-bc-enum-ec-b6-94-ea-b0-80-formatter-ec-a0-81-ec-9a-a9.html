@@ -1,0 +1,281 @@
+<p>Code 도메인에 enum으로 CodeCate 타입 필드를 하나 추가합니다. Enum을 사용할 땐 DB에 저장될 값과 화면에 보여줄 값과 순서를 지정하는게 보통인지라 그런 기능을 갖추게 하는 인터페이스를 하나 정의했었습니다.
+<div>
+</div>
+<div>
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>public interface PersistentEnum {</div>
+<div>
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>String getDescr();</div>
+<div>
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>Integer getValue();</div>
+<div>
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>int getOrder();</div>
+<div>
+</div>
+<div id="">
+}</div>
+</div>
+<div id="">
+</div>
+</div>
+<div id="">
+</div>
+<div id="">
+enum이 이 인터페이스를 구현하도록 만듭니다. enum에는 상속다운 상속이 없어서 매번 똑같은 코드가 반복되지만 그래도 머.. 필요하기 때문에 어쩔 수 없습니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public enum CodeCate implements PersistentEnum {</div>
+<div id="">
+</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>COLOR(10, "색상", 2),</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>SEX(15, "성별", 3),</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>SIZE(20, "사이즈", 1);</div>
+<div id="">
+</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>private final Integer value;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>private final String descr;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>private final int order;</div>
+<div id="">
+</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>private CodeCate(Integer value, String descr, int order) {</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>this.value = value;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>this.descr = descr;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>this.order = order;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="">
+</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>public Integer getValue() {</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>return value;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>public String getDescr() {</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>return descr;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>public int getOrder() {</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">		</span>return order;</div>
+<div id=""><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="">
+</div>
+<div id="">
+}</div>
+</div>
+<div id="">
+</div>
+</div>
+<div id="">
+</div>
+<div id="">
+그리고 하이버네이트에서 이 타입을 알 수 있게 UserType을 만들어줘야 하는데 GenericPesistentEnumUserType을 사용해서 간단하게 만들 수 있습니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class CodeCateUserType extends GenericEnumUserType&lt;CodeCate&gt; implements Serializable {</div>
+<div id="">&nbsp;&nbsp; &nbsp;</div>
+<div id="">}</div>
+</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이게 끝입니다. Code 도메인에 필드와 매핑 정보를 추가합니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;@Column</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>@Type(type="smdis.domain.usertype.CodeCateUserType")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>private CodeCate cate;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">위에서 만든 UserType을 지정해주면 됩니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+여기까지 한다음 웹쪽을 생각해보죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+새 코드를 입력할 때 코드 카테고리를 선택하려면 코드 카테 목록이 model에 들어있고 화면에서 그 값을 참조할 수 있어야 합니다. 이런 참조형 데이터를 한곳에 모아서 화면에 전달하도록 하죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+@Component</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class CodeRef {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public List&lt;CodeCate&gt; getCodeCateList(){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return PersistentEnumUtil.sortedListOf(CodeCate.class);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">그리고 CodeController에는 @ModelAttribute를 사용해서 화면에 전달합니다.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;@Autowired CodeRef ref;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;@ModelAttribute("ref")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>public CodeRef ref() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>return ref;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">그럼 이제 화면에서 참조할 수 있죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">&lt;p class="ui-widget-content"&gt;&lt;label&gt;코드종류&lt;/label&gt;&lt;form:select path="cate" items="<b>${ref.codeCateList}</b>" itemValue="<b>value</b>" itemLabel="<b>descr</b>" /&gt;&lt;form:errors path="cate" cssClass="smdis-error-message"/&gt;&lt;/p&gt;</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">스프링 form 태그를 이용해서 Enum 타입 List를 items에 넘겨주고 그 List 엔티티의 필드 중에서 값이 될 필드와 레이블이 될 필드명을 설정해 줍니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<img src="/assets/cfile1.uf.141C86254C0E015D686617.jpg" class="aligncenter" width="600" height="454" alt="" filename="3.jpg" filemime="image/jpeg" />
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그럼 이렇게 화면에 보이는 값는 PersistentEnum의 getDescr() 값으로 보여지고 실제 선택했을때 핸들러로 넘어가게 되는 값은 getValue() 값이 됩니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이제 적당한 값을 넣고 저장을 누르면..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<img src="/assets/cfile23.uf.190E3C254C0E015C5600D5.jpg" class="aligncenter" width="600" height="425" alt="" filename="1.jpg" filemime="image/jpeg" />
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이렇게 됩니다. 왜 이런 에러가 나는지는 아시겠죠? 필요한건 CodeCate 타입인데 20이라는 String 타입이 넘어와서 도무지 어떻게 바인딩해야할지 모르겠다고 에러가 나는겁니다. 해결책은 간단합니다. 알려주면 됩니다. 어떻게 바인딩 하면 되는지 스프링한테..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이전까진 PropertyEditor를 사용하던지 아님 직접 핸들러에서 매번 request에서 파라메터 받아서 처리하던지 해야했지만 스프링 3.0에서는 Converter와 Formatter라는게 추가됐습니다. 그 중에서도 웹 용으로는 특수화된 Formatter를 사용하겠습니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이전 글에서 만든 GenericPersistentEnumFormatter를 사용해서 만듭니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+@Component</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class CodeCateFormatter extends GenericPersistentEnumFormatter&lt;CodeCate&gt; {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">쓰레드 세이프하기 때문에 빈으로 등록해서 싱글톤으로 써도 됩니다. PropertyEditor는 2단계 호출을 거치기 때문에 그다지 안전하지 않았습니다. 매번 new를 사용해서 등록해주는것이 안전했었죠. 이젠 그럴필요가 없으니까 이렇게 합니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그리고 이제 이 포매터를 등록하는 일이 남았는데 조금 귀찮습니다;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+public class SmdisFormattingConversionServiceFactoryBean extends FormattingConversionServiceFactoryBean {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Autowired CodeCateFormatter codeCateFormatter;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Override</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;protected void installFormatters(FormatterRegistry registry) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;super.installFormatters(registry);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;registry.addFormatterForFieldType(CodeCate.class, codeCateFormatter);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">먼저 이렇게&nbsp;FormattingConversionServiceFactoryBean를 상속한 다음에&nbsp;installFormatters()를 재정의해서 원하는 포매터를 등록해 줍니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+마지막으로 이녀석을 conversionService로 등록하고 어댑터에 끼워줘야 합니다. 그나마 이부분은 스프링 3.0에 추가된 mvc 네임스페이스 덕분에 간단해 졌습니다.,</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;mvc:annotation-driven conversion-service="conversionService" /&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;&lt;bean id="conversionService" class="smdis.common.formatter.SmdisFormattingConversionServiceFactoryBean"/&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">끝.. 이제는 스프링이 CodeCate 타입을 어떻게 바인딩 해야하는지 알고 있기 떄문에 잘 들어갑니다.</div>
+<div>
+</div>
+<div>
+<img src="/assets/cfile24.uf.201B55254C0E015D69539E.jpg" class="aligncenter" width="600" height="425" alt="" filename="2.jpg" filemime="image/jpeg" />
+</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+내일은 검색과 그리드쪽에도 CodeCate를 추가해야겠군요.&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">흠.. 그리드는 간단하니깐 걍 오늘 추가해야겠네요.</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+</div>

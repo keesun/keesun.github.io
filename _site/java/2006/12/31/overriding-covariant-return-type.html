@@ -1,0 +1,18 @@
+<p><a href="http://java.sun.com/docs/books/tutorial/java/IandI/override.html" target="_blank">Java tutorial</a>에 보시면 다음과 같이 나와있습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">An instance method in a subclass with the same <span style="color: rgb(255, 0, 0);">signature (name, plus the number<br />
+and the type of its parameters) and return type</span> as an instance method in<br />
+the superclass <i>overrides</i> the superclass's method.</p>
+<p>메소드 서명 부분(메소드 이름, 매변수의 수, 매개변수의 타입) 과 리턴 타입이 부모 클래스의 것과 같을 때 자식 클래스에 있는 메소드가 오버라이딩을 한다.</p></div>
+<p>하지만 이게 끝이 아닙니다. 다음 문단에 보시면
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="color: rgb(255, 0, 0);"> An overriding<br />
+method can also return a subtype of the type returned by the overridden<br />
+method.</span> This is called a <i>covariant return type</i>.</p>
+<p>오버라이딩 하는 메소드의 리턴 타입은 오버라이딩 당하는 메소드의 리턴타입의 하위 타입이 될 수 있습니다. 이것을 covariant return type이라고 한다는데 한글로는 뭐라고 해야하는지 모르겠네요.</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">팁으로 Overriding이 맞는지 확인하고 싶으면 Overriding하는 메소드 위에 @Override 라고 어노테이션을 붙여 주시면 됩니다. 적절한 오버라이딩이 아닐 때는 이 어노테이션을 근거로 컴파일 에러가 발생합니다. "오버라이딩이 아닌데 왜 오버라이딩이라고 써논거야?" 뭐 이런 에러가 발생합니다. 그래서 오버로딩과 오버라이딩이 명확하지 않을 땐 @Override를 붙여주는 것도 좋은 코딩 습관이 될 것 같습니다.</div>
+<p>코드로 확인해 보겠습니다.<br />[#M_ more.. | less.. | package override;</p>
+<p>public class Animal {<br />&nbsp;&nbsp; &nbsp;public Animal getAnimal(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return new Animal();<br />&nbsp;&nbsp; &nbsp;}<br />}</p>
+<p>package override;</p>
+<p>public class Cat extends Animal {<br />&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; public Cat getAnimal(){<br />&nbsp; &nbsp; &nbsp; &nbsp; return new Cat();<br />&nbsp; &nbsp; }<br />}</p>
+<p>//이클립스에서는 @Override에 빨간 불이 안들어오는 걸 보고도 오버라이딩이 적용된다고 생각할 수 있겠습니다.<br />_M#]<br />전 이 부분을 읽고나서 한 참 뒤 매개변수도 하위 타입으로 받아 들이게 되면 오버라이딩 아닌가~ 하는 생각으로 '외곡된 기억'을 가지게 되었고 다행히 <a href="http://zerry82.tistory.com/" target="_blank">열공하는 후배</a> 덕분에 제가 '외곡된 기억'을 가지고 있었다는 사실을 알게 되었습니다.</p>
+<p>머릿속으로 '맞다'라고 생각했던 것이 '외곡된 기억'일 수도 있다는 교훈을 얻게 됐네요.</p>

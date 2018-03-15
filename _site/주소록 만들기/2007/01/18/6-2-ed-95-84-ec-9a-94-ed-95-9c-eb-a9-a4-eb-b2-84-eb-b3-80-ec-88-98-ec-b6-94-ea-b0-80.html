@@ -1,0 +1,7 @@
+<p><span style="font-weight: bold;">1. 연관을 맺기 위해서 필요한 필드들을 새로 추가합니다.</span></p>
+<div style="margin-left: 40px;">Member 모델에 필요한 필드<br />- Set&lt;MemberGroup&gt; memberGroups;<br />- Set&lt;Messenger&gt; messengers;</p>
+<p>Messenger 모델에 필요한 필드<br />- Member member;</p>
+<p>Group 모델에 필요한 필드<br />- Set&lt;MemberGroup&gt; memberGroups;</p>
+<p>MemberGroup 모델에 필요한 필드<br />- Member member;<br />- Group group;</div>
+<p><span style="font-weight: bold;">2. 각각의 세터 게터들을 추가합니다.</span></p>
+<div style="margin-left: 40px;">Alt + Shift + S -&gt; R 단축키 사용.<br />게터 세터 추가하실 때 팁은.. 새로 추가되는 메소드를 맨 뒤에 생성하기 위해서 커서를 마지막 메소드 아래에 위치 하시고 추가하시면 좋습니다. 게터 세터 메소드를 추가하는 기본 위치 설정이 현재 커서의 위치로 되어 있어서요. :)</div>

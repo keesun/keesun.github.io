@@ -1,0 +1,28 @@
+<p>쉽지 않다. 일단 배경 자체가 매우 긴데...</p>
+<p><a href="http://www.javaworld.com/javaworld/jw-02-2009/jw-02-servlet3.html" target="_blank">http://www.javaworld.com/javaworld/jw-02-2009/jw-02-servlet3.html</a></p>
+<p>이 글에서 배경을 잘 설명하고 있다.</p>
+<p>HTTP 1.0과 HTTP 1.1의 차이점부터 시작해서, Thread per connection을 설명하고, page-by-page 방식에서 커넥션 쓰레드가 지연상태로 있기 마련인지라, JDK 1.4에 추가된 NIO를 사용해서 놀아도 되는 커넥션 쓰레드를 회수하여 새로운 요청을 처리할 용도로 사용하도록 되었다고 한다. 그러다, Ajax의 등장으로 page 당 요청수가 급증하게되고, 그 중에서도 느리고 제한적인 자원에 접근하는 요청일 경우에는 처리용 쓰레드가 대기하는 상황이 자주 발생하게 됐다. 그래서 등장한 것이 바로 Servlet 3.0의 비동기 기능이다. 대기해야 하는 리소스를 요청한 상태에서 처리용 쓰레드를 계속 대기 상태로 유지(동기)하는게 아니라, 처리용 쓰레드는 대기해야 하는 리소스를 요청하고 회수했다가, 리소스가 다시 가용해졌을 때 처리를 이어가게 해주는 것이다. 이렇게되면, 가만히 기다리느라 멍때리고 있던 리소스를 다른 작업 처리하는데 사용할 수 있으니 훨씬 효율적이라서, 잘하면 처리량이 올라갈 수도 있겠다.</p>
+<p>결국 DB로 쏠릴것이다. 지금도 성능의 대부분은 DB에서 먹히는 거라고 하지만, 그걸 뭘 어째겠는가. 그 앞에 캐시를 둬서 잘 운영하거나, DB 자체를 좀 더 효율적으로 활용하는 방법을 찾거나, 그건 또 다른 문제니까 논외로 패스.</p>
+<p>어쨌거나, 지금까지 배경을 살펴보면 대충 이런것 같다.</p>
+<ul>
+<li>일단 두 종류의 자원이 있다. 하나는 커넥션용. 하나는 처리용.</li>
+<li>커넥션용 자원은 이미 여러 서블릿 컨테이너가 NIO를 사용해서 효율적으로 작업해 뒀기 때문에 개발자가 신경쓰지 않아도 됨. - "Today, popular Web servers -- including Tomcat, Jetty, GlassFish (Grizzly), WebLogic, and WebSphere -- all use thread per request through Java NIO."</li>
+<li>처리용 쓰레드는 DB 요청이나, 웹 서비스 요청을 했을 때 대기하게 되는데, 이건 서블릿 3.0의 비동기 기능을 활용해서 절약할 방법이 생김. (어느정도 효과가 있을지는 모르겠음.)</li>
+</ul>
+<p>하지만, 이 글에서 보여주는 예제는 ServletContextListener와 조합하고 있는데, 그리 깔끔해 보이는 예제는 아니었다.</p>
+<p><a href="http://blogs.oracle.com/enterprisetechtips/entry/asynchronous_support_in_servlet_3" target="_blank">http://blogs.oracle.com/enterprisetechtips/entry/asynchronous_support_in_servlet_3</a></p>
+<p>다음으로 읽은 글인데, 비교적 깔끔한 예제와 설명을 제공한다. 그런데 저기 있는 예제 코드처럼 요청이 올때마다 new ThreadPoolExecutor(10)를 생성하는 건 매우 위험해보이고, 쓰레드 풀을 스프링에 빈으로 등록해두고 쓰는게 좋겠다. 스프링 @Async 기능 관련해서 무슨 클래스 이름이 있었는데 잊어버렸다. @_@; 머더라.. 뭔 Factory였는데.. 또 패스.</p>
+<p>그치만 저 글로는 AsyncContext, AsyncListener의 주요 기능을 파악하기는 어려웠다. API를 읽어본다고 크게 도움이 되지도 않고, 언제 이 메서드를 사용해야 하는 것인지 알아야 할텐데..</p>
+<p><a href="http://jcp.org/en/jsr/detail?id=315" target="_blank">http://jcp.org/en/jsr/detail?id=315</a></p>
+<p>그래서 스펙을 열어봤다. 스펙 문서는 서블릿의 모든것이 설명되어 있는 필독 문서인데, 난 아직 전부다 읽어본적은 없다. 이번 기회에 한번 다 읽어볼까 싶기도 하고... 어쨋든 이 문서에서 비동기 관련 내용이 잘 설명되어 있다. 2.3.3.3을 보면 된다. 사실 나도 아직 다 읽은건 아니라서.. @_@ 일단 링크 정리하면서 요약하려고 적기 시작한거라. 나중에 레퍼런스를 요약해서 정리해야겠다. 서블릿 3.0 부셔버리겠어!!</p>
+<p><a href="http://weblogs.java.net/blog/mode/servlet3.0/servlet3.0-javaone09.pdf" target="_blank">http://weblogs.java.net/blog/mode/servlet3.0/servlet3.0-javaone09.pdf</a></p>
+<p>마지막으로 전체적으로 훑어보기 좋은 PDF 문서가 있다. 여기 그림과 코드가 주옥같다. 발표 영상도 구할 수 있으면 좋겠지만, 귀찮아서 찾아보진 않았다.</p>
+<p>예제를 하나 만들어 보고 슬슬 자야겠다. 벌써 12시 30분을 향해가는구나. 간단한 웹 서비스 요청을 한다고 가정해보자. 야후 주식 API를 호출해서 여러 주가 정보를 받아와야 한다고 가정해보자.</p>
+<p>[gist id=1621658 file=AsyncServlet.java]</p>
+<p>여기서 사용한 야후 주시 정보는 스프링 RestTemplate응 이용했다.</p>
+<p>[gist id=1621658 file=YahooFinance.java]</p>
+<p>이렇게 짜봤는데... 흠.. 뭔가 좀... 응답이 한방에 오는게 어째 좀 찝찝하다. 응답이 조각 조각 와야 하는거 아닌가. 크롬 인스펙터로 보면 응답 Transper-Encoding: chuncked 이긴한데.. 내가 원한건, Start가 먼저 응답으로 오고, 그 다음에 주식 정보가 다시 응답 조각으로 와서 완료되는 것인데.. 흠.. 디스패치를 이용해야되나.. 아. 찝찝한데 시간은 벌써 1시 반이 넘었고... 자야겠다. 젠장.. OTL...</p>
+<p>서블릿 레퍼런스랑 자바 컨커런시 프로그래밍 좀 잘 봐야겠다.</p>
+<p>출근길에 Dispatch를 사용하도록 코드를 변경해봤다.</p>
+<p>[gist id=1621658 file=AsyncServlet2.java]</p>
+<p>이번에도 내가 원하는대로 되진 않았다. 일단 브라우저에는 Start만 보내고, 그 다음 리모트 호출이 완료된 다음 주가 정보를 출력하는 것이 내가 원하는 결과였는데.. 흠.. 화면단에서 자바스크립트로 코딩이 들어가야 하는걸까? 화면단 코딩을 하지 않더라도, 적어도 크롭 인스펙터에 두줄로 나와야 하는거 아닐까나.. 흠;; 모르겠군;</p>

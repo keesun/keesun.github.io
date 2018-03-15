@@ -1,0 +1,15 @@
+<p>Nontransactional 상태에서 SQL을 날리면 그런 일이 발생합니다.</p>
+<p>하이버네이트는 Flush 시점에 꼭 필요한 SQL만 날립니다. 그 전에 프로그램에서 필요로 하는 데이터를 위한 SQL 역시 날아갑니다. 이것에 관한건 이전에 Flush에 관한 부분을 정리해두었으니 그 부분을 참조하시면 됩니다.</p>
+<p>문제는, get() 류의 SQL들은 바로바로 날아가는데, insert와 update류의 SQL들은 바로 날아가지 않고 Persistence Context에 담겨 있다가 가장 나중에 Write behind 쓴다는 것입니다. 이 때, 만약 트랜잭션 경계를 지정해두지 않고 코딩을 했다면 문제가 복잡해 질 수 있습니다.</p>
+<p>트랜잭션 범위를 명시적으로 정해주지 않으면, 사용하는 DB에 따라 동작하는 방식이 다른데, 오라클의 경우 트랜잭션 범위 없이 커넥션을 닫아버리면 그냥 커밋해버립니다. 다른 DB들은 롤백해버립니다. 오라클이 아닌 DB를 사용할 때는 결국 select문만 날아가고 insert 문이 안날아 가는 상황을 목격할 수 있습니다. 이것도 이렇게 단순한게 아닙니다. 주키 생성방식에 따라 insert문이 날아갈 수도 있고 안날아 갈 수 도 있습니다. 주키를 sequence를 사용해서 생성할 때에는 insert문이 날아가지 않고 sequence를 구해오는 SQL 함수만 호출합니다. 주키를 indentity 방식으로 생성할 때에는 insert문을 날려서 주키 값을 가져옵니다.</p>
+<p>이렇게 복잡한 상황을 면하려면, 트랜잭션 경계를 잘 설정해 주어야 합니다. 스프링을 사용해서 가장 간단하게 트랜잭션 경계를 설정하는 방법은 다음과 같습니다.</p>
+<p>1. sessionFactory 빈 등록<br />2. &lt;context:annotation-config /&gt; 추가.<br />3. 트랜잭션 경계가 되는 클래스 위에 @Transactional 애노테이션 붙이기</p>
+<p>1, 2번은 간단합니다. 아주 쉽죠. 3번도 간단해보이지만 그렇게 간단하지 않습니다. 아니, 단일 클래스를 사용했을 때는 간단합니다. 그런데 최소한 인터페이스는 사용하겠죠. 그래서 다음과 같은 구조가 있다고 생각해 봅시다.<br /><img src="/assets/gk180000000000.png" class="aligncenter" width="315" height="300" alt="사용자 삽입 이미지" /><br />MemberService는 인터페이스고 그 아래는 그것을 구현한 클래스입니다. 둘 중 어디에 @Transactional을 붙여야 할까요? 스프링 팀은 Concrete 클래스에 @Transactional을 붙이는 것을 권장합니다. 그 이유는 스프링 AOP와 Proxy 그리고 애노테이션과 관련된 것인데, 생략하겠습니다. 암튼 Concrete 클래스에 붙이면 만사 OK 끝입니다.</p>
+<p>그럼 인터페이스를 구현한게 아니라, 클래스 상속 구조에서는 @Transactional을 어디에 붙여야 할까요?</p>
+<p><img src="/assets/gk180000000001.png" class="aligncenter" width="307" height="300" alt="사용자 삽입 이미지" /><br />고민입니다. 어디에 붙여야 할지... 
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">1. 일단 MemberServiceImpl에만 붙이면 안 됩니다. 그럼 AbstractMemberService에 있는 메소드들은 트랜잭션 경계를 설정하지 않은 꼴이 됩니다. </p>
+<p>2. 그렇다고 AbstractMemberService에만 붙이자니 그것도 안 됩니다. MemberServiceImpl에만 있는 메소드들에는 마찬가지로 트랜잭션 경계를 설정해주지 않을 꼴이 되니까요. </p>
+<p>3. 그럼.. AbstractmemberService와 MemberServiceImpl에 있는 모든 public 메소드에 @Transactional을 붙여줄까요? 이 애노테이션은 public 메소드 위에도 붙일 수 있습니다.(사실 모든 메소드 위에 붙일 수 있지만, public 메소드에만 트랜잭션 경계를 적용시켜주고 다른건 무시합니다.) 귀찮습니다. 메소드 추가할 때마다 애노테이션 한 줄씩 넣기가 귀찮습니다.</p>
+<p>4. 그럼 두 개의 클래스 위에 다가 @Transactional을 붙여버리자!! 빙고.. 그런데 프록시 많이 사용하는건 그다지 성능에 안 좋지 않나. 게다가 프록시는 self-invocation문제도 있는데..</p>
+<p>5. 그럼 @Transactional을 두 개의 클래스 위에 붙이고 Spring AOP말고 AspectJ를 써야겠다. 근데 AspectJ 사용이 2.5에서 편해지긴 했는데 여전히 뭔가 귀찮단 말이지..</div>
+<p>여기까지가 고민의 끝입니다.</p>

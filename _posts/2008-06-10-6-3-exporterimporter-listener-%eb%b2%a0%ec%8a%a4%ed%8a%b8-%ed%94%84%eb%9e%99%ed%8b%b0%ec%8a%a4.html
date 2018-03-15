@@ -1,0 +1,74 @@
+---
+layout: post
+title: 6.3. Exporter/Importer listener 베스트 프랙티스
+date: 2008-06-10 13:26:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- cyclic reference
+- listener
+- 스프링 DM
+- 스프링 DM 레퍼런스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879540'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>위에서 언급했듯이, 스프링 DM 리스너들은 서비스가 묶이고, 풀리고, 등록되고, 해지될 때를 알기 위한 용도다. 이런 리스너들을 다룰 때 다음의 가이드라인이 도움이 될 수 있을 것이다.
+<ul>
+<li>오래 걸리는 작업을 리스너 안에서 실행하지 말아라. 만약 그래야만 한다면, 별도의 쓰레드에서 작업하도록 하라. 리스너들이 동기적으로 처리되기 때문에 가능한 빨리 처리되도록 해야 한다. 해당 리스너 안에서 작업을 하는 동안에는 다른 이벤드들과 서비스의 활동이 대기상태가 된다.</li>
+<li>왠만하면 커스텀 리스너 콜백을 사용하라. 그래야 스프링 DM API에 묶이지 않으며, 특정 이름을 가용하지도 않는다.</li>
+<li>bind/unbind 설정을 반복하고 있다면, 빈 설정 상속 기능을 사용하는 것을 한번 고려해 보아라. 공통적인 설정을 재사용할 수 있다.</li>
+<li>java.util.Dictionary보다는 java.util.Map을 사용하라. 전자는 폐기처분 상태다. 그래도 호환성을 위해서 스프링 DM은 리스너에 필요시 Dictionary로 캐스팅할 수 있는 Map을 제공한다.</li>
+<li>과도한 메소드 사용에 주의하라. 원치 않게도 모든 메소드들이 특정 서비스 타입에 모두 호출 될 수 있다.</li>
+</ul>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">public class MyListener {<br />&nbsp; &nbsp; void register((1)Object service, Map properties);<br />&nbsp; &nbsp; void register((2)Collection dataService, Map properties);<br />&nbsp; &nbsp; void register((3)SortedSet orderedDataService , Map properties);<br />}</p>
+<p>1 &nbsp;&nbsp; Object type - 이 메소드는 항상 실행된다.<br />2 &nbsp;&nbsp; Collection type - 이 메소드가 실행되면, 바로 위에 있는 메소드도 실행된다.<br />3 &nbsp;&nbsp; SortedSet type - 이 메소드가 실행되면, 위에 있는 거 모두 실행된다.</div>
+<p><font size="3"><span style="font-weight: bold;">6.3.1. 리스너와 cyclic depencdency</span></font></p>
+<p>리스너가 자신을 사용하는 서비스를 사용하려는 빈을 참조하려는 경우가 있을 수 있다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;bean id="listener" class="cycle.Listener"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (1)<br />&nbsp; &nbsp; &lt;property name="target" ref="importer" /&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (2)<br />&lt;/bean&gt;<br />&nbsp; &nbsp; <br />&lt;osgi:reference id="importer" interface="SomeService"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (3)<br />&nbsp; &nbsp; &lt;osgi:listener bind-method="bind" ref="listener" /&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (4)<br />&lt;/osgi:reference&gt;</p>
+<p>1 &nbsp;&nbsp; Listener bean<br />2 &nbsp;&nbsp; Dependency listener -&gt; importer<br />3 &nbsp;&nbsp; Importer declaration<br />4 &nbsp;&nbsp; Dependency importer -&gt; listener</div>
+<p>위 선언은 유효하다. 그러나 리스너를 만들려고 하면 레퍼런스 빈을 만들어야 하고 레퍼런스 빈을 만들려면 리스너를 만들어야 한다. 이 원이 깨져서 어느 한쪽이라고 먼저 생성을 하고 설정되어야 한다. 이런 시나리오는 스프링 DM에서 지원한다. 즉 알아서 만들어 준다. 하지만 다음과 같이 내부 빈을 사용한 경우에는 그렇치 않다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;osgi:reference id="importer" interface="SomeService"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (1)<br />&nbsp; &nbsp; &lt;osgi:listener bind-method="bind"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (2)<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;bean class="cycle.Listener"&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (3)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="target" ref="importer" /&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (4)<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/bean&gt;<br />&nbsp; &nbsp; &lt;/osgi:listener&gt;<br />&lt;/osgi:reference&gt;</p>
+<p>1 &nbsp;&nbsp; OSGi service importer<br />2 &nbsp;&nbsp; Dependency between importer -&gt; listener<br />3 &nbsp;&nbsp; Nested listener declaration<br />4 &nbsp;&nbsp; Dependency nested listener -&gt; importer</div>
+<p>내부 빈은 자신의 이름이나 라이프사이클도 없이 외부 빈에 종속적인 삶을 살 뿐이기 때문에, 내부 리스너를 캐시 할 수 없다. 따라서 cyclic 참조 원을 깨트리지못하고 동작하지 않게 되는것이다.</p>
+<p>정리하자면, 만약 리스너가 정말로 자신을 사용하는 서비스에 대한 참조가 필요하다면 리스너를 탑 레벨 빈으로 등록하거나 dependency lookup을 사용하라. 대신 후자는 좀 더 많으 설정과 빈 이름을 사용할 것이기 때문에 dependency injection 보다 깨지기 쉽다.</p>
+<p></p>

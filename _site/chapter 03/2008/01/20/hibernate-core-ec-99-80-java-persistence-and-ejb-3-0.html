@@ -1,0 +1,28 @@
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Hibernate Core </th>
+<th class="confluenceTh"> Java Persistence and EJB 3.0 </th>
+</tr>
+<tr>
+<td class="confluenceTd"> Persistence 클래스는 프록시 기반의 Lazy Loading을 사용할 때에만 아규먼트가 없는 public 또는 protected의 생성자를 필요로 한다. </td>
+<td class="confluenceTd"> JPA는 모든 Entity 클래스들이 반드시 아규먼트가 없는 public 또는 protected의 생성자를 가지고 있어야만 한다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> Persistent 콜렉션은 반드시 인터페이스 타입이어야 하며, JDK가 제공하는 모든 인터페이스를 지원한다. </td>
+<td class="confluenceTd"> 마찬가지로 모두 인터페이스 타입이어야 하며, 정렬된 콜렉션을 제외한 일부 인터페이스만 완전히 이식가능한 형태로 사용할 수 있다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> Persistent 속성들은 실행시에 accessor나 필드를 통해서 접근할 수 있으며, 혹은 완전히 다른 전략을 적용할 수도 있다. </td>
+<td class="confluenceTd"> 마찬가지로 accessor나 필드를 통해서 접근가능하지만, 이식성이 필수라면 두 방법 모두 그렇치 않다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> XML 메타데이터 형식으로 모든 하이버네이트 맵핑 옵션을 사용할 수 있다. </td>
+<td class="confluenceTd"> JPA 애노테이션은 기본적이고 가장 발전된 형태의 맵핑 옵션을 모두 제공한다. 하이버네이트 애노테이션은 별도의 맵핑과 튜닝을 필요로 한다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> XML 맵핑 메타데이터는 전역적으로 설정될 수 있으며 XML placeholder를 사용해서 메타데이터를 독립적으로 유지할 수 있다. </td>
+<td class="confluenceTd"> 전역적인 메타데이터는 org.xml 메타데이터 파일에 두어야 이식성을 유지할 수 있다.</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,117 @@
+---
+layout: post
+title: "@Configurable 사용하기"
+date: 2007-11-26 03:46:14.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323165971'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이제야... 이 글을 올릴 수 있게 됐네요. ㅎㅎㅎ 저번 주부터 올리고 싶었던 글인데, 별것도 아닌거 가지고 삽질을 하느라고 늦어졌습니다.</p>
+<p>@Configurable이 뭔지, 왜 사용해야 하는지 궁금하시면 먼저 토비님이 마소에 기고하셨던 글인 <a href="https://www.dbguide.net/know/know102001.jsp?mode=view&amp;divcateno=9&amp;divcateno_=9&amp;pg=1&amp;idx=3229" target="_blank">"스프링프레임워크와 DDD(Driven Driven Design)"</a>와 그 글을 보고 감명을 받은 찬욱군의 <a href="http://chanwook.tistory.com/558" target="_blank">도메인 개체가 빈으로 선언되야 하는 걸까?</a>와 제가 쓴 <a href="http://whiteship.tistory.com/1279" target="_blank">@Configurable을 사용해야 하는 이유</a>를 읽으시는게 좋습니다.</p>
+<p>1. 도메인 객체 구현. + 2. @Configurable 설정.<br />2. XML 설정.<br />3. java 아규먼트 설정.<br />4. 테스트.</p>
+<p><span style="font-weight: bold;">0 순위가 빠졌네요. 테스트 코드부터 작성하겠습니다.</span><br />
+<textarea name="code" class="java" cols="50" rows="10">package whiteship;</p>
+<p>import static org.junit.Assert.assertNotNull;</p>
+<p>import org.junit.Test;<br />
+import org.junit.runner.RunWith;<br />
+import org.springframework.test.context.ContextConfiguration;<br />
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration<br />
+public class MemberTest {</p>
+<p>	@Test<br />
+	public void testDI() throws Exception {<br />
+		Member member = new Member();<br />
+		assertNotNull(member.getRepository());<br />
+	}</p>
+<p>}<br />
+</textarea></p>
+<p>new를 사용해서 도메인 객체를 생성하고, 이 객체가 Repository라는 객체를 가지고 있나 확인하는 매우 간단한 코드입니다.</p>
+<p><span style="font-weight: bold;">1. 도메인 객체 구현. + 2. @Configurable 설정.</span></p>
+<p>구현은 간단합니다.<br />
+<textarea name="code" class="java" cols="50" rows="10">package whiteship;</p>
+<p>import org.springframework.beans.factory.annotation.Autowired;<br />
+import org.springframework.beans.factory.annotation.Configurable;</p>
+<p>@Configurable("member")<br />
+public class Member {</p>
+<p>	@Autowired<br />
+	private Repository repository;</p>
+<p>	public void setRepository(Repository repository) {<br />
+		this.repository = repository;<br />
+	}</p>
+<p>	public Repository getRepository() {<br />
+		return repository;<br />
+	}</p>
+<p>	public Integer save() {<br />
+		return repository.add(this);<br />
+	}</p>
+<p>}<br />
+</textarea></p>
+<p>주목해서 봐야할 부분은 Repository 객체를 new 키워드로 생성하여 가지고 있지 않습니다. 스프링의 DI를&nbsp; 사용하여 주입받을 것이기 때문입니다.</p>
+<p>그리고 클래스 선언 부 위에 @Configurable 애노테이션을 사용하여 이 객체를 스프링이 관리하도록 설정합니다. 괄호 안에는 스프링에서 이 객체를 나타낼 bean의 이름을 적어줍니다. 위와같이 클래스 명과 동일할 때는 생략해도 됩니다.</p>
+<p><span style="font-weight: bold;">2.&nbsp; XML 설정.</span></p>
+<p>스프링 설정 파일은 다음과 같습니다.<br />
+<textarea name="code" class="xml" cols="50" rows="10">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+	xmlns:context="http://www.springframework.org/schema/context"<br />
+	xsi:schemaLocation="<br />
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd<br />
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"<br />
+	default-autowire="byName"&gt;</p>
+<p>	&lt;context:load-time-weaver /&gt;</p>
+<p>	&lt;context:spring-configured /&gt;</p>
+<p>	&lt;bean id="member" class="whiteship.Member" abstract="true"<br />
+		scope="prototype" /&gt;</p>
+<p>	&lt;bean id="repository" class="whiteship.RepositoryImpl" /&gt;</p>
+<p>&lt;/beans&gt;<br />
+</textarea>gg</p>
+<p>스프링 2.5에 새로 추가된 context 네임스페이스를 추가한 뒤, &lt;context:load-time-weaver /&gt; 엘리먼트와 &lt;context:spring-configured /&gt; 엘리먼트를 추가해줍니다. &lt;context:spring-configured /&gt; 이 녀석은 @Configurable이 붙어있는 bean을 찾아서 스프링이 관리하도록 설정합니다. 이 때 LTW(load time weaver)를 필요로 하는데, 이 녀석을 사용하도록 &lt;context:load-time-weaver /&gt; 엘리먼트를 등록해 줍니다.</p>
+<p>그리고 member 객체는 명시적으로 컨테이너에서 만들 수 없도록 abstract 속성을 true로 해주고, 매번 다른 객체처럼 취급해야 하기 때문에 prototype Scope으로 설정해줍니다.</p>
+<p>beans 엘리먼트에서 Autowiring 설정을 byName으로 해두었기 때문에, Member 클래스에 RepositoryImpl 클래스를 주입해 줄 것입니다.</p>
+<p><span style="font-weight: bold;">3. java 아규먼트 설정.</span></p>
+<p>Run -&gt; Open Run Dialog를 클릭하고 JUnit을 우클릭하여 new를 선택하여 새로운 테스트 스크립트를 작성합니다.</p>
+<p>이때 Test에서는 기존의 Test와 같은 값을 주고, Argument 탭에서 다음과 같이 -javaagent 옵션을 사용하여 spring-agent.jar 파일의 위치를 알려줍니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk5.png" class="aligncenter" width="600" height="441" alt="사용자 삽입 이미지" /><br /><span style="font-weight: bold;">4. 테스트.</span><br /><img src="{{ site.baseurl }}/assets/gk6.png" class="aligncenter" width="319" height="197" alt="사용자 삽입 이미지" /><br />휴~ 이제 시작이네요. ㅎㅎ</p>

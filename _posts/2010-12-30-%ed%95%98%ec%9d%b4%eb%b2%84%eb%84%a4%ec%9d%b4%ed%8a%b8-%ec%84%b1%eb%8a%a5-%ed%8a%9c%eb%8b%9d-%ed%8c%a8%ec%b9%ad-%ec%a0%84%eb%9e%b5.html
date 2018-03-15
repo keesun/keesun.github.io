@@ -1,0 +1,73 @@
+---
+layout: post
+title: "[하이버네이트 성능 튜닝] 패칭 전략"
+date: 2010-12-30 23:13:46.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Hibernate
+tags:
+- fetching strategies
+- hibernate
+- 하이버네이트
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323189488'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;">참조: <a href="http://www.javadev.org/files/Hibernate%20Performance%20Tuning.pdf" target="_blank">http://www.javadev.org/files/Hibernate%20Performance%20Tuning.pdf</a></p>
+<p>하이버네이트에서 패칭 전략은 애플리케이션에서 어떤 객체와 연관된 객체를 가져오는 방법이다. 즉 A-&gt;B 또는 A-&gt;Collection<strong> </strong>이런 관계가 있을 때 A와 연관되어 있는 B 또는 Collection를 가져오는 방법이다. 쉽게 생각해보면 A를 가져갈때 B나 C도 같이 가져가는 방법이 있고, A를 가져갈땐 A만 가져가고 B는 나중에 a.b라고 접근하는 순간에 가져갈 수 있겠다. 그런데 이렇게 단순하지 많은 않다.</p>
+<p style="clear: both;">
+<ul style="clear: both;">
+<li>Join fetching: 연관된 인스턴스나 콜렉션을 <strong>동일한 SELECT</strong> 절에서 OUTER JOIN으로 가져온다.</li>
+<li>Select fetching: 연관된 인스턴스나 콜렉션을 <strong>부가적인 SELECT</strong> 절을 사용해서 가져오기. lazy="false"라고 명시하지 않는한 이 부가적인 쿼리는 실제 해당 컬렉션에 접근할 때 발생한다.</li>
+<li>Subselect fetching: <strong>이전 쿼리나 패치에서 가져온 모든 엔티티에 연관된</strong> 인스턴스나 콜렉션을 <strong>부가적인 SELECT</strong> 절을 사용해서 가져오기. lazy="false"라고 명시하지 않는한 이 부가적인 쿼리는 실제 해당 컬렉션에 접근할 때 발생한다.</li>
+<li>Batch fetching: select fetching의 최적화 전략. 하이버네이트는 인스턴스나 컬렉션을 주키나 외래키 목록을 사용해 하나의 SELECT 절로 묶어서 가져온다.</li>
+</ul>
+<p style="clear: both;">패칭 전략을 이렇게 나누기도 한다.</p>
+<ul style="clear: both;">
+<li>Immediate fetching: owner 쪽을 로딩할 때 컬렉션이나 속성을 그 즉시 가져온다.</li>
+<li>Lazy collection fetching: 해당 컬렉션에 접근할 때 가져온다.(이게 컬렉션의 기본 전략)</li>
+<li>"Extra-lazy" collection fetching: 컬렉션의 개별 요소에 접근할 때 데이터베이스에 접근한다. 컬렉션을 전부다 메모리로 가져오지 않는 방법인데 컬렉션이 매우 클때 적합하다.</li>
+<li>Proxy fetching: 단일 값 관계에 있는 인스턴스는 id가 아닌 다른 속성에 접근할 때 가져온다.</li>
+<li>"No-proxy" fetching: 인스턴스 변수에 접근하면 바로 가져온다. Proxy fetching에 비해 덜 lazy한 방식이지만 프록시를 사용하지 않으니 더 깔끔하다. 이 방법을 사용하려면 빌드시 바이트코드 조작을 해야 하다. 이 방법은 거의 사용하지 않는다.</li>
+<li>Lazy attribute fetching: 어떤 속성이나 단일 값 관계에 접근할 때 인스턴스 변수를 접근한다. 이 방법도 빌드시 바이트코드 조작을 해야 하며 거의 사용하지 않는다.</li>
+</ul>
+<p><br class="final-break" style="clear: both;" /></p>

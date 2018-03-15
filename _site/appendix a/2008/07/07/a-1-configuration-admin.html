@@ -1,0 +1,11 @@
+<p><span style="font-weight: bold;">A.1.1. Property placeholder support</span></p>
+<p>스프링 DM은 빈 속성 값을 OSGi Configuration Administration 서비스에서 가져오는 기능을 지원한다. 이 기능은 property-placeholder 엘리먼트를 이용하여 사용할 수 있다.&nbsp; property placeholder 엘리먼트는 "${...}" 이런 형태의 구분자를 사용한 부분의 빈 속성 값을 Configuration Administratino 서비스에서 가져와서 설정해준다. 이 때 persistent-id 속성으로 Configuration dictionary의 키에 해당하는 id를 설정해준다.</p>
+<p>나중에 이 부분은 스프링 프레임워크에 있는 방법과 동일하게 변결 될 거라고 합니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;osgix:property-placeholder persistent-id="com.xyz.myapp"/&gt;</p>
+<p>&lt;bean id="someBean" class="AClass"&gt;<br />&nbsp; &lt;property name="timeout" value="${timeout}"/&gt;<br />&lt;/bean&gt;</div>
+<p>someBean의 timeout 속성 com.xyz.myapp 라는 persistent id로 등록된 Configuration Ditionary 안에 있는 timeout의 값으로 대치 한다.</p>
+<p>placeholder 문자열은 빈을 생성할 시점에 대치가 된다. 프로퍼티 값을 변경했다고 해서 생성한 빈 속성을 다시 주입하지는 않는다. 이런 방법이 필요하면 Appendix B의 managed-service와 managed-service-reference를 참조하라. placeholder-prefix와 placeholder-suffix를 사용하여 구분자를 변경할 수 있다.</p>
+<p>프로퍼티 값들을 Configuration Dictionary에 두지 않고 직접 생성해서 사용해도 된다. default-propertiies라는 내부 엘리먼트를 사용한다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;osgix:property-placeholder persistent-id="com.xyz.myapp"&gt;<br />&nbsp; &lt;default-properties&gt; <br />&nbsp; &nbsp;&nbsp; &lt;property name="productCategory" value="E792"/&gt;<br />&nbsp; &nbsp;&nbsp; &lt;property name="businessUnit" value="811"/&gt; <br />&nbsp; &lt;/default-properties&gt;<br />&lt;/osgix:property-placeholder&gt;</div>
+<p>이때 persistent-id 속성은 OSGi ManagerdService를 참조해야 한다. ManagedServiceFactory를 참조하면 에러난다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">A.1.2.&nbsp; Configuration Dictionaries</span></p>
+<p>설정 객체 및 그와 연관된 딕셔너리에 접근하는 방법을 제공하며, 설정 객체에서 직접 빈 객체를 생성하는 것이 스프링 DM 로드맵으로 잡혀있다. Appendix F. Roadmap을 참조하라.</p>

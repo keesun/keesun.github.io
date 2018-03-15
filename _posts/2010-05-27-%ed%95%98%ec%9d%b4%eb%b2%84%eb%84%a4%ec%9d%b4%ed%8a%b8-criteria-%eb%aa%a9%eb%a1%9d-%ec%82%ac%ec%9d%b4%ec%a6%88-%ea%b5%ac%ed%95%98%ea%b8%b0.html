@@ -1,0 +1,120 @@
+---
+layout: post
+title: "[하이버네이트 Criteria] 목록 사이즈 구하기"
+date: 2010-05-27 01:47:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Criteria
+- 하이버네이트 완벽 가이드
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323123924'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div id="">
+난 편의상 이런 메서드들을 만들어 놓고 쓴다.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp;private Session getSession() {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return sessionFactory.getCurrentSession();</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;private Criteria getCriteriaOf(Class clazz){</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return getSession().createCriteria(clazz);</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+</div>
+<div id="">
+이 두개가 있다고 했을 때.. Criteria API를 이용해서 목록 사이즈를 구하는 코드를 작성해보자.</div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp;public int totalSize() {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return getCriteriaOf(Code.class).list().size();</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="">
+</div>
+<div id="">캬.. 얼마나 명시적인가. 하지만 이러면 안된다. ㅠ.ㅠ.. 난 하이버가 좀 더 똑똑해져서 저렇게 짜더라도 알아서 count 쿼리를 만들어 주면 좋겠지만 그러지 않는다. 전부다 select 해온다. 로그를 보면..</div>
+<div id="">
+</div>
+<div id="">
+<div id="">Hibernate: select this_.id as id0_0_, this_.code as code0_0_, this_.descr as descr0_0_, this_.name as name0_0_ from Code this_</div>
+<div>
+</div>
+<div id="">
+이렇다. 필요한건 사이즈 뿐인데 Code 테이블에 있는걸 전부다 가져온 셈이다. 크헉.. 따라서 목록 사이즈를 구할 때는 이런 쿼리를 쓰면 안된다.. 절대로; 그럼 어떻게 할까나..</div>
+<div id="">
+</div>
+<div id="">
+<div id="">&nbsp;&nbsp; &nbsp;public int totalSize() {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return (Integer)getCriteriaOf(Code.class)</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setProjection(Projections.count("id"))</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.uniqueResult();</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이렇게 하면된다. Projections를 이용하면 count 말고도 max, min등을 사용할 수 있다. 코드가 좀 길어지고 Projection API에 적응해야 한다는 단점이 있지만 쿼리는 깔끔해진다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">Hibernate: select count(this_.id) as y0_ from Code this_</div>
+<div>
+</div>
+<div>
+딱 내가 원하던 쿼리다. 하이버네이트를 쓸땐 이렇게 Criteria나 HQL이 생성해주는 SQL도 일일히 확인하는것이 좋다. 사실 일일히 확인하는 작업을 DBA가 해주면 좋겠지만 하이버네이트랑 친한 DBA가 있을 때의 이야기이고 그렇지 않다면 본인이 해야겠다. 아니면 하이버네이트를 마스터해서 어떤 쿼리가 생성되는지 달달달 꽤고 있다면 시간을 좀 단축 시킬 수 있을 것 같기도 하다.</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+하이버네이트를 마스터 하기 위해서는 조마간 나올 하이버네이트 번역서가 필수라는....앗.. &nbsp;광고를 하려고 시작한 글은 아니었는데;; ㅋㅋㅋ</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+ps1: Criteria를 사용해서 좀 더 간결한 코딩으로 가져오는 방법이 있으면 알고 싶다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">ps2: 반드시 Criteria를 써야 한다. 나중에 저 쿼리에 검색 조건이 임의로 추가될텐데 그럴때 Criteria가 빛을 발하기 때문이다. 난 동적쿼리를 SQL이나 HQL로 짜지 못하겠다. 짜증난다.</div>
+</div>
+</div>
+</div>

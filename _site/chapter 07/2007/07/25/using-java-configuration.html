@@ -1,0 +1,15 @@
+<p>원문 : <a href="http://static.springframework.org/spring-javaconfig/docs/1.0-m2/reference/html/using-java-config.html" target="_blank">Chapter 7. Using Java Configuration</a></p>
+<p>애플리케이션에서 애노테이션을 설정 파일로 사용할 수 있는 방법으로 다음과 같은 클래스가 있다.</p>
+<p>&nbsp; &nbsp; * AnnotationApplicationContext &nbsp; &nbsp;&nbsp; </p>
+<p>이 클래스는 Ant 스타일 패턴을 사용하여 애노테이션을 사용한 설정 클래스 이름을 받을 수 있다.</p>
+<p>&nbsp; &nbsp; &nbsp; ApplicationContext oneConfig = <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; new AnnotationApplicationContext(SimpleConfiguration.class.getName());<br />&nbsp; &nbsp; &nbsp; ApplicationContext aBunchOfConfigs = <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; new AnnotationApplicationContext("**/configuration/*Configuration.class");</p>
+<p>이 애플리케이션 컨텍스트는 주어진 패턴에 매칭되는 클래스 패스 내의 클래스들을 자동으로 읽어들이고 빈으로 등록한다. 이 방법의 단점은 설정 객체를 parameterization 할 수 없다는 것이다.</p>
+<p>&nbsp; &nbsp; * Configuration post processor</p>
+<p>&nbsp; &nbsp; &nbsp; &lt;beans&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;!-- Spring configuration --&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;bean class="org.springframework.samples.petclinic.JdbcConfiguration"/&gt;</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp; &lt;!-- Java Configuration post processor --&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/beans&gt;</p>
+<p>두 번째 방법은 설정 처리 뿐만 아리나 (ConfigurationPostProcessor를 통해서) 설정 객체 자체도 제어 하기 때문에 보다 많은 설정 옵셥을 제공한다.</p>
+<p>설정을 빈으로 정의함으로써, Spring 컨테이너는 설정을 (속성 또는 특정 생성자를 사용해서)설정할 수 있다.</p>
+<p>&nbsp; &nbsp; &nbsp; &lt;beans&gt;</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp; &lt;!-- a possible configurable configuration --&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;bean class="org.my.company.config.AppConfiguration"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="env" value="TESTING"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="monitoring" value="true"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="certificates" value="classpath:/META-INF/config/MyCompany.certs"/&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp; &lt;!-- Java Configuration post processor --&gt;<br />&nbsp; &nbsp; &nbsp;&nbsp; &lt;bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &lt;/beans&gt;</p>

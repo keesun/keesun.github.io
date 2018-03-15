@@ -1,0 +1,70 @@
+---
+layout: post
+title: 머리 뽀개지는 BeanPostProcessor
+date: 2007-05-09 08:20:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Bean Life Cycle
+- BeanPostProcessor
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322999566'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이전 글에서 모든 Bean Life Cycle 콜백들을 구현하여 모든 콜백들이 예상대로 동작하는지 확인해봤습니다. 모든 메소드들이 제대로 동작했지만 BeanPostProcessor만 이상하게 동작하지 않았습니다.</p>
+<p>결론부터 말씀드리면 재미없기 때문에 일단 코드를 보겠습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="test" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" init-method="customInit" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="test2" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" init-method="customInit" /&gt;</p></div>
+<p>이 전 글에서 테스트 할 때 사용한 클레스를 다른 빈으로 하나 더 등록하고 테스트를 돌렸습니다.</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"><span style="color: rgb(0, 153, 102);">setBeanName() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setBeanClassLoader() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setBeanFactory() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setResourceLoader() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setApplicationEventPublisher() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setMessageSource() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setApplicationContext() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">afterPropertiesSet() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">customInit() 실행합니다.</span><br /><span style="color: rgb(23, 127, 205);">setBeanName() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setBeanClassLoader() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setBeanFactory() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setResourceLoader() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setApplicationEventPublisher() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setMessageSource() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setApplicationContext() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessBeforeInitialization() 실행합니다.</span><br /><span style="color: rgb(23, 127, 205);">afterPropertiesSet() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">customInit() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessAfterInitialization() 실행합니다.</span></div>
+<p>자 이제 수수께기가 풀리기 시작합니다. 제가 녹색으로 칠한 부분이 test 빈에서 찍힌것이고 v하늘색은 test1 빈에서 찍힌것입니다.</p>
+<p>즉 <span style="background-color: rgb(255, 218, 237);">BeanPostProcessor의 콜백 메소드들은 자신 이후에 생성되는 빈들에 적용됩니다.</span></p>
+<p>좀 더 확실하게 확인하기 위해서 이번엔 세 개로 테스트 해보겠습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="test" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" init-method="customInit" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="test2" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" init-method="customInit" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="test3" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" init-method="customInit" /&gt;</p></div>
+<p>결과는 다음과 같습니다,</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);"><span style="color: rgb(0, 153, 102);">setBeanName() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setBeanClassLoader() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setBeanFactory() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setResourceLoader() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setApplicationEventPublisher() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setMessageSource() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">setApplicationContext() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">afterPropertiesSet() 실행합니다.</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">customInit() 실행합니다.</span><br /><span style="color: rgb(212, 26, 1);">setBeanName() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setBeanClassLoader() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setBeanFactory() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setResourceLoader() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setApplicationEventPublisher() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setMessageSource() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">setApplicationContext() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessBeforeInitialization() 실행합니다.</span><br /><span style="color: rgb(212, 26, 1);">afterPropertiesSet() 실행합니다.</span><br style="color: rgb(212, 26, 1);" /><span style="color: rgb(212, 26, 1);">customInit() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessAfterInitialization() 실행합니다.</span><br /><span style="color: rgb(23, 127, 205);">setBeanName() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setBeanClassLoader() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setBeanFactory() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setResourceLoader() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setApplicationEventPublisher() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setMessageSource() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">setApplicationContext() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessBeforeInitialization() 실행합니다.</span><br /><span style="color: rgb(255, 0, 0);">postProcessBeforeInitialization() 실행합니다.</span><br /><span style="color: rgb(23, 127, 205);">afterPropertiesSet() 실행합니다.</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">customInit() 실행합니다.</span><br /><span style="color: rgb(0, 153, 102);">postProcessAfterInitialization() 실행합니다.</span><br /><span style="color: rgb(255, 0, 0);">postProcessAfterInitialization() 실행합니다.</span><br style="color: rgb(255, 0, 0);" /></div>
+<p>하지만 bean 생성은 보통 설정 파일에 등록되어 있는 순서이고 depends-on 속성을 사용한다 하더라고 위 처럼 여러개의 BeanPostProcessor의 실행 순서를 예측하기란 사실 불안합니다.</p>
+<p>그래서...<span style="color: rgb(255, 0, 0); font-weight: bold; background-color: rgb(255, 218, 237);">BeanPostProcessor가 implements하고 있는 Orderd 인터페이스를 사용하여 순서를 지정할 수 있습니다.</span></p>
+<p>BeanFactoryPostProcessor와의 차이는 BeanPostProcessor는 Bean 객체에 조작을 하는 반명 BeanFactoyPostProcessor는 Bean을 만드는 설명서에 해당하는 설정파일을 조작한다는 것입니다.</p>

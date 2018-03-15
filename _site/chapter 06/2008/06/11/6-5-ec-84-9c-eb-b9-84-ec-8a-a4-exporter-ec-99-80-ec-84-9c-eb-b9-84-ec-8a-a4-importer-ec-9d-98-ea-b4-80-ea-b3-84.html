@@ -1,0 +1,6 @@
+<p>공개한 서비스가 기능을 수행하기 위해 다른 서비스에 의존할 수 있다. 이때 만약 이들 서비스가 필수 레퍼런스라고 가정하고 해당 서비스들이 없어지고 대체제를 찾지 못해서 unsatisfied 상태가 되면 공개한 서비스는 자동으로 서비스 레지스트리에서 해지가된다. 즉 더이상 클라이언트에서 해당 서비스를 사용할 수 없게 된다. 그러나, 해당 필수 레퍼런스가 다시 가용해지면, 공개한 서비스도 다시 서비스 레지스트리에 등록된다.</p>
+<p>이런 공개한 서비스의 자동 해지 및 자동 재등록은 오직 명시적인 선언에 의해서만 사용할 수 있다. 만약 서비스 A 빈을 공개한 서비스 S가 서비스 M을 사용하고 있을 때 아래 처럼 명시적으로 선언을 해 둬야. M이 없어지면 S가 해지되고, M이 사용가능 해지면 S도 다시 서비스 레지스트리에 등록된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;osgi:service id="S" ref="A" interface="SomeInterface"/&gt;</p>
+<p>&lt;bean id="A" class="SomeImplementation"&gt;<br />&nbsp;&nbsp; &lt;property name="helperService" ref="M"/&gt;<br />&lt;/bean&gt; </p>
+<p>&lt;!-- the reference element is used to refer to a service<br />&nbsp; &nbsp;&nbsp; in the service registry --&gt;<br />&lt;osgi:reference id="M" interface="HelperService"<br />&nbsp; &nbsp;&nbsp; cardinality="1..1"/&gt;</div>
+<p>하지만 만약 A에서 M으로 의존성이 명시되어 있지 않고, 런타임 시에 M에 대한 레퍼런스를 만들어서 A로 넘긴다면 스프링 컨테이너는 아무일도 해주지 않는다. 스프링 DM은 의존성을 추적하지 않을 것이다.</p>

@@ -1,0 +1,68 @@
+---
+layout: post
+title: TDDBE - xUnit 20장
+date: 2008-09-01 11:13:19.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- xUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323176336'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>ToDo <br />나중에 tearDown 호출하기.</p>
+<p>이 작업을 하기 전에 일단 이전까지 사용하던 flag 방식은 실행 순서를 못 잡기 때문에..이 작업을 잠시 미루고</p>
+<p>ToDo<br />WasRun에 로그 문자열 남기기.</p>
+<p>이 작업을 먼저 합니다. 모든 작업을 마치고 나면...
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class TestCaseTest extends TestCase {</p>
+<p>&nbsp; &nbsp; public TestCaseTest(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testTemplateMethod(){<br />&nbsp; &nbsp; &nbsp; &nbsp; WasRun test = new WasRun("testMethod");<br />&nbsp; &nbsp; &nbsp; &nbsp; test.run();<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.log.equals("setUp testMethod tearDown ");<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; new TestCaseTest("testTemplateMethod").run();<br />&nbsp; &nbsp; }<br />}</div>
+<p>테스트 코드가 줄어듭니다. 두둥.. 과정을 보여드리지 못해 아쉽네요.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class WasRun extends TestCase {</p>
+<p>&nbsp; &nbsp; String log;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public WasRun(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testMethod() {<br />&nbsp; &nbsp; &nbsp; &nbsp; log += "testMethod ";<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected void setUp() {<br />&nbsp; &nbsp; &nbsp; &nbsp; log = "setUp ";<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected void tearDown() {<br />&nbsp; &nbsp; &nbsp; &nbsp; log += "tearDown ";<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>WasRun에서는 flag를 없애고 로그를 남기는 방식으로 바껴서.. 역시 코드가 또 줄어들었습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class TestCase {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; String methodName;</p>
+<p>&nbsp; &nbsp; public TestCase(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.methodName = methodName;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void run() {<br />&nbsp; &nbsp; &nbsp; &nbsp; setUp();<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Method method = this.getClass().getMethod(methodName, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; method.invoke(this, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(e);<br />&nbsp; &nbsp; &nbsp; &nbsp; } <br />&nbsp; &nbsp; &nbsp; &nbsp; tearDown();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; protected void tearDown() {}</p>
+<p>&nbsp; &nbsp; protected void setUp() {}<br />}</div>
+<p>끝..</p>

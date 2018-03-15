@@ -1,0 +1,61 @@
+---
+layout: post
+title: 테터 팀블로그 플러그인 업데이트(0.7->1.0)
+date: 2007-01-15 04:42:34.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Blogging
+tags:
+- 차칸아이 0.7 -&gt; 1.0
+- 테터툴즈
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322977733'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://chakani.net/284" target="_blank">http://chakani.net/284</a></p>
+<p>현재 설치된 테터 버젼은 1.0.6.1, 그리고 팀블로그 플러그인 차칸아이 버젼은 0.7 여기서 테터 버젼을 올리기 전에 차칸은 1.0으로 올리고 테터를 다시 1.1.0.2로 올리고 다시 차칸을 1.1로 올리고 다시 테터를 1.1.1로 올리고 차칸을 다시 1.1.1로 올리는 일을 해야합니다.</p>
+<p>이번에 한 작업은 차칸을 0.7에서 1.0으로 올리는 작업입니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">1. backup.php 파일 다운 받기.</span><br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl180.php" class="aligncenter">bl180.php</a><br /><span style="font-weight: bold;">2. backup.php를 '테터 설치 폴더'/blog/ 로 이동 시키고 웹에서 접속.</span><br />예)www.webapp2.net/tt/backup.php &lt;=&nbsp; 여기서 tt라는 폴더는 단일 설치 된 이번 예의 경우이고 자신이 운용하는 테터가 설치된 기본 웹 폴더 이름을 적으면 될 것 같습니다.</p>
+<p>접속하면 백업 파일이 만들어졌가고 하면 제대로 된 것이고 안그러면 2번에 관한 부분을 참조에서 자세히 보시기 바랍니다.</p>
+<p><span style="font-weight: bold;">3. 차칸 0.7 제거.</span><br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl182.bmp" class="aligncenter" width="418" height="137" alt="사용자 삽입 이미지">bl182.bmp</a><br /><span style="font-weight: bold;">4. 테터를 다중 사용자로 다시 설정합니다.</span><br />4-1. '테터 설치 폴더'/config.php 파일을 제거 =&gt; rm -rf ./config.php<br />4-2.&nbsp; 웹에서 setup.php로 접속. 예) webapp2.net/tt/setup.php<br />4-3.&nbsp; 테터를 새로 설치 하는 것이 아니라 설정을 변경하는 것이기 때문에 두 번째 메뉴를 선택합니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl183.bmp" class="aligncenter" width="332" height="349" alt="사용자 삽입 이미지">bl183.bmp</a><span style="font-weight: bold;">5. 이제 차칸 1.0&nbsp; 플러그인을 설치합니다.</span><br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl184.bz2" class="aligncenter">bl184.bz2</a> 플러그인 설치는 '테터 설치 폴더'/plugins/ 안에 위 파일을 옮겨 놓고 압축을 풀어주면 됩니다. 예) tar xvjf ~~~.tar.bz2</p>
+<p><span style="font-weight: bold;">6. update.php 파일을 다운로드 하고 웹에서 접속.</span> (1번~3번과 파일만 다르고 동일합니다.)<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl185.php" class="aligncenter">bl185.php</a><span style="font-weight: bold;">7. 끝!! </span>로그인 하신 뒤 버젼을 확인하면 차칸 버젼 1.0이 된 것을 확인 할 수 있습니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl186.bmp" class="aligncenter" width="243" height="39" alt="사용자 삽입 이미지">bl186.bmp</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">버젼업 이후 문제점...</span><br />1. 초대를 해도 메일이 가지 않음. =&gt; 수동으로 메일을 보내서 생성된 비번을 메일로 알려주면 됨.<br />2. 관리자 모드중에 "환경 설정"에서 가로 스크롤바 생김. =&gt; 참고 쓰면 됨.<br />3. 모든 글의 작성자가 관리자의 사용자 명으로 바뀜. =&gt; 방법을 모르겠슴. -_-;;</div>

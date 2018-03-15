@@ -1,0 +1,155 @@
+---
+layout: post
+title: "[회사일] Generic 타입 추론 유틸 만들기"
+date: 2010-06-11 03:23:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SLT
+tags:
+- Generic 타입 추론
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322965748'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>@Transactional</div>
+<div>public class GenericServiceImpl&lt;D extends GenericDao&lt;E, S&gt;, E, S&gt; implements GenericService&lt;E, S&gt; {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired ApplicationContext applicationContext;</div>
+<div>&nbsp;&nbsp; &nbsp;private Class&lt;D&gt; daoClass;</div>
+<div>&nbsp;&nbsp; &nbsp;protected D dao;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public GenericServiceImpl(){</div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Type type = genericSuperclass.getActualTypeArguments()[0];</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (type instanceof ParameterizedType) {</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.daoClass = (Class&lt;D&gt;) ((ParameterizedType) type).getRawType();</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} else {</b></div>
+<div><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.daoClass = (Class&lt;D&gt;) type;</b></div>
+<div id=""><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</b></div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+...</div>
+<div>}</div>
+</div>
+<div>
+</div>
+<div id="">
+</div>
+<div id="">지난 번에 작성했던 GenericService 코드입니다. 여기서 저 가운데 부분이 GenericDao나 GenericController에서 사용될 가능성이 높습니다. 사실 지금 GenericController를 작성하던 중이었는데 타입 추론할께 하두 많아서;; @_@ &nbsp;유틸로 빼고 있습니다.</div>
+<div id="">
+</div>
+<div id="">
+구현은 간단합니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class GenericUtils {</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public static Class getClassOfGenericTypeIn(Class clazz, int index){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ParameterizedType genericSuperclass = (ParameterizedType) clazz.getGenericSuperclass();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Type wantedClassType = genericSuperclass.getActualTypeArguments()[index];</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (wantedClassType instanceof ParameterizedType) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return (Class) ((ParameterizedType) wantedClassType).getRawType();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} else {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return (Class) wantedClassType;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">테스트도 해봐야겠죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; " id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+public class GenericUtilsTest {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Test</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void testGetClassOfGenericTypeIn() throws Exception {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Class&lt;String&gt; stringClass = GenericUtils.getClassOfGenericTypeIn(SampleClass.class, 0);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(stringClass.toString(), is("class java.lang.String"));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Class&lt;Map&gt; mapClass = GenericUtils.getClassOfGenericTypeIn(SampleClass.class, 1);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(mapClass.toString(), is("interface java.util.Map"));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;class SampleGenericClass&lt;S, M&gt;{}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;class SampleClass extends SampleGenericClass&lt;String, Map&gt; {}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>잘 되는군요. GenericController 마무리하러 가야겠습니다.</div>
+</div>
+<div>
+</div>
+<div>
+</div>
+</div>

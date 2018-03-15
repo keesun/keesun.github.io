@@ -1,0 +1,62 @@
+---
+layout: post
+title: Spring에서 Freemarker 사용하기
+date: 2008-02-20 02:48:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 14
+tags:
+- 프리마커와 스프링 연동
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323090852'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>- Spring은 Freemarker 2.3이상을 지원합니다.<br />- 사용하는 방법은 간단합니다.</p>
+<p><span style="font-weight: bold;">0. 라이브러리 추가.</span><br />클래스패스에 freemarker.jar 파일을 추가해 줍니다. 이 파일은 spring-with-depedencies를 받으셨다면, lib에 freemarker에 있습니다.</p>
+<p><span style="font-weight: bold;">1. XXX-servlet.xml에 뷰 리졸버와 프리마커 Configurer 객체를 세팅하는 FreeMarkerConfigurer 빈 등록하기</span></p>
+<p>&lt;!-- freemarker config --&gt;<br />&lt;bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"&gt;<br />&nbsp; &lt;property name="templateLoaderPath" value="/WEB-INF/freemarker/"/&gt;<br />&lt;/bean&gt;</p>
+<p>&lt;!-- <br />&nbsp; View resolvers can also be configured with ResourceBundles or XML files. If you need<br />&nbsp; different view resolving based on Locale, you have to use the resource bundle resolver.<br />--&gt;<br />&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"&gt;<br />&nbsp; &lt;property name="cache" value="true"/&gt;<br />&nbsp; &lt;property name="prefix" value=""/&gt;<br />&nbsp; &lt;property name="suffix" value=".ftl"/&gt;<br />&lt;/bean&gt;</p>
+<p>끝. 매우 간단합니다. freemarkerConfig 빈은 프리마커의 Configuration 객체를 대변하는 객체로 이 객체다가 Configuration 객체에 필요한 설정을 하듯이 세터를 사용해서 설정하면 됩니다. 이 객체는 다른 컴포넌트들에게 공유될 객체가 아니라 순수하게 프리마커 설정을 하기 위해서 사용되는 빈입니다. 따라서 id는 없어도 됩니다. 그리고 FreeMarkerConfigurer 이 빈의 상위 클래스가 제공하는 setFreemarkerVariables 세터를 사용해서 프리마커 탬플릿에서 자주 사용하는 맵 객체를 세팅할 수도 있습니다. 또한 탬플릿 파일들의 기본 위치를 지정해야합니다. 그렇기 때문에 아래에 있는 viewResolver에서 prefix를 굳이 줄 필요가 없습니다.</p>
+<p>FreeMarkerViewResolver에서는 인코딩을 설정할 수 있습니다. 위와 같이 레퍼런스에 나와있는 기본 설정대로 하면, 한글이 깨집니다. 그래서 contentType 속성에 text/html; charset=UTF-8 값을 설정해 줍니다. </p>
+<p>저는 다음과 같이 설정했습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="templateLoaderPath"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="/WEB-INF/freemarker/" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="freemarkerVariables"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;map&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;entry key="xml_escape" value-ref="fmXmlEscape" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/map&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;<br />&nbsp; &nbsp; &lt;bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="viewResolver"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="contentType" value="text/html; charset=UTF-8" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="suffix" value=".ftl" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>그리고 레퍼런스에서 스프링이 제공하는 커스텀 지시자를 사용하려면 페이지 위에 &lt;#import "spring.ftl" as spring /&gt; 이렇게 추가하라고 나와있는데, 제 경우에는 그렇게 하면 못 찾더군요. &lt;#import "/spring.ftl" as spring /&gt; 이렇게 /를 추가해주어야 클래스 패스(spring.jar안에 모모모 패키지에 들어있습니다.)에 있는 탬플릿 파일을 찾아서 사용할 수 있었습니다.</p>

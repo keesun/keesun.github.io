@@ -1,0 +1,19 @@
+<p>bean으로 등록할 class를 스캔할 때 기본적인 방식(기본으로 사용하는 필터)은 다음과 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169); text-align: center;">base-package 이하의 package에 속해 있는 모든 클래스 중에서 @Component 또는 @Repository 애노테이션이 붙어 있으면 모두 bean으로 사용.</div>
+<p>이 때 명시적으로 다른 필터를 사용하여 위의 기본 방식을 변경하거나 확장할 수 있습니다. 필터 사용은 매우 간단하게 &lt;component-scan /&gt; 태그의 하위 태그로 정의 할 수 있습니다.</p>
+<p>필터 태그의 종류는 include-filter와 exclude-filter 두 가지 이며 각각 type과 expression을 가지고 있습니다. type은 필터의 타입을 나타내며 expression은 말그대로 표현식을 나타냅니다.</p>
+<p>필터에서 사용할 수 있는 타입과 표현식은 다음과 같습니다.<br /><img src="/assets/dn317.png" class="aligncenter" width="600" height="190" alt="사용자 삽입 이미지" />
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&lt;context:component-scan base-package="whiteship" <span style="color: rgb(255, 0, 0);">use-default-filters="false"</span>&nbsp; /&gt;</div>
+<p>이렇게 기본 필터의 사용을 fasle로 설정하면 @Component나 @Repository 애노테이션을 사용한 클래스 조차 bean으로 인식하지 않습니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&nbsp; &nbsp; &lt;context:component-scan base-package="whiteship" <span style="color: rgb(255, 0, 0);">use-default-filters="false"</span>&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&lt;context:include-filter type="annotation" expression="whiteship.Bean"/&gt;</span><br />&nbsp; &nbsp; &lt;/context:component-scan&gt;</div>
+<p>Bean이라는 annotation을 만들고, @Bean 애노테이션이 붙은 것을 bean으로 읽도록 정의해 두었습니다. @Bean 애노테이션 생성은 간단합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public @interface Bean {</p>
+<p>}</p></div>
+<p>요렇게 만들어 두면 되죠. 그리고 이제 그냥 사용하면 됩니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Bean<br />public class MovieFinder {</p>
+<p>}</p></div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Bean<br />public class SimpleMovieLister {</p>
+<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; private MovieFinder movieFinder;<br />&nbsp;&nbsp; ....<br />}</div>
+<p>매우 간단하네요.</p>
+<p></p>

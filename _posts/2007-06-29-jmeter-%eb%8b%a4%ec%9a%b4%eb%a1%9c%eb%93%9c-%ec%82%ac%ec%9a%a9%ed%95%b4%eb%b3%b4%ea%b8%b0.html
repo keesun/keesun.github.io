@@ -1,0 +1,58 @@
+---
+layout: post
+title: JMeter 다운로드 & 사용해보기
+date: 2007-06-29 04:30:14.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JMeter
+- 스트레스 테스트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322952370'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. 바이너리 압축 파일을 다운로드 : <a href="http://jakarta.apache.org/site/downloads/downloads_jmeter.cgi" target="_blank">http://jakarta.apache.org/site/downloads/downloads_jmeter.cgi</a><br />하고 압축을 풀고 bin 디렉토리에서 jmeter.bat를 실행합니다.<br /><img src="{{ site.baseurl }}/assets/dm261.png" class="aligncenter" width="600" height="430" alt="사용자 삽입 이미지" />AWT를 사용하여 만든 것 같습니다.</p>
+<p>2. Test Plan에 Thread Group을 생성합니다.<br /><img src="{{ site.baseurl }}/assets/dm262.png" class="aligncenter" width="600" height="430" alt="사용자 삽입 이미지" /><br />3. Thread Group을 설정합니다.<br /><img src="{{ site.baseurl }}/assets/dm263.png" class="aligncenter" width="600" height="305" alt="사용자 삽입 이미지" />20명의 사용자가 동시에(0) 접근하는 것을 10번 반복하여 테스트하겠다고 선언합니다. 샘플러가 에러가 나도 계속(countinue)작업하기로 합니다.</p>
+<p>4. 이제 요청을 만듭니다.<br /><img src="{{ site.baseurl }}/assets/dm264.png" class="aligncenter" width="600" height="305" alt="사용자 삽입 이미지" /><br />5. request를 설정합니다.<br /><img src="{{ site.baseurl }}/assets/cm275.png" class="aligncenter" width="600" height="453" alt="사용자 삽입 이미지" /><br />6. 결과를 살펴볼 Listener들 중에서 Graph Result를 추가합니다.<br /><img src="{{ site.baseurl }}/assets/cm276.png" class="aligncenter" width="600" height="454" alt="사용자 삽입 이미지" /><br />7. 테스트를 실행합니다.<br /><img src="{{ site.baseurl }}/assets/dm265.png" class="aligncenter" width="253" height="313" alt="사용자 삽입 이미지" /><br />8. 그럼 결과가 나타납니다.<br /><img src="{{ site.baseurl }}/assets/dm266.png" class="aligncenter" width="600" height="437" alt="사용자 삽입 이미지" /><br />아 근데 이게 뭘 나타내는지 모르겠군요.ㅋㅋㅋ</p>
+<p>그나마 View In Table은 좀 알아 볼 수 있겠네요.<br /><img src="{{ site.baseurl }}/assets/dm267.png" class="aligncenter" width="600" height="437" alt="사용자 삽입 이미지" />
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">동시 접속자 20명일 때를 10번 테스트 해본 결과 페이지 로딩하는데 평균 144 밀리세컨이 걸리는군요.</div>
+<p>참조 : <a href="http://wiki.javajigi.net/display/IDE/JMeter" target="_blank">http://wiki.javajigi.net/display/IDE/JMeter</a></p>

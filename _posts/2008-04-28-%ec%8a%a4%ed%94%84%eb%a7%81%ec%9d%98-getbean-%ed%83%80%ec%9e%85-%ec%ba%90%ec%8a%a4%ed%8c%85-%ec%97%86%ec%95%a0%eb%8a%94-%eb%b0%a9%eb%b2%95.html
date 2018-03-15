@@ -1,0 +1,59 @@
+---
+layout: post
+title: 스프링의 getBean() 타입 캐스팅 없애는 방법
+date: 2008-04-28 09:08:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- JavaConfig
+- JavaConfigApplicationContext
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323150388'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp;Service myService = (Service) ctx.getBean("service");</p>
+<p>대부분 위처럼 캐스팅을 해서 사용합니다. 저는 캐스팅이 정말 싫었습니다.</p>
+<p>&nbsp;Service myService = ctx.getBean(Service.class);</p>
+<p>이렇게 캐스팅 없이 사용할 수 있는 방법이 있습니다.</p></div>
+<p>정답은? <span style="color: rgb(255, 255, 255);">JavaConfig, http://www.springframework.org/javaconfig, </span><font style="color: rgb(255, 255, 255);" class="FrameItemFont">JavaConfigApplicationContext<br />
+</font></p>

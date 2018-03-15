@@ -1,0 +1,22 @@
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">s.createQuery(<br />"select item.itemid, count(foo), sum(bar) " +<br />"form Item item " +<br />...</div>
+<p>뭐 이런 HQL이 있을 때 s.list() 의 결과는 Object[] 의 리스트입니다.<br />따라서 저기서 값을 꺼내서 새로운 객체 넣어줄 때 다음과 같은 코드를 작성하게 됩니다. </p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">List list = s.list();<br />for(int i = 0 ; i &lt; list.size() ; i++) {<br />&nbsp; &nbsp; Object[] result = list.get(i)<br />&nbsp; &nbsp; Baz baz = new Baz();<br />&nbsp; &nbsp; baz.setItemId((Integer)result[0]);<br />&nbsp; &nbsp; baz.setFoo(((Long)result[1]).intValue());<br />&nbsp; &nbsp; baz.setBar(((Double)result[2]).intValue());<br />&nbsp; &nbsp; ...<br />}</div>
+<p>배열에서 일일히 꺼내는 코드가 짜증날 뿐만 아니라, 꺼내는 데이터 타입이 count일 경우에는 Long 타입이 나오고 sum의 경우에는 Double 타입의 값이 나오기 때문에, 가장 자주 사용하는 Integer로 세팅해야 하는 경우에는 위와 같이 어지러운 괄호를 사용해가며 파싱을 하고 다시 int값으로 세팅해줘야 합니다. 번거로운건 둘째치고 코드가 지져분해졌습니다.</p>
+<p>좀.. 짜증나는 코드입니다. 마치 JDBC의 ResultSet 쓰듯이 사용한건데, 저는 JDBC 라이브러리를 쓰지 않고<br />
+엘레강트한 하이버네이트를 쓰고 싶었는데, 하이버네이트에서도 이건 어쩔 수 없는건가 하면서 무심코 그냥 저렇게 코딩을 했었습니다.</p>
+<p>그런데.. 정말 엘레강트한 방법이 있더군요...</p>
+<p>하이버네이트의 "다이내믹 인스턴세이션" Dynamic Instantiation 이라는 기능을 사용하면 정말 깔끔하게 코딩할 수 있습니다.</p>
+<p>먼저 DTO를 만듭니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">class DTO {</p>
+<p>private Integer itemId;</p>
+<p>private Integer foo;</p>
+<p>private Integer bar;</p>
+<p>public DTO(Integer itemId, Long foo, Double bar) {<br />&nbsp; &nbsp; // parsing<br />}</p>
+<p>// setter and getter</p>
+<p>}</p></div>
+<p>그리고 HQL을 다음과 같이 수정합니다.</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">select new whiteship.baz.DTO(item.itemId, count(foo), sum(bar))<br />...//나머지 동일</div>
+<p>그러면 이제 저 쿼리의 결과인 s.list()를 호출하면 DTO 객체들의 컬렉션을 받을 수 있습니다. 즉 List&lt;DTO&gt; 타입으로 받을 수 있죠. 그러면 파싱하는 쪽 코드가 깔끔해집니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">1. ForEach 문 사용가능.(한 줄이 줄어 들고,&nbsp; for문이 짧아짐, i라는 변수 사라짐)<br />2. 형변환 하지 않아도 됨.(DTO의 생성자에서 하기 때문에 지져분한 코드 사라짐)</div>
+<p>음.. 하이버네이트는 정말 엘레강트 한 것 같습니다.&nbsp; <br />Hibernate is ROCK!!!</p>
+<p>ps : 14장에 나오는 내용인데, 현재 10장을 보고 있습니다. 10장의 트랜잭션과 동기화, 11장 컨버ㄹ세이션보다 14, 15장의 쿼리에 관한 내용이 먼저 나왔으면 좋치 않았을까 싶습니다. 책을 끝까지 보기 전까지는 하이버네이트 쓸 생각을 하지 말라는 걸지도.. ㅋㅋㅋ</p>

@@ -1,0 +1,41 @@
+<p><a href="https://github.com/SpringSource/spring-test-mvc">https://github.com/SpringSource/spring-test-mvc</a></p>
+<p>얼마전, easy_test라는 프로젝트를 공개했었습니다. 스프링 MVC를 사용한 웹 프로젝트에서 컨트롤러부터 그 밑으로 쭉… 전부 다 손쉽게 테스트 하는 방법을 제공하고자, 만든 라이브러리였습니다. 그런데, SpringSource에서 이미 이런 라이브러리를 만들고 있었습니다.</p>
+<p>이름은 spring-test-mvc이고, 나중에 스프링 프레임워크에서 테스트 모듈쪽으로 통합될 기능으로 보입니다.</p>
+<p>테스트 방법은 간단합니다.</p>
+<p>컨트롤러 하나만 테스트 하는 경우</p>
+<p>[java]<br />
+MockMvcBuilders.standaloneMvcSetup(new TestController()).build()<br />
+    .perform(get(&quot;/form&quot;))<br />
+        .andExpect(response().status(200))<br />
+        .andExpect(response().contentType(&quot;text/plain&quot;))<br />
+        .andExpect(response().responseBody(&quot;content&quot;));<br />
+[/java]</p>
+<p>컨트롤러 클래스만 단위 테스트 할 때 유용한 테스트 방법입니다. 하지만 이런 경우는 거의 없을 겁니다. 컨트롤러 –&gt; 서비스 –&gt; DAO 구조로 많이 사용하고 있을텐데요. 저렇게 컨트롤러 클래스 하나만 넣고 테스트 하면 분명히 서비스쪽 코드를 실행하는 부분에서 NullPointerException이 발생하겠죠. 하지만, 그 부분을 Mock 객체로 변경해주면 컨트롤러 코드만 테스트하게 되겠죠.</p>
+<p>[java]<br />
+MockMvcBuilders.xmlConfigMvcSetup(&quot;classpath:org/examples/servlet-context.xml&quot;).build()<br />
+    .perform(get(&quot;/form&quot;))<br />
+        .andExpect(response().status(200))<br />
+        .andExpect(model().modelAttributesWithErrors(&quot;formBean&quot;))<br />
+        .andExpect(view().viewName(&quot;form&quot;));<br />
+[/java]</p>
+<p>보통은 이렇게 미리 만들어둔 스프링 설정 파일을 사용해서 애플리케이션 컨텍스트를 만들고, 그 안에 등록되어 있는 빈들을 사용해서 테스트 하게 될 것입니다. 이렇게 하면, 일단 통합테스트가 되겠죠. 애플리케이션 컨텍스트에서 생성하는 객체가 많다면, 아마도 테스트를 실행하는데 꽤 오래 걸릴 겁니다.</p>
+<p>[java]<br />
+MockMvcBuilders.annotationConfigMvcSetup(TestConfiguration.class).build()<br />
+    .perform(get(&quot;/resources/Spring.js&quot;))<br />
+        .andExpect(response().contentType(&quot;application/octet-stream&quot;))<br />
+        .andExpect(response().responseBodyContains(&quot;Spring={};&quot;));<br />
+[/java]</p>
+<p>빈 설정 파일이 XML이 아니라, 자바 설정 파일이라는 것 빼곤 같습니다.</p>
+<p>이 방법들 말고, 스프링 테스트 컨텍스트를 활용하는 방법도 필요합니다. 물론, 이 프로젝트에서 코딩 중인 개발자도 그것을 알고 있죠. 알고 있다는 증거가 이미 코드에 있습니다.</p>
+<p><a href="https://github.com/SpringSource/spring-test-mvc/blob/master/src/main/java/org/springframework/test/web/server/setup/MockMvcBuilders.java">https://github.com/SpringSource/spring-test-mvc/blob/master/src/main/java/org/springframework/test/web/server/setup/MockMvcBuilders.java</a></p>
+<p>이 클래스에 보면, applicationContext를 가지고 MockMVC를 만들어주는 applicationContextMvcSetup 메서드가 있는데, 그 위에 이렇게 주석이 달려있죠.</p>
+<p>[java]<br />
+	/**<br />
+	 * Build a {@link MockMvc} from a fully initialized {@link WebApplicationContext} --<br />
+	 * e.g. through the Spring TestContext framework.<br />
+	 */<br />
+	public static AbstractContextMockMvcBuilder applicationContextMvcSetup(WebApplicationContext context) {<br />
+		return new InitializedContextMockMvcBuilder(context);<br />
+	}<br />
+[/java]</p>
+<p>하지만, 문제는 테스트 컨테스트에서 만드는 ApplicationContext는 기본적으로 WebApplicationContext가 아닙니다. 그런데 저기서는 WebApplicationContext를 가지고 만들도록 가정하고 있죠. 이 차이를 어디서 어떤 방식으로 매꿔 줄지가 궁금합니다. 나라면 어떻게 해야할지… 고민도 되구요. 암튼 관심가는 부분입니다. 이 부분만 매꿔지면 MVC 테스트에 엄청난 편의성을 제공해주는 거의 완벽한 스프링 MVC 테스트 라이브러리가 생기게 됩니다. 캬~</p>

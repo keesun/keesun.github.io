@@ -1,0 +1,217 @@
+<p><a href="http://static.springsource.org/spring/docs/3.1.0.M2/spring-framework-reference/html/cache.html">http://static.springsource.org/spring/docs/3.1.0.M2/spring-framework-reference/html/cache.html</a></p>
+<p>28. 캐시 추상화</p>
+<p>28.1. 소개</p>
+<p>스프링 프레임워크 3.1부터 기존의 스프링 애플리케이션에 투명하게 캐싱을 추가할 수 있는 기능을 제공한다. 트랜잭션 기능과 비슷하게, 캐싱 추상화도 최소한의 코드로 다양한 캐싱 솔루션을 사용할 수 있게 해준다.</p>
+<p>28.2 캐싱 추상화 이해</p>
+<p>자바 메서드에 캐싱 추상화를 적용한다는 것은, 캐시에 있는 정보를 이용해서 메서드 실행 횟수를 줄인다는 것이다. 다시 말해서, 타겟 메서드가 호출 됐을 때, 캐시 추상화 계층이 해당 메서드가 이미 동일한 인자로 실행된 적이 있는지 확인한다. 만약 그런 적이 있다면, 메서드를 호출하지 않고 캐시해둔 결과를 반환한다. 그런 적이 없다면, 메서드를 실행하고 그 결과를 캐시하고 반환한다. 이런 방법으로 (CPU나 IO)비용이 큰 메서드를 매개변수 마다 한번만 실행되도록 할 수 있다.</p>
+<p>주의</p>
+<p>물론, 이런 접근 방법은 얼마나 여러번 호출하든지 상관없이, 입력(메서드 인자)에 따른 결과(메서드 반환값)가 동일하다는 보장이 되는 메서드에 적용해야 한다.</p>
+<p>캐시 추상화를 사용하려면, 개발자는 두 가지를 알아야 한다.</p>
+<ul>
+<li><span style="background-color: #ffffff;">캐시 선언 – 캐시를 적용할 메서드를 식별하고, 그곳에 적용할 캐시 정책을 설정하는 방법</span></li>
+<li><span style="background-color: #ffffff;">캐시 설정 – 데이터를 저장하고 읽어올 캐시 저장소에 대한 설정</span></li>
+</ul>
+<p>스프링 프레임워크가 제공하는 다른 서비스와 마찬가지로, 캐시 서비스도 추상화기 때문에, 실제로 캐시 데이터 저장소를 사용해야 한다. 즉, 추상화로 인해서 개발자가 캐싱 로직을 작성해야 하는 수고를 덜 수 있지만 실제 저장소를 제공하지는 않는다. 현재, 두 가지 구현체를 제공한다.</p>
+<ul>
+<li><span style="background-color: #ffffff;">JDK, java.util.concurrent.ConcurrentMap</span></li>
+<li><span style="background-color: #ffffff;">Ehcache</span></li>
+</ul>
+<p>28.3 선언적인 애노테이션 기반 캐싱</p>
+<p>캐시를 선언할 때는 @Cacheable과 @CacheEvict를 사용해서 캐시를 만들고 캐시를 정리한다. 각 애노테이션을 자세히 살펴보자.</p>
+<p>28.3.1 @Cacheable 애노테이션</p>
+<p>애노테이션 이름이 암시하듯이, @Cacheable은 캐시할 메서드를 선언할 때 사용한다. 즉, 메서드 결과가 캐시에 저장되고, 동일한 인자로 메서드를 호출하면, 메서드를 실제로 호출하지 않고 그 값을 반환한다. 가장 간단히, 애노테이션을 붙이 메서드와 연관된 캐시 이름을 사용해서 선언할 수 있다.</p>
+<p>[java]<br />
+@Cacheable(&quot;books&quot;)<br />
+public Book findBook(ISBN isbn) {...}<br />
+[/java]</p>
+<p>이 코드는 findBook과 관련된 캐시 이름 books를 사용했다. 매번 이 메서드가 호출될 때, 캐시를 확인하고 이미 실행된 적이 있는지 반복할 필요가 없는지 확인한다. 대부분 캐시를 하나만 선언하겠지만, 이 애노테이션에 사용할 캐시 이름을 여러개 명시할 수도 있다. 그럴 경우에는 메서드를 실행하기 전에 모든 캐시를 확인한다. 최소한 하나의 캐시에서 필요한 데이터를 발견하면, 그 값을 반환한다.</p>
+<p>노트</p>
+<p>메서드를 담고 있지 않은 다른 모든 캐시도 수정된다.</p>
+<p>[java]<br />
+@Cacheable({ &quot;books&quot;, &quot;isbns&quot; })<br />
+public Book findBook(ISBN isbn) {...}<br />
+[/java]</p>
+<p>28.3.1.1 기본 키 생성</p>
+<p>캐시는 기본적으로 키-값 스토어기 때문에, 캐시된 메서드를 호출할 때 마다 캐시를 찾을 수 있는 적절한 키로 변환할 필요가 있다. 기본적으로 캐시 추상화는 다음과 같은 알고리즘 기반의 KeyGenerator를 사용한다.</p>
+<ul>
+<li><span style="background-color: #ffffff;">매개변수가 아무것도 없으면 0을 반환한다.</span></li>
+<li><span style="background-color: #ffffff;">매개변수가 하나면, 그 인스턴스를 반환한다.</span></li>
+<li><span style="background-color: #ffffff;">매개변수가 둘 이상이면, 모든 매개변수의 해시로 계산한 키를 반환한다.</span></li>
+</ul>
+<p>hashCode()를 잘 만들었다면, 자연키를 가지고 있는 객체에 잘 적용된다. 분산 환경이나, 영속 환경에서는 이런 방식이 적합하지 않을 수 있는데, 객체의 hashCode를 사용하지 않도록 바꿀 필요가 있다. 사실, JVM 구현체나 실행 환경에 따라서, 동일한 VM 인스턴스에서 다른 객체가 동일한 hashCode를 만드는 경우도 있다.</p>
+<p>다른 기본키 생성기를 사용하려면, org.springframework.cache.KeyGenerator 인터페이스를 구현하면 된다.</p>
+<p>28.3.1.2 커스텀 키 생성 선언</p>
+<p>캐싱을 적용할 때, 타겟 메서드에 인자가 여러개 일 때, 캐시키로 사용할 것을 SpringEL을 사용해서 명시할 수도 있다. 매개변수 중에서 캐시와 관련 있는 것은 일부일 뿐이고, 나머지는 메서드 로직에서만 사용되는 경우가 그렇다.</p>
+<p>[java]<br />
+@Cacheable(&quot;books&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed<br />
+[/java]</p>
+<p>key 속성을 사용해서 SpEL로 관심있는 인자를 선택할 수도 있고, 오퍼레이션을 수행하거나, 임의 메서드를 호출할 수도 있다.</p>
+<p>[java]<br />
+@Cacheable(value=&quot;book&quot;, key=&quot;#isbn&quot;<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)</p>
+<p>@Cacheable(value=&quot;book&quot;, key=&quot;#isbn.rawNumber&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)</p>
+<p>@Cacheable(value=&quot;book&quot;, key=&quot;T(someType).hash(#isbn)&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)<br />
+[/java]</p>
+<p>28.3.1.3. 조건적인 캐싱</p>
+<p>항상 캐시를 적용하는 것이 아니라, 인자 값의 조건에 따라 캐싱해야 할 경우가 있다. 캐시 애노테이션은 conditional 속성과 SpEL 표현식으로 ture나 false 평가식을 만들 수 있다. 해당 표현식이 true면 캐싱하고, false명 캐싱하지 않는다.</p>
+<p>[java]<br />
+@Cacheable(value=&quot;book&quot;, condition=&quot;#name.length &lt; 32&quot;)<br />
+public Book findBook(String name)<br />
+[/java]</p>
+<p>28.3.1.4. SpEL 표현식에서 사용할 수 있는 컨텍스트</p>
+<p>다음 목록은 key와 conditional에서 사용할 수 있는 SpEL 컨테스트다.</p>
+<p>표 28.1. Cache SpEL available metadata</p>
+<table width="518" border="0" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top" width="100">이름</td>
+<td valign="top" width="100">위치</td>
+<td valign="top" width="196">설명</td>
+<td valign="top" width="120">예제</td>
+</tr>
+<tr>
+<td valign="top" width="100">methodName</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">실행될 메서드 이름</td>
+<td valign="top" width="120">#root.methodName</td>
+</tr>
+<tr>
+<td valign="top" width="100">method</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">실행될 메서드</td>
+<td valign="top" width="120">#root.method.name</td>
+</tr>
+<tr>
+<td valign="top" width="100">target</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">실행될 타겟 객체</td>
+<td valign="top" width="120">#root.target</td>
+</tr>
+<tr>
+<td valign="top" width="100">targetClass</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">실행될 타겟 클래스</td>
+<td valign="top" width="120">#root.targetClass</td>
+</tr>
+<tr>
+<td valign="top" width="100">params</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">타겟을 실행할 때 사용하는 인자 목록</td>
+<td valign="top" width="120">#root.params[0]</td>
+</tr>
+<tr>
+<td valign="top" width="100">cacahes</td>
+<td valign="top" width="100">root 객체</td>
+<td valign="top" width="196">현재 메서드 실행할 때 사용하는 캐시 컬렉션</td>
+<td valign="top" width="120">#root.cacahes[0].name</td>
+</tr>
+<tr>
+<td valign="top" width="100">parameter name</td>
+<td valign="top" width="100">evalucation 컨텍스트</td>
+<td valign="top" width="196">메서드 매개변수 이름</td>
+<td valign="top" width="120">iban 또는 p0</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>28.3.2 @CacheEvict 애노테이션</p>
+<p>캐시 추상화는 캐시 생성 뿐 아니라 삭제로 제공한다. 이 과정은 변한 데이터나 사용하지 않는 데이터를 캐시에서 제거할 때 유용하다. @Cacheable과는 반대로 @CacheEvict는 캐시 삭제를 수행할 메서드에 선언한다. 캐시의 데이터를 지울 트리거 역할을 할 메서드에 사용한다. @CacheEvict도 여러 캐시를 명시할 수 있으며, key와 condition을 사용할 수 있다. 거기에 추가로, allEntries 속성도 있는데, 이 속성은 키값으로 캐시 엔트리 하나만 비우는 것이 아니라 캐시-영역을 비우도록 한다.</p>
+<p>[java]<br />
+@CacheEvict(value = &quot;books&quot;, allEntries=true)<br />
+public void loadBooks(InputStream batch)<br />
+[/java]</p>
+<p>이 옵션은 캐시 영역을 비워야 할 때 유용하다. 이 경우에는 키를 명시해도 적용되지 않기 때문에 무시한다.</p>
+<p>28.3.3 캐시 추상화 사용하기</p>
+<p>캐시 애노테이션을 붙인다고 해서 모두 처리되지는 않는다. 캐시 기능을 사용하도록 한 줄을 추가해야 한다.</p>
+<p>[xml]<br />
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />
+  xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;<br />
+  xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br />
+      http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd&quot;&gt;<br />
+  &lt;cache:annotation-driven /&gt;<br />
+&lt;/beans&gt;<br />
+[/xml]</p>
+<p>이 네임스페이스는 AOP를 사용해서 캐시 기능을 다양한 방법으로 설정할 수 있는 옵션을 제공한다. 설정은 tx:annotation-driven과 비슷하다.</p>
+<p>표 28.2 &lt;cache:annotation-driven/&gt; 설정</p>
+<table width="602" border="0" cellspacing="0" cellpadding="2">
+<tbody>
+<tr>
+<td valign="top" width="133">속석</td>
+<td valign="top" width="133">기본값</td>
+<td valign="top" width="334">설명</td>
+</tr>
+<tr>
+<td valign="top" width="133">cache-manager</td>
+<td valign="top" width="133">cacheManager</td>
+<td valign="top" width="334">사용할 캐시 매니저 이름. 캐시 매니저 이름이 cacheManager가 아닐 경우에만 설정.</td>
+</tr>
+<tr>
+<td valign="top" width="133">mode</td>
+<td valign="top" width="133">proxy</td>
+<td valign="top" width="334">스프링 AOP를 사용하는 설정이며, “aspect”를 사용할 수도 있다.</td>
+</tr>
+<tr>
+<td valign="top" width="133">proxy-target-class</td>
+<td valign="top" width="133">false</td>
+<td valign="top" width="334">JDK의 인터페이스 기반 프록시를 사용하도록 한다. true를 사용하면 클래스 기반 프록시를 사용한다.</td>
+</tr>
+<tr>
+<td valign="top" width="133">order</td>
+<td valign="top" width="133">Ordered.LOWEST_PRECEDENCE</td>
+<td valign="top" width="334">캐시 어드바이스가 적용되는 순서.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>노트</p>
+<p>&lt;cache:annotation-driven/&gt;은 오직 동일한 애플리케이션 컨텍스트 내부에 있는 빈의 @Cacheable/@CacheEvict 애노테이션을 처리한다.</p>
+<p>28.3.4 커스텀 애노테이션 사용하기</p>
+<p>캐시 추상화는 커스텀 애노테이션을 사용해서 캐시를 만들거나 제거할 수 있게 해준다. 캐시 중복 선언을 제거할 때 유용하다.</p>
+<p>[java]<br />
+@Retention(RetentionPolicy.RUNTIME)<br />
+@Target({ElementType.METHOD})<br />
+@Cacheable(value=“books”, key=&quot;#isbn&quot;)<br />
+public @interface SlowService {<br />
+}<br />
+[/java]</p>
+<p>SlowService 애노테이션은 그 자체로 @Cacaheable 애노테이션이기 때문에 다음과 같이 교체할 수 있다.</p>
+<p>[java]<br />
+@Cacheable(value=&quot;books&quot;, key=&quot;#isbn&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)<br />
+[/java]</p>
+<p>또는</p>
+<p>[java]<br />
+@SlowService<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)<br />
+[/java]</p>
+<p>이렇게 @SlowService가 스프링 애노테이션은 아니지만, 컨테이너에서 자동으로 읽어서 처리해준다.</p>
+<p>28.4 캐시 저장소 설정</p>
+<p>기본적으로 두가지 저장소를 지원한다. 하나는 JDK ConcurrentMap이고 다른 하나는 ehcache 라이브러리다. 이것을 사용하려면 적절하게 CacheManager를 선언해야 한다.</p>
+<p>28.4.1 JDK ConcurrentMap 기반 캐시</p>
+<p>JDK 기반 Cache 구현체는 org.springframework.cacahe.cocurrent 패키지에 있다. ConcurrentHashMap을 캐시 저장소로 사용하는 구현체다.</p>
+<p>[xml]<br />
+&lt;!-- generic cache manager --&gt;<br />
+&lt;bean id=&quot;cacheManager&quot; class=&quot;org.springframework.cache.support.SimpleCacheManager&quot;&gt;<br />
+  &lt;property name=&quot;caches&quot;&gt;<br />
+    &lt;set&gt;<br />
+      &lt;bean class=&quot;org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean&quot; p:name=&quot;default&quot;/&gt;<br />
+      &lt;bean class=&quot;org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean&quot; p:name=&quot;books&quot;/&gt;<br />
+    &lt;/set&gt;<br />
+  &lt;/property&gt;<br />
+&lt;/bean&gt;<br />
+[/xml]</p>
+<p>여기서는 SimpleCacheManager가 default와 books라는 ConcurrentMapCache 구현체를 만들도록 설정했다.</p>
+<p>애플리케이션에서 캐시를 만들면 그 캐시의 라이프사이클이 애플리케이션에 종속된다. 매우 빠르지만 관리 기능이나 영속화 기능은 제공하지 않는다.</p>
+<p>28.4.2 Ehcache 기반 캐시</p>
+<p>Ehcache 구현체는 org.springframework.cache.ehcache 패키지에 있다. 이것을 사용하려면 간단하게 적절한 CacheManager를 설정하면 된다.</p>
+<p>[xml]<br />
+&lt;bean id=&quot;cacheManager&quot; class=&quot;org.springframework.cache.ehcache.EhcacheCacheManager&quot; p:cache-manager=&quot;ehcache&quot;/&gt;</p>
+<p>&lt;!-- Ehcache library setup --&gt;<br />
+&lt;bean id=&quot;ehcache&quot; class=&quot;org.springframework.cache.ehcache.EhCacheManagerFactoryBean&quot; p:config-location=&quot;ehcache.xml&quot;/&gt;<br />
+[/xml]</p>
+<p>ehcache 관련 설정은 ehcache.xml에 있다.</p>
+<p>28.5 다른 백엔드 캐시 사용하기</p>
+<p>분명히 여러 캐싱 제품이 있고 그것을 캐시 저장소로 사용할 수 있다. 그런 것을 사용하려면, CacheManager와 Cache 구현체를 만들어야 한다. 어렵게 들리겠지만, 실제로는 간단한 어댑터를 만드는 것이다. CacheManager 클래스는 org.springframework.cache.support 패키지에 있는 것을 사용할 수 있다. 그 중에서 AbstractCacheManager는 실제 맵핑을 할 때 자주 반복되는 코드를 줄여줄 수 있다.</p>

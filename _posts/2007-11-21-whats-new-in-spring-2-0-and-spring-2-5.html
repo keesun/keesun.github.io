@@ -1,0 +1,182 @@
+---
+layout: post
+title: What's new in Spring 2.0 and Spring 2.5?
+date: 2007-11-21 02:18:18.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 02
+tags:
+- Spring Reference
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323115577'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://static.springframework.org/spring/docs/2.5.x/reference/new-in-2.html" target="_blank">http://static.springframework.org/spring/docs/2.5.x/reference/new-in-2.html</a><a href="http://static.springframework.org/spring/docs/2.0.x/reference/new-in-2.html" target="_blank"><span style="font-weight: bold;"><br /></span></a><span style="font-weight: bold;"><br />2.1. Introduction</span></p>
+<p>이번 챕터에서는 Spring 2.5와 Spring 2.0에 새로 추가되거나 향상된 기능을 소개 합니다. 여기서는 간략히 소개하고 있기 때문에 자세한 내용은 해당 내용의 링크를 참조 하시기 바랍니다.</p>
+<p><span style="font-weight: bold;">2.2. The Inversion of Control (IoC) container</span></p>
+<p>이부분에 상당히 많은 개선이 있었습니다.</p>
+<p>2.2.1. Easier XML configuration</p>
+<p>XML 스키마 기반의 XML을 사용할 수 있습니다. 물론 DTD 기반의 XML을 사용할 수도 있지만 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/xsd-config.html" title="Appendix A. XML Schema-based configuration">Appendix A, <i>XML Schema-based configuration</i></a>.을 사용하면 더 간편하게 할 수 있습니다.</p>
+<p>2.2.2. New bean scopes</p>
+<p>기존의 bean scope(singleton, prototype) 이 외에 Spring이 배포된 환경에 따라 부가적인 Scope을 사용할 수 있으며[footnote]웹 환경에서 request와 session Scope를 사용할 수 있습니다.[/footnote] 사용자 정의 Scope을 만들 수도 있습니다. 자세한 내용은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes" title="3.4. Bean scopes">Section 3.4, “Bean scopes”</a>에있습니다.</p>
+<p>2.2.3. Extensible XML authoring</p>
+<p>XML 설정 파일은 작성하기도 쉽고 확장성도 좋습니다. 다른 Spring 설정 파일에서 쉽게 사용할 수 있는 custom tag를 만들어 사용할 수 있습니다. 이로 인해 DSL을 가질 수 있습니다.<br />The extensible configuration mechanism is documented in <a href="http://static.springframework.org/spring/docs/2.5.x/reference/extensible-xml.html" title="Appendix B. Extensible XML authoring">Appendix B, <i>Extensible XML authoring</i></a>.</p>
+<p>2.2.4. Annotation-driven configuration</p>
+<p>스프링 2.0에서는 설정을 간편화 하기 위해 @Transactional, @Required @PersistenceContext/@PersistenceUnit 와 같은 애노테이션들이 추가되었습니다,</p>
+<p>스프링 2.5에서는 JSR-250 애노테이션 스팩을 따르는 @Resource, @PostConstruct and @PreDestroy 에다가 @Autowired 까지 추가되었습니다.</p>
+<p>이들에 대한 자세한 내용은&nbsp;  <a href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-annotation-config" title="3.10. Annotation-based configuration">Section 3.10, “Annotation-based configuration”</a> 여기서 다룹니다. </p>
+<p>2.2.5. Autodetecting components in the classpath</p>
+<p>스프링 2.5에서 새로 추가된 기능으로 컴포넌트 스캐닝을 지원합니다. 특정 클래스패스 안에 다음의 애노테이션이 붙어있는 컴포넌트들을 자동으로 읽어옵니다. @Component, @Repository, @Service, @Controller.</p>
+<p>이 기능을 사용하면, 애노테이션으로 XML 설정을 대채할 수 있습니다. 애노테이션 기반 설정은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-stereotype-annotations" title="3.11.1. @Component and further stereotype<br />
+      annotations">Section 3.11.1, “@Component and further stereotype<br />
+      annotations”</a> 여기서 자세히 다룹니다.</p>
+<p><span style="font-weight: bold;">2.3. Aspect Oriented Programming (AOP)</span></p>
+<p>보다 덜 복잡해 졌습니다. AspectJ 포인트컷 문법과 @Aspect 표기법을 지원합니다.</p>
+<p>2.3.1. Easier AOP XML configuration</p>
+<p>&lt;aop:...&gt; 라는 새로운 스키마를 제공하고 이 스키마로 AspectJ 포인트컷 문법과 캐스팅이 필요 없는 advice를 지원합니다. 자세한 내용은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/aop.html#aop-schema" title="6.3. Schema-based AOP support">Section 6.3, “Schema-based AOP support”</a>.에 있습니다.</p>
+<p>2.3.2. Support for @AspectJ aspects</p>
+<p>@AspectJ 어노테이션을 사용한 Aspect 설정도 가능합니다. 이렇게 만든 Aspect는 AspectJ와 Spring에서 모두 사용이 가능하면 진짜 <a href="http://static.springframework.org/spring/docs/2.0.x/reference/aop.html#aop-ataspectj" target="_blank"> </a><a href="http://static.springframework.org/spring/docs/2.5.x/reference/aop.html#aop-ataspectj" title="6.2. @AspectJ support">Section 6.2, “@AspectJ support”</a>[footnote]예전에 해봤을 때 &lt;aop:aspectj-autoproxy/&gt; 이렇게만 설정해주면 됐었습니다. [/footnote]만 있으면 됩니다.</p>
+<p>2.3.3. Support for bean name pointcut element</p>
+<p>스프링 2.5부터 bean(...)&nbsp; 포인트컷 표현식을 지원합니다. 이에 대한 내용은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/aop.html#aop-pointcuts-designators" title="6.2.3.1. Supported Pointcut Designators">Section 6.2.3.1, “Supported Pointcut Designators”</a>&nbsp; 여기서 다룹니다.</p>
+<p>2.3.4. Support for AspectJ load-time weaving</p>
+<p>스프링 2.5부터 context:load-time-weaver 엘리먼트를 사용하면 자동으로 META-INF/aop.xml 에 설정한 AspectJ 위버 설정을 읽어들어 로드 타임 위버를 적용합니다. 이에 대한 자세한 내용은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/aop.html#aop-aj-ltw" title="6.8.4. Load-time weaving with AspectJ in the Spring Framework">Section 6.8.4, “Load-time weaving with AspectJ in the Spring Framework”</a><br />
+      여기서 다룹니다.</p>
+<p><span style="font-weight: bold;">2.4. The Middle Tier</span></p>
+<p>2.4.1. Easier configuration of declarative transactions in XML</p>
+<p>1.2.x 스타일의 설정도 사용이 가능하지만 그것보다 훨씬 간단하게 할 수 있고 추천하는 바입니다. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/transaction.html" title="Chapter 9. Transaction management">Chapter 9, <i>Transaction management</i></a>에서 자세히 볼 수 있습니다.</p>
+<p>스프링 2.5부터 context:load-time-weaver 와 tx:annotation-driven mode="aspectj"를 사용하여 로드 타임 위버를 사용하여 애노테이션 기반의 트랜잭션 처리를 할 수 있습니다.</p>
+<p>2.4.2. Full WebSphere transaction management support</p>
+<p>스프링 2.5에 WAS 6.0.2.19+ and 6.0.1.9+ 부터 웹로직에서 사용할 수 있는 UOWManager API를 지원하는 WebSphereUowTransactionManager 가 추가 되었습니다.</p>
+<p>JTA 기반 트랜잭션 매니저를 사용할 경우 <tt class="literal">tx:jta-transaction-manager 엘리먼트를 사용하여, 웹로직이나 웹스피어의 트랜잭션 관리자를 자동으로 찾아줍니다.</tt></p>
+<p>2.4.3. JPA
+<p>Spring 2.0 ships with a JPA abstraction layer that is similar in intent<br />
+      to Spring's JDBC abstraction layer in terms of scope and general<br />
+      usage patterns.<a href="http://static.springframework.org/spring/docs/2.5.x/reference/orm.html#orm-jpa" title="12.6. JPA">Section 12.6, “JPA”</a></p>
+<p>Spring 2.5 upgrades its OpenJPA support to OpenJPA 1.0,<br />
+      with support for advanced features such as savepoints.
+<p>2.4.4. Asynchronous JMS</p>
+<p>2.0 전에는 동기화 상태에서 메시지 받기만 가능했는데 비동기 스타일로도 메시지를 받을 수 있게 됐습니다. <a href="http://static.springframework.org/spring/docs/2.0.x/reference/jms.html#jms-asynchronousMessageReception" target="_blank"><br />
+      </a><a href="http://static.springframework.org/spring/docs/2.5.x/reference/jms.html#jms-asynchronousMessageReception" title="19.4.2. Asynchronous Reception - Message-Driven POJOs">Section 19.4.2, “Asynchronous Reception - Message-Driven POJOs”</a>.
+<p>As of Spring 2.5, the JCA style of setting up asynchronous<br />
+      message listeners is supported as well, through the<br />
+      <tt class="classname">GenericMessageEndpointManager</tt> facility.<br />
+      This is an alternative to the standard JMS listener facility, allowing<br />
+      closer integration with message brokers such as ActiveMQ and JORAM.<br />
+      See <a href="http://static.springframework.org/spring/docs/2.5.x/reference/jms.html#jms-jca-message-endpoint-manager" title="19.5. Support for JCA Message Endpoints">Section 19.5, “Support for JCA Message Endpoints”</a>.</p>
+<p>Spring 2.5 also introduces an XML namespace for simplifying JMS<br />
+      configuration, offering concise configuration of a large numbers of<br />
+      listeners. This namespace supports both the standard JMS listener facility<br />
+      as well as the JCA setup style, with minimal changes in the configuration.<br />
+      See <a href="http://static.springframework.org/spring/docs/2.5.x/reference/jms.html#jms-namespace" title="19.6. JMS Namespace Support">Section 19.6, “JMS Namespace Support”</a>.</p>
+<p>2.4.5. JDBC</p>
+<p>JDBC support 라이브러리에 몇 개의 클래스가 추가 됐는데 NamedParameterJdbcTemplate는 JDBC statement에 ? 만 사용하던 것과 달리 named parameter를 사용할 수 있도록 해주고 <br />SimpleJdbcTemplate 는 java 5.0 이상의 개발 환경에서 JdbcTemplate을 더 쉽게 사용할 수 있도록 도와줍니다.</p>
+<p>스프링 2.5의 SimpleJdbcTemplate 기능이 확장되었습니다. </p>
+<p><span style="font-weight: bold;">2.5. The Web Tier</span></p>
+<p>2.5.1. Sensible defaulting in Spring MVC</p>
+<p>여러 프로젝트를 통해서 기본값으로 적당한 값을 찾아냈습니다. 그것으로&nbsp; CoC를 Spring MVC에 적용했습니다. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/mvc.html#mvc-coc" title="13.11. Convention over configuration">Section 13.11, “Convention over configuration”</a></p>
+<p>2.5.2. Portlet framework</p>
+<p>Spring 2.0 ships with a Portlet framework. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/portlet.html" title="Chapter 16. Portlet MVC Framework">Chapter 16, <i>Portlet MVC Framework</i></a>.</p>
+<p>2.5.3. Annotation-based controllers</p>
+<p>@RequestMapping, @RequestParam, @ModelAttribute 등을 사용하여, 컨트롤러를 구현할 수 있어며 Servlet이나 Portlet API를 직접적으로 참조하지 않고도, Servlet이나 Portlet의 기능을 사용할 수 있습니다.  <a href="http://static.springframework.org/spring/docs/2.5.x/reference/mvc.html#mvc-annotation" title="13.12. Annotation-based controller configuration">Section 13.12, “Annotation-based controller configuration”</a></p>
+<p>2.5.4. A form tag library for Spring MVC</p>
+<p>JIRA를 통해 개발자들의 의견을 반영했으며 새로운 JSP tag 라이브러리에 대한 자세한 내용은 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/mvc.html#mvc-formtaglib" title="13.9. Using Spring's form tag library">Section 13.9, “Using Spring's form tag library”</a>에서 참조할 수 있습니다.</p>
+<p>2.5.5. Tiles 2 support</p>
+<p>Spring 2.5 ships support for Tiles 2, the next generation of the popular Tiles templating framework. This supersedes Spring's former support for Tiles 1, as included in Struts 1.x. See <a href="http://static.springframework.org/spring/docs/2.5.x/reference/view.html#view-tiles" target="_blank">Section 14.3, “Tiles” for details.</a></p>
+<p>2.5.6. JSF 1.2 support</p>
+<p>Spring 2.5 supports JSF 1.2, providing a JSF 1.2 variant of Spring's DelegatingVariableResolver in the form of the new DelegatingFacesELResolver.</p>
+<p>2.5.7. JAX-WS support</p>
+<p>Spring 2.5 fully supports JAX-WS 2.0, as included in Java 6 and Java EE 5. JAX-WS is the successor of JAX-RPC, allowing access to WSDL/SOAP-based web services as well as JAX-WS style exposure of web services.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2.6. Everything else</span></p>
+<p>기타 등등 추가되거나 개선된 기능 입니다.</p>
+<p>2.6.1. Dynamic language support</p>
+<p>자바 이외에 동적 언어(JRuby, Groovy, BeanShell등..)로 작성된 코드를 bean으로 등록할 수 있습니다. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html" title="Chapter 24. Dynamic language support">Chapter 24, <i>Dynamic language support</i></a>.</p>
+<p>스프링 2.5에서 오토 와이어링 지원을 하며, 최근에 배포한 JRuby 1.0을 지원합니다.</p>
+<p>2.6.2. Enhanced testing support</p>
+<p>스프링 2.5부터 Spring TestContext Framework 라는 것을 도입하여 애노테이션 기반의 테스트 작성이 가능하며, JUnit 4.4와 TestNG를 지원합니다. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/testing.html#testcontext-framework" title="8.3.7. Spring TestContext Framework">Section 8.3.7, “Spring TestContext Framework”</a></p>
+<p>2.6.3. JMX</p>
+<p>The Spring Framework now has support for Notifications; it is also possible to exercise declarative control over the registration behavior of MBeans with an MBeanServer.</p>
+<p>스프링 2.5부터 @ManagedResource 라는 애노테이션이 붙은 클래스를 자동으로 찾아서 노출 시키는 context:mbean-export 엘리먼트가 추가되었습니다.</p>
+<p>2.6.4. Deploying a Spring application context as JCA adapter</p>
+<p>스프링 2.5부터 스프링 애플리케이션 컨텍스트를 JCA RAR 파일로 배포할 수 있게 되었습니다.</p>
+<p>2.6.5. Task scheduling</p>
+<p>Spring 2.0 offers an abstraction around the scheduling of tasks. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/scheduling.html#scheduling-task-executor" title="23.4. The Spring TaskExecutor abstraction">Section 23.4, “The Spring TaskExecutor abstraction”</a></p>
+<p>The TaskExecutor abstraction is used throughout the framework itself as well, e.g. for the asynchronous JMS support. In Spring 2.5, it is also used in the JCA environment support.</p>
+<p>2.6.6. Java 5 (Tiger) support</p>
+<p>Java 5.0을 지원하며 아래의 링크들은 Java 5.0에서만 동작합니다.
+<div class="itemizedlist">
+<ul type="disc">
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/reference/transaction.html#transaction-declarative-aspectj" title="9.5.8. Using @Transactional with AspectJ">Section 9.5.8, “Using @Transactional with AspectJ”</a></li>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/reference/aop.html#aop-atconfigurable" title="6.8.1. Using AspectJ to dependency inject domain objects with Spring">Section 6.8.1, “Using AspectJ to dependency inject domain objects with Spring”</a></li>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/reference/aop.html#aop-ataspectj" title="6.2. @AspectJ support">Section 6.2, “@AspectJ support”</a></li>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/reference/metadata.html#metadata-annotations-required" title="25.3.1. @Required">Section 25.3.1, “@Required”</a></li>
+<li><a href="http://static.springframework.org/spring/docs/2.0.x/reference/jdbc.html#jdbc-SimpleJdbcTemplate" title="11.2.3. SimpleJdbcTemplate">Section 11.2.3, “SimpleJdbcTemplate”</a></li>
+</ul>
+<p><span style="font-weight: bold;">2.7. Migrating to Spring 2.5</span></p>
+<p>1.2.X 에서 2.0으로 업그레이드 하는 방법은 간단하게 2.0 jar파일을 적당한 라이브러리 폴더에 복사해 넣으면 됩니다.</div>
+<p>1.2.X 스타일의 XML 설정 파일들은 2.0 환경에서도 100% 호환이 되긴 하지만 2.0에 새로 추가된 기능들 중 몇개(새로운 scope, 간단한 AOP 설정, 트랜잭션 설정)은 사용할 수 없습니다.</p>
+<p>2.7.1. Changes</p>
+<p>바뀐 내용에 대한 것은 Spring 설치 폴더에 'changelog.txt'파일에서 참조할 수 있습니다.</p>
+<p>2.7.1.1. Supported JDK versions</p>
+<p>2006년 말에 SUN에서 JDK 1.3을 deprecation 했기 때문에, JDK 1.3 과 관련된 라이브러리는 제거되었습니다. 최소한 JDK 1.4.2 이상의 버전을 사용해야 합니다.</p>
+<p>JDK 1.3만 지원하는 WebSphere 4.0 나 5.0을 사용하고 계신다면, 스프링 2.0.6/2.0.7을 사용하시기 바랍니다.</p>
+<p>2.7.1.2. Jar packaging</p>
+<p>패키징에 변화가 있었습니다. JDO, Hibernate, TopLink를 위한 class들이 더이상 spring.jar파일 안에 들어있지 않습니다.</p>
+<p>스프링 MVC 관련 라이브러리를 spring.jar에서 빼서 spring-webmvc.jar 여기로 묶어놨습니다. 포틀릿은 spring-webmvc-struts.jar에 있으며, 두 파일 모두 lib/module 폴더 안에 들어있습니다.</p>
+<p>OSGi 호환 Jar 형태로 배포했기 때문에, OSGi 환경에서 스프링 2.5를 사용할 경우 별도의 패키징 작업이 필요하지 않습니다.</p>
+<p>2.7.1.3. XML configuration</p>
+<p>XSD 기반의 XML을 사용할 것을 권장하며 달라진 것은 1.2 DTD에서는 singleton 속성을 사용했지만 2.0 DTD에서는 scope 속성을 사용해야 합니다.</p>
+<p>2.7.1.4. Deprecated classes and methods</p>
+<p>다음의 클래스 or 인터페이스는 삭제되었습니다.<br />&nbsp; &nbsp; * ResultReader : Use the RowMapper interface instead.<br />&nbsp; &nbsp; * BeanFactoryBootstrap : Consider using a BeanFactoryLocator or a custom bootstrap class instead.</p>
+<p>2.7.1.5. Apache OJB</p>
+<p>Apache OJB와 관련된 코드가 Spring 소스 트리에서 완전히 삭제 되었습니다. 여전히 라이브러리 사용은 가능하지만 <a href="https://springmodules.dev.java.net/" target="_top">Spring<br />
+        Modules project</a>.으로 집을 옮겼습니다.</p>
+<p>2.7.1.6. iBatis</p>
+<p>iBatis SQL Maps 1.3 을 지원하는 코드가 삭제 되었습니다. iBatis SQL Maps 2.0/2.1로 업그레이드 하세요.</p>
+<p>2.7.1.7. Hibernate</p>
+<p>Hibernate 2.1과 3.0 을 지원하는 코드가 삭제 되었습니다. Hibernate 3.1 이상의 버전들을 지원하며, 이전 버전의 하이버네이트를 사용하신다면 스프링 2.0.6/2.0.7을 사용하세요.</p>
+<p>2.7.1.8. JDO</p>
+<p>JDO 1.0 을 지원하는 코드가 삭제 되었습니다. JDO 2.0 이상의 버전을 지원하며, 이전 버전의 JDO를 사용하시려면 스프링 2.0.6/2.0.7을 사용하세요.</p>
+<p>2.7.1.9. UrlFilenameViewController</p>
+<p>The view name that is determined by the <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/mvc/UrlFilenameViewController.html" target="_blank">UrlFilenameViewController</a>&nbsp; now takes into account the nested path of the request. 따라서 1.2.x 에서 이 클래스를 사용하고 있었다면 Spring MVC 설정을 살짝 바꿔야 합니다.</p>
+<p><span style="font-weight: bold;">2.8. Updated sample applications</span></p>
+<p>샘플 코드도 2.0 코드에 맞게 업그레이드 했으며 spring-with-dependencies.zip 파일안에 들어있습니다. <a href="http://static.springframework.org/spring/docs/2.5.x/reference/showcases.html" title="Chapter 26. Showcase applications">Chapter 26, <i>Showcase applications</i></a>.</p>
+<p><span style="font-weight: bold;">2.9. Improved documentation</span></p>
+<p>Reference에 잘못된 것이 있으면 <a href="http://opensource.atlassian.com/projects/spring/secure/Dashboard.jspa" target="_blank">이곳</a>에 글을 올려주세요~</p>
+<p>============================================================<br />updated 2007-11-21<br />기존의 글을 스프링 2.5 레퍼런스를 보며 내용을 추가 및 수정했습니다.<br />기존의 링크를 수정했습니다.</p>

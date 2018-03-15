@@ -1,0 +1,73 @@
+---
+layout: post
+title: 3.10.1. @Autowired
+date: 2007-07-30 11:09:36.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- "@Autowired 애노테이션"
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323202860'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>@Autowired 애노테이션을 붙여서 종속성을 주입할 수 있는데 XML 기반 설정파일에서의 오토 와이어링 설정 보다 더 유연하고 확장성이 좋아졌습니다.
+<ul>
+<li>일반 적인 setter 위에 붙일 수 있습니다.</li>
+<li>메소드의 이름이 굳이 setter 형식일 필요가 없습니다.</li>
+<li>필드와 생성자에도 붙일 수 있습니다.</li>
+</ul>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class SimpleMovieLister {</p>
+<p> &nbsp;&nbsp; @Autowired<br />
+ &nbsp;&nbsp; private MovieFinder movieFinder;</p>
+<p> &nbsp;&nbsp; public void setMovieFinder(MovieFinder movieFinder) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.movieFinder = movieFinder;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public MovieFinder getMovieFinder() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return movieFinder;<br />
+ &nbsp;&nbsp; }</p>
+<p>}</p></div>
+<p>
+주의 할 것은 종속성을 주입할 후보자가 아무것도 없다면 에러가 발생한다는 것입니다. 즉 @Autowired 애노테이션이 붙은<br />
+메소드, 생성자, 필드의 경우 기본으로 필수 요소로 인식합니다. 이를 원치 않을 때는 다음과 같이 설정할 수 있습니다.</p>
+<p>@Autowired(required = false)</p>
+<p>Spring 2.1 M1에서는 해당 속성이 없습니다. Spring 2.1 M2 부터 지원하고 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cn322.png" class="aligncenter" width="252" height="142" alt="사용자 삽입 이미지" /><br />Spring 2.1 M2에서도 지원하고 있는 속성이 딱 한 개 입니다. 타입으로 종속성 주입할 대상을 찾습니다.</p>

@@ -1,0 +1,58 @@
+---
+layout: post
+title: JavaScript If...Else와 Switch Statement
+date: 2007-07-09 03:25:18.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AJAX/JavaScript
+tags:
+- 자바스크립트 조건문
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323189559'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <br /><a href="http://www.w3schools.com/js/js_if_else.asp" target="_blank">http://www.w3schools.com/js/js_if_else.asp</a><br /><a href="http://www.w3schools.com/js/js_switch.asp" target="_blank">http://www.w3schools.com/js/js_switch.asp</a></p>
+<p><span style="font-weight: bold;">if문 예제</span>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;script type="text/javascript"&gt;<br />var d = new Date()<br />var time = d.getHours()<br />if (time&lt;10)<br />{<br />document.write("&lt;b&gt;Good morning&lt;/b&gt;")<br />}<br />else if (time&gt;=10 &amp;&amp; time&lt;16)<br />{<br />document.write("&lt;b&gt;Good day&lt;/b&gt;")<br />}<br />else<br />{<br />document.write("&lt;b&gt;Hello World!&lt;/b&gt;")<br />}<br />&lt;/script&gt;</div>
+<p><span style="font-weight: bold;">switch문 예제</span>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;script type="text/javascript"&gt;<br />//You will receive a different greeting based<br />//on what day it is. Note that Sunday=0,<br />//Monday=1, Tuesday=2, etc.</p>
+<p>var d=new Date()<br />theDay=d.getDay()<br />switch (theDay)<br />{<br />case 5:<br />&nbsp; document.write("Finally Friday")<br />&nbsp; break<br />case 6:<br />&nbsp; document.write("Super Saturday")<br />&nbsp; break<br />case 0:<br />&nbsp; document.write("Sleepy Sunday")<br />&nbsp; break<br />default:<br />&nbsp; document.write("I'm looking forward to this weekend!")<br />}<br />&lt;/script&gt;</div>
+<p>둘 다 자바의 조건문이랑 완전 같기 때문에 pass<br />&amp;&amp;와 || 연산자 사용도 같습니다.</p>

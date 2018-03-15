@@ -1,0 +1,133 @@
+---
+layout: post
+title: Generics
+date: 2007-01-17 03:26:00.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- generics
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323022978'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://whiteship.epril.com/wp-content/uploads/1/bl194.pdf" class="aligncenter">bl194.pdf</a></p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">1. Introduction</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">자바5.0에 새로 추가된 기능중에 하나로 이게 뭔지 한 문장으로 표현하면 다음과 같습니다.<br />Generics allow you to abstract over types.</p>
+<p>Generic을 사용하는 가장 좋은 예로 Collection을 들 수 있겠습니다.</p>
+<p>List myIntList = new LinkedList(); // 1<br />myIntList.add(new Integer(0)); // 2<br />Integer x = (Integer) myIntList.iterator().next(); // 3</p>
+<p>이러한 기존의 코드를 다음과 같이 사용할 수 있습니다.</p>
+<p>List&lt;Integer&gt; myIntList = new LinkedList&lt;Integer&gt;(); // 1’<br />myIntList.add(new Integer(0)); //2’<br />Integer x = myIntList.iterator().next(); // 3’</p>
+<p><span style="color: rgb(0, 153, 102);"><br />
+2’ 에서 Integer가 아닌 다른 객체를 넣으려고 하면 컴파일 에러가 발생합니다. 3’ 에서는 캐스팅이 필요없습니다.</span></p>
+<p>기존의 List는 모든 객체가 Object 타입으로 들어가고 그래서 꺼낼 때 캐스팅이 필요했지만 Generic을 사용한 List를 사용하면 type-parameter를 사용해서 특정 타입의 객체만 들어갈 수 있도록 지정할 수 있기 때문에 꺼낼 때 캐스팅이 필요 없습니다.</p>
+<p>=&gt; <span style="color: rgb(255, 0, 0);">코드의 가독성과 견고함(robustness)을 높여줍니다.</span></div>
+<p><br style="font-weight: bold;" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">2. Defining Simple Generics</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public interface List&lt;E&gt; { <br />&nbsp; &nbsp; void add(E x);<br />&nbsp; &nbsp; Iterator&lt;E&gt; iterator();<br />}<br />public interface Iterator&lt;E&gt; { E next();<br />&nbsp; &nbsp; boolean hasNext();<br />}</p>
+<p>위와 같이 생겼으며 사용하는 방법은 1. Intoduction에서 보았듯이 List&lt;Integer&gt;처럼 E와 같은 <span style="color: rgb(255, 51, 153);">type-parameter</span> 대신에 원하는 실제 타입(actual type parameter)를 넣어 주면 됩니다.</p>
+<p>이 때 다음과 같은 코드가 생길 것이라고 생각하는 것은 괜찮지만 사실은 그렇치 않습니다.</p>
+<p>public interface IntegerList { <br />void add(Integer x)<br />Iterator&lt;Integer&gt; iterator();<br />}</p>
+<p>왜냐면 List&lt;Integer&gt;가 저런 코드를 사용하는 것 처럼 동작하긴 하지만 실제 저런 복사본을 어디에도 만들지 않기 때문입니다. C++의 탬플릿과는 다르다고 합니다.</p>
+<p>Agile Java 14장 5절에 보면 C++은 인수화된 형(type-parameter)을 사용할 때마다 새로운 형식을 만든다고 합니다. 하지만 <span style="color: rgb(255, 0, 0);">자바는 Erasure(삭제) 방식을 사용한다고 합니다.</span> 즉 인수화된 형식 정보를 지우고 적절한 캐스팅으로 대체 된다고 합니다.</div>
+<p><br style="font-weight: bold;" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">3. Generics and Subtyping</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">List&lt;String&gt; ls = new ArrayList&lt;String&gt;(); //1<br />List&lt;Object&gt; lo = ls; //2</p>
+<p>위 두 줄의 코드 중에서 1번은 문제가 없고 2번은 컴파일 에러가 발생합니다. 다음과 같은 일이 발생 할 수 있기 때문에 미연에 방지하기 위함입니다.</p>
+<p>lo.add(new Object()); // 3<br />String s = ls.get(0); // 4: attempts to assign an Object to a String!</div>
+<p><br style="font-weight: bold;" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">4. Wildcards</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">void printCollection(Collection c) { <br />&nbsp; &nbsp; Iterator i = c.iterator();<br />&nbsp; &nbsp; for (k = 0; k &lt; c.size(); k++) { <br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; System.out.println(i.next());<br />}}</p>
+<p>위와 같은 코드를 Generic을 사용하여 다음과 같이 표현하고 싶겠지만... </p>
+<p>void printCollection(Collection&lt;Object&gt; c) { <br />&nbsp; &nbsp; for (Object e : c) { <br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(e);<br />}}</p>
+<p>원하는 대로 동작하지 않을 것입니다. 오로지 Object만 들어있는 컬렉션을 받을 수 있을 뿐... List&lt;String&gt;을 printCollection의 매개 변수로 넣으려고 하면 컴파일 에러가 발생합니다. 3. Generics and Subtyping에서 발생했던 문제와 같은 논리입니다.</p>
+<p>Collection&lt;Object&gt;는 모든 타입들의 Supertype이 아닙니다. 모든 타입들의 Supertyle은 ?<span style="color: rgb(255, 51, 153);"> 와일드 카드</span>를 사용해서 표현합니다. 즉 Collection&lt;?&gt; 이렇게 표현하면 됩니다. 따라서 위의 메소드를 다음과 같이 작성하면 원하는 결과를 얻을 수 있습니다.</p>
+<p>void printCollection(Collection&lt;?&gt; c) { <br />&nbsp; &nbsp; for (Object e : c) { <br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println(e);<br />}}</p>
+<p><span style="color: rgb(255, 0, 0);">주의할 것은 ? 을 사용한 콜렉션에 추가하는 일을 하면 컴파일 에러가 발생한다는 것입니다.</span></p>
+<p>Collection&lt;?&gt; c = new ArrayList&lt;String&gt;();<br />c.add(new Object()); // compile time error</p>
+<p>왜냐면.. ? 는 모든 타입을 나타내기 때문에 Collection에 어떤 타입이 들어갈지 예측할 수 없기 때문입니다. 1. Introduction에서 Collection에 타입의 제약을 가해서 빼낼 때 캐스팅 없이 알고 있는 타입으로 빼내는 견고함과 가독성을 위해 Generics를 사용하기 시작한 것을 기억하실 것입니다. 그렇다면 지금 벌어지는 일이 그와는 정반대 되는 일임을 알 수 있을 것입니다. 따라서 컴파일 에러가 발생합니다.</p>
+<p>넣는 것과  다르게<span style="color: rgb(255, 0, 0);"> ? 를 사용한 Collection에서 꺼내는 일(get())은 가능합니다.</span> 위와 같은 코드의 경우 나오는 객체의 타입을 Object 타입으로 예상하고 있고 실제 모든 객체들은 Object 타입이기 때문입니다. </p>
+<p>? 의 기본 상위 경계는 Object 이기 때문이라고 해도 되겠네요. 조금 후에 extends를 사용해서 상위 경계를 원하는 타입으로 제한할 수 있는데 그때는 나오는 타입을 역시 원하는 상위 타입으로 예측할 수 있기 때문에 get()을 하는데는 아무 문제가 없습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">4.1 Bounded Wildcards<br />
+</span></div>
+<p><span style="font-weight: bold;"><br />
+</span><a href="http://whiteship.epril.com/wp-content/uploads/1/bl195.bmp" class="aligncenter" width="404" height="246" alt="사용자 삽입 이미지">bl195.bmp</a>위와 같은 구조에서 Canvas의 drawAll의 코드가 다음과 같다고 생각해 봅니다.</p>
+<p>public void drawAll(List&lt;Shape&gt; shapes) {<br />
+&nbsp; &nbsp; for (Shape s: shapes) { <br />
+ &nbsp; &nbsp; &nbsp;&nbsp; s.draw(this);<br />
+ &nbsp;&nbsp; }<br />
+}</p>
+<p>이<br />
+때 drawAll의 매개 변수로 넘겨줄 수 있는 Collection은 오로지 List&lt;Shape&gt; 밖에 없습니다.<br />
+하지만 메소드 선언 부를 다음과 같이 바꾸면 public void drawAll(List&lt;? extends<br />
+Shape&gt; shapes) { ... } List&lt;Circle&gt;과 List&lt;Rectangle&gt;도<br />
+매개변수로 넘겨 줄 수 있습니다. </p>
+<p>&lt;? extends Shape&gt;와 같은 표현을 상위<br />
+경계[footnote]기본 상위 경계는 Object 입니다.[/footnote]을 가했다고 해서 <span style="color: rgb(255, 51, 153);">bounded wildcard</span><br />
+라고 하며 Shape를 상위 경계(upper bound)라고 합니다.</p>
+<p>이때도 역시 4. Wildcards 에서 보았던 것처럼 다음의 코드는 컴파일 에러를 발생합니다.</p>
+<p>public void addRectangle(List&lt;? extends Shape&gt; shapes) { <br />
+ &nbsp;&nbsp; shapes.add(0, new Rectangle()); // compile-time error!<br />
+}</p>
+<p>? 의 상위 제한은 알지만 여전히 어떤 객체가 들어갈지는 예측할 수가 없습니다. List&lt;Rectangle&gt; 에 Rectangle의 상위 타입(Shape의 하위타입이면서..)이 들어 갈 수도 있기 때문입니다.</div>
+<p><br style="font-weight: bold;" />
+<div style="padding: 10px; background-color: rgb(228, 228, 228);"><span style="font-weight: bold;">5 Generic Methods</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">static void fromArrayToCollection(Object[] a, Collection&lt;?&gt; c) { <br />&nbsp; &nbsp; for (Object o : a) { <br />&nbsp; &nbsp; &nbsp; &nbsp; c.add(o); // compile time error<br />}}</p>
+<p>배열에 있는 요소들을 콜렉션으로 옮겨 담는 메소드인데 위의 메소드에서 컴파일 에러가 발생하는 이유는 앞에서도 설명을 했지만 ? 와일드 카드는 모든 타입을 나타내기 때문에 Collection이 어느 특정 타입을 유지 하리라 예측 할 수 없기 때문입니다.</p>
+<p>static &lt;T&gt; void fromArrayToCollection(T[] a, Collection&lt;T&gt; c) { <br />&nbsp; &nbsp; for (T o : a) { <br />&nbsp; &nbsp; &nbsp; &nbsp; c.add(o); // correct<br />}}</p>
+<p>하지만 위 코드는 에러가 발생하지 않습니다. T라는 특정 타입 하나로 제한되었기 때문입니다. 이런 메소드를 <span style="color: rgb(255, 51, 153);">generic method</span>라고 합니다. 위 메소드를 사요하면 특정 타입만을 가지는 Collection을 만들 수 있기 때문에 Generics를 사용하는 이유인 견고함과 가독성 유지에 위배되지 않습니다.</p>
+<p>그렇다면 문제는 언제 ? 를 쓰고 언제 generic method를 사용하는가 입니다.</p>
+<p>interface Collection&lt;E&gt; { <br />&nbsp; &nbsp; public boolean containsAll(Collection&lt;?&gt; c);<br />&nbsp; &nbsp; public boolean addAll(Collection&lt;? extends E&gt; c);<br />}</p>
+<p>위 코드를 아래 처럼 generic method를 사용해서 표현할 수도 있습니다.</p>
+<p>interface Collection&lt;E&gt; { <br />&nbsp; &nbsp; public &lt;T&gt; boolean containsAll(Collection&lt;T&gt; c);<br />&nbsp; &nbsp; public &lt;T extends E&gt; boolean addAll(Collection&lt;T&gt; c);<br />// hey, type variables can have bounds too!<br />}</p>
+<p>하지면 여기서 사용된 T라는 type parameter는 리턴타입에 영향을 주지도 않으며 매개변수들 간의 계층 관계를 나타내지도 않습니다.[footnote]물론 여기서 매개변수는 한 개 밖에 없어서 더욱 그렇쵸.[/footnote] 이런 경우에서 addAll에서의 E는 상위제한을 가하는 용도로만 사용되었습니다. 또한 다양한 type을 받아 들이기 위해 T라는 type parameter를 사용했습니다. 이럴때는 ? 와일드카드를 사용하는 것이 좋습니다.
+<ul>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">
+<li>다형성을 나타내고 싶고 매개 변수에서 한번만 사용되는 type parameter는 generic method보다 ? 와일드 카들르 사용하는 것이 좋습니다.</li>
+<li>generic method는 매개변수 타입들 간 or/and 리턴 타입 간의 관계를 표현할 때 사용하는 것이 좋습니다.</li>
+</div>
+</ul>
+<p>주의 할 것은 아래와 같이 매개변수 간의 관계가 있다고 해서</p>
+<p>class Collections { <br />&nbsp; &nbsp; public static &lt;T&gt; void copy(List&lt;T&gt; dest, List&lt;? extends T&gt; src){...}<br />}</p>
+<p>아래와 같이 S라는 type parameter를 상용할 수도 있습니다.</p>
+<p>class Collections { <br />&nbsp; &nbsp; public static &lt;T, S extends T&gt; void copy(List&lt;T&gt; dest, List&lt;S&gt; src){...}<br />}</p>
+<p>하지만 여기서 매개변수들 만 본다면 T라는 type parameter는 두 개의 매개변수에서 모두 사용된 것이지만[footnote]S = S extends T 이기 때문에 S를 대체하면 T가 두번 사용된 것입니다.[/footnote] S는 하나의 매개변수에서 사용된 것이나 마찬가지 입니다. 따라서 이 경우도 ? 와일드 카드를 사용하는 것이 보다 깨끗하고 간결합니다.</div>
+<p>참고 할 곳(물개 선생님께서 정리해 두신 링크들)<br />- SUN 기본 튜토리얼 : <a href="java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf" target="_blank">java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf</a> <br />- 이희승님 정리 문서 : <a href="trustin.googlepages.com/Java5Generics.pdf" target="_blank">trustin.googlepages.com/Java5Generics.pdf</a> <br />- Toby님 JavaGeneric과 Erasure : <a href="toby.epril.com/?p=248" target="_blank">toby.epril.com/?p=248</a><br />- advanced: <a href="http://blog.interface21.com/main/2007/01/16/a-bridge-too-far/" target="_blank">http://blog.interface21.com/main/2007/01/16/a-bridge-too-far/</a></p>

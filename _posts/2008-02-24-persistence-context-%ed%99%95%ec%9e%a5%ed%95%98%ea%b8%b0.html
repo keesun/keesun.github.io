@@ -1,0 +1,68 @@
+---
+layout: post
+title: Persistence context 확장하기
+date: 2008-02-24 05:02:36.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 9
+tags:
+- Conversation 구현 전략
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323042712'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>요청을 처리한 다음에 Persistent context를 닫지 않고 DB Connection을 끊은 상태에서<br />
+사용자의 다음 요청을 기다린다. 사용자의 다음 요청이 오면 다시 DB에 연결하고 다음 요청을 처리한다. Conversation이<br />
+끝나면, Persistent context를 DB에 동기화하고, 닫는다. 다음 Conversation을 시작할 때는 새로운<br />
+Persistence context를 시작하고, 이전 Conversation에서 사용했던 entity 객체들을 재사용하지 않는다.</li>
+</ul>
+<ul>
+<li>Detached 상태의 객체가 없다. 모든 객체는 Transient 상태이거나 Persistent 상태다.</li>
+</ul>
+<ul>
+<li>손수 reattachment 하거나 merging할 필요가 없다.</li>
+</ul>
+<ul>
+<li>이 책의 나중에 두 가지 Conversation 구현 전략에 대해 자세하게 다룰 것이다.</li>
+</ul>

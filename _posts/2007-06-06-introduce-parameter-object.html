@@ -1,0 +1,55 @@
+---
+layout: post
+title: Introduce Parameter Object
+date: 2007-06-06 12:14:58.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 5~ 12장 Catalogue
+tags:
+- 리팩토링
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322957607'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.refactoring.com/catalog/introduceParameterObject.html" target="_blank">http://www.refactoring.com/catalog/introduceParameterObject.html<br /></a><br />여러개의 파라미터를 가지는 메소드의 경우 그 일련의 파라미터들을 가지는 새로운 객체 타입을 받도록 변경할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dm226.gif" class="aligncenter" width="480" height="100" alt="사용자 삽입 이미지" /><br />Eclipse의 refactoring 기능 중에 저런 리팩터링을 지원하는 것이 없는지 찾아봤지만 못찾았습니다. 있으면 좋으련만... <br /><a href="http://dev.eclipse.org/mhonarc/lists/eclipse-pmc/msg00188.html" target="_blank">http://dev.eclipse.org/mhonarc/lists/eclipse-pmc/msg00188.html</a><br /><a href="http://download.eclipse.org/eclipse/downloads/drops/S-3.3M7-200705031400/eclipse-news-M7.html" target="_blank">http://download.eclipse.org/eclipse/downloads/drops/S-3.3M7-200705031400/eclipse-news-M7.html</a><br />위 글들을 보니 Eclipse3.3의 refactoring 기능에 추가해 줄 것 같습니다.</p>
+<p>하나의 메소드 안에 뭉탱이로 들어가는 인자들이 있다면 그 인자들끼리 관계가 밀접할 수 있으며 해당 객체에서 따로 빼내는 것이 애플리케이션을 더 유연하게 만들 수 있습니다.</p>
+<p>메소드에 넘겨줄 인자가 단순해집니다.</p>

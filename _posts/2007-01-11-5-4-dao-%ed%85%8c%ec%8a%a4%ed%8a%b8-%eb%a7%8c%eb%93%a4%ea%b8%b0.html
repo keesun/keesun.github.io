@@ -1,0 +1,87 @@
+---
+layout: post
+title: 5-4. DAO 테스트 만들기
+date: 2007-01-11 05:55:13.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- 주소록 만들기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323144350'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. test/src 소스 폴더에 keesun.messenger 패키지 안에 MessengerDaoTest 클래스를 생성합니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl175.bmp" class="aligncenter" width="292" height="82" alt="사용자 삽입 이미지">bl175.bmp</a>2. 이 클래스는 AbstractTransactionalDataSourceSpringContextDaoTest 이 클래스를 상속 받습니다. 이 클래스는 Spring에 있는 AbstractTransactionalDataSourceSpringContextTests 클래스를 상속하여 만들어진 클래스 입니다.</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> MessengerDaoTest </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">extends</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> AbstractTransactionalDataSourceSpringContextDaoTest{</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span lang="EN-US"><o:p><font face="맑은 고딕" size="2">&nbsp;</font></o:p></span></p>
+<p>3. 테스트 대상인 MessengerDao를 protected로 변수를 만들고 다음과 같이 bean이 생성됐는지 확인하는 테스트를 만듭니다.</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">protected</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> MessengerDao </span><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">messengerDao</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">;</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> testValidBean(){</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span><i>assertNotNull</i>(</span><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">messengerDao</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}<br /></font></span></p>
+<p>테스트는 실패 합니다. 이전 글에서 등록한 빈의 이름이 memberDao로 쓰였네요;; 오타입니다. messengerDao로 수정을 하고 다시 테스트를 하면 통과합니다.</p>
+<p>4. Member 객체를 memberDao를 이용해서 DB에 집어 넣는 테스트를 해봅니다. 이 때 MessengerFixture라는 객체를 만들어서 넘겨주는 클래스를 만들어서 사용합니다.</p>
+<p><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style=""></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> testModel(){</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>Messenger m = MessengerFixture.<i>getAMessenger</i>();</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">messengerDao</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">.add(m);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><i><u><span style="color: blue; font-family: 'Courier New';" lang="EN-US">assertTrue</span></u></i><span style="color: black; font-family: 'Courier New';" lang="EN-US">(m.getMessengerId()&gt;0);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span></p>
+<p></span></span></font>//MessengerFixture.java</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> <span style="background: silver none repeat scroll 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;">MessengerFixture</span> {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">static</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Messenger getAMessenger() {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">return</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">new</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Messenger();</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</font></span></p>
+<p>5. 하지만 이 때 에러가 발생하는데 이유는 필수 요소인(nullable=false) 필드들의 값을 입력하지 안았기 때문에 발생하게 됩니다. 따라서 다음과 같이 수정을 하면 테스트가 통과 합니다.</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> testModel(){</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; </span>Messenger m = MessengerFixture.<i>getAMessenger</i>(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"keesun"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">, </span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"skype"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; </span></span><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">messengerDao</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">.add(m);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; </span><i>assertTrue</i>(m.getMessengerId()&gt;0);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}<br />//MessengerFixture.java<br /></font></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">static</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Messenger getAMessenger(String m_id, String m_type) {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style=""><font size="2">&nbsp; &nbsp;&nbsp; </font></span><font size="2">Messenger messenger = </font></span><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">new</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Messenger();</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style=""><font size="2">&nbsp; &nbsp;&nbsp; </font></span><font size="2">messenger.setM_id(m_id);</font></span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style=""><font size="2">&nbsp; &nbsp;&nbsp; </font></span><font size="2">messenger.setM_type(m_type);</font></span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style=""><font size="2">&nbsp; &nbsp;&nbsp; </font></span></span><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">return</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> messenger;</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</font></span></p>

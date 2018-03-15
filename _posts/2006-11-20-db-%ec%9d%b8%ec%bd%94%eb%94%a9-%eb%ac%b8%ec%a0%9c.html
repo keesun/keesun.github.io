@@ -1,0 +1,90 @@
+---
+layout: post
+title: DB 인코딩 문제
+date: 2006-11-20 12:33:23.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- DB 인코딩 문제
+- MySQL
+- UTF8
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322743329'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(250, 255, 169)"><a href="http://whiteship.epril.com/wp-content/uploads/1/1246883544.bmp" class="alignleft" width="307" height="201" alt="">1246883544.bmp</a>왼쪽의 테스트 메소드를 통해서 DB에 들어있는 값이 제대로 출력되는지 확인하는 printDate(member);를 호출한 결과를 보면 다음과 같습니다.</p>
+<p>1<br />
+???<br />
+whiteship2000@gmail.com<br />
+whiteship2000@hotmail.com<br />
+016-9889-6911<br />
+http://whiteship.tistory.com</p>
+<p>setOneMember(); 메소드에서 member 객체를 DB에 하나 집어 넣는데요 그 객체 안에 들어있던 원래 정보는 다음과 같습니다.</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; int id = _id;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String name = "백기선";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String phone = "016-9889-6911";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String email = "whiteship2000@gmail.com";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String messengerId = "whiteship2000@hotmail.com";<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; String blugAddress = "http://whiteship.tistory.com";</p>
+<p>따라서 한글이 지금 제대로 보이지 않고 있다는 것을 확인할 수 있습니다. 
+</div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">table을 생성하는 쿼리문을 다음과 같이 수정한 뒤 실제로 Character Set이 바꼈는지 확인해 봤습니다.<br />
+[#M_ more.. | less.. | DROP TABLE IF EXISTS Member;<br />
+CREATE TABLE Member<br />
+(<br />
+&nbsp; id INT NOT NULL PRIMARY KEY,<br />
+&nbsp; name VARCHAR(15) NOT NULL,<br />
+&nbsp; email VARCHAR(30) NOT NULL,<br />
+&nbsp; messengerId VARCHAR(30),<br />
+&nbsp; blugAddress VARCHAR(30),<br />
+&nbsp; phone VARCHAR(13)<br />
+) DEFAULT CHARSET=utf8;_M#]<a href="http://whiteship.epril.com/wp-content/uploads/1/1380097933.bmp" class="aligncenter" width="600" height="289" alt="">1380097933.bmp</a>utf8로 설정 된 것을 확인할 수 있습니다.</p>
+<p>URL 뒷부분도 다음과 같이 수정했습니다.<br />
+[#M_ more.. | less.. | <br />
+&lt;property name="driverClassName" value="com.mysql.jdbc.Driver" /&gt;<br />
+&lt;property name="url" value="jdbc:mysql://localhost:3306/addressbook?useUnicode=true&amp;amp;chracterEncoding=UTF-8" /&gt;<br />
+_M#]<br />
+그러나 여전히 ??? 로 DB에 들어간다는 거~<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1400075834.bmp" class="aligncenter" width="578" height="115" alt="">1400075834.bmp</a></div>
+<p>
+아구 어지러~</p>

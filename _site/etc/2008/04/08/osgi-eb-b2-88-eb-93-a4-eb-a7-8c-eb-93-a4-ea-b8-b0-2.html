@@ -1,0 +1,20 @@
+<p>참조 : <a href="http://blog.springsource.com/main/2008/02/18/creating-osgi-bundles/" target="_blank">Creating OSGi bundle</a></p>
+<p><font size="4"><span style="font-weight: bold;">OSGi 메타데이터 작성하기</span></font></p>
+<p><font size="3"><span style="font-weight: bold;">손으로</span></font><br />손수 OSGi 메타데이터를 작성하는 일은 비추.<br />한 줄당 72 스페이스를 넘으면 안 된다.<br />META-INF/MANIFEST.MF 파일이 압축파일 젤 위에 있어야 한다.<br />이 방법은 정말 정말 다른 방법이 없을 때나 사용하라.</p>
+<p><font size="3"><span style="font-weight: bold;">Bnd</span></font><br />Bnd는 BuNDle 도구로 Peter Kriens(OSGi Technical Officer)님께서 만들었다. OSGi R4 번들용 메타데이터를 만들어주는 도구다. 멋진건 bnd.jar 파일 자체가 실행가능한 파일인데다가, Ant 태스크도 가지고 있고, 이 거 자체로 이클립스 플러그인이기 때문에, Eclipse의 plugins 폴더에 넣으면 번들 만들어 주는 메뉴가 생긴다.</p>
+<p>(와.. 정말 죽인다.)</p>
+<p>이걸 사용해서, 클래스들을 OSGi 번들로 만들 수도 있고, 이클립스 프로젝트를 OSGi 번들로 만들 수도 있고, 기존의 JAR 파일을 OSGi 번들로 만들 수 도 있다.</p>
+<p>예제가 있는데 이건 실습하면서 해보게 생략합니다.</p>
+<p>java -jar bnd.jar print c3p0-0.9.1.2.jar</p>
+<p>java -jar bnd.jar wrap c3p0-0.9.1.2.jar</p>
+<p>java -jar bnd.jar wrap -properties c3p0-0.9.1.2.bnd c3p0-0.9.1.2.jar</p>
+<p>Maven용 번들 플러그인</p>
+<p>Apache Felix Bundle Plug-in은 Bnd와 Maven2를 연동할 수 있는 메이븐 플러그인이다. 메이븐의 POM에 해당 프로젝트가 필요로 하는 라이브러리 정보가 들어있기 떄문에, Bnd가 MANIFEST를 작성할 때 필요한 추가 정보를 POM을 보고 생성할 수 있다.</p>
+<p>예제가 있는데.. 이것도 실습해보기 위해 생략합니다.</p>
+<p>(아.. 정말 Maven의 POM이 유용하게 쓰이겠군. 버전도 있지, optional인지도 있지, 캬.. 죽이는데.. OSGi랑&nbsp; Maven 이랑 찰떡궁합이였군!!!)</p>
+<p>Bnd가 번들로 패키징 할 때, 클래스패스에 있는 모든 클래스를 묶어버리는 것을 주의해야 한다. Bnd가&nbsp; Export/Import 패키지를 보고서 생성할 jar파일에 추가할 라이브러리를 추가/제거 하긴 하는데, 패턴 매칭을 잘 해서 실제로 포함할 패키지만 가지고 묶을 수 있도록 설정을 잘 해야한다.</p>
+<p><font size="3"><span style="font-weight: bold;">별도 개발, in-house 툴</span></font></p>
+<p>바이트코드 분석을 기반으로 새로운 툴을 만들어 사용해도 된다. 스프링은 ASM 기반 바이트 코드 파서를 사용해서 테스트 프레임워크를 만들었다. 보다 효율적으로 간단한 MENIFEST.MF 파일을 만들려고..</p>
+<p><font size="4"><span style="font-weight: bold;">OSGi 저장소 사용하기</span></font></p>
+<p>기존의 JAR를 Bnd를 사용하여 새로운 OSGi 번들로 만들기 전에, 이미 OSGi 저장소에 존재할 수 있으니 거기서 찾아서 사용해도 된다.</p>
+<p><a href="http://www.osgi.org/Repository/HomePage" target="_blank">OSGi Bundle Repository(ORB)</a><br /><a href="http://www.eclipse.org/orbit/" target="_blank">Eclipse Orbit</a><br /><a href="http://felix.apache.org/site/apache-felix-commons.html" target="_blank">Apache Felix Commons</a><br /><a href="http://wiki.apache.org/commons/CommonsOsgi" target="_blank">Apache OSGified projects</a></p>

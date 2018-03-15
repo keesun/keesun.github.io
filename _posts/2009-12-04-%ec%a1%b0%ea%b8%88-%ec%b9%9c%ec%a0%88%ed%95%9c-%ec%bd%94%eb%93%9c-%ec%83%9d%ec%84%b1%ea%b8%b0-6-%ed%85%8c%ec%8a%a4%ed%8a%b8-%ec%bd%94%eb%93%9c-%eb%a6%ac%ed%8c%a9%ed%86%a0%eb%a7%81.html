@@ -1,0 +1,77 @@
+---
+layout: post
+title: 조금 친절한 코드 생성기 6 - 테스트 코드 리팩토링
+date: 2009-12-04 07:06:09.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 코드 생성기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323191429'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번에는 테스트 코드부터 만들기로 마음 먹었습니다. 그랬더니, 테스트 코드에서도 리팩토링 할 부분이 있어서 수정했습니다.</p>
+<p>일단 프리마커 Configuration을 여러 테스트에서 공유해야 하기 때문에, 인스턴스 변수로 선언했고, @Before를 이용해서 모든 테스트 마다 새로 만든 Configuration 객체를 사용하게 했습니다. 사실 그럴 필요까진 없는데 말이죠;</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+public class FreemarkerCodeGenerationServiceTest {</p>
+<p>&nbsp;&nbsp;&nbsp; FreemarkerCodeGenerationService service;</p>
+<p>&nbsp;&nbsp;&nbsp; @Before<br />
+&nbsp;&nbsp;&nbsp; public void setUp() throws IOException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Configuration configuration = new Configuration();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setObjectWrapper(new DefaultObjectWrapper());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; configuration.setDirectoryForTemplateLoading(new FileSystemResource("doc/template").getFile());</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertNotNull(configuration);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service = new FreemarkerCodeGenerationService(configuration);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void generateController() throws IOException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.generateController(new FreemarkerControllerSetting("test", "controller.ftl", "test/springsprout/modules", Study.class));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertTrue(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; service.deleteController();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertFalse(new File("test/springsprout/modules/test/StudyController.java").exists());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; //TODO template file loading fail test</p>
+<p>&nbsp;&nbsp;&nbsp; //TODO destination file make fail test</p>
+<p>&nbsp;&nbsp;&nbsp; //TODO template processing fail test</p>
+<p>&nbsp;&nbsp;&nbsp; //TODO destination folder mkdir test<br />
+}</div>
+<p>자.. 이제는 정말로;;</p>

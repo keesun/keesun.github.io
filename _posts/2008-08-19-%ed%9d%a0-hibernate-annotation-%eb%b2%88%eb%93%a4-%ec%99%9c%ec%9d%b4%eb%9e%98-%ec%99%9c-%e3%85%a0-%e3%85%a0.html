@@ -1,0 +1,56 @@
+---
+layout: post
+title: 흠... Hibernate Annotation 번들 왜이래 왜 ㅠ.ㅠ
+date: 2008-08-19 03:20:26.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- Fragment
+- hibernate-annotation
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323111548'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>osgi&gt; diag 13<br />initial@reference:file:com.springsource.org.hibernate.annotations-3.3.1.ga.jar/ [13]<br />&nbsp; Constraints from the fragment conflict with the host: Import-Package: org.apache.commons.logging; version="[1.1.1,2.0.0)"<br />&nbsp; Missing Constraint: Fragment-Host: com.springsource.org.hibernate; bundle-version="[3.2.6.ga,3.3.0)"</p>
+<p>osgi&gt; </p>
+<p>흠... 이상하네. host(org.hibernate) 랑 dep 충돌이 난다는데, host도 commons.logging 1.1.1 사용하고, 이 녀석도 1.1.1 참조하는데, 뭐가 충돌이 난다는거얌 ㅠ.ㅠ</p>
+<p>왜그러니.. 내가 널 만들어줄까??</p>

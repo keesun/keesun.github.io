@@ -1,0 +1,62 @@
+---
+layout: post
+title: 12.2.7. Declarative transaction demarcation
+date: 2007-04-25 04:00:29.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- hibernate
+- ORM
+- Spring Reference 12장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322774854'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번엔 선언적인 트랜잭션 경계 설정에 관해 살펴보겠습니다. Spring AOP를 사용하는 방법으로 이전에는 Service Layer에 트랜잭션과 관련된 코드가 들어있었다면 Service Layer이 오직 자신의 본연의 임무에만 충실할 수 있도록 코드가 다음과 같이 바뛰게 됩니다.
+<pre class="programlisting"><div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ProductServiceImpl implements ProductService {<br /><br />    private ProductDao productDao;<br /><br />    public void setProductDao(ProductDao productDao) {<br />        this.productDao = productDao;<br />    }<br /><br />    <i class="lineannotation"><span class="lineannotation">// notice the absence of transaction demarcation code in this method</span></i><br />    <i class="lineannotation"><span class="lineannotation">// Spring's declarative transaction infrastructure will be demarcating transactions on your behalf </span></i><br />    public void increasePriceOfAllProductsInCategory(final String category) {<br />        List productsToChange = this.productDao.loadProductsByCategory(category);<br />        <i class="lineannotation"><span class="lineannotation">// ...</span></i><br />    }<br />}</div></pre>
+<p><a href="http://whiteship.tistory.com/753" target="_blank">이전 글</a>에서의 빨간색 글자 부분이 모두 사라졌으며 TransactionTemplate 변수 역시 필요없게 되었습니다. 이 말은 Spring 관련 API가 코드에서 사라졌다는 것이죠. 다시 또 말하면&nbsp; Spring의 non-invasive 특징을 잘 나타내주고 있습니다.</p>
+<p>Spring 1.2 방식의 AOP를 사용하여 트랜잭션 경계를 설정하는 방법은 다음과 같습니다.
+<pre class="programlisting"><div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;beans&gt;<br /><br />  &lt;bean id="myTxManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"&gt;<br />    &lt;property name="sessionFactory" ref="mySessionFactory"/&gt;<br />  &lt;/bean&gt;<br /><br />  &lt;bean id="myProductService" class="org.springframework.aop.framework.ProxyFactoryBean"&gt;<br />    &lt;property name="proxyInterfaces" value="product.ProductService"/&gt;<br />    &lt;property name="target"&gt;<br />        &lt;bean class="product.DefaultProductService"&gt;<br />            &lt;property name="productDao" ref="myProductDao"/&gt;<br />        &lt;/bean&gt;<br />    &lt;/property&gt;<br />    &lt;property name="interceptorNames"&gt;<br />      &lt;list&gt;<br />        &lt;value&gt;myTxInterceptor&lt;/value&gt; <i class="lineannotation"><span class="lineannotation">&lt;!-- the transaction interceptor (configured elsewhere) --&gt;</span></i><br />      &lt;/list&gt;<br />    &lt;/property&gt;<br />  &lt;/bean&gt;<br /><br />&lt;/beans&gt;</div></pre>
+<p>TransactionInterceptor 와 TransactionTemplate의 차이<br />* 발생 시키는 Exception 유형 :: Interceptor는 throwable 타입, Template은 transactionException 타입(Runtime Exception)<br />* 롤백 설정 단위 :: Interception 는 메소드마다 정책을 다르게 설정해 줄 수 있다. Template은 어플리케이션에서 사용하는 TransactionStatus 객체에 설정하기 땜시 단위가 다름.</p>
+<p>위의 설정 내용을 Spring 2.0 방식으로 다음과 같이 간단하게 바꿀 수 있습니다.
+<pre class="programlisting"><div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />       xmlns:aop="http://www.springframework.org/schema/aop"<br />       xmlns:tx="http://www.springframework.org/schema/tx"<br />       xsi:schemaLocation="<br />       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd<br />       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd<br />       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;<br /><br />  <i class="lineannotation"><span class="lineannotation">&lt;!-- <tt class="interfacename">SessionFactory</tt>, <tt class="interfacename">DataSource</tt>, etc. omitted --&gt;</span></i><br /><br />  &lt;bean id="myTxManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"&gt;<br />    &lt;property name="sessionFactory" ref="mySessionFactory"/&gt;<br />  &lt;/bean&gt;<br />  <br />  &lt;aop:config&gt;<br />    &lt;aop:pointcut id="productServiceMethods" expression="execution(* product.ProductService.*(..))"/&gt;<br />    &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="productServiceMethods"/&gt;<br />  &lt;/aop:config&gt;<br /><br />  &lt;tx:advice id="txAdvice" transaction-manager="myTxManager"&gt;<br />    &lt;tx:attributes&gt;<br />      &lt;tx:method name="increasePrice*" propagation="REQUIRED"/&gt;<br />      &lt;tx:method name="someOtherBusinessMethod" propagation="REQUIRES_NEW"/&gt;<br />      &lt;tx:method name="*" propagation="SUPPORTS" read-only="true"/&gt;<br />    &lt;/tx:attributes&gt;<br />  &lt;/tx:advice&gt;<br /><br />  &lt;bean id="myProductService" class="product.SimpleProductService"&gt;<br />    &lt;property name="productDao" ref="myProductDao"/&gt;<br />  &lt;/bean&gt;<br /><br />&lt;/beans&gt;</div></pre>
+<p></p>

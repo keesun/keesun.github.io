@@ -1,0 +1,13 @@
+<p>Bean Life Cycle 콜백 중에서 InitializingBean과 DisposableBean 인터페이스를 사용하거나 XML 설정에서 bean 태그 속성 중에 init-method와 destroy-method 을 사용하여 특정 메소드를 생성자가 호출 된 후(초기화 이후)나 객체가 소멸되기 전에 실행할 메소드를 지정할 수 있었습니다. </p>
+<p>이것에 대한 또 다른 대안이자 JSR-250 라이프사이클 애노테이션 표준을 따르는 @PostConstruct와 @PreDestroy 애노테이션이 Spring 2.1에 추가되었습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class CachingMovieLister {</p>
+<p>&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">@PostConstruct</span><br />&nbsp; &nbsp; public void populateMovieCache() {<br />&nbsp; &nbsp; &nbsp; &nbsp; // populates the movie cache upon initialization...<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">@PreDestroy</span><br />&nbsp; &nbsp; public void clearMovieCache() {<br />&nbsp; &nbsp; &nbsp; &nbsp; // clears the movie cache upon destruction...<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />}</div>
+<p>사용법은 위 처럼 더욱 간편해 졌습니다.</p>
+<p>정리하다 보니 궁금한 것이 생겼는데 애노테이션에서도 설정하고 XML에서도 설정을 하면 어떻게 될지 입니다.<br />그래서 예제를 만들어 돌려보았습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class SimpleMovieLister {</p>
+<p><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; public void initMethod(){</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("initMetod");</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; }</span><br style="color: rgb(0, 102, 153);" /><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; @PostConstruct</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; public void postConstuct(){</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("postConstruct");</span><br style="color: rgb(0, 102, 153);" /><span style="color: rgb(0, 102, 153);">&nbsp; &nbsp; }</span></p>
+<p>}</p></div>
+<p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; &lt;bean name="lister" class="whiteship.SimpleMovieLister"<br />&nbsp; &nbsp; &nbsp; &nbsp; init-method="initMethod" /&gt;</div>
+<p>init-method 속성도 사용하고 @PostConstruct 애노테이션도 사용하면 다음과 같이 @PostConstruct가 먼저 적용되는 것을 확인할 수 있었습니다.</p>
+<p><img src="/assets/dn311.png" class="aligncenter" width="185" height="85" alt="사용자 삽입 이미지" /></p>

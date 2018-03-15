@@ -1,0 +1,65 @@
+<p>스프링은 리소스 추상화 계층을 제공합니다.<br />- Application Context는 그 녀석을 기본으로 탑재하고 있습니다.<br />- 모든 리소스는 application context가 가지고 있는 org.springframework.core.io.ResourceLoader가 읽어옵니다. 물론 이 녀석을 별도의 bean에 주입하고 직접 코딩을 통해서 리소스를 읽어와도 됩니다.<br />- 리소스의 경로 앞에 classpath: 또는 file: 접두어prefix를 사용하여 가져올 리소스의 경로를 지정할 수 있는데, 사용하는 application context의 구현체에 따라 기본으로 사용하느 접두어가 다릅니다.</p>
+<p>OSGi 4.0.X 스펙에는 리소스를 읽어올 세 종류의 공간space을 정의하고 있습니다.<br />- 스프링 DM은 이 모든 것들을 적잘한 OSGi 맞춤 application context와 적잘한 접두어를 사용하여 지원합니다.</p>
+<table class="MsoTableDarkListAccent3" style="BORDER-COLLAPSE: collapse; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 5.4pt 0cm 5.4pt" cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr style="mso-yfti-irow: -1; mso-yfti-firstrow: yes">
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: black; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 78.8pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 2.25pt solid; mso-border-bottom-themecolor: background1; mso-background-themecolor: text1" valign="top" width="105">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 5"><b><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">접두어<span lang="EN-US"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" ?><o:p></o:p></span></font></font></span></b></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: black; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 75.45pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 2.25pt solid; mso-border-bottom-themecolor: background1; mso-background-themecolor: text1" valign="top" width="101">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 1"><b><font size="2"><font face="맑은 고딕"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1">OSGi </span><span style="COLOR: white; mso-themecolor: background1">리소스 로딩 방법<span lang="EN-US"><o:p></o:p></span></span></font></font></b></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: black; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 307.85pt; PADDING-TOP: 0cm; BORDER-BOTTOM: white 2.25pt solid; mso-border-bottom-themecolor: background1; mso-background-themecolor: text1" valign="top" width="410">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 1"><b><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">설명<span lang="EN-US"><o:p></o:p></span></font></font></span></b></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 0">
+<td style="BORDER-RIGHT: white 2.25pt solid; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-border-right-themecolor: background1; mso-background-themeshade: 191" valign="top">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 68"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">classpath:<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 75.45pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-background-themeshade: 191" valign="top" width="101">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">Class Space<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 307.85pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-background-themeshade: 191" valign="top" width="410">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">번들 클래스로더<b style="mso-bidi-font-weight: normal"><span lang="EN-US">(the bundle, all imported packages and required bundles)</span></b>를 찾는다<span lang="EN-US">. </span>해당 번들들이<span lang="EN-US"> RESOLVED </span>상태가 되도록 강제한다<span lang="EN-US">. </span>이 방법은<span lang="EN-US"> OSGi API Bundle </span>클래스의<span lang="EN-US"> getResource(String)</span>과 유사한 방법이다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 1">
+<td style="BORDER-RIGHT: white 2.25pt solid; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-border-right-themecolor: background1; mso-background-themeshade: 191" valign="top">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 4"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">classpath*:<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #9bbb59; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 75.45pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3" valign="top" width="101">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">Class Space<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #9bbb59; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 307.85pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3" valign="top" width="410">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">번들 클래스로더<b style="mso-bidi-font-weight: normal"><span lang="EN-US">(the bundle and all imported packages and required bundles)</span></b>를 찾는다<span lang="EN-US">. </span>해당 번들들이<span lang="EN-US"> RESOLVED </span>상태가 되도록 강제한다<span lang="EN-US">. </span>이 방법은<span lang="EN-US"> OSGi API Bundle </span>클래스의<span lang="EN-US"> getResource(String)</span>과 유사한 방법이다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 2">
+<td style="BORDER-RIGHT: white 2.25pt solid; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-border-right-themecolor: background1; mso-background-themeshade: 191" valign="top">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 68"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">osgibundlejar:<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 75.45pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-background-themeshade: 191" valign="top" width="101">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">JAR File(or JarSpace)<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 307.85pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-background-themeshade: 191" valign="top" width="410">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 64"><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">번들 <span lang="EN-US">jar</span>만 찾는다<span lang="EN-US">. </span>번들을<span lang="EN-US"> RESOLVED </span>상태로 만들 필요 없이<span lang="EN-US"> low-level </span>접근을 제공한다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+<tr style="mso-yfti-irow: 3; mso-yfti-lastrow: yes">
+<td style="BORDER-RIGHT: white 2.25pt solid; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #76923c; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3; mso-border-right-themecolor: background1; mso-background-themeshade: 191" valign="top">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; mso-yfti-cnfc: 4"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">osgibundle:<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #9bbb59; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 75.45pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3" valign="top" width="101">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">Bundle Space<o:p></o:p></font></font></span></p>
+</td>
+<td style="BORDER-RIGHT: #ece9d8; PADDING-RIGHT: 5.4pt; BORDER-TOP: #ece9d8; PADDING-LEFT: 5.4pt; BACKGROUND: #9bbb59; PADDING-BOTTOM: 0cm; BORDER-LEFT: #ece9d8; WIDTH: 307.85pt; PADDING-TOP: 0cm; BORDER-BOTTOM: #ece9d8; mso-background-themecolor: accent3" valign="top" width="410">
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span style="COLOR: white; mso-themecolor: background1"><font size="2"><font face="맑은 고딕">번들<span lang="EN-US"> jar</span>와 그것에 붙어있는 조각<span lang="EN-US">(fragment)</span>들까지 찾는다<span lang="EN-US">. </span>클래스로더를 생성하거나 번들이<span lang="EN-US"> RESOLVED </span>상태가 되도록 강제하지 않는다<span lang="EN-US">.<o:p></o:p></span></font></font></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>노트<br />만약 접두어를 붙이지 않으면, 기본으로 bundle space(osgibundle:)를 사용합니다.</p>
+<p>노트<br />OSGi의 동적인 특징 때문에, 번들 클래스패스가 생명주기 동안 변경 될 수 있습니다. 이것으로 인해 실행 중이 환경 또는 타겟 플랫폼에 기반해서 패턴 매칭을 할 때 전혀 다른 클래스패스 리소스가 반환될 가능성이 있습니다.</p>
+<p>file: 이나 http: 같은 일반적인 스프링 리소스 접두어들도 물론 지원하며, 리소스 로딩이 되는 대상은 위치에 있더라고 상관없습니다. resource-loading 번들 또는 거기에 붙어있는 fragment에 국한되진 않습니다.</p>
+<p>OSGi 플랫폼들이 번들에 들어있는 내용물을 찾기 위한 자신들 만의 독특한 접두어들을 가지고 있을 수도 있다. 예를들어, Equinox는 bundleresource: 와 bundlentry: 접두어를 가지고 있다. 물론 이렇게 플랫폼이 정의한 프리픽스도 스프링 OSGi(여긴 DM이라고 안 했네.ㅋㅋ)과 함께 사용할 수 있다. (특정, OSGi 구현체에 여러분들이 직접 타이핑하는 수고는 해야하다.)</p>

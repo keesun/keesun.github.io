@@ -1,0 +1,65 @@
+---
+layout: post
+title: Spring DM Extentions
+date: 2008-07-07 14:32:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Appendix B
+tags:
+- "@ServiceReference"
+- OSGi
+- 스프링 DM
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322999990'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이번 Appendix 장에서는 1.0 배포판부터 추가된 핵심 기능을 확장한 기능들을 다루지만, 이 다음 배포판에서도 그대로 확장으로 있을지는 보장하지 못한다. 이 기능들을 핵심 기능 쪽으로 옮기는 것을 생각하고 있기 때문이다.</p>
+<p><span style="font-weight: bold;">B.1. 애노테이션 기반 주입</span></p>
+<p>org.springframework.osgi.extensions.annotation 번들은 OSGi 서비스 레퍼런스를 주입하는 애노테이션을 제공한다. 이 기능을 사용하려면 JDK 1.5 이상을 사용해야 한다.</p>
+<p>Bean 클래스 세터 메소드 위에 org.springframework.osgi.extensions.annotation.ServiceReference 애노테이션을 사용할 수 있다. 기본으로 속성 타입으로 OSGi 서비스 레지스트리에서 매치하는 서비스 인터페이스를 찾아서 주입해준다. 예를 들어,</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;bean id="annotationDriven" class="MyAnnotationDrivenBeanClass"/&gt;</div>
+<p>위의 클래스를 다음과 같이 정의한다면,</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">public class MyAnnotationDrivenBeanClass {</p>
+<p>&nbsp; @ServiceReference<br />&nbsp; public void setMessageService(MessageService aService) { ... }</p>
+<p>}</p></div>
+<p>MessageService 인터페이스를 구현한 서비스를 찾아서 가장 적합한 레퍼런스를 주입해준다.(이 때 적합한 레퍼런스를 찾는 방법은 reference 엘리먼트와 동일함)</p>
+<p>서비스 룩업을 하는 과정에 몇 가지 설정을 할 수 있게 reference 엘리먼트에 상응하는 속성을 가지고 있다. 자세한건 <a href="http://static.springframework.org/osgi/docs/1.1.0-m1/api/org/springframework/osgi/extensions/annotation/ServiceReference.html" target="_blank">javadoc</a>을 참조하라.</p>
+<p></p>

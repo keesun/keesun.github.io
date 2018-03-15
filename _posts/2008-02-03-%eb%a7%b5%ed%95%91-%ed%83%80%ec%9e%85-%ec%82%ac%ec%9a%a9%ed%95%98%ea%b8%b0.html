@@ -1,0 +1,73 @@
+---
+layout: post
+title: 맵핑 타입 사용하기
+date: 2008-02-03 15:17:40.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- 맵핑 특징
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323129346'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<ul>
+<li>type 속성을 명시하지 않아도 된다.</li>
+</ul>
+<ul>
+<li>java.lang.String 타입의 변수는 기본 맵핑으로 string을 사용한다.</li>
+</ul>
+<ul>
+<li>java.util.Date는 timestamp를 사용한다.</li>
+</ul>
+<ul>
+<li>JPA를 사용할 때는 @Temporal을 사용해서 정확도를 명시해 준다.</li>
+</ul>
+<ul>
+<li>기본값은 TemporalType.TIMESTAMP, (가용한 값은, TIEM, DATE)</li>
+</ul>
+<ul>
+<li>하이버네이트 맵핑 타입을 명시적으로 표현하고 싶을 때는 하이버네이트의 @Type 애노테이션 사용.</li>
+</ul>
+<ul>
+<li>커스텀 타입도 만들 수 있다.</li>
+</ul>

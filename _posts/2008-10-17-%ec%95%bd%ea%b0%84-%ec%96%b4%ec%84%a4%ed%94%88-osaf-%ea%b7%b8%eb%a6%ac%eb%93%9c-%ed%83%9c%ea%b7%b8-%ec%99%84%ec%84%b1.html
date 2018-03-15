@@ -1,0 +1,77 @@
+---
+layout: post
+title: 약간 어설픈.. OSAF 그리드 태그 완성
+date: 2008-10-17 06:39:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- OSAF
+- 그리드 태그 파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323018965'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>조금 어설픈 그리드 태그를 완성하고 공개합니다. 사실상 그리드 태그의 핵심 요소는 DisplayTag이고, 회사에서 사용한 OSAF 태그는 상용제품을 사용하고 있어서 공개할 수가 없었습니다. 그리드 구조도 조금 바껴서, 엑셀 기능을 제대로 활용할 수 없었습니다. ㅠ.ㅠ.. 이제 더이상 시간을 끌다가는 언제 공개할 수 있을지 몰라서, 일단 마일스톤 버전 공개를 목표로, 현 상태를 정리하여 공개하겠습니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+&lt;o:gridpage popupheight="400" popupwidth="700" &gt;<br />
+&lt;c:set var="startNumValue" value="${startNum}" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;d:table name="list" class="maingrid" id="maingrid"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column title="No"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;a href="javascript:sendToUpdate(&lt;c:out value="${maingrid.id}" /&gt;)"&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ${startNumValue}<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/a&gt;<br />
+&lt;c:set var="startNumValue" value="${startNumValue + 1}" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/d:column&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="name" title="이름" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="loginId" title="아이디" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="sex" title="성별" decorator="org.opensprout.sample.model.enumeration.SexType" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="location" title="사는곳" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="birthday" title="생일" /&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;d:column property="hobbies" title="취미" /&gt;<br />
+&nbsp; &nbsp; &lt;/d:table&gt;<br />
+&lt;/o:gridpage&gt;</div>
+<p>이런식으로 그리드 태그를 작성하면, 화면에서 다음과 같은 그리드를 만들어 줍니다. 약간 어설플이라고 한 이유는 많은데, 차차 개선해 나가기로 하겠습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/48f832148a692AK.jpg" class="aligncenter" width="600" height="104" alt="" filename="1.jpg" filemime="" /><br />
+왼쪽에 [1/6]은 [첫번째 row 넘버/전체 갯수] 입니다. 따라서 두 번째 페이지에서는 [6/6]으로 보이겠죠.<br />
+중간에 있는 [1|2] 에서 굵은 글씨체가 현제 페이지고 2를 누르면 두 번째 페이지로 이동합니다.<br />
+오른쪽에 있는 건, 한 페이지당 목록의 갯수 입니다.</p>
+<p>파이어폭스/인터넷 익스플로러/구글 크롬 에서 확인해봤을 때 모두 동일하게 보였습니다.</p>

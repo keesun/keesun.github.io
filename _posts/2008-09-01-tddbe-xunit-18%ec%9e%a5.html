@@ -1,0 +1,67 @@
+---
+layout: post
+title: TDDBE - xUnit 18장.
+date: 2008-09-01 07:00:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- xUnit
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322849224'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>파이썬으로 되어있는 예제라서, TDD(테스트 주도 개발) 책을 읽으면서 그냥 넘어갔던 부분인데.. 도무지 그냥 넘어갈 만한 부분이 아닌거 같아서 자바로 코딩해보기로 했습니다. 파이썬으로 코딩해도 되겠지만, 저는 자바로.. 그래서 18장을 우선 코딩해봤습니다.</p>
+<p>캬~ 재밌네요.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class TestCaseTest extends TestCase {</p>
+<p>&nbsp; &nbsp; public TestCaseTest(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void testRunning(){<br />&nbsp; &nbsp; &nbsp; &nbsp; WasRun test = new WasRun("testMethod");<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.wasRun == false;<br />&nbsp; &nbsp; &nbsp; &nbsp; test.run();<br />&nbsp; &nbsp; &nbsp; &nbsp; assert test.wasRun == true;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; new TestCaseTest("testRunning").run();<br />&nbsp; &nbsp; }<br />}</div>
+<p>위에 있는 TestCase는 JUnit에 있는게 아닙니다. 직접 구현한 클래스입니다. 구현체는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class TestCase {<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; String methodName;</p>
+<p>&nbsp; &nbsp; public TestCase(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.methodName = methodName;<br />&nbsp; &nbsp; }<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public void run() {<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Method method = this.getClass().getMethod(methodName, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; method.invoke(this, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; } catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new RuntimeException(e);<br />&nbsp; &nbsp; &nbsp; &nbsp; } <br />&nbsp; &nbsp; }<br />}</div>
+<p>이것을 상속받은 WasRun은 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">public class WasRun extends TestCase {</p>
+<p>&nbsp; &nbsp; boolean wasRun;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; public WasRun(String methodName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; super(methodName);<br />&nbsp; &nbsp; &nbsp; &nbsp; wasRun = false;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testMethod() {<br />&nbsp; &nbsp; &nbsp; &nbsp; wasRun = true;<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>TestCase와 WasRun은 원래 하나의 클래스였는데, 책임이 두 개가 되자(하나는 실행됐는지 여부를 확인하는 플래스, 하나는 동적으로 메소드를 실행하는 역할) 그 즉시 리팩터링을 합니다. 상위 클래스를 만들고 그 쪽으로 Pull Up Field, Pull Up Method를 합니다.</p>
+<p>코드도.. 정말 딱 테스트가 통과할 만큼만 만들고, 테스트 성공 시킨 다음에는 상수를 변수로 바꾸는 리팩터링 부터 시작해서, 위에서 언급한 리팩터링까지.. 쫘르륵...</p>
+<p>캬.. 역시 그냥 읽는 것 보다 한 번 해보는거랑은 차이가 큽니다.</p>

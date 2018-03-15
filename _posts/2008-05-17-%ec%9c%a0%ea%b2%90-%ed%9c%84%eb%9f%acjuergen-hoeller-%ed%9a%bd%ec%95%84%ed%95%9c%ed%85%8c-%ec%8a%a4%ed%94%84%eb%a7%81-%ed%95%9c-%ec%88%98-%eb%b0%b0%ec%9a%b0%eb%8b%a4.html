@@ -1,0 +1,181 @@
+---
+layout: post
+title: 유겐 휄러(Juergen Hoeller) 횽아한테 스프링 한 수 배우다.
+date: 2008-05-17 00:08:52.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 그냥 놀아
+tags:
+- 스프링 이슈 놀이
+- 유겐 휄러
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323119463'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">updated 2008-05-17 유겐의 마무리 멘트와 3.0에 추가될 기능 언급 추가. 캬캬캬 끝까지 친절한 유겐 횽.</span></p>
+<p>스프링 지라에 올린 이슈(개선 사항으로..)</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">We are using GenericController with Spring 2.5 @Controller APIs. And we are using @SessionAttribute like this.<br />
+<br />
+@SessionAttributes(value="model")<br />
+<br />
+This session attribute name "model" are used by many diffent controllers and many JSPs.</p>
+<p>The problem is that diffent session attribute stored with same name(here is "model").<br />
+<br />
+ex, When open pop-up page from parent page, the pop-up page's session<br />
+attribute will override the parent page's session attribute with same<br />
+name "model". So, after close the pop-up and if we click save button on<br />
+parent page, we can meet ClassCastException. ^^;;</p>
+<p>We resolve this by modify org.springframework.web.bind.annotation.support.HandlerMethodInvoker class</p>
+<p>updateModelAttributes method's</p>
+<p>from<br />
+<br />
+this.sessionAttributeStore.storeAttribute(webRequest, attrName, attrValue);</p>
+<p>to<br />
+<br />
+this.sessionAttributeStore.storeAttribute(webRequest, attrValue.getClass().getSimpleName() + attrName, attrValue);</p>
+<p>and resolveModelAttribute method's</p>
+<p>from<br />
+<br />
+Object sessionAttr = this.sessionAttributeStore.retrieveAttribute(webRequest, attrName);</p>
+<p>to<br />
+<br />
+Object sessionAttr = this.sessionAttributeStore.retrieveAttribute(webRequest, paramType.getSimpleName() + attrName);</p>
+<p>This modification don't need any change or modification existing<br />
+Controllers and JSPs. They now use there own session with same name.</p>
+<p>How about apply this modification?<br />
+<br />
+And could you remove final keywords from HandlerMethodInvoker to extend that class?  </p>
+<p>Now we just copy and paste original source and modify this above<br />
+code, and AnnotationMethodHandlerAdapter too.<br />
+AnnotationMethodHandlerAdapter class using inner class thar extends<br />
+HandlerMethodInvoker(ServletHandlerMethodInvoker). So we change the<br />
+HandlerMethodInvoker import statement in AnnotationMethodHandlerAdapter<br />
+to our modified version. kk.. Please think about it.</p></div>
+<p>유겐 횽아 1차 답변 및 대안</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">We actually <font size="2"><font size="2"><span style="font-weight: bold; color: rgb(0, 153, 102);">envisioned</span></font> </font>such use cases and designed the<br />
+<font size="3"><span style="color: rgb(255, 0, 0); font-weight: bold;">SessionAttributeStore</span></font> strategy accordingly... You should be able to<br />
+implement your custom attribute prefix strategy through decorating the<br />
+SessionAttributeStore, configuring your custom decorator through the<br />
+"sessionAttributeStore" property on AnnotationMethodHandlerAdapter.</p>
+<p>Juergen</p></div>
+<p>2차 질문</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">I saw SessionAttributeStore class but in this case that class cann't help us.</p>
+<p>Bacause, the session attribute's (internal) name sould be change<br />
+according to the command object's class's name(or each controllers).<br />
+<br />Yes, we could do this by add @SessionAttribute(name="foobar") on<br />
+every controllers. but, we made and use custom tags that expects only<br />
+one session attribute name "model". So we set<br />
+@SessionAttribute(name="model") this on GenericController and we don't<br />
+set any @SessinoAttribute on sub-clsss of GenericController.(If you<br />
+want to see this class code, I can show you.)</p>
+<p>With SessionAttributeStrore extending, we can only set a static<br />
+prefix(this is not what i want.). Even if we can modify storing name by<br />
+overriding storeAttribute(WebRequest request, String attributeName,<br />
+Object attributeValue) method with<br />
+attribute.getClass().getSimpleName()(ex. "Foomodel"), but how can we<br />
+pick up that session object by that name(ex. "Foomodel") by overring<br />
+retrieveAttribute(WebRequest request, String attributeName) method. We<br />
+can't. There is not enough information about runtime command object<br />
+type or name.</p>
+<p>We want to use only one static session attribute name (not prefix)<br />
+that can be stored and can be retrived according to there runtime<br />
+object type.(ex. FooController(extends GenericController) reference Foo<br />
+command object in session by "model"(internally "Foomodel"). And<br />
+BarController(extends GenericController) also can reference Bar command<br />
+object in session by "model"(internally "Barmodel".)</p>
+<p>So we just do that in here(above modified HandlerMethodInvoker class).<br />
+<br />
+At least we want to extend HandlerMethodInvoker class and set to AnnotationMethodHandlerAdapter. </p>
+<p>Is there another way to do this?</p></div>
+<p>유겐 횽아 2차 답변 및 질문 그리고 대안</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">Good point - you can't include the param type name in the session attribute name that way.</p>
+<p>However, I would argue that including the param type is a half-baked<br />
+solution to begin with: That way you'll isolate per param type, which<br />
+will work when different windows operate on model attributes of<br />
+different type. <span style="font-weight: bold;">However, what if multiple windows operate on the same<br />
+type of attribute? What if the same controller gets opened multiple<br />
+times, e.g. to concurrently edit business accounts of different<br />
+customers in multiple windows?<br />
+</span></p>
+<p><span style="font-weight: bold; color: rgb(255, 0, 0);">The idea behing the SessionAttributeStore strategy is that it may<br />
+use a custom conversation mechanism:</span> either storing attributes in a<br />
+managed conversation object instead of in the plain session, or<br />
+prefixing attribute names with a conversation identifier and still<br />
+storing them in the session directly. <span style="font-weight: bold; color: rgb(0, 128, 0);">The latter is what I would<br />
+recommend for your purposes</span>: Determine a conversation identifier for<br />
+each request (from the given WebRequest object, e.g. from the URL or<br />
+from a parameter) and use it as a prefix for each attribute name. This<br />
+will work for storage as well as for retrieval, and will even work for<br />
+multiple windows that operate on the same type of attribute.</p>
+<p>Juergen</div>
+<p>감사의 말</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">Thanks. I missed that situation (multiple windows on same type) and misunderstanded SessionAttributeStore.<br />
+<br />
+I'll try to use SessionAttributeStore. I really appreciate your recommendation. ^^</div>
+<p>문제 해결 알려주기.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);"><span style="font-weight: bold;">Good!! We resolve this issue with you advice.</span></p>
+<p>We made an interceptor that can capture URI, and made a custom<br />
+SesstionAttributeStore that make session attribute session attribute<br />
+using captured URI by WebRequest. Finally we configure it to<br />
+AnnotationMethodHandlerAdapter
+<div id="1eof" class="ArwC7c ckChnd">
+<br />
+We are so impressed to Spring Framework's extensibility and your kind advice. Thanks a lot : )</div>
+</div>
+<p>유겐 횽아 마무리 멘트</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">
+Juergen Hoeller resolved SPR-4818.<br />
+------------------------------
+<div id="1fba" class="ArwC7c ckChnd"><wbr>----</p>
+<p> &nbsp; &nbsp; &nbsp; Resolution: Won't Fix<br />
+ &nbsp; &nbsp;Fix Version/s: &nbsp; &nbsp; (was: 2.5.5)</p>
+<p>OK, good to hear that it works for you! I'm closing this issue then,<br />
+since the existing SessionAttributeStore strategy seems to be capable<br />
+of handling this use case.</p>
+<p>In Spring 3.0, we intend to provide general conversation support out of<br />
+the box, also isolating concurrently active browser windows per<br />
+conversation. This will essentially be a more extensive variant of what<br />
+you're achieving through your custom SessionAttributeStore - then to be<br />
+available out of the box in the context of general conversation<br />
+management.</p>
+<p>Juergen</wbr></div>
+</div>
+<p>ps : 유겐 횽아 최고!!<br />참조: <a href="http://jira.springframework.org/browse/SPR-4818" target="_blank">http://jira.springframework.org/browse/SPR-4818</a></p>

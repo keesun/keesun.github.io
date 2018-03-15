@@ -1,0 +1,81 @@
+---
+layout: post
+title: Factory Method vs Constructor
+date: 2007-05-18 05:43:10.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- static factory 메소드
+- 생성자
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323191149'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : Effective Java Chapter 2 Item 1</p>
+<p>여러개의 생성자 대신 Static Factory 메소드를 제공하면 다음과 같은 장점이 있습니다.</p>
+<h3 id="FactoryMethodvsConstructor-%EC%9E%A5%EC%A0%90%3A%EC%9D%B4%EB%A6%84%EC%9D%84%EA%B0%80%EC%A7%80%EA%B3%A0%EC%9E%88%EB%8B%A4.">장점: 이름을 가지고 있다.</h3>
+<p>Java API 중 BigInteger의 생성자 중에 BigInteger(int bitLength, int certainty, Random rnd) 이런 녀석이 있습니다.<br />
+과연 이 생성자가 무슨 일을 하는지 예측할 수 있나요? 없죠. <br />
+그럼 이 생성자와 동일한 역할을 하면서 Java 1.4에 추가된 Static Factory 메소드인 static<br />
+BigInteger probablePrime(int bitLength, Random rnd) 이 메소드는 어떤가요? 이번엔 무슨<br />
+일을 하는지 알 수 있지 않나요? 소수를 반환합니다.</p>
+<p>이렇게 Java는 생성자의 이름이 클레스 이름과 동일해야 한다는 규칙 때문에 명확히 무슨 일을 하는 생성자인지 표현하지 못합니다.<br />
+이런 단점을 보완할 때 Static Factory 메소드를 사용할 수 있겠습니다.</p>
+<h3 id="FactoryMethodvsConstructor-%EC%9E%A5%EC%A0%90%3A%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80%EB%8A%94%EB%8B%AC%EB%A6%AC%EB%A7%A4%EB%B2%88%EC%83%88%EB%A1%9C%EC%9A%B4%EA%B0%9D%EC%B2%B4%EB%A5%BC%EC%83%9D%EC%84%B1%ED%95%98%EC%A7%80%EC%95%8A%EC%95%84%EB%8F%84%EB%90%A9%EB%8B%88%EB%8B%A4.">장점: 생성자와는 달리 매번 새로운 객체를 생성하지 않아도 됩니다.</h3>
+<p>생성자를 사용하면 매번 새로운 객체를 반환받게 됩니다.<br />
+만약 같은 객체를 자주 여러 곳에서 사용해야 한다면 미리 만들어 둔 객체를 factory에서 반환 해주기만 하면 되겠죠.</p>
+<div class="code">
+<div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> StaticFactoryExam {<br />   <br />    <span class="code-keyword">private</span> StaticFactoryExam exam = <span class="code-keyword">new</span> StaticFactroyExam();<br /><br />    <span class="code-keyword">public</span> <span class="code-keyword">static</span> StaticFactoryExam getExam(){<br />        <span class="code-keyword">return</span> exam;<br />    }<br /><br />}</pre>
+</div>
+</div>
+<p>매우 간단하게 구현하다면 위와 같은 모습을 같은 객체를 계속 반환 할 수 있습니다.<br />
+매번 객체를 생성하지 않아도 되기 때문에 성능향상의 장점이 생깁니다.</p>
+<p>Immutable 클레스와 싱글톤 객체를 다룰 때 자주 사용합니다.</p>
+<h3 id="FactoryMethodvsConstructor-%EC%9E%A5%EC%A0%90%3A%EC%83%9D%EC%84%B1%EC%9E%90%EC%99%80%EB%8A%94%EB%8B%AC%EB%A6%AC%EB%A6%AC%ED%84%B4%ED%83%80%EC%9E%85%EC%9D%B4%EC%9E%90%EC%9C%A0%EB%A1%AD%EC%8A%B5%EB%8B%88%EB%8B%A4.">장점: 생성자와는 달리 리턴 타입이 자유롭습니다.</h3>
+<p>생성자는 무조건 자신의 타입의 객체를 반환하지만 메소드에는 그러한 제한이 없습니다. 따라서 해당 클레스의 하위 타입을 반환해도 됩니다.<br />
+이런 특징을 잘 살리면 훨씬 유연한 API를 만들 수 있습니다.<br />
+Collections의 팩토리 메소드들을 생각해 보시면 될 것 같습니다.</p>
+<h3 id="FactoryMethodvsConstructor-%EB%8B%A8%EC%A0%90%3A%EB%8B%A4%EB%A5%B8%EC%A0%95%EC%A0%81%ED%8C%A9%ED%86%A0%EB%A6%AC%EB%A9%94%EC%86%8C%EB%93%9C%EC%99%80%EA%B5%AC%EB%B6%84%EC%9D%B4%EC%95%88%EB%90%A9%EB%8B%88%EB%8B%A4.">단점: 다른 정적 팩토리 메소드와 구분이 안 됩니다.</h3>
+<p>생성자 처럼 API에서 눈에 띄는 위치에 있는 것도 아니기 때문에 다른 메소드들과 구분하는게 쉽지 않습니다.<br />
+이 문제는 컨벤션을 잘 적용하면 어느정도 해결할 수 있습니다.<br />
+예) getInstance(), valueOf()</p>

@@ -1,0 +1,15 @@
+<p>출처 : <a href="http://www.w3schools.com/js/js_animation.asp" target="_blank">http://www.w3schools.com/js/js_animation.asp</a></p>
+<p><span style="font-weight: bold;">자바스크립트 애니메이션</span></p>
+<p>자바스크립트를 사용하여 동적인 이미지를 만드는 것이 가능합니다.</p>
+<p>그 트릭은 바로 서로 다른 이벤트 마다 다른 이미지로 변경하는 것입니다.</p>
+<p>다음의 예제에서 우리는 웹 페이지의 링크 버튼으로 보이는 이미지를 추가할 것입니다. 그런 다음 onMounseOver 이벤트와 onMouseOut 이벤트를 사용하여 자바스크립트 함수를 호출하고 그 곳에서 이미지를 변경할 것입니다.</p>
+<p><span style="font-weight: bold;">HTML 코드</span></p>
+<p>HTML 코드는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;a href="http://www.w3schools.com" target="_blank"&gt;<br />&lt;img border="0" alt="Visit W3Schools!"<br />src="b_pink.gif" name="b1"<br />onmouseOver="mouseOver()"<br />onmouseOut="mouseOut()" /&gt;<br />&lt;/a&gt;</div>
+<p>나중에 자바스크립트에서 참조할 수 있도록 이미지가 name 속성을 가지고 있는 것에 주목하기 바랍니다.</p>
+<p>onMouseOver 이벤트는 브라우저에서 마우스가 이지미 위로 올라왔슴을 알려주고 브라우저가 이미지를 다른것도 바꾸는 함수를 호출하도록 합니다.</p>
+<p>onMouseOut 이벤트는 브라우에서 마우스가 이미지 밖으로 나갔음을 알려주고, 다른 자바스크립트 함수를 실행합니다. 이 함수는 다시 원래의 이미지로 설정합니다.</p>
+<p><span style="font-weight: bold;">자바스크립트 코드</span></p>
+<p>이미지를 변경하는 자바스크립트 코드는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;script type="text/javascript"&gt;<br />function mouseOver()<br />{<br />document.b1.src ="b_blue.gif"<br />}<br />function mouseOut()<br />{<br />document.b1.src ="b_pink.gif"<br />}<br />&lt;/script&gt;</div>
+<p>mouseOver() 함수는 이미지를 "b_blue.gif"로 바꿉니다.<br />mouseOut() 함수는 이미지를 "b_pink.gif"로 바꿉니다.</p>

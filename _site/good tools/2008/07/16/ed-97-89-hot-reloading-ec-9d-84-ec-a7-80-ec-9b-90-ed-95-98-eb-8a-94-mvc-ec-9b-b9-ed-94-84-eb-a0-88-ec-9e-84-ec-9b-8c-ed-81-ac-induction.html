@@ -1,0 +1,5 @@
+<p>참조 : <a href="http://www.theserverside.com/news/thread.tss?thread_id=50068" target="_blank">http://www.theserverside.com/news/thread.tss?thread_id=50068</a></p>
+<p>대단들 하죠. 정말 멋져부러요. 모델, 뷰, 컨트롤러간에 타입으로 DI를 해주고, 확장가능한 형태라는데 일단 코딩해보기 전까진 모르겠지만, JSP 페이지가 아닌 애플리케이션 코드를 동적으로 릴로딩 해준다는거.. 그것도 웹로직같은 WAS 단에서 하는게 아니라 MVC 프레임워크가 해준다니....</p>
+<p><a href="http://www.inductionframework.org/getting-started-tutorial.html" target="_blank">시작하기 문서</a>를 살펴본 결과, 스프링처럼 DispatcherServlet을 하나 등록해서 쓰면 되고, URL 맵핑은 풀패키지 명이 붙은 클래스 이름을 사용하고 있습니다. URL 맵퍼를 확장할 수 있는 방법은 해당 문서에 보이질 않는데, 아마도 있겠죠. 독특한건 핫 리로딩 하기 위해서 클래스 파일들의 위치를 지정해준다는 겁니다. 흠.. 저 부분만 스프링 MVC로 가져다 쓰고 싶은데 어떻게 안 될런지 몰겠네요.</p>
+<p>좋아 좋아. 오픈 소스니까 소스코드를 좀 보면서 어떻게 만든건지 구경이라도 해야겠습니다.</p>
+<p>ps : 아무리 프레임워크 단에서 핫 릴로딩이 되더라도, 서버쪽에서 요청을 잠시 잡아서 대기 시켜주지 않으면 불상사는 발생하기 마련이겠죠?? 아님 혹시 프레임워크 단에서 그런 일도 해줄까나~ 멋지겠는데~ Dispatcher가 잡아서 잠시 들고 있으면 될라나..ㅋㅋ</p>

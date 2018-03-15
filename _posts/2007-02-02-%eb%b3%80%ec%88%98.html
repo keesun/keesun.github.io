@@ -1,0 +1,62 @@
+---
+layout: post
+title: 변수
+date: 2007-02-02 12:28:12.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Study
+tags:
+- Python
+- 변수
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323008837'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>전부 객체인가 봅니다. 놀라운 건.. 전부 Java에서 "문자열" 이런 식으로 문자열을 지정할 때 와 똑같이 동작한다는 겁니다.</p>
+<p>String name = "keesun";<br />name2 = "keesun";</p>
+<p>이렇게 했을 때 name과 name2가 같은 객체를 가리키듯이 python에서도 그렇네요. 단 문자열만 그런게 아니라 전부 다 그런가 봅니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = "abc"<br />&gt;&gt;&gt; b = "abc"<br />&gt;&gt;&gt; a is b<br />True<br />&gt;&gt;&gt; a = 3<br />&gt;&gt;&gt; b = 3<br />&gt;&gt;&gt; a is b<br />True<br />&gt;&gt;&gt; b = 2<br />&gt;&gt;&gt; a<br />3&gt;&gt;&gt; b<br />&gt;&gt;&gt; b<br />2</div>
+<p>오호 신기한 거 발견!! 두 변수에 들어있는 값 바꾸는 것이 매우 편하네요.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&gt;&gt;&gt; a = 1<br />&gt;&gt;&gt; b = 2<br />&gt;&gt;&gt; a, b = b, a<br />&gt;&gt;&gt; a<br />2<br />&gt;&gt;&gt; b<br />1</div>
+<p><span style="color: rgb(255, 0, 0);">변수명의 첫글자는 반드시 영문자 or 언더바(_) 여야 하고 숫자, 영문자, 언더바만 사용할 수 있습니다.</span></p>
+<p>예약어는 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">and &nbsp; &nbsp; assert &nbsp; &nbsp; break &nbsp; &nbsp;	class &nbsp; &nbsp;	continue<br />def&nbsp; &nbsp; &nbsp;	del&nbsp; &nbsp; &nbsp;	elif &nbsp; &nbsp;	else &nbsp; &nbsp;	except<br />exec &nbsp; &nbsp;	finally &nbsp; &nbsp;	for &nbsp; &nbsp;	from &nbsp; &nbsp;	global<br />if &nbsp; &nbsp; 	import	 &nbsp;&nbsp; in &nbsp; &nbsp;	is &nbsp; &nbsp;	lambda<br />not &nbsp; &nbsp;	or &nbsp; &nbsp;	pass &nbsp; &nbsp;	print	 &nbsp;&nbsp; raise<br />return &nbsp; &nbsp;	try	 &nbsp;&nbsp; while</div>
+<p>객체를 가리키는 변수들이 없으면 메모리에서 제거 된다고 합니다. 흠.. 바로 사라지나??</p>

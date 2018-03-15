@@ -1,0 +1,244 @@
+---
+layout: post
+title: "[회사일] 그리드 정렬 기능 구현하기"
+date: 2010-06-03 02:47:54.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SLT
+tags:
+- 정렬 구현
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322810191'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이제 실제 회사일과 싱크 맞는다. 휴.. 이전까지 싱크 맞출려고 급하게 달렸더니 정신 없다.ㅋ
+<div>
+
+</div>
+<div id="">
+그리드를 누르면 JqGrid가 알아서 매개변수에 정렬할 필드 명과 정렬 방향을 넘겨준다. 그럼 컨트롤러에서 잘 받는지 확인부터 해볼까.</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp;@RequestMapping</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public void list(Model model, CodeSearchParam searchParam, PageParam pageParam) {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("sidx: " + pageParam.getSidx());</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("sord: " + pageParam.getSord());</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("codeList", codeService.list(pageParam, searchParam));</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="">
+</div>
+<div id="">
+
+</div>
+<div id="">
+잠깐 저렇게 추가해서 콘솔에 찍고나서 다시 지운다. 이럴때는 JRebel이 빛을 발한다. 짱이다. 서버 껐다켜지 않아도 이정도는 간단하게 잘 처리해준다.</div>
+<div id="">
+
+</div>
+<div id="">
+서비스 코드 고칠것 없다. 이미 PageParam에 들어있으니.. 그냥 타고 갈것다.</div>
+<div id="">
+DAO 인터페이스도 고칠것 없다. DAO 구현체의 list만 고치면 될 것 같다.</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp;public List&lt;Code&gt; list(PageParam pageParam, CodeSearchParam searchParam) {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Criteria c = getCriteriaOf(Code.class);</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;//searching</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;applySearchParam(c, searchParam);</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;//paging</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;c.setFirstResult(pageParam.getFirstRowNumber());</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;c.setMaxResults(pageParam.getRows());</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;//ordering</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(pageParam.getSord().equals("asc"))</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.addOrder(Order.asc(pageParam.getSidx()));</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;else</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c.addOrder(Order.desc(pageParam.getSidx()));</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return c.list();</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+</div>
+</div>
+<div id="">
+
+</div>
+<div id="">
+고쳤다. 이전에 만들었던 테스트를 돌렸다. 혹시 이 코드를 수정하면서 이전에 되던게 안될까바 걱정되서 돌려봤다. 이런 테스트를&nbsp;<a href="http://en.wikipedia.org/wiki/Regression_testing" target="_blank" title="[http://en.wikipedia.org/wiki/Regression_testing]로 이동합니다.">리그레션 테스트</a> 또는 회기 테스트라는 어려운 말을 쓰기도 하는데 뭐.. 많이 아는척하는 사람들과의 대화에서 밀리지 않으려면 알아두는게 좋겠다.</div>
+</div>
+<div id="">
+
+</div>
+<div id="">
+자 그럼 이제 다시 지금 추가한 코드에 대한 테스트를 만들어보자.</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp;@Test</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public void testListOrdering() throws Exception {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;insertXmlData("testData2.xml");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;CodeSearchParam codeSearchParam = new CodeSearchParam();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;PageParam pageParam = new PageParam();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setRows(5);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setPage(1);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setSidx("id"); &nbsp;// id 필드 기준으로</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setSord("asc"); // 내림차순</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;List&lt;Code&gt; codeList = codeDao.list(pageParam, codeSearchParam);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String result = "";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(Code code : codeList){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;result += code.getId();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(result, is("12345"));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setSidx("id"); &nbsp;// id 필드 기준으로</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;pageParam.setSord("desc"); // 내림차순</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeList = codeDao.list(pageParam, codeSearchParam);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;result = "";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;for(Code code : codeList){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;result += code.getId();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(result, is("76543"));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+오퀘 잘 돈다. 캬캬 사실 맨 마지막 줄은 예상을 잘못해서 "54321"로 적었었는데.. 테스트 코드가 니보다 똑똑했다. @_@;;; 아... 이런!..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+테스트보다 멍청한.. 개발자.. 이게 나다. ㅠ.ㅠ</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+흠.. 슬슬 그리드 쪽이 정리가 되가니깐 추가/수정 기능쪽으로 넘어갈까 말까..&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+아니면 기본 정렬 기능을 넣을까..고민 된다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+사실 대표님은 가끔 "일단 CodeCate로 정렬하고 그 다음에 코드값으로 정렬해줘" 이렇게 다중 정렬을 요구한적이 있었다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+밥먹으면서 생각해봐야지.. 그전까진 잠깐 놀까나..</div>
+</div>

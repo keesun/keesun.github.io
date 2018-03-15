@@ -1,0 +1,62 @@
+---
+layout: post
+title: 9. Tag만들기
+date: 2007-02-12 07:34:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- Tag 만들기
+- TagFile
+- TDD
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323167094'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.tistory.com/457" target="_blank">CustomTag를 공부</a> 하다가 느낀 점은.. 'servlet으로 html 코드 뿌리는 것 같다.', '복잡하네..언제는 뭐 상속 받고 언제는 뭐 상속 받고...어떤거 구현해줘야 하고 뭐를 리턴 해줘야 하고,,,,'</p>
+<p>그런데 TagFile을 사용하면 매우 단순하게 태그를 만들 수 있었습니다.</p>
+<p>1. Tag로 만들 부분 물색.<br />2. Tag를 만들었다는 가정하에 Tag를 사용해서 변경.<br />3. Tag 파일 작성.<br />4. 확인.</p>
+<p><span style="color: rgb(255, 118, 53);">2번 다음에 확인하고 5. 수정하고 싶은 부분 수정하고 다시 확인 요거만 추가 하면 TDD랑 많이 닮은 것 같네요.</span></p>
+<p>1. Tag로 만들 부분 물색.<br /><img src="{{ site.baseurl }}/assets/bm287.jpg" class="aligncenter" width="409" height="216" alt="사용자 삽입 이미지" />2. 먼저 위에 있는 빨간색 부분을 다음과 같이 Tag가 있다고 생각하고 바꿔줍니다.<br /><img src="{{ site.baseurl }}/assets/bm288.jpg" class="aligncenter" width="405" height="168" alt="사용자 삽입 이미지" />3. 그리고 WEB-INF/tags/os 안에 새로운 태그를 정의해 줍니다. page라는 태그명을 사용했기 때문에 page.tag라는 파일을 작성합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="color: rgb(255, 0, 0);">&lt;%@ attribute name="title" required="true" %&gt;</span><br />&lt;html&gt;<br />&nbsp; &nbsp; &lt;head&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;title&gt;<span style="color: rgb(255, 0, 0);">${title}</span>&lt;/title&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;link rel="stylesheet" type="text/css" href="/css/style.css" /&gt;<br />&nbsp; &nbsp; &lt;/head&gt;<br />&nbsp; &nbsp; &lt;body&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">&lt;jsp:doBody /&gt;</span><br />&nbsp; &nbsp; &lt;/body&gt;<br />&lt;/html&gt;</div>
+<p>JSP 페이지 지시자를 사용해서 태그의 속성을 나타내고 EL태그로 원하는 위치에 사용하면 됩니다. 몸체가 있는 태그라면 하늘색 부분 처럼 몸체가 들어갈 부분에 &lt;jsp:doBody /&gt; 태그를 사용해 주면 됩니다. 이밖에도.. JSTL의 &lt;c:set /&gt; &lt;c:if /&gt; 이런 태그들을 이용해서 속성값에 기본 값을 setting하고 조건에 따라 값을 바꿀 수 있습니다.</p>
+<p>4. 확인하기.<br /><img src="{{ site.baseurl }}/assets/bm289.jpg" class="aligncenter" width="500" height="131" alt="사용자 삽입 이미지" />이런 에러가 납니다. title이 필수 속성이라고 했는데 왜 안넣어줬느냐!! 라는 것인데.. 전 넣는다고 넣어는데?? 라고 생각하고 소스를 다시 보니.. titile 라고 오타를 쳤네요. ㅠ.ㅠ</p>
+<p><img src="{{ site.baseurl }}/assets/bm290.jpg" class="aligncenter" width="185" height="23" alt="사용자 삽입 이미지" />OK! 수정하고 새로고침을 해보니깐 제대로 나왔습니다.</p>

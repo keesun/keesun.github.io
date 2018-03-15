@@ -1,0 +1,70 @@
+---
+layout: post
+title: Value Type의 Set, Bag, List, Map
+date: 2008-02-07 13:14:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- 콜렉션 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322798695'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<ul>
+<li>Entity가 Value Type 객체 하나를 가지고 있을 때는 Entity를 저장한 테이블의 레코드에 같이 저장된다.</li>
+</ul>
+<ul>
+<li>Value Type의 콜렉션과 연관을 맺고 있을 때는 별도의 테이블이 필요하다.</li>
+</ul>
+<ul>
+<li>콜렉션 인터페이스 선택하기</li>
+</ul>
+<ul>
+<li>Sorted: 자바 메모리 상에서 정렬이 되는 것. Ordered: 데이터베이스 레벨에서 order by 절을 사용해서 정렬한다.</li>
+</ul>
+<ul>
+<li>Bag, List는 Sorting을 설정할 수 없다. 인덱스가 있으니까... 대신 Order는 할 수 있다.</li>
+</ul>
+<ul>
+<li>Set이나 Map을 Soring이 아닌 Order를 사용하고 싶을 때는 order-by 속성을 사용한다.(XML 설정)</li>
+</ul>

@@ -1,0 +1,61 @@
+---
+layout: post
+title: Bean Life Cycle 콜백 인터페이스 사용 예(in Spring)
+date: 2007-05-11 02:54:19.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322963987'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>BeanNameAware<br />- ServletForwardingController<br />- AbstractView<br />- PortletWrappingController<br />- GenericFilterBean<br />- JobDetailBean<br />- OsgiServiceProxyFactoryBean<br />- AbstractTest<br />- EhCacheFactoryBean<br />- FieldRetrievingFactoryBean</p>
+<p>BeanClassLoaderAware<br />- 구현 방법 : this.beanClassLoader = (beanClassLoader != null ? beanClassLoader : ClassUtils.getDefaultClassLoader());<br />- AbstractBeanFactory<br />- AbstractBeanDefinitionReader ::<br />- ConfigurableBeanFactory 인터페이스 ::<br />- AbstractHttpInvokerRequestExecutor<br />- HttpInvokerTests</p>
+<p>BeanFactoryAware<br />- MethodLocatingFactoryBean<br />- ProxyFactoryBean<br />= AbstractAdvisorAutoProxyCreator<br />- AbstractBeanFactoryBasedTargetSourceCreator<br />- ScopedProxyFactoryBean<br />- AbstractBeanFactoryBasedTargetSource<br />- AutowiredAnnotationBeanPostProcessor<br />- ObjectFactoryCreatingFactoryBean<br />- ServiceLocatorFactoryBean<br />- DependencyInjectionAspectSupport<br />- 엄청난 분량</p>
+<p>BeanPostProcessor :: before :: after<br />- BundleContextAwareProcessor :: 해당 bean이 bundleaware 일 때 BundleContext 세팅, 로깅, 없으면 예외처리 :: ::<br />- CommonsLogProviderBeanPostProcessor :: 리플렉션 사용해서 로깅 :: ::<br />- ServletContextAwareProcessor :: ServletContext랑 SevletConfig 세팅 :: ::<br />- PortletContextAwareProcessor<br />- AbstractAutoProxyCreator ::&nbsp; :: 프록시 만들 때 사용 </p>
+<p>InitializingBean<br />- MustBeInitialized<br />- ServiceCreationFactoryBean<br />- CommonsLogFactoryBean :: 로깅<br />- FieldRetrievingFactoryBean :: 없으면 확인하고<br />- MethodInvokingFactoryBean ::<br />public void afterPropertiesSet() throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;prepare();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (this.singleton) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.initialized = true;<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.singletonObject = doInvoke();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp;&nbsp; &nbsp;}<br />- PropertiesFactoryBean :: 싱글톤인지..<br />- ResourceFactoryBean :: resource 가 널이면 예외 발생<br />- 그 외에도 많아요.</p>
+<p>ResourceLoaderAware<br />- ReloadableResourceBundleMessageSource :: Set the ResourceLoader to use for loading bundle properties files.<br />- DefaultPersistenceUnitManager<br />- ResourceJobSchedulingDataProcessor<br />- ScriptFactoryPostProcessor</p>
+<p>ApplicationEventPublisherAware<br />- EventPublicationInterceptor :: invoke 호출할 때 이벤트 발생</p>
+<p>MessageSourceAware<br />- Service :: 그냥 구현했네</p>
+<p>ApplicationContextAware<br />- ApplicationObjectSupport :: applicationcontext 세팅하고 주는일 하는데 사용하는거 편하게 해주려고 만든 클레스<br />- SchedulerFactoryBean :: 스케쥴링 할 때 applicatoincontext 사용</p>
+<p>ServletContextAware<br />-ServletContextAwareBean :: 기본 구현<br />- ServletContextAttributeExporter :: servletcontext 받아서 attributes Map을 채우네..<br />- ServletContextAttributeFactoryBean :: 위랑 같은데 역긴 attribute 하나만 채우네..<br />- ServletContextFactoryBean :: 기본 구현<br />- ServletContextParameterFactoryBean :: this.paramValue = servletContext.getInitParameter(this.initParamName); paramValue 세팅<br />- ServletContextPropertyPlaceholderConfigurer :: resolvePlaceholder 에서 사용<br />- WebApplicationObjectSupport :: 기본 구현<br />- CommonsMultipartResolver :: FileItemFactor에 Repository 위치 정보 세팅<br />- SimpleServletPostProcessor :: postProcessAfterInitialization 에서 사용</p>

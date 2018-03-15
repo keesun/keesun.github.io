@@ -1,0 +1,25 @@
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; @Override<br />&nbsp;&nbsp; &nbsp;public List&lt;T&gt; search(P params, OrderPage orderPage) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;// total rowcount<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;orderPage.setRowcount((Integer) (addRestrictions(<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;getSession().createCriteria(this.persistentClass), params)<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setProjection(Projections.rowCount()).uniqueResult()));</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;// pages list<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Criteria c = addRestrictions(getSession().createCriteria(<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.persistentClass), params);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;orderPage.applyPage(c);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;orderPage.applyOrder(c);</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return c.list();<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;/**<br />&nbsp;&nbsp; &nbsp; * template method for search<br />&nbsp;&nbsp; &nbsp; * <br />&nbsp;&nbsp; &nbsp; * @param c<br />&nbsp;&nbsp; &nbsp; * @param params<br />&nbsp;&nbsp; &nbsp; * @return<br />&nbsp;&nbsp; &nbsp; */<br />&nbsp;&nbsp; &nbsp;protected Criteria addRestrictions(Criteria c, P params) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return c;<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>위 코드에서 중복이 보이시나요? 안 보이신 다구요?</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; @Override<br />
+ &nbsp; &nbsp;public List&lt;T&gt; search(P params, OrderPage orderPage) {<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;// total rowcount<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;orderPage.setRowcount((Integer) (<span style="font-weight: bold; color: rgb(0, 153, 102);">addRestrictions(</span><br style="font-weight: bold; color: rgb(0, 153, 102);" /><span style="font-weight: bold; color: rgb(0, 153, 102);"><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;getSession().createCriteria(this.persistentClass), params)</span><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.setProjection(Projections.rowCount()).uniqueResult()));</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;// pages list<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;Criteria c = <span style="color: rgb(0, 153, 102); font-weight: bold;">addRestrictions(getSession().createCriteria(</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;"><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.persistentClass), params)</span>;<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;orderPage.applyPage(c);<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;orderPage.applyOrder(c);</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;return c.list();<br />
+ &nbsp; &nbsp;}</div>
+<p>어떤가요. 중복 이죠? 그러나.. </p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">Criteria c = <span style="color: rgb(0, 153, 102); font-weight: bold;">addRestrictions(getSession().createCriteria(</span><br style="color: rgb(0, 153, 102); font-weight: bold;" /><span style="color: rgb(0, 153, 102); font-weight: bold;"><br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;this.persistentClass), params)</span>;<br />orderPage.setRowcount((Integer) (c.setProjection(Projections.rowCount()).uniqueResult()));<br />orderPage.applyPage(c);<br />
+orderPage.applyOrder(c);</div>
+<p>대강 이런 식으로 리팩터링 해보면 하이버네이트는 요상한 쿼리와 함께 에러를 뱉어냅니다.</p>
+<p>전체 Row 갯수를 반환하는 Criteria(쿼리는 select count(*).. )이런식으로 시작)를 다시 Order와 Page 처리를 할 때 사용하면 이상한 쿼리(select count(*).. order by ... 이게 이상한 이유는 order by에서 사용한 컬럼이 group by에 있어야 하는데 groupd by를 정의한 적이 없거니와, 사실 두 번째 쿼리는 count(*)가 없어야 하는데 앞에서 만들어둔 Criteria에 이어 붙인 꼴이 되어서 이상해졌습니다.)가 되버립니다.</p>
+<p>중복처럼 보이지만 제거하면 코드가 깨지는... 요상한 경우. 이거 어떻게 처리하는게 좋을까요? 전 요리 조리 해보다가 그냥 뒀습니다.</p>

@@ -1,0 +1,121 @@
+---
+layout: post
+title: Ruby in Twenty Minutes 4
+date: 2006-09-21 02:20:26.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Getting Started
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322811392'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이 전에 만들었던 새로운 프로그램을 좀더 자세히 살펴봅시다. # 마크로 시작하는 줄은 Ruby에서 주석을 나타낼때 사용합니다. 이 마크가 사용된 줄은 interpreter가 무시하게 됩니다. The first line of the fileis a  special case, and under  a Unix-like operating  system tells theshell how  to run the file.(이부분은 무슨 뜻인지 모르겠네요;;) 나머지 주석들은 프로그램의 명확성을 위해 사용되었습니다.</p>
+<p>say_hi 메소드가 좀더 기술적으로 변했습니다.</p>
+<pre class="code ruby-code"><code><span class="comment"># Say hi to everybody</span><br />
+<span class="keyword">def </span><span class="method">say_hi</span><br />
+  <span class="keyword">if</span> <span class="attribute">@names</span><span class="punct">.</span><span class="ident">nil?</span><br />
+    <span class="ident">puts</span> <span class="punct">"</span><span class="string">...</span><span class="punct">"</span><br />
+  <span class="keyword">elsif</span> <span class="attribute">@names</span><span class="punct">.</span><span class="ident">respond_to?</span><span class="punct">("</span><span class="string">each</span><span class="punct">")</span><br />
+    <span class="comment"># @names is a list of some kind, iterate!</span><br />
+    <span class="attribute">@names</span><span class="punct">.</span><span class="ident">each</span> <span class="keyword">do</span><br />
+      <span class="punct">|</span><span class="ident">name</span><span class="punct">|</span><br />
+      <span class="ident">puts</span> <span class="punct">"</span><span class="string">Hello <span class="expr">#{name}</span>!</span><span class="punct">"</span><br />
+    <span class="keyword">end</span><br />
+  <span class="keyword">else</span><br />
+    <span class="ident">puts</span> <span class="punct">"</span><span class="string">Hello <span class="expr">#{@names}</span>!</span><span class="punct">"</span><br />
+  <span class="keyword">end</span><br />
+<span class="keyword">end</span></code></pre>
+<p>
+@names를 보고 분기를 합니다. 만약에 nil이면 점 세개를 출력합니다. </p>
+<h2>Cycling and Looping—a.k.a. Iteration</h2>
+<p>만약에 @names 객체가 each에 반응을 하면 iterator를 사용할 수 있다는 것이고 그것을 사용하여 각각의 사람들에게 인사를 하면 되겠네요. </p>
+<p>반복에 대해 좀더 자세히 살펴봅시다.</p>
+<pre class="code ruby-code"><code><span class="attribute">@names</span><span class="punct">.</span><span class="ident">each</span> <span class="keyword">do</span><br />
+  <span class="punct">|</span><span class="ident">name</span><span class="punct">|</span><br />
+  <span class="ident">puts</span> <span class="punct">"</span><span class="string">Hello <span class="expr">#{name}</span>!</span><span class="punct">"</span><br />
+<span class="keyword">end<br />
+<br />
+</span></code></pre>
+<p>each는 코드 블럭을 받아들이는 메소드로써 리스트에 있는 모든 원소들을 상대로 코드 블럭을 실행합니다. do와 end 사이가 블럭에 해당합니다. A block is  like an anonymous functionor <code>lambda</code>. 블럭은 파이프들(| |) 사이에 있는 변수가 이 블럭에서 사용될 파라미터입니다.</p>
+<p>여기서는 리스트 안에 있는 모든 요소들을 name으로 가리키고 이것을 사용하여&nbsp; puts "Hello #{name}!" 를 실행했군요.</p>
+<pre class="code ruby-code">다른 프로그래밍 언어의 경우 리스트의 요소들을 반복할 때 for loop를 사용합니다.<br />
+(C언어 스타일 같은 경우 다음과 같이 표현 합니다.)<br />
+<br />
+<code><span class="keyword">for</span> <span class="punct">(</span><span class="ident">i</span><span class="punct">=</span><span class="number">0</span><span class="punct">;</span> <span class="ident">i</span><span class="punct">&lt;</span><span class="ident">number_of_elements</span><span class="punct">;</span> <span class="ident">i</span><span class="punct">++)</span><br />
+<span class="punct">{</span><br />
+  <span class="ident">do_something_with</span><span class="punct">(</span><span class="ident">element</span><span class="punct">[</span><span class="ident">i</span><span class="punct">]);</span><br />
+<span class="punct">}<br />
+<br />
+</span></code>이것도 작동은 하지만 우아하진 않습니다. 여기서는 i와 같은 변수를 필요로 합니다. <br />
+i는 리스트의 길이를 나타내고 리스트에서 어떤 순으로 작업을 할지 알려줍니다.<br />
+하지만 Ruby는 좀더 우아한 방법을 사용합니다. <br />
+모든 구체적인 것들은 each 메소드 안에 숨겨 놨습니다. 우리가 할일은 오직 리스트안에 있는<br />
+각각의 요소들이 each문 안에서 어떠한 작업을 할 것인지만 기술하면 됩니다. <br />
+<br />
+</pre>
+<h2>Blocks, the Highly Sparkling Glint on the Edge of Ruby</h2>
+<p>블럭은 리스트보다 더 복잡한 것들을 다룰 때 사용합니다. 메소드를 가지고 구체적인 것들을 다룰수 있는 것을 물론이고 셋업, 분해, 에러들 또한 다룰 수 있습니다<br />
+<span style="font-family: monospace"><br />
+</span>
+<pre class="code ruby-code"><code><span class="comment"># Say bye to everybody</span><br />
+<span class="keyword">def </span><span class="method">say_bye</span><br />
+  <span class="keyword">if</span> <span class="attribute">@names</span><span class="punct">.</span><span class="ident">nil?</span><br />
+    <span class="ident">puts</span> <span class="punct">"</span><span class="string">...</span><span class="punct">"</span><br />
+  <span class="keyword">elsif</span> <span class="attribute">@names</span><span class="punct">.</span><span class="ident">respond_to?</span><span class="punct">("</span><span class="string">join</span><span class="punct">")</span><br />
+    <span class="comment"># Join the list elements with commas</span><br />
+    <span class="ident">puts</span> <span class="punct">"</span><span class="string">Goodbye <span class="expr">#{@names.join(", ")}</span>.  Come back soon!</span><span class="punct">"</span><br />
+  <span class="keyword">else</span><br />
+    <span class="ident">puts</span> <span class="punct">"</span><span class="string">Goodbye <span class="expr">#{@names}</span>.  Come back soon!</span><span class="punct">"</span><br />
+  <span class="keyword">end</span><br />
+<span class="keyword">end<br />
+</span></code><br />
+</pre>
+<p>say_bye 메소드는 each를 사용하지 않고 대신에 @names가 join 메소드에 반응 하는지를 체크 합니다. 그리고 만약에 반응한다면 join을 사용합니다. 반응하지 않으면 그냥 변수를 문자열로 출력합니다. 이 메소드는 변수의 실제 타입을 신경쓰지 않습니다. 이 메소드가 지향하는 것은 "Duck Typing"입니다. "만약에 오리같은 것이 들어오면 오리처럼 꽥꽥거려라..". 라는 것이죠. 이런것의 장점은 변수들의 불필요한 타입 제약을 가하지 않는다는 것입니다. 만약에 새로운 타입의 리스트를 가지고 온다면 (join 메소드를 구현한 것이여야 겠죠.) 모든 일들이 계획된 대로 진행될 것입니다.</p>
+<h2>Kicking Off the Script</h2>
+<p>여기까지가 MegaGreeter 클래스 였고 남은 부부는 이 클래스의 메소드를 호출하여 사용하는 부분입니다. 이게 Ruby in Twenty Minutes 여기서 배울 마지막 트릭이군요.<br />
+<code><span class="keyword"><br />
+if</span> <span class="constant">__FILE__</span> <span class="punct">==</span> <span class="global">$0</p>
+<p></span></code>_FILE_ 이것은 현재 파일이름을 가지고 있는 마술 같은 변수 입니다. $0 은 프로그램을 시작하기 위해 사용되는 파일의 이름입니다. 이 문장은 "만약에 이 파일이 실행되는 파일이면..." 이라는 뜻입니다. 어떤 파일이 그냥 library 로 사용될 것이라면 저 문장에 걸렸을 때 실행되지 안을 것이고 만약에 파일이 실행될 수 있는 파일이면 다음 코드가 실행될 것입니다.</p>
+<h2>Consider Yourself Introduced</h2>
+<p>여기까지가 Ruby의 quick tour 였습니다. 하지만 아직 살펴 볼 것들이 많습니다.(제어문, 블럭, 모듈들,,) <br />
+<a href="http://www.ruby-lang.org/en/documentation/">Documentation</a> 이곳에 가시면 여러 문서들이 무료로 제공됩니다.<br />
+만약에 책을 보고 싶으신 분들은 <a href="http://www.ruby-lang.org/en/documentation/book-list/">book list</a>이곳을 클릭하여 살펴보시면 됩니다.</p>

@@ -1,0 +1,55 @@
+<p>Spring 2.0에 새로 도입한 @Repository 애노테이션은 스테레오타입 애노테이션으로 DAO 역할을 하는 클래스를<br />
+나타냈었으며 해당 클래스에서 발생하는 DB 관련 예외를 Spring의 DAOException으로 전환해주는 일을 했습니다. <a href="http://static.springframework.org/spring/docs/2.1.0-m3/reference/orm.html#orm-jpa-exceptions" target="_blank">참조</a></p>
+<p>Spring 2.1에는 '스테레오 타입이 붙은' 클래스를 모두 찾아서 ApplicationContext의<br />
+BeanDefinition 객체로(&lt;bean&gt;태그를 읽어서 이 객체 형태로 가지고 있게 되지요.) 만들어 주는 역할을<br />
+하는 새로운 스테레오타입 애노테이션인 @Component를 추가했습니다.</p>
+<p>물론 그럴 떄 필요한 Post Processor를 등록해야 하는데 그 부분을 숨겨두고 사용하기 편하게 태그 한 줄로 등록할 수 있습니다.</p>
+<p>AutowiredAnnotationBeanPostProcessor 와 CommonAnnotationBeanPostProcessor를 등록해주는 태그는 다음과 같습니다.</p>
+<p>&lt;context:component-scan base-package="org.example"/&gt;</p>
+<p><img src="/assets/cn329.png" class="aligncenter" width="600" height="383" alt="사용자 삽입 이미지" />Spring IDE 2.0을 설치 하셨다면 Spring 설정파일 안에서 'Ctrl + 스페이스' 만으로 해당 태그를 찾을 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Repository<br />
+public class MovieFinder {</p>
+<p>}</p></div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+@Component<br />
+public class SimpleMovieLister {</p>
+<p> &nbsp;&nbsp; @Resource(name="myMovieFinder")<br />
+ &nbsp;&nbsp; private MovieFinder movieFinder;</p>
+<p> &nbsp;&nbsp; ...<br />
+}</div>
+<p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />
+ &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+ &nbsp;&nbsp; xmlns:context="http://www.springframework.org/schema/context"<br />
+ &nbsp;&nbsp; xsi:schemaLocation="http://www.springframework.org/schema/beans<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/beans/spring-beans-2.0.xsd<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/context<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/context/spring-context-2.1.xsd"&gt;</p>
+<p> &nbsp;&nbsp; &lt;context:annotation-config /&gt;<br />
+ &nbsp;&nbsp; <span style="color: rgb(255, 0, 0);">&lt;context:component-scan base-package="whiteship"&nbsp; /&gt;</span></p>
+<p>&lt;/beans&gt;</p></div>
+<p>
+그리고 다음과 같은 테스트 코드를 돌려서 확인해 볼 수 있습니다.</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">
+public class DITest extends AbstractDependencyInjectionSpringContextTests{</p>
+<p> &nbsp;&nbsp; private SimpleMovieLister lister;</p>
+<p> &nbsp;&nbsp; public void setLister(SimpleMovieLister lister) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.lister = lister;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; @Override<br />
+ &nbsp;&nbsp; protected String[] getConfigLocations() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; return new String[]{"classpath:whiteship/applicationContext.xml"};<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void testDI() throws Exception {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; assertNotNull(lister.getMovieFinder());<br />
+ &nbsp;&nbsp; }<br />
+}</div>
+<p>
+결과는 에러~<br />
+이유는? asm 라이브러리가 필요합니다.<br />
+구체적으로는 asm.jar 와 asm-commons.jar 가 필요합니다.</p>
+<p>그리고 주의 할 것!<br />@Component나 @Repository 애노테이션에 별도의 bean name을 지정하지 않았다면 bean의 이름을 사용하여 DI하기 위해 사용했었던 @Resource 애노테이션은 걷어내고 @Autowired로 바꿔주어야 합니다.</p>
+<p></p>

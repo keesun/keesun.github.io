@@ -1,0 +1,80 @@
+---
+layout: post
+title: Plugin
+date: 2007-11-28 01:54:40.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- plugin
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323120916'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>플러그인 역시 Maven의 핵심 요소로 Goal이라는 실행 단위들을 집합으로 구성되어 있습니다. 플러그인은 새로운 패키징 타입을 도입하여 빌드 라이프사이클을 만들어낼 수도 있습니다.</p>
+<p><span style="font-weight: bold;">플러그인 이름 살펴보기</span></p>
+<p>여태까지 사용했었던 clean:clean 이라는 Goal은 실제로는 org.apache.maven.plugins:maven-clean-plugin:clean 이었습니다. 특정 버전의 플러그인을 사용하기 위해 다음과 같이 버전을 명시할 수도 있습니다. org.apache.maven.plugins:maven-clean-plugin:2.1.1:clean</p>
+<p>위 Goal의 맨 앞의 값 org.apache.maven은 groupId로 기본값이 org.apache.maven입니다. </p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;source&gt;1.5&lt;/source&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;target&gt;1.5&lt;/target&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;<br />&nbsp; &nbsp; &lt;/plugins&gt;</div>
+<p>따라서 플러그인을 등록할 때도 groupId가 빠져있는데, 기본으로 org.apache.maven.plugins 와 org.codehaus.mojo 는 생략해도 됩니다. 생략해도 되는 groupId를 추가하고 싶다면, settings.xml 의 pluginGroups 엘리먼트에 다음과 같이 추가해주면 됩니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;settings&gt;<br />&nbsp; ...<br />&nbsp; &lt;pluginGroups&gt;<br />&nbsp; &nbsp; &lt;pluginGroup&gt;com.training.plugins&lt;/pluginGroup&gt;<br />&nbsp; &lt;/pluginGroups&gt;<br />&lt;/settings&gt;</div>
+<p>=&gt; mvn maven-zip-plugin:zip<br />이제 위와 같이 사용할 수 있습니다.</p>
+<p>중간에 위치한 플러그인 이름은 &lt;&lt;&lt;maven-${name}-plugin&gt;&gt; 이런 형식이거나 ${name}-maven-plugin 이기 때문에 컨벤션에 따라 플러그인을 찾습니다. 따라서 다음과 같이 플러그인 이름도 줄여서 사용할 수 있습니.다</p>
+<p>=&gt; mvn zip:zip</p>
+<p>플러그인 설정하기</p>
+<p>플러그인 정보를 build 엘리먼트의 plugins 목록에 넣어줍니다. 그리고 각각의 플러그인이 필요로 하는 기본 설정을 해줍니다. 이 부분이 다소 복잡할 수 있지만 CoC에 입각하여 기본 설정 값들을 사용할 수 있습니다. 특정 Goal들은 기본적으로 빌드 라이프사이클의 특정 Phase과 연관을 맺게 됩니다. 하지만 이런 기본 설정을 변경할 수도 있습니다.
+<ul>
+<li>이미 라이프사이클의 일부로 등록되어 있는 플러그인이나 특정 Goal을 설정하기</li>
+<li>라이프사이클에 등록되어 있지 않은 플러그인이나 특정 Goal을 설정하기</li>
+<li>라이프사이클의 일부로 특정 Goal을 추가하고 설정하기</li>
+<li>플러그인 종속성 목록 변경하기</li>
+<li>플러그인 확장기능을 빌드 클래스로더에 추가하기</li>
+</ul>
+<p>위에서 세 번째 까지는 plugin 엘리먼트의 configuration 엘리먼트를 사용하며, 나머지는 다른 것을 사용합니다. 다음은 complie 플러그인의 기본 값을 JDK 1.4로 변경하는 설정입니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="font-weight: bold;">&lt;configuration&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;source&gt;1.4&lt;/source&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;target&gt;1.4&lt;/target&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;</span><br />&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;</div>
+<p>특정 Goal의 설정을 변경하고 싶다면, 다음과 같이 execution 엘리먼트 안에서 하나의 Goal과 그것의 설정을 변경할 수 있습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;executions&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;execution&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;goals&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;goal&gt;compile&lt;/goal&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;goal&gt;testCompile&lt;/goal&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/goals&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-weight: bold;">&lt;configuration&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;source&gt;1.4&lt;/source&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;target&gt;1.4&lt;/target&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/execution&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/executions&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;</div>
+<p>빌드 라이프사이클에 등록되어 있지않은 플러그인을 설정하는 방법은 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; <span style="font-weight: bold;">&lt;plugin&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;configuration&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tasks&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;echo&gt;The JAVA_HOME var is ${env.JAVA_HOME}&lt;/echo&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tasks&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;</span></div>
+<p>이렇게 하면, 이 Goal을 실행시키기 위해서 mvn antrun:run 을 실행해야 합니다. 특정 Phase에 연과시키기 위해서드는 다음과 같이 설정해 줍니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;tasks&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;echo&gt;The JAVA_HOME var is ${env.JAVA_HOME}&lt;/echo&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/tasks&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;executions&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;execution&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;goals&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;goal&gt;run&lt;/goal&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/goals&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="font-weight: bold;">&lt;phase&gt;verify&lt;/phase&gt;</span><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/execution&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/executions&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;</div>
+<p></p>

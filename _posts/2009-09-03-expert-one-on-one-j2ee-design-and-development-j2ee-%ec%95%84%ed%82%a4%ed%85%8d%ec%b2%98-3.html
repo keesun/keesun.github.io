@@ -1,0 +1,69 @@
+---
+layout: post
+title: "[Expert One-on-One J2EE Design and Development] J2EE 아키텍처 3"
+date: 2009-09-03 05:00:42.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- J2EE D&amp;D
+tags:
+- J2EE 아키텍처
+- 빨간책 1
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322793140'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">Web Ties Design</span></p>
+<p>이전에 보았던 각기 다른 네 가지 아키텍처에 모두 적용가능하다.</p>
+<p>웹 단을 미들 단의 비즈니스 인터페이스에 의존하는 별도의 계층으로 구분하는 것이 중요하다. 그렇게 해야 비즈니스 객체를 바꾸지 않고도 웹 단을 수정할 수 있으며 웹 단을 참조하지 않고도 비즈니스 객체를 테스트할 수 있다.</p>
+<p>MVC 아키텍처 패턴</p>
+<p>이 패턴은 스몰토크 유저 인터페이스를 위해 처음으로 문서화 되었으며 가장 성공적인 OO 아키텍처 패턴중 하나이다.</p>
+<p>중략~</p>
+<p>웹 단에서 MVC 아키텍처 패턴을 사용하라. 스트럿츠같이 작성해야 할 애플리케이션 코드의 양을 줄여주며, 기본적인 MVC 패턴 구현체를 사용하라.</p>
+<p><span style="font-weight: bold;">Designing Applications for Portability</span></p>
+<p>특정 플랫폼에 종속적인 것은 추상화 계층을 사용하여 구현해야 한다. 인터페이스 자체는 플랫폼에 독립적이기 때문이다.</p>
+<p>구현 이식성과 디자인 이식성의 차이를 알아야 한다. 구현 이식성이랑 어떤 서버에 배포하든 코드를 고칠 필요가 없는 것이고, 디자인 이식성은 분명한 인터페이스 약간을 다시 구현하기만 하면 어떤 서버에든 배포할 수 있는 것이다. 완전한 구현 이식성을 달성하기는 매우 많은 노력이 필요할 수 있지만, 디자인 이식성은 달성할만하며 충분한 비즈니스 가치를 가져다 준다. 이식성이 비즈니스 요구사항이 아니더라도, 디자인 이식성은 좋은 OO 디자인 실천으로 자연스래 달성할 수 있다.</p>
+<p><span style="font-weight: bold;">Summary</span><br style="font-weight: bold;" /><br />
+- 분산 아키텍처의 단점: 보다 복잡하고, 구현, 테스트, 유지보수 하기 힘들다. 주의깊게 설계하지 않으면 성능 문제가 발생한다.<br />
+- 분산 아키텍처의 장점" 특정 경우에 따라, 보다 견고하고 확장성이 좋을 수 있다. 특정 비즈니스 요구사항에 따라 분산 아키텍처가 필요할 수도 있다.<br />
+=&gt; 진짜 장점을 주지 못한다면 분산 아키텍처를 피하는 것이 최선이다.</p>
+<p>- EJB 2.0에 웹 서비스가 포함되었다. 따라서 RMI에 종속적이지 않게 되었다. 로컬 인터페이스를 통해 EJB가 실행되고 있는 동일한 JVM에 접근할 수 있다. 따라서 분산 아키텍처에 종속적이지 않게 되었다.</p>
+<p>- 언제 EJB를 사용할 것인가. EJB는 특정 문제를 매우 잘 해결할 수 있는 복잡하고, 강력한 기술이다. 하지만 대부분의 애플리케이션에 적절하지 않다.</p>
+<p>- 나머지 dao, tiered architecture, four J2EE architecture, web-tire design issue 생략~</p>

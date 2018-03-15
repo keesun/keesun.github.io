@@ -1,0 +1,89 @@
+---
+layout: post
+title: 스프링 Roo petclic 예제 실행 성공
+date: 2009-04-30 10:47:31.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- Roo petclinic sample
+- Spring Roo
+- 스프링 루
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323134973'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile4.uf.1210C70C49F97B7786FB4E.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile3.uf.1210A70C49F97B776D338B.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile4.uf.170E6A0C49F97B7775CDF5.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile5.uf.16103C0C49F97B784A7F0D.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile2.uf.1610760C49F97B78FB6734.png" class="aligncenter" width="400" /><img src="{{ site.baseurl }}/assets/cfile1.uf.13112C0C49F97B79C87216.png" class="aligncenter" width="400" /></p>
+<p>1. 프로젝트 디렉토리 만들기</p>
+<p># mkdir petclinic</p>
+<p>2. 디렉토리로 이동하기</p>
+<p># cd petclinic</p>
+<p>3. 루 실행</p>
+<p># roo</p>
+<p>4. 스크립트 실행</p>
+<p>roo&gt; script clinic.roo<br />
+roo&gt; exit</p>
+<p>5. 이클립스 프로젝트로 변환</p>
+<p>mvn eclipse:eclipse</p>
+<p>6. 이클립스 프로젝트로 임폴트</p>
+<p>7. 콘솔에서 테스트</p>
+<p>mvn test</p>
+<p>8. Run As -&gt; Run on server</p>
+<p>간단하네요.. 소스 코드를 봤더니, 애노테이션과 AspectJ의 향연입니다. 자바 소스 코드는 거의 없다시피 합니다. 하이버네이트를 사용했습니다. 도메인이 CRUD를 담당하는지(물론 어딘가로 위임하겠죠.), 도메인과 컨트롤러 밖에 보이지 않습니다. 도메인이 역할을 위임하는 녀석들이 보이지 않습니다.</p>
+<p><span style="color: rgb(73, 181, 213); font-weight: bold;">@Entity</span><br />
+<span style="color: rgb(95, 182, 54); font-weight: bold;">@RooJavaBean</span><br style="color: rgb(95, 182, 54); font-weight: bold;" /><span style="color: rgb(95, 182, 54); font-weight: bold;">@RooToString</span><br style="color: rgb(95, 182, 54); font-weight: bold;" /><span style="color: rgb(95, 182, 54); font-weight: bold;">@RooEntity(finders = { "findVisitsByDescriptionAndVisitDate", "findVisitsByVisitDateBetween", "findVisitsByDescriptionLike" })</span><br />
+public class Visit {</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color: rgb(114, 147, 250); font-weight: bold;">@Size(max = 255)</span><br />
+&nbsp;&nbsp;&nbsp; private String description;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color: rgb(114, 147, 250); font-weight: bold;">@NotNull</span><br style="color: rgb(114, 147, 250); font-weight: bold;" /><span style="color: rgb(114, 147, 250); font-weight: bold;">&nbsp;&nbsp; @Past</span><br />
+&nbsp;&nbsp;&nbsp; <span style="color: rgb(73, 181, 213); font-weight: bold;">@Temporal(TemporalType.TIMESTAMP)</span><br />
+&nbsp;&nbsp;&nbsp; private Date visitDate;</p>
+<p>&nbsp;&nbsp;&nbsp; @NotNull<br />
+&nbsp;&nbsp;&nbsp; <span style="color: rgb(73, 181, 213); font-weight: bold;">@ManyToOne</span><br style="color: rgb(73, 181, 213); font-weight: bold;" /><span style="color: rgb(73, 181, 213); font-weight: bold;">&nbsp;&nbsp; @JoinColumn</span><br />
+&nbsp;&nbsp;&nbsp; private Pet pet;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color: rgb(73, 181, 213); font-weight: bold;">@ManyToOne</span><br style="color: rgb(73, 181, 213); font-weight: bold;" /><span style="color: rgb(73, 181, 213); font-weight: bold;">&nbsp;&nbsp; @JoinColumn</span><br />
+&nbsp;&nbsp;&nbsp; private Vet vet;<br />
+}</p>
+<p>하늘색은 JPA 애노테이션(하지만 실제로 사용하는 라이브러리는 하이버네이트, 왜냐면 JPA가 표준이까) 녹색은 Roo 애노테이션, 남색은 javax.validation 애노테이션입니다. @Past는 항상 입력되는 Date가 입력되는 시점 기준으로 이전 날짜여야 한다네요. 오호..</p>
+<p>Roo를 학습하려면 Roo가 제공하는 애노테이션과 그 기능을 파악하는게 주요해 보입니다. 그리고 Roo가 가정하고 있는 CoC도 익혀야겠죠. 좀 더 자세히 보려면 Roo가 제공하는 Aspect들을 조사해봐야겠습니다.</p>
+<p>AspectJ 파일들을 보려면 이클립스에서 네비게이터로 보면 됩니다. 아니면 Filters 옵션에서 Hide generated ROO ITDs의 체크를 없애면 패키지 익스플로러에서도 볼 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile21.uf.1844C20B49F980D4CAACCB.png" class="aligncenter" width="390" height="477" alt="" filename="7.png" filemime="image/png" /></p>
+<p>흠.. 기발한 것 같습니다. AspectJ를 자동생성해서 자바로 만든 클래스에 @Configurable을 붙이고 테스트까지 자동생성합니다. @_@ 와.. 정말이지 이건 애노테이션과 AspectJ의 향연입니다.</p>

@@ -1,0 +1,21 @@
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void illegalAccessException() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileUrlClassLoader fUCL1 = new FileUrlClassLoader(CLASSPATH, null);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass = fUCL1.loadClass(WHITESHIP);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object whiteship = whiteshipClass.newInstance();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(this.getClass() + " " + this.getClass().getClassLoader());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(whiteshipClass + " " + whiteshipClass.getClassLoader());</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">whiteshipClass.getDeclaredField("name").get(whiteship);</span><br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p></p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+public class Whiteship2 {</p>
+<p>&nbsp;&nbsp;&nbsp; String name = "keesun";<br />
+}</div>
+<p>이 테스트를 실행한 결과 중 일부는 다음과 같습니다.</p>
+<p>class sandbox.classloader.ClassloaderTest sun.misc.Launcher$AppClassLoader@19821f &lt;- CL1<br />
+class sandbox.classloader.Whiteship2 <span style="font-weight: bold;">ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ&lt;- CL</span></p>
+<p>1. CL의 값은 CL1일까요? 아니면 전혀 다른 값?<br />
+2. 그 뒤 코드의 굵은 줄을 실행한 결과는 어찌됐을까요? 무사히 실행하고 keesun을 가져왔을까요? 에러가 났을까요? 에러가 났다면 어떤 에러가 났을까요?</p>
+<p></p>

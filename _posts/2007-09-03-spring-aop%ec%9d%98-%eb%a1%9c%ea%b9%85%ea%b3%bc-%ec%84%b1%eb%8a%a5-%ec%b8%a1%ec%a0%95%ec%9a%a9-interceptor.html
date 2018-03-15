@@ -1,0 +1,58 @@
+---
+layout: post
+title: Spring AOP의 로깅과 성능 측정용 Interceptor
+date: 2007-09-03 07:03:15.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- 유용한 Interceptor
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322994425'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 레퍼런스 7장의 예제를 유심히 보다보면 Spring에서 자체적으로 구현해둔 Interceptor들을 볼 수 있습니다. 그 중에 몇개를 살펴 보도록 하겠습니다.</p>
+<p>디버그 인터셉터 :: <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/interceptor/DebugInterceptor.html" target="_blank">org.springframework.aop.interceptor.DebugInterceptor</a></p>
+<p>성능 측정 인터셉터 :: <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/interceptor/PerformanceMonitorInterceptor.html" target="_blank">org.springframework.aop.interceptor.PerformanceMonitorInterceptor</a></p>
+<p>사용법은 ProxyFactoryBean으로 간단하게 설정하여 사용할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;bean id="proxy"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.aop.framework.ProxyFactoryBean"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="target" ref="service" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="interceptorNames"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;global*&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="global_debug"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.aop.interceptor.DebugInterceptor" /&gt;<br />&nbsp; &nbsp; &lt;bean id="global_performance"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.aop.interceptor.PerformanceMonitorInterceptor" /&gt;</div>
+<p>target 속성에 디버깅 또는 퍼포먼스 체크를 하고 싶은 bean의 이름을 설정해 주면 됩니다. 둘 중 하나만 사용하고 싶다면 interceptorNames에서 조정을 하면 됩니다.</p>

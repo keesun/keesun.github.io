@@ -1,0 +1,66 @@
+---
+layout: post
+title: Maven으로 프로젝트 생성하기
+date: 2007-11-15 08:57:32.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- maven
+- 프로젝트 생성
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323154483'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://maven.apache.org/download.html" target="_blank">http://maven.apache.org/download.html</a><br />위 주소에서 Maven을 다운로드 받으실 수 있습니다.<br />원하는 디렉토리에 압축을 풀고 해당 bin 폴더를 Path로 잡아주면 어디서나 mvn 명령을 실행할 수 있습니다.</p>
+<p>이클립스 플러그인을 설치하실 때는 업데이트 사이트를 이용하시면 됩니다. 저는 Appfuse 예제 돌려볼때 설치했었습니다.<br />http://m2eclipse.codehaus.org/update/</p>
+<p>콘솔에서 프로젝트 생성할 때
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">mvn archetype:create -DgroupId=그룹 아이디 -DartifactId=프로젝트 아이디<br />cd 프로젝트 아이디<br />mvn initailize</div>
+<p>이클립스에서 프로젝트 생성할 때는 그냥 maven 프로젝트를 선택하시면 됩니다.</p>
+<p>콘솔에서 작업할 때 주의할 것
+<ul>
+<li>프로젝트 최상위 폴더 경로에 한글이 포함되어 있으면 안 됩니다.</li>
+</ul>
+<p>콘솔에서 프로젝트를 생성할 때와 이클립스에서 Maven 플러그인으로 프로젝트를 생성할 차이점
+<ul>
+<li>기본으로 App라는 클래스와 AppTest 클래스를 생성해 줍니다.</li>
+</ul>
+<p></p>

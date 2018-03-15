@@ -1,0 +1,74 @@
+---
+layout: post
+title: Spring 2.5 on the Way to 3.0 - 유겐 휄러
+date: 2008-10-10 02:55:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Spring One 2008
+tags:
+- 스프링 2.5
+- 스프링 3.0
+- 유겐 휄러
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323149631'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.parleys.com/display/PARLEYS/Home#title=Spring%202.5%20on%20the%20Way%20to%203.0;talk=0;slide=1" target="_blank">Spring 2.5 on the Way to 3.0<br /></a><br />Spring One 2008에서 유겐 휄러의 발표 동영상을 보여줍니다. 별점은. 3.2/5 정도 됩니다. 지난 번에 봤던 Using Spring Security (별점 4/5)보다 평점이 조금 낮네요.</p>
+<p>JDK 6 지원<br />- JDK 1.4, 1.5 호환(1.3은 안 함)<br />- JDBC 4.0 지원(native connections, LOB 핸들링)<br />- JMX MXBenas</p>
+<p>AspectJ LTW 지원</p>
+<p>Java EE 5 지원</p>
+<p>JSR-250 애노테이션 지원<br />- @PostConstruct, @PreDestroy<br />- @Resource<br />- self describing.</p>
+<p>Further Java EE 5 Annotations<br />- @WebServiceRef/@EJB<br />- @TransactionAttrubute<br />- @PersistenceContext/@PersistenceUnit</p>
+<p>Autowiring Annotation<br />- specific autowiring by type<br />- @Qualifier</p>
+<p>Autodetectable Component<br />- @Component</p>
+<p>@Configurable with AspectJ<br />- &lt;context:load-time-weaver aspectj-weaving="on" /&gt;<br />- &lt;context:spring-configured /&gt;<br />- @Configurable </p>
+<p>@Transactional with AspectJ<br />- &lt;context:load-time-weaver aspectj-weaving="on" /&gt;<br />- &lt;tx:annotation-driven mode="aspectj" /&gt;</p>
+<p>Annotated MVC Controllers<br />- @Controller<br />- @RequestMapping<br />- @RequestParam<br />- @ModelAttribute</p>
+<p>Test Context Framework<br />- @ContextConfiguration<br />- @TransactionConfiguration<br />- JUnit 4.4 지원.</p>
+<p>Tradeoffs<br />- 재컴파일(XML 설정 변경은 재컴파일 필요 없다.)<br />- 설정의 외부화(애노테이션은 클래스를 보면 내용을 알 수 있다.)<br />- 설정 재정의 가능 여부(애노테이션 설정 바꾸면 컴파일 필요하다.)</p>
+<p>Spring 2.5 정리<br />- Java 5와 Java EE 5 완전 지원<br />- ApsectJ와 보다 긴밀한 연동<br />- 애노테이션 설정 강화</p>
+<p>The Roadmap for Spring 3.0<br />- 7월까지 2.5.6<br />- 8월에 3.0 M1<br />&nbsp; - REST 지원<br />&nbsp; - 다양한 EL 지원<br />- Spring 3.0 GA는 4분기 중으로..<br />=&gt; 흠.. 이미 8월 지난지 오래 됐는데, M1 소식도 못들었네요. 내년 초를 기대해봐야겠네요.</p>
+<p>Spring 3: Core Revisions<br />- Java 5+ 지원<br />&nbsp; - 스프링 코어 API에 Generic 적용<br />- J2EE 1.4+ 호환(웹스피어 6.1, 웹로직 9.2, JBoss 4.2)<br />- 스프링 EL<br />- 새로운 커테이너 기능 제공(annotated factory methods)<br />=&gt; 흠. 제레닉 코드가 코어 API에 들어가면.. 혹시 GenericDAO 같은 거도 스프링이 제공하는건가.. 캬오..</p>
+<p>Spring 3 and the Web Space<br />- 개정된 자바 웹 표준 지원(포틀릿 2.0, 서블릿 3.0)<br />- REST 지원<br />- conversation 관리<br />- 애노테이션 기반 위자드 컨트롤러<br />=&gt; 스프링 3이 conversation이랑 애노테이션 기반 위자드 마법사를 지원해주면.. 캬오 멋질듯.</p>
+<p>Spring 2.5 Mission Continued</p>
+<p>Pruning &amp; Deprecation in 3.0<br />- 가지칠것<br />&nbsp; - Commons Attuributes 지원<br />&nbsp; - 예전 TopLink API 지원<br />- deprecation 계획<br />&nbsp; - 예전 MVC 컨트롤러 클래스 계층 구조<br />&nbsp; - 예전 JUnit 3.8 테스트 클래스 계층 구조<br />=&gt; 애노테이션 기반 시설 중심으로 가면서 예전 시설은 deprecation.</p>
+<p>Spring 3.0 Summary<br />- REST, EL<br />- RESTful URI 맵핑, 포틀릿 2.0<br />- Java 5+, Spring 2.5 환경에서 그대로 호환 가능.</p>
+<p>아음.. 발표 시간이 64분인데, 55분동안 2.5 얘기만 하다가 3.0 얘기는 빠르게 지나가 버려서 아쉽습니다. 그래서 별 세개만 줬어요. ㅋㅋ 유겐 횽님 Spring One America에서는 스프링 3.0 얘기 좀 더 해주세요. ㅠ.ㅠ 소스도 배포해 주시구요. 3.0에서 저는 컨버세이션 관리와 위자드 마법사가 제일 궁금해요. 그 다음으로는 코어 API에 추가할 제네릭 클래스들 중에 GenericDao같은 것들도 제공할 것인지도 궁금하구요. 마지막으론 스프링 EL도 궁금한데.. 그건 JSF 확장 기능이겠죠? JSP에서도 사용 가능한건가? 어쨋든 S1A에서 뵙겠습니다. 바이바이</p>

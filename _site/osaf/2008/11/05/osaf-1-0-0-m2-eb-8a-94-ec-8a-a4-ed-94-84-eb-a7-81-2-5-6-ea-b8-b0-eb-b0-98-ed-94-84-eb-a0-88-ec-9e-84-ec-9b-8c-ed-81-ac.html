@@ -1,0 +1,24 @@
+<p>국내 최초 아니 어쩌면 세계 최초 <a title="[http://www.springsource.org/node/813]로 이동합니다." target="_blank" href="http://www.springsource.org/node/813">스프링 2.5.6</a> 기반 애플리케이션 프레임워크가 될지도 모릅니다. 크하하하. 최첨단 프레임워크니까 이 정도는 해줘야겠죠?</p>
+<p>나오자마자 바로 업그레이드. 이럴 땐 메이븐이 편하긴 합니다. pom.xml에서 프로퍼티 사용해서 버전만 바꿔주면 되거든요.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+&nbsp; &nbsp; &lt;properties&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;slf4j.version&gt;1.4.3&lt;/slf4j.version&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;spring.version&gt;2.5.6&lt;/spring.version&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;java.version&gt;1.5&lt;/java.version&gt;<br />
+&nbsp; &nbsp; &lt;/properties&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- spring --&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;spring-test&lt;/artifactId&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;${spring.version}&lt;/version&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/dependency&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;spring-core&lt;/artifactId&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;${spring.version}&lt;/version&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/dependency&gt;<br />
+... </div>
+<p>
+뭐 이런 식입니다. 어떻게 사용하는지 대충 아시겠죠?</p>
+<p>인증샷 올립니다</p>
+<p><img src="/assets/49110a52daf5aEH.png" class="aligncenter" width="405" height="617" alt="" filename="1.png" filemime="" /></p>

@@ -1,0 +1,16 @@
+<p>이라는 주제로 TSE 2006에서 발표가 있었습니다. 작년 자료인데, <a href="http://chanwook.tistory.com/" target="_blank">찬욱군</a>이 <a href="http://toby.epril.com/" target="_blank">토비님</a>한테 받아온 것을 제가 다시 찬욱군으로부터 받았습니다.ㅋㅋ</p>
+<p>사실 저 것은 부제고 원제는 Myth Buster 입니다. '미신 깨기' 정도가 되겠네요. 따라서 Spring은 XML 지옥이 아니다는 주제가 되겠죠.</p>
+<p>Spring이 XML을 많이 사용하는 것은 사실입니다. 2.5부터는 애노테이션을 대폭 활용하게 되겠지만 Java5를 도입하기 어려운 환경에 있으신 분들은 XML로 많은 bean들을 설정하게 될 것입니다. 이 때 다음과 같은 몇 가지 지침많 따르신다면, XML 지옥에서 벗어날 수 있을 것 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+<li>bean 설정을 여러 파일로 나누기</li>
+<li>import 엘리먼트 사용하기</li>
+<li>설정 파일을 코드 근처에 두기</li>
+<li>bean의 id는 인터페이스 이름으로 한다는 Naming Convention 사용하기.</li>
+<li>Factory나 FactoryBean을 사용합니다.(고정적인 부분을 설정으로 외부화 하지 않고 감출 수 있습니다.)</li>
+<li>또는 5번과 같이 Factory가 없어도 간단하게 static 블럭을 사용하여, 내부적으로 초기화 할 수 도 있습니다.</li>
+<li>Spring이 제공하는 Parent/Child bean 설정 기능 사용하기.</li>
+<li>Spring 2.0 부터 제공하는 다양한 네임스페이스 사용하기.(aop, jee, lang, tx, util, ...)</li>
+<li>원하는 네임스페이스 만들어 사용하기.(KSUG 1회때 토비님께서 발표 했었습니다.)</li>
+<li>Spring IDE 사용하기</li>
+</div>
+<p>작년 TSE에서 Interface21의 수석 컨설컨트 Ben Hale이 발표한 내용을 참조했습니다.</p>

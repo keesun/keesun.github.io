@@ -1,0 +1,36 @@
+<p>JSON뷰랑 하이버 Proxy 객체가 만나면 JSON 뷰를 만들다 에러가 납니다.</p>
+<p>하이버 객체가 Lazy 로딩을 할 수 없는 지점에서 Proxy 객체를 통해 collection에 접근해서 JSON 뷰로 만들 수 없는 데이터에 접근하여 발생하는 에러로 추측하고 있습니다. 에러가 좀 깔끔하게 떨어지면 해결책이나 원인을 찾기도 쉬울텐데.. 이건 뭐.. StackOverFlow 입니다. Q&amp;A 게시판이 아니라. 정말 그 에러입니다.</p>
+<p>이런 일이 발생한 대표적인 시나리오는 현재까지 세 군대 정도 됩니다.<br />
+- 로그인<br />
+- 출석체크<br />
+- 낙서장</p>
+<p>이중에서 출석체크와 낙서장은 제가 해결했는데 그 방법이 비슷하지만 살짝 다릅니다.</p>
+<p>먼저, 출첵의 경우 proxy객체를 직렬화 하는데, 필요 없는 객체를 JSON 뷰로 넘기고 있었습니다. @SessionAttribute에 등록한 객체들이 Model model 객체에 기본으로 들어가 있었고, 그 객체들(study, member, meeting)을 JSON 뷰로 직렬화 하다가 에러가 났습니다. 그래서 Model model을 깨끗하게 비워버리고 JSON 뷰로 넘겨주도록 헬퍼를 만들어 사용했습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @RequestMapping("/study/{studyId}/meeting/{meetingId}/confirm/{attendanceId}")<br />
+&nbsp;&nbsp;&nbsp; public ModelAndView confirmMember(Model model, @PathVariable int studyId,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; @PathVariable int meetingId, @PathVariable int attendanceId,<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; HttpSession session) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; service.confirmAttendanceById(attendanceId);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return JsonHelper.jsonViewWithCleanMap(model);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>두 번째 낙서장은 제가 맡은 부분은 아닌데, 계속 눈에 걸려서... 암튼 보니까 필요한건 Grafitty의 comments 뿐인데, Graffiy의 작성자(Member)를 포함한 모든 속성들을 다 가져오더군요. 그래서 JSON 뷰에서는 또 타고 타고 들어가다가 접근 못하는 부분(아마도 Member가 들고 있는 Set&lt;Role&gt; 타입의 프로퍼티)에서 JSON 뷰를 만들다 직렬화 에러를 냈을 겁니다. 이번에는 DAO에서 하이버네이트의 Projection을 이용해서 필요한 것만 가져오도록 쿼리를 수정해서 처리했습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public List&lt;Graffiti&gt; getByWriteDate(Date writeDate) throws DataAccessException {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Criteria c = getCurrentSession().createCriteria(Graffiti.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .add(Expression.ge("writeDate", writeDate))<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addOrder(Order.asc("writeDate"))<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .setProjection(Property.forName("contents"));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return c.list();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @SuppressWarnings("unchecked")<br />
+&nbsp;&nbsp;&nbsp; public List&lt;Graffiti&gt; getRecent10Contents() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Criteria c = getCurrentSession().createCriteria(Graffiti.class)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .setMaxResults(10)<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .addOrder(Order.asc("writeDate"))<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; .setProjection(Property.forName("contents"));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return c.list();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>이 방법들은 완전한 대책이 아니라, 적당히 필요한 데이터만 간추리다보니 해결이 된겁니다. 땜빵이라고 하기도 좀 뭐하지만.. 해결책이라고 하기도 좀 뭐하지요.</p>
+<p>좀 더 궁극적인 해결책을 생각해 봤는데;;</p>
+<p>OSIV Fileter가 MappingJacksonJsonView와 뭔가 잘 안 맞는것 같습니다. JSON이 빌드할 때도 트랜잭션 경계 안에 들어있는 상태라면 하이버 프록시 객체에서 타고 타고 타고 들어갈 수 있는건데... 그게 안 되서 에러가 나는 거겠죠?? 결국은 AOP로 MappingJacksonJsonView의 특정 메서드를 실행하기 전에 트랜잭션을 열고.. 작업을 끝낸다음 트랜잭션을 닫는 작업을 해줘야 하는거 아닌지.. 고민입니다.</p>
+<p>아이고;; 번역 헀어야 하는데.. 봄싹에 손을 대버리다니... 큰일이네... 큰일이야.. 에휴... 봄싹 중독인가. @_@</p>

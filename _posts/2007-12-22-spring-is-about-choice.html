@@ -1,0 +1,75 @@
+---
+layout: post
+title: Spring is About Choice
+date: 2007-12-22 16:03:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- KSUG
+tags:
+- Spring 2.5
+- 애노테이션 설정
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322770959'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이 메모도 역시 토비님 발표를 들으며 요약한 내용입니다. 첫 번째 세션에서 엉뚱한 대답들을 하느라 무안했지만, 기억하는데에는 망신당하는 것이 최고였습니다.</p>
+<p><span style="font-weight: bold;">틀린 내용</span>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">1. DesposableBean, destroy-method, @PreDestroy 의 메소드 실행 여부 확인 안 되는 이유.<br />&nbsp; &nbsp; 테스트 하는 Main 메소드가 BeanFactory가 내려가기 전에 끝나서...라고 말하고 싶었는데 뭐라고 말을 한건지도 모르겠네요. -_-;;<br />&nbsp; &nbsp; ac.close(); 사용하면 볼 수 있음.<br />2. Autowiring 종류에 default는 없슴. auto-detect.<br />3. 딴짓(여친과 문자)하느라 질문 내용도 못들음...-_-;;;<br />&nbsp; &nbsp; 정답이 bean이였던걸로 유추하면 2.5에 새로추가된 pointcut 표현식을 물어보셨었나..라고 생각이 됩니다.</div>
+<p><span style="font-weight: bold;">요약</span>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">스프링 컨테이너의 역할<br />&nbsp; &nbsp; 컴포넌트 모델 지원<br />&nbsp; &nbsp; 공통의 기반 제공<br />&nbsp; &nbsp; 컴포넌트에 다양한 가치 부여<br />&nbsp; &nbsp; &nbsp; &nbsp; AOP, 트랜잭션, ...</p>
+<p><span style="color: rgb(255, 0, 0);">Spring is About Choice</span><br />&nbsp; &nbsp; 스프링은 만능 솔루션을 강요하지 않아. 항상 선택할 수 있으며, 책임이 뒤따른다.</p>
+<p>애노테이션 설정</p>
+<p>IoC/DI : 컨테이너가 객체들 관리해준다.<br />&nbsp; &nbsp; 생성, 설정, 데코레이션, 어샘블, ...<br />&nbsp; &nbsp; BeanDefinition : &lt;bean&gt;에 의해 만들어지는 정보</p>
+<p>Spring 2.5<br />&nbsp; &nbsp; <span style="font-weight: bold;">Field Injection</span><br />&nbsp; &nbsp; <span style="font-weight: bold;">Multi Param Method</span></p>
+<p><span style="font-weight: bold;">@Resource</span><br />&nbsp; &nbsp; 자바스팩에서는 JNDI vs 스프링에서는 Bean 이름<br />&nbsp; &nbsp; property 태그 대체<br />&nbsp; &nbsp; 디포트 이름은 Java Bean 규약에 따른 이름사용.</p>
+<p>필드 인젝션 단점은??</p>
+<p>고급설정<br />&nbsp; &nbsp; CommonAnnotationBeanPostProcessor 직접 등록하고 속성 설정.<br />&nbsp; &nbsp; init/dest 애노테이션 이름 설정 가능 &nbsp;&nbsp; </p>
+<p>@PostConstruct<br />&nbsp; &nbsp; void 리턴<br />&nbsp; &nbsp; 파라미터 없애고, 체크드 익셉션 던지면 안돼<br />@PreDestroy<br />&nbsp; &nbsp; 컨테이너를 명시적으로 닫아줘야 돼.<br />&nbsp; &nbsp; ac.close();</p>
+<p><span style="font-weight: bold;">@Autowired</span><br />&nbsp; &nbsp; 기본으로 byType<br />&nbsp; &nbsp; 메소드는 아무이름이나 가져도 된다.<br />&nbsp; &nbsp; AutowiredAnnotationBeanPostProcessor<br />&nbsp; &nbsp; &lt;context:annotation-config /&gt;<br />&nbsp; &nbsp; Fine Grained 됐다. 프로퍼티 별로.<br />&nbsp; &nbsp; 한 번에 여러개 주입 가능.(구글 쥬스에서 따옴)</p>
+<p>그럼 두 개의 타입은 못쓰느냐?<br />&nbsp; &nbsp; @Qualifier("fileFinder")<br />&nbsp; &nbsp; &lt;qualifier value || type /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; 메타 애노테이션<br />&nbsp; &nbsp; 스프링 레퍼런스 참조</p>
+<p>required default<br />primary<br />custom annotation<br />component scanning</p>
+<p>기본 컴포넌트<br /><span style="font-weight: bold;">@Component</span><br />&nbsp; &nbsp; 컴포넌트 스캐너 = &lt;context:component-scan base-pachage="" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; include filter(annotation, assignable, aspectj, regex)<br />&nbsp; &nbsp; 메타에노테이션으로 사용가능.<br />&nbsp; &nbsp; &nbsp; &nbsp; @Repository, @Service, @Controller, ...<br />&nbsp; &nbsp; &nbsp; &nbsp; AOP 적용할 때 유리해.<br />&nbsp; &nbsp; &nbsp; &nbsp; value는 꼭 있어야 돼.</p>
+<p>XML 수정시 SCM 충돌 괴롭지 아니한가</p>
+<p>@Scope</p>
+<p><span style="font-weight: bold;">ClassPathBeanDefinitionScanner 쓰면 xml 하나도 안써도 돼.</span></p>
+<p>RAR : 데몬 서비스 패치<br />&nbsp; &nbsp; JMS</p>
+<p>AspectJ LTW가 성능 좋아<br />&nbsp; &nbsp; 트랜잭션에 mode로 LTW 사용가능</div>
+<p><span style="font-weight: bold;">실습할 내용</span><br />1. @Resource와 @Autowired 언제 어떤걸 사용할까?<br />2. 트랜잭션 처리할 때 LTW 적용<br />3. 필드 인젝션 단점은 뭘까?<br />4. 메타 애노테이션과 Spring AOP에서 포인트컷 표현식의 조화</p>

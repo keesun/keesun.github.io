@@ -1,0 +1,59 @@
+---
+layout: post
+title: 2. Type of advice
+date: 2007-01-05 12:19:51.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- advice
+- AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322863852'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div class="itemizedlist">참조 : <a href="http://static.springframework.org/spring/docs/2.0.x/reference/aop.html#aop-introduction-defn" target="_blank">Spring Reference 6.1.1 AOP concepts</a></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);"><span style="font-weight: bold;">Before advice</span> : join point 이 전에 실행이 되며 예외를 던지지 않는 이상 join point 이 후에 실행될 작업을 막을 방법이 없습니다.</p>
+<p><span style="font-weight: bold;">After returning advice</span> : join point가 정상적으로 완료된 후에 실행이 됩니다. 예외를 던지는 상황은 정상적인 상황에서 제외됩니다.</p>
+<p><span style="font-weight: bold;">After throwing advice</span> : 어떤 메소드가 예외를 던지면 실행이 됩니다.</p>
+<p><span style="font-weight: bold;">Around advice</span> : 메소드 호출과 같이 join point를 감싸는 Advice. 이 녀석은 advice 중에 가장 능력이 좋다. 메소드 호출 전과 후에 어떤 것을 실행할 수 있다. 또한 join point 이 후에 실행될 작업을 계속 수행할지 말지 정할 수 있다. 수행 하지 않을 때는 자신이 수행할 메소드 대신에 값을 반환하거나 예외를 던질 수 있다.</div>
+<p>이 중에서 <span style="color: rgb(0, 153, 102);">필요한 기능을 수행할 수 있는 가장 최소화된 능력을 발휘하는 Advice를 사용하는 것을 권장합니다.</span> 예를 들어 어떤 메소드가 값을 반환한 이후 cache를 업데이트 하려고 할 때 Around advice를 사용할 수도 있겠지만 After returning advice를 사용합시다. 이렇게 가장 구체적인 Adivce 타입을 사용하는 것은 잠재적으로 발생할 에러를 방지 할 수 있습니다.</p>
+</div>

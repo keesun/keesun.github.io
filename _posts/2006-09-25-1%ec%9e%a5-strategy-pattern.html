@@ -1,0 +1,71 @@
+---
+layout: post
+title: 1장 Strategy Pattern
+date: 2006-09-25 15:17:58.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Design Pattern
+tags:
+- design pattern
+- Head First Design Pattern
+- Strategy Pattern
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322792162'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img style="" onclick="viewImage('/whiteship200/25965513_250x221.bmp');" alt="" src="{{ site.baseurl }}/assets/25965513_250x221.bmp" border="0" /> </p>
+<div>
+위 다이어그램을 보면 Duck class를 상속을 이용하여 재사용 하고 있습니다.</div>
+<div>필요한 부분( 여기서는 display() )만 overriding 해주면 되기 때문에 상당히 편리해 보입니다.</div>
+<div>기본 기능으로 오리가 날수 있도록 하고 싶을 때...</div>
+<div>
+<img style="" onclick="viewImage('/whiteship200/25965514_253x226.bmp');" alt="" src="{{ site.baseurl }}/assets/25965514_253x226.bmp" border="0" /> 
+</div>
+<div>
+위와 같이 상위 class에 추가하기만 하면 모든 하위 class들에 일일히 추가할 필요가 없기때문에 편리해 보입니다. </div>
+<div>하지만... </div>
+<div>날지 못하는 오리(고무 인형 오리)의 경우라면 상속 받지 말아야 할텐데.</div>
+<div><font color="#ff7635">특정 method를 제외하고 상속하는 방법</font> 같은 것은 배운적이 없네요 :)</div>
+<div>상속을 못하게 하는 방법은 있지만 그렇게 하면 다른 자식 class들은 어떻게 하나요? 하핫;
+</div>
+<div>method하나가지고 뭘 그러나.. 그냥 method를 overring해서 안에서 아무것도 안하면 되지 않을까...라는 생각을 처음엔 했었습니다.</div>
+<div>그러나...</div>
+<div>그러한 method가 무진장 많다고 했을 때를 생각해 보면 코드 낭비에 시간 낭비라는 생각이 안들 수가 없습니다. 무언가 뾰족한 수가 필요합니다.</div>

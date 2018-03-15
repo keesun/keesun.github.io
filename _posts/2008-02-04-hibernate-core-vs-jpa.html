@@ -1,0 +1,78 @@
+---
+layout: post
+title: Hibernate Core VS JPA
+date: 2008-02-04 08:39:25.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- JPA와 비교
+- 상속 구조 맵핑
+- 커스텀 맵핑 타입
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323172089'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh">Hibernate </th>
+<th class="confluenceTh">JPA </th>
+</tr>
+<tr>
+<td class="confluenceTd">네 가지 상속 맵핑 전략을 제공하고, 상속 전략을 혼용하는 것이 가능하다. </td>
+<td class="confluenceTd">네 가지 맵핑 전략을 표준화 했다. 이 중에선 Table Per Class Hierarchy와 Table Per Subclass만 JPA 호환 필수요소다. </td>
+</tr>
+<tr>
+<td class="confluenceTd">영속성 대상이 되는 클래스의 상위 클래스는 abstract class나 interface도 될 수 있다. </td>
+<td class="confluenceTd">abstract class만 이식 가능하다. </td>
+</tr>
+<tr>
+<td class="confluenceTd">Value Type을 위한 유연한 내장 타입과 컴버터를 제공한다. </td>
+<td class="confluenceTd">표준화된 방법으로 맵핑 타입을 자동으로 찾아 준다. 커스텀 타입을 찾을 때는 하이버네이트 확장 애노테이션을 사용한다. </td>
+</tr>
+<tr>
+<td class="confluenceTd">막강한 타입 확장 시스템 </td>
+<td class="confluenceTd">Enum을 위한 내장 타입 표준이 필요하다. </td>
+</tr>
+</tbody>
+</table>

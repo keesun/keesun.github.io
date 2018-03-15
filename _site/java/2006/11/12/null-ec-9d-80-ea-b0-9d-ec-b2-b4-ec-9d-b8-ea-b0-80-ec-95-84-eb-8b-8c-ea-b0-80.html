@@ -1,0 +1,31 @@
+<div style="padding: 10px; background-color: rgb(208, 255, 157)"><font style="color: rgb(255, 118, 53); font-weight: bold" size="4"><span style="font-family: verdana,arial,helvetica,sans-serif">Null은 객체다.</span></font></p>
+<p>Agile Java 번역서인 "지름길로 빠르게 배울 수 있는 자바 프로그래밍"의 p168쪽 중간에서 약간 위부분에 이렇게 쓰여있다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169)">명시적으로 초기화하지 않은 참조는 null 값을 가진다. null 값은 널 객체로 불리는 유일한 인스턴스를 나타낸다. null 객체에 메시지를 보내면, NullPointerException을 받게된다.</div>
+<p>
+어디에 있을까.. API에 있으려나...없습니다. 아쉬운데로 NullPointerException API에 있는 내용을 읽어 봅니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-family: verdana,arial,helvetica,sans-serif">
+<p>Thrown when an application attempts to use null in a  case where an object is required. These include:  </p>
+<ul>
+<li>Calling the instance method of a null object.  </li>
+<li>Accessing or modifying the field of a null object.  </li>
+<li>Taking the length of null as if it were an array.  </li>
+<li>Accessing or modifying the slots of null as if it      were an array.  </li>
+<li>Throwing null as if it were a Throwable value.  </li>
+</ul>
+<p> Applications should throw instances of this class to indicate  other illegal uses of the null object.</p>
+</div>
+<p>출처 : <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/NullPointerException.html">http://java.sun.com/j2se/1.5.0/docs/api/java/lang/NullPointerException.html</a></div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169)"><font style="color: rgb(255, 118, 53); font-weight: bold" size="4"><span style="font-family: verdana,arial,helvetica,sans-serif">Null은 객체가 아니다.</span></font></p>
+<p>먼저 가장 시각적으로 확인되는 실험을 통해 Null이 객체가 아니라는 것을 성일이 형이 증명(?) 했습니다. 트랙백을 걸어주셨으면 좋겠는데 아직 안걸어 주셔서 <a href="http://hsi8007.tistory.com/25">링크</a>를 따옵니다.</p>
+<p>그리고 구글 신님이 알려주신 링크 <a href="http://www.faqs.org/docs/thinkjava/chap08.htm">http://www.faqs.org/docs/thinkjava/chap08.htm </a>이곳에 8.10을 보면 null은 Java에서 "객체가 아님"을 나타내는 특별한 "값"(Java의 키워드)이라고 나와있습니다. </div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)"><font style="font-family: verdana,arial,helvetica,sans-serif; font-weight: bold;" size="4"><span style="color: rgb(255, 118, 53)">결론</span></font></p>
+<p>마지막 링크가 걸린 곳의 하단에 보면 이러한 글을 볼 수 있습니다. </p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237)">If you try to use a <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255)">null object</span>, either by accessing an instance variable or invoking a method, you will get a NullPointerException.  The system will print an error message and terminate the program.</div>
+<p>
+"null이라는 값은 Object 가 아님을 나타 내주는 문자, 즉 자바의 키워드로 null object를 가리키는 특별한 값을 나타내는 키워드라고 생각합니다. 그리고 이 값(nul)을 가지고 있는 reference를 통해서 null object에 어떠한 call을 하든지 NullPointerException을 발생시킨다."</p>
+<p>이것이 저의 결론이며 성일이 형이 실험한 "null instanceOf Object" 는 null은 Object가 아님을 나태내는 값이기 그런 결과가 나올 수 있다고 생각하며 그런 결과가 나온것이 타당하다고 생각합니다. </p>
+<p>수학에서 보이지 않는 면에서 봐야 보이는 수인 허수 처럼 객체가 아닌 객체가 Null Object이고 그 것을 가리키는 값이 null이라는 키워드 아닐까 싶습니다.</p>
+<p>그리고 대엽님이 달아준 리플에도 null type이라는 단어가 있습니다. type이라는 것은 어떤 객체가 있다고 보아도 무방하지 않을까요? 거기에 null reference라는 단어까지 사용되고 있습니다. 이로 미루어 보아 null도 일종의 매우 특별한 객체(객체가 아닌 객체이고 하는 일은 NullPointerException 리턴해주는 일)로 보아야 하지 않을까요?
+</div>

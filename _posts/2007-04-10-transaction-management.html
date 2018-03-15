@@ -1,0 +1,80 @@
+---
+layout: post
+title: Transaction management
+date: 2007-04-10 16:00:25.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322781568'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>9.1. Introduction</p>
+<p>트랜잭션 관리를 위한 추상화를 통해 다음의 장점들을 제공합니다.
+<ul>
+<li>JTA, JDBC, Hibernate, JPA, and JDO와 같은 다른 트랜잭션 관리 API 간에도 일관된 프로그래밍을 할 수 있습니다.</li>
+<li>선언적인 트랜잭션 관리를 할 수 있습니다.</li>
+<li>JTA 같은 복잡한 방법이 아닌 단순한 API를 제공합니다.</li>
+<li>Spring의 다양한 데이타 접근 추상화(data access abstractions)와 통합하기 좋습니다.</li>
+</ul>
+<p>9.2. Motivations</p>
+<p>EJB CMT 또는 Hibernate 같은 독자적인 API를 사용한 트랜잭션 관리 대신 Spring 프레임워크의 트랜잭션 추상화를 사용하기 원하는 이유에 대해 나옵니다.</p>
+<p>9.3. Key abstractions</p>
+<p>Spring 프레임워크의 트랜잭션 지원을 위한 핵심 클래스들을 소개하고 어떻게 설정하고 다양한 자원으로 부터 DataSource 객체를 얻을 수 있는지 설명합니다.</p>
+<p>9.4. Resource synchronization with transactions</p>
+<p>어떻게 어플리케이션 코드에서 직접적으로 또는 간접적으로 퍼시스턴트의 API를 사용할 수 있는지 설명합니다.</p>
+<p>9.5. Declarative transaction management</p>
+<p>Spring AOP를 사용하여 기존 코드에 가장 적은 영향을 주며 선언적으로 트랜잭션 관리를 할 수 있도록 하는 방법을 설명합니다.</p>
+<p>9.6. Programmatic transaction management</p>
+<p>프로그래밍을 통한 트랜잭션 관리 방법에는 TransactionTemplate 과 PlatformTransactionManager  사용하는 두 가지가 있는데 이 중에 첫번째 방법을 권장합니다.</p>
+<p>9.7. Choosing between programmatic and declarative transaction management</p>
+<p>선언적인방법과 프로그래밍을 통한 방법의 장단점을 살펴 봅니다.</p>
+<p>9.8. Application server-specific integration</p>
+<p>Spring 프레임워크의 트랜잭션 추상화는 일반적으로 서버를 인지 하지 못합니다. 부가적으로 특정 웹서버를 위한 클래스를 제공합니다.</p>
+<p>9.9. Solutions to common problems</p>
+<p>특정 DataSource를 위한 잘못된 트랜잭션 메니저 사용에 관한 내용이 있습니다.</p>
+<p>9.10. Further Resources</p>
+<p>This book,<br />
+				<a href="http://www.infoq.com/minibooks/JTDS" target="_top">Java Transaction Design Strategies</a><br />
+				from <a href="http://www.infoq.com/" target="_top">InfoQ</a></p>

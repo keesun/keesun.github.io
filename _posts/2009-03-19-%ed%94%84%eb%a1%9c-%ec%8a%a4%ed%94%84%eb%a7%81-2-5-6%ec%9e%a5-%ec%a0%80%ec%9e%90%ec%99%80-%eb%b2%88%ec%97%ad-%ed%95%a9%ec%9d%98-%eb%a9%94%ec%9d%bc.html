@@ -1,0 +1,60 @@
+---
+layout: post
+title: 프로 스프링 2.5 6장 저자와 번역 합의 메일
+date: 2009-03-19 13:16:45.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Koreanization
+tags:
+- 스프링 AOP
+- 프로 스프링 2.5
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323162883'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>봄싹스터디에서 베타리딩 중인 프로 스프링 2.5 6장 AOP 관련 내용 중에 이상한 부분이 있다는 글이 올라온적이 있습니다. 성윤님이 올린 글 <a href="http://helols.tistory.com/193" target="_blank">@Aspect는 누구의 것?</a>이라는 글인데 저 부분을 번역한 것이 바로 접니다. 번역하면서도 저 부분이 뭔가 맘에 걸렸지만 일단은 번역 자체가 급해서 걍 넘어갔었는데 다행히도 베타리딩에서 잘 걸렸네요.</p>
+<p>몇 일 미루다가 오늘 아침 저자에게 메일을 보냈습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile22.uf.20762C0D49C242BB4A8F4A.png" class="aligncenter" width="600" height="160" alt="사용자 삽입 이미지" /><br />대충 @AspectJ 애스팩트가 AspectJ에 의존하는데 왜 의존하지 않는다고 썼느냐.. 라고 보냈습니다. 그랬더니 답장이 왔는데..</p>
+<p><img src="{{ site.baseurl }}/assets/cfile1.uf.1677690D49C2433A34530D.png" class="aligncenter" width="600" height="288" alt="사용자 삽입 이미지" /><br />음.. 이건 걍 읽어보시면 좋은 내용입니다. 본래는 어쩌구 저쩌구 하면서 좀 장황하게 얘기를 해주네요. 중요한건 ApsectJ 라이브러리를 참조하기는 하지만 애노테이션을 떄문에 참조하는 것이지 스프링 AOP를 사용할 때는 AspectJ의 compile-time weaving 같은 컴포넌트를 사용하진 않는다는 겁니다. 그런 뜻으로 AspectJ에 의존하지 않는다고 한거라는거죠.</p>
+<p>하지만 너무 애매하자나요. 그래서 다시 메일을 보냈습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile5.uf.1577B90D49C24476821D99.png" class="aligncenter" width="600" height="228" alt="사용자 삽입 이미지" /><br />애매하니까 AspectJ 라이브러리에서 애노테이션만 사용하고 다른 것들은 사용하지 않는다는 식으로 번역하겠다고 보냈습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile21.uf.1876C00D49C244BA7385D9.png" class="aligncenter" width="600" height="125" alt="사용자 삽입 이미지" /><br />귿~ 잘 해결됐네요. 그렇게 하랍니다. 번역서에서는 좀 더 분명하게 적어드리겠습니다.</p>
+<p></p>

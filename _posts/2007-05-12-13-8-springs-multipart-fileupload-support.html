@@ -1,0 +1,82 @@
+---
+layout: post
+title: 13.8. Spring's multipart (fileupload) support
+date: 2007-05-12 12:48:54.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- File Upload
+- Multipart support
+- Spring Reference 13장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323150582'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">13.8.1. Introduction</span></p>
+<p>MultipartResolver 인터페이스를 사용하여 파일 업로드를 구현할 수 있습니다. 내부 구현체는 Commons FileUpload 와 COS FileUpload 를 사용합니다.</p>
+<p>기본적으로 Spring은 Multipart 를 지원하진 않지만 Multipart를 포함하는 요청이 들어오면 Context에 설정해둔 MutipartResoolver를 사용하여 적절하게 처리할 수 있습니다.</p>
+<p><span style="font-weight: bold;">13.8.2. Using the MultipartResolver</span></p>
+<p>Multipart 기능을 사용하기 위해 먼저 사요할 MultipartResolver를 bean으로 등록해야 합니다.</p>
+<p>CommonsMultipartResolver 등록하기 :: commons-fileupload.jar, commons-io.jar 필요함
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="multipartResolver"<br />&nbsp; &nbsp; class="org.springframework.web.multipart.commons.CommonsMultipartResolver"&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- one of the properties available; the maximum file size in bytes --&gt;<br />&nbsp; &nbsp; &lt;property name="maxUploadSize" value="100000"/&gt;<br />&lt;/bean&gt;</div>
+<p>CosMultipartResolver 등록하기 :: cos.jar 필요함
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="multipartResolver" class="org.springframework.web.multipart.cos.CosMultipartResolver"&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- one of the properties available; the maximum file size in bytes --&gt;<br />&nbsp; &nbsp; &lt;property name="maxUploadSize" value="100000"/&gt;<br />&lt;/bean&gt;</div>
+<p><span style="font-weight: bold;">13.8.3. Handling a file upload in a form</span></p>
+<p>화면에서 파일 입력 받기.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;html&gt;<br />&nbsp; &nbsp; &lt;head&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;title&gt;Upload a file please&lt;/title&gt;<br />&nbsp; &nbsp; &lt;/head&gt;<br />&nbsp; &nbsp; &lt;body&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;Please upload a file&lt;/h1&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;form method="post" action="upload.form" <span style="color: rgb(255, 0, 0); font-weight: bold;">enctype="multipart/form-data"</span>&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;input type="<span style="color: rgb(255, 0, 0);">file</span>" name="file"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;input type="submit"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/form&gt;<br />&nbsp; &nbsp; &lt;/body&gt;<br />&lt;/html&gt;</div>
+<p>화면에서 입력받은 파일을 객체로 바인딩 해야 하는데 이 때 String 타입으로 바인딩하려면 StringMultipartEditor, byte타입의 배열로 바인딩 하려면 ByteArrayMultipartEditor 를 사용할 수 있습니다.</p>
+<p>byte 타입의 배열 이나 String으로 바인딩하지 않고 MultipartFile 타입으로 받으려면 별다른 바인딩이 필요 없습니다.</p>
+<p>이 세가지 방법 중 String으로 바인딩하는 예제를 보겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class FileUploadController extends SimpleFormController {</p>
+<p>&nbsp; &nbsp; protected ModelAndView onSubmit(<br />&nbsp; &nbsp; &nbsp; &nbsp; HttpServletRequest request,<br />&nbsp; &nbsp; &nbsp; &nbsp; HttpServletResponse response,<br />&nbsp; &nbsp; &nbsp; &nbsp; Object command,<br />&nbsp; &nbsp; &nbsp; &nbsp; BindException errors) throws ServletException, IOException {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; // cast the bean<br />&nbsp; &nbsp; &nbsp; &nbsp; FileUploadBean bean = (FileUploadBean) command;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; let's see if there's content there<br />&nbsp; &nbsp; &nbsp; &nbsp; String file = bean.getFile();<br />&nbsp; &nbsp; &nbsp; &nbsp; if (file == null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; // hmm, that's strange, the user did not upload anything<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; // well, let's do nothing with the bean for now and return<br />&nbsp; &nbsp; &nbsp; &nbsp; return super.onSubmit(request, response, command, errors);<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder)<br />&nbsp; &nbsp; &nbsp; &nbsp; throws ServletException {<br />&nbsp; &nbsp; &nbsp; &nbsp; // to actually be able to convert Multipart instance to a String<br />&nbsp; &nbsp; &nbsp; &nbsp; // we have to register a custom editor<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="background-color: rgb(255, 218, 237);"> binder.registerCustomEditor(String.class, new <span style="color: rgb(255, 0, 0); font-weight: bold;">StringMultipartFileEditor</span>());</span><br />&nbsp; &nbsp; &nbsp; &nbsp; // now Spring knows how to handle multipart object and convert them<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>public class FileUploadBean {</p>
+<p>&nbsp; &nbsp; private <span style="color: rgb(255, 0, 0); font-weight: bold;">String </span>file;</p>
+<p>&nbsp; &nbsp; public void setFile(String file) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.file = file;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String getFile() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return file;<br />&nbsp; &nbsp; }<br />}</div>
+<p>오호.. 간단하군요. 집에가서 써먹어 봐야겠습니다.</p>

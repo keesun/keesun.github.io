@@ -1,0 +1,55 @@
+<p>흔히 사용하는 어댑터와 같은 역할을 하는 객체 입니다. 플랫폼에 독립적으로 클라이언트들이 사용하는 인터페이스에 맞춰 사용할 수 있도록 해줍니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1067386489.bmp" class="aligncenter" width="287" height="115" alt="">1067386489.bmp</a><br />
+기존 시스템에서 사용하던 소스코드는 그대로 두고 새로운 클래스의 메소드를 사용하고 싶다면 기존 시스템에서 사용하던 인터페이스를 구현하는 클래스를 만들면서 구현 할 때 사용하고 싶은 클래스의 인터페이스를 호출하면 됩니다. 그런 클래스를 어댑터라고 합니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1342364516.bmp" class="aligncenter" width="350" height="126" alt="">1342364516.bmp</a>이렇게하면 기존 시스템에서 사용하던 코드는 변경할 필요가 없이 기능이 확장될 수 있습니다. 이 그림은 Java를 처음 배울 때 자바의 특성중에 '플랫폼에 독립적이다.'라는 말이 나올때 마다 봤던 그림을 떠올리게 합니다. JVM자체는 플랫폼에 종속적이지만 JVM 위에서 실행되는 클래스들은 JVM 덕분에 리눅스든 윈도우든 맥이든 어디서든 돌아가게 되있다는 것이였죠.</p>
+<p> 책에서 예를 들고 있는 Duck interface를 보겠습니다.</p>
+<p>기존 시스템에서 사용하던 인터페이스에 해당하는 Duck 인터페이스 소스보기<br />
+[#M_ more.. | less.. | <br />
+public interface Duck {<br />
+ &nbsp;&nbsp; public void quack();<br />
+ &nbsp;&nbsp; public void fly();<br />
+}<br />
+_M#]<br />
+사용하고 싶은 클래스에 해당하는 인터페이스인 Turkey 인터페이스 소스보기<br />
+[#M_ more.. | less.. | <br />
+public interface Turkey {<br />
+ &nbsp;&nbsp; public void gobble();<br />
+ &nbsp;&nbsp; public void fly();<br />
+}<br />
+_M#]<br />
+이 둘을 연결해주는 어댑터에 해당하는 TurkeyAdapter 클래입니다.<br />
+[#M_ more.. | less.. | <br />
+public class TurkeyAdapter implements Duck {<br />
+ &nbsp;&nbsp; Turkey turkey;</p>
+<p> &nbsp;&nbsp; public TurkeyAdapter(<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">Turkey turkey</span>) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; this.turkey = turkey;<br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void quack() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">turkey.gobble();</span><br />
+ &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void fly() {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; for(int i=0; i &lt; 5; i++) {<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> turkey.fly();</span><br />
+ &nbsp;&nbsp; &nbsp; &nbsp; }<br />
+ &nbsp;&nbsp; }<br />
+}<br />
+_M#]</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255)">어댑터 패턴의 정의<br />
+어댑터 패턴 - 한 클래스의 인터페이스를 클라이언트에서 사용하고자 하는 다른 인터페이스로 변환합니다. 어댑터를 이용하면 인터페이스 호환성 문제 때문에 같이 쓸 수 없는 클래스들을 연결해서 쓸 수 있습니다.</div>
+<p>
+핵심이라고 생각하는 부분은 클래이언트는 바뀔 필요가 없는데 나중에 다른 구현을 추가할 수 있다는 것 같습니다. 즉 OCP가 적용되어 있는 패턴이라는 것이죠. 이런 어댑터 패턴은 크게 두 가지로 나뉘는데 하나는 객체 어댑터 패턴 다른 하나는 클래스 어댑터 패턴입니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169)">먼저 객체 어댑터 패턴의 정의와 그 클래스 다이어그램 입니다.<br />
+The <em><a href="http://en.wikipedia.org/w/index.php?title=Object_Adapter_pattern&amp;action=edit" class="new" title="Object Adapter pattern">Object Adapter pattern</a></em>- In this type of adapter pattern, the adapter contains an instance ofthe class it wraps. In this situation, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">the adapter makes calls to aphysical instance of the wrapped <a href="http://en.wikipedia.org/wiki/Object_%28computing%29" title="Object (computing)">object</a>.</span></p>
+<div class="fullImageLink" id="file"><img src="/assets/ObjectAdapter.png" alt="" border="0" height="277" width="386" /></p>
+</div>
+<p>감싸주는 클래스의 객체를 만들어서 호출하기 때문에 객체 어댑터 패턴이라고 합니다. Composition을 사용하여 확장이 편리하도록 했습니다.</p></div>
+<p></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169)">다음은 클래스 어댑터 패턴의 정의와 클래스 다이어그램입니다. <br />
+The <em><a href="http://en.wikipedia.org/w/index.php?title=Class_Adapter_pattern&amp;action=edit" class="new" title="Class Adapter pattern">Class Adapter pattern</a></em> - This type of adapter uses<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> multiple <a href="http://en.wikipedia.org/wiki/Inheritance_%28object-oriented_programming%29" title="Inheritance (object-oriented programming)">inheritance</a></span>to achieve its goal. The adapter is created inheriting interfaces fromboth the interface that is expected and the interface that ispre-existing. The Object Adapter pattern is more often used as somepopular <a href="http://en.wikipedia.org/wiki/Programming_language" title="Programming language">languages</a>, such as <a href="http://en.wikipedia.org/wiki/Java_programming_language" title="Java programming language">Java</a>, do not support true <a href="http://en.wikipedia.org/wiki/Multiple_inheritance" title="Multiple inheritance">multiple inheritance</a> as the designers of these languages consider it a dangerous practice.</p>
+<div class="fullImageLink" id="file"><img src="/assets/ClassAdapter.png" alt="" border="0" height="290" width="379" /></p>
+<p>다중 상속을 사용해서 어댑터를 구현할 수 도 있습니다. Java에서는 다중 상속은 되지 않지만 다중 구현은 되기 때문에 비슷한 모양을 만들 수는 있지만 클래스 어댑터 패턴의 장점인 재사용성을 따라 할 수는 없다는 한계가 있다고 생각합니다. </p></div>
+</div>
+<div class="fullImageLink" id="file">
+노란 부분의 출처 : <a href="http://en.wikipedia.org/wiki/Adapter_pattern">http://en.wikipedia.org/wiki/Adapter_pattern</a></p>
+<p>참고 할 곳 : <a href="http://younghoe.info/176">영회 형 블러그의 어댑터 패턴</a>
+</div>

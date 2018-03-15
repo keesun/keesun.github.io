@@ -1,0 +1,43 @@
+---
+layout: post
+title: "[vert.x] EchoClient 데모"
+date: 2012-02-03 22:04:28.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- vert.x
+tags:
+- NetClient
+- vert.x
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>지난번에는 NetServer를 이용해서 EchoServer를 만들고 telnet으로 접속해서 메아리를 확인했었다. 이번에는 NetClient를 이용해서 자바로 EchoClient를 만들었다.</p>
+<p>[gist id=1730614]</p>
+<p>서버 코드도 다시 볼까?</p>
+<p>[gist id=1704781]</p>
+<p>서버를 다시 띄워보자. 서버를 띄우려면 빌드를 하고, target을 classes가 들어있는 빌드 루트 디렉토리라고 가정하고..</p>
+<p>target&gt; vertx run -main echo.EchoSever -cp classes</p>
+<p>이렇게 실행하면 기본적으로 코어 갯수만큼 인스턴스를 생성해준다. 맥북 에어에서 4개의 인스턴스가 생겼다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/02/스크린샷-2012-02-04-오전-12.13.34.png"><img class="aligncenter size-full wp-image-13483" title="스크린샷 2012-02-04 오전 12.13.34" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-02-04-&#50724;&#51204;-12.13.34.png" alt="" width="1348" height="624" /></a></p>
+<p>다음은 클라이언트를 실행할 차례다..</p>
+<p>target&gt; vertx run -main echo.EchoClient -cp classes -instances 1</p>
+<p>이번에는 -instances 옵셥으로 인스턴스를 한개만 띄우도록 설정했다 안그러면 기본으로 클라이언트가 4개 떠버리고... 그랬다가는 아래와 같은 불상사가 발생한다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/02/스크린샷-2012-02-04-오전-12.15.14.png"><img class="aligncenter size-full wp-image-13484" title="스크린샷 2012-02-04 오전 12.15.14" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-02-04-&#50724;&#51204;-12.15.14.png" alt="" width="1348" height="624" /></a></p>
+<p>물론, 이번에도 telnet으로 접속할 수 있다.</p>
+<p>target&gt; telnet localhost 8080</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/02/스크린샷-2012-02-04-오전-12.16.07.png"><img class="aligncenter size-full wp-image-13485" title="스크린샷 2012-02-04 오전 12.16.07" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-02-04-&#50724;&#51204;-12.16.07.png" alt="" width="1348" height="624" /></a></p>
+<p>코드는 NetServer와 매우 유사하다.</p>
+<p>먼저, NetClient 객체를 만들고 connect() 메서드 호출하면서, handle(NetSocket)만 구현하면 되는 Handler&lt;NetSocket&gt; 객체를 만들어서 넘긴다. 이런 객체를 콜백 객체나 함수 객체라고 불러도 되지 않을까 싶다.</p>
+<p>handle() 메서드 안에서 본격적으로 연결된 뒤에 할 일을 하면 되는데, 일단 클라이언트가 서버로부터 메시지를 받았을 때 무슨일을 할지 dataHandler()라는 메서드를 호출하면서, 또 다시 함수 객체로 Handler 객체를 넘긴다.</p>
+<p>그담엔 메시지를 하나 보내본다.</p>
+<p>끝.</p>

@@ -1,0 +1,47 @@
+<p style="clear: both;">크하하 완전 재밌게 풀었다. 잡습도 리플렉션이 있구나..</p>
+<p>[javascript]<br />
+		var params = {'port':port,<br />
+		              'username':req.session.username,<br />
+		              'p_id':req.params.id,<br />
+		              'title':'',<br />
+		              'diffCount ' : 0,<br />
+		              'disCount'   : 0,<br />
+		              'sameCount'  : 0,<br />
+		              'likeCount'  : 0,<br />
+		              'queCount'   : 0,<br />
+		              'allCount'   : 0<br />
+		             },<br />
+			presentFn = function(){<br />
+				Presentations.findById(req.params.id, function(err, p){<br />
+					if(!p){<br />
+						res.redirect('/list');<br />
+					} else {<br />
+						params.title = p.title;<br />
+						res.render('presentation',params);<br />
+					}<br />
+				});<br />
+			},<br />
+			countFn = function(args){<br />
+				var arg = args[idx++];<br />
+				var param = {'to':params.p_id};<br />
+				if(arg.emotion){<br />
+					param.emotion = arg.emotion;<br />
+				}<br />
+				Comments.find(param).count(function(err, count){<br />
+					params[arg.countNm] = count;<br />
+					arg.callBack.call(this,args);<br />
+				});<br />
+			},<br />
+			functions  = [{'emotion' : '불만이 있습니다.', 'countNm' : 'disCount', 'callBack' :countFn},<br />
+						  {'emotion' : '다르게 생각합니다.', 'countNm' : 'diffCount', 'callBack' :countFn},<br />
+						  {'emotion' : '좋아합니다.', 'countNm' : 'likeCount', 'callBack' :countFn},<br />
+						  {'emotion' : '공감하고 있습니다.', 'countNm' : 'sameCount', 'callBack' :countFn},<br />
+						  {'emotion' : '궁금해 합니다.', 'countNm' : 'queCount', 'callBack' :countFn},<br />
+						  {'countNm' : 'allCount', 'callBack' :presentFn}<br />
+						 ],<br />
+			idx = 0;</p>
+<p>			countFn(functions);<br />
+[/javascript]</p>
+<p style="clear: both;">하지만... 결국 돌아가는건 아래 코드랑 똑같자나. 난 직관적인 코드가 더 좋으니, 내 코드에 손을 들겠다. 음하하핫!</p>
+<p style="clear: both;">그렇다고 고치진 않을께. 잡습 공부하긴 좋은 코드로구나.. +_+</p>
+<p><br class="final-break" style="clear: both;" /></p>

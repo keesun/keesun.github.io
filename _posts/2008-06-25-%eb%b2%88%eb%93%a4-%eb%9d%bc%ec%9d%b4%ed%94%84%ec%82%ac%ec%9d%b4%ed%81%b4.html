@@ -1,0 +1,58 @@
+---
+layout: post
+title: 번들 라이프사이클
+date: 2008-06-25 13:56:54.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- 번들 라이프사이클
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323109476'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>전에 한 번 그림도 그려보고 아드리안의 발표자료에서도 봤지만, 이번엔 Neil이 그린 라이프사이클입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/jk16.png" class="aligncenter" width="561" height="418" alt="사용자 삽입 이미지" /><br />install 커맨드를 사용해서 번들을 설치하면 맨 먼저 INSTALLED 상태가 되고, <br />start 커맨드를 사용하면 번들이 필요로 하는 패키지나 서비스를 참조할 수 있는지 확인한 다음 RESOLVED 상태가 되고, 자동으로 자신이 공개할 서비스를 서비스 레지스트리에 등록하고 ACTIVE&nbsp; 상태가 됩니다.</p>
+<p>이 상태에서 update 명령을 실행하면 일단 RESOLVED 상태로 넘어가야 하기 떄문에 STOPPING 과정을 거치는데 이 과정에서 자신이 등록했던 서비스를 서비스 레지스트리에서 제거하고 RESOLVED 상태에서 INSTALLED 상태로 변하고 여기서 실제 번들 파일을 update 합니다. 이 때 이미 번들이 위치한 정보를 알고 있기 때문에 위치를 다시 알려줄 필요는 없겠죠. 그런 다음 원래 상태가 ACTIVE 상태였기 떄문에 다시&nbsp; start를 합니다. 그럼 처음과 같이 RESOLVED -&gt; STARTING 을 걸쳐 ACTIVE 상태가 됩니다.</p>
+<p>이 상태에서 이번에는 stop 커맨드를 사용하면 번들은 RESOLVED 상태가 됩니다. 왜? 이미 해당 번들이 필요한 서비스나 패키지들이 가용하다는 것을 검증한 상태기 때문이죠.</p>
+<p>해당 번들을 아예 안 쓸꺼면 그 땐 uninstall 해버리면 됩니다. 현재 상태가 어떤 상태이든 관계없이 저 고리를 따라서 이동한 뒤 설치된 번들 목록에서 사라질 겁니다. 다음에 그 번들을 다시 설치하고 싶으면 위치를 또 알려줘야 합니다. 그게 update와 uninstall/install의 가장 큰 외관상 차이며, 개념적인 차이기도 합니다.</p>
+<p>Anyway 무사히 모든 번들들이 RESOLVED 되기를 빕니다. </p>
+<p>참조 : <a href="http://neilbartlett.name/blog/osgibook/" target="_blank">http://neilbartlett.name/blog/osgibook/</a></p>

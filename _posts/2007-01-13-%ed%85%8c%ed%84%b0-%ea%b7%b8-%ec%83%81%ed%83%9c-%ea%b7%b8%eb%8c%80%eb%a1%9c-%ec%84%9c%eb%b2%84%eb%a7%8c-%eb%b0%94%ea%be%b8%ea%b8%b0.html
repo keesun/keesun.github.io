@@ -1,0 +1,61 @@
+---
+layout: post
+title: 테터 그 상태 그대로 서버만 바꾸기
+date: 2007-01-13 03:53:29.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Blogging
+tags:
+- 테터이전
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323153467'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>실험 대상은 테터 버전 1.0.6.1 에 차칸아이 플러그인 0.7c 가 설치되어 있었습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">1. 옮기려는 대상 서버에 접속 해서 테터가 설치된 폴더를 tar로 묶기</span><br />tar cvf [저장될 파일명] [묶을 폴더]<br />예) tar cvf tt.tar ./tt</p>
+<p><span style="font-weight: bold;">2. 테터가 사용하는 DB 덤프 뜨기</span><br />mysqldump -u 사용자아이디 -p 데이터베이스명&nbsp; &gt; 저장될 파일명<br />예) mysqldump -u agilejava -p agilejava &gt; whiteship.sql</p>
+<p>이제 이사갈 짐싸는 일은 끝났습니다. 저렇게 파일 두 개 만드는 시간은 불과 몇 초 밖에 안걸리더군요. 이제 짐을 풀어 놓아야 할 시간입니다.</p>
+<p><span style="font-weight: bold;">3. 먼저 새로운 서버에 DB를 만듭니다.</span><br />3.1. mysql -p [사용자명] 으로 로그인 한뒤<br />3.2. show databaes; 날려서 뭐뭐 있나 한번 봐주고.<br />3.3. create database [db이름]; 이렇게 원하는 db를 만들어 줍니다.<br />3.4. show databases; 로 만들어졌나 확인 해보고<br />3.5. exit;</p>
+<p><span style="font-weight: bold;">4. 묶어 놨던 테터를 웹 기본 폴더에 풀어 줍니다.</span><br />tar xvf [풀어 제낄 파일 이름]</p>
+<p><span style="font-weight: bold;">5. 테터를 설치합니다.</span><br />5.1.&nbsp; config.php 파일을 다른 이름으로 바꾸던지 삭제합니다.&nbsp; <br />mv [대상 파일] [목표 파일] or rm -rf [지울 파일]<br />5.2. 웹에서 setup.php 에 접속합니다.<br />예) www.webapp2.net/tt/setup.php<br />5.3. 새로운 테터 설치를 진행합니다. DB는 3번에서 만들었던 DB로 설정해 줍니다.<br />5.4. 설치가 끝나고 Admin으로 로그인 해보면 테터가 텅텅 비어있는 새거 인 상태를 볼 수 있습니다.</p>
+<p><span style="font-weight: bold;">6. DB에 접속해서 3번에서 만들어둔 DB를 2번에서 덤프뜬 sql로 대체 합니다.</span><br />6.1. DB에 접속<br />6.2. show databases; 로 만들어둔 DB가 보이나 확인.<br />6.3. drop database [db이름]; 으로 tt에서 사용하는 db 제거.<br />6.4. create database [db이름]; 다시 지웠던 db이름으로 db 생성.<br />6.5. exit;<br />6.6. 덤프파일로 복구합니다.<br />mysql -u [사용자아이디] -p [디비명] &lt; 덤프파일명<br />예) mysql -u agilejava -p agilejava &lt; whiteship.sql</div>
+<p>끝났습니다.</p>
+<p>다시 테터에 접속해 보시면 이전 서버에 있던 상태 그대로 새로운 서버에 깔린 것을 확인할 수 있습니다. <span style="color: rgb(0, 153, 102);">계정들도 그대로 로그인 됩니다.</span></p>

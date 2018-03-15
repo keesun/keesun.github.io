@@ -1,0 +1,81 @@
+---
+layout: post
+title: 스프링 2.5 기반(JUnit 4.4 사용) 테스트 코드
+date: 2007-11-22 06:41:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 08
+tags:
+- 스프링 2.5
+- 테스트 코드
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322994640'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><textarea name="code" class="java" cols="60" rows="10"><br />
+package whiteship;</p>
+<p>import static org.junit.Assert.*;</p>
+<p>import org.junit.Test;<br />
+import org.junit.runner.RunWith;<br />
+import org.springframework.beans.factory.annotation.Autowired;<br />
+import org.springframework.test.context.ContextConfiguration;<br />
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)<br />
+@ContextConfiguration<br />
+public class MemberTest {</p>
+<p>	@Autowired<br />
+	private Member member;</p>
+<p>	@Test<br />
+	public void testDI() throws Exception {<br />
+		assertNotNull(member.getRepository());<br />
+	}</p>
+<p>}<br />
+</textarea></p>
+<p>위의 코드에 보시면, Context 파일을 명시하고 있지 않습니다. 스프링 2.5에서 도입한 COC중 하나로 생각할 수 있는데요. 만약 테스트 코드를 담고 있는 클래스가 whiteship.MemberTest 면 whiteship/MemberTest-context.xml 이라는 파일을 기본 설정 파일로 읽어오려고 합니다. 물론 명시적으로 설정할 수도 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk4.png" class="aligncenter" width="274" height="246" alt="사용자 삽입 이미지" /><br />그리고 세터도 없이 @Autowired 애노테이션을 사용하여 Member 객체를 가져오고 있습니다.</p>
+<p>위 소스코드를 작성할 때 주의 할 것은.. JUnit 4 라이브러리를 이클립스의 자동완성(컨트롤 + 스페이스)으로 추가하면 안됩니다. 스프링 소스 코드를 받을 때 같이 받은 lib/junit에 있는 jar 파일을 빌드패스에 추가해주어야 합니다.(둘 다 같은 4.4같은데 RunWith 애노테이션의 인자가 다른 것 같습니다.)</p>
+<p>따라서 위의 코드를 돌리는데 필요한 Jar 파일은 다음과 같습니다.
+<ul>
+<li>dist 폴더의 spring.jar (스프링 컨테이너 필요함.)</li>
+<li>dist/modules 폴더의 spring-test.jar (SpringJUnit4ClassRunner.class 필요함.)</li>
+<li>lib/jakarta-commons 폴더의 commons-logging.jar (spring.jar 가 종속함.)</li>
+<li>lib/junit 폴더의 junit-4.4.jar (@RunWith, @Test, assertNotNull 필요함.)</li>
+</ul>

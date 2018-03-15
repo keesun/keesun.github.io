@@ -1,0 +1,117 @@
+---
+layout: post
+title: Inversion of Control
+date: 2006-10-06 12:24:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 02장 Spring 기본요소
+tags:
+- AOP
+- Dependency Injection
+- Inversion Of Control
+- IOC
+- Service Locator
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323146224'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><font style="font-family: verdana,arial,helvetica,sans-serif; color: rgb(153, 204, 102); font-weight: bold;" size="5">Inversion of Control</font></p>
+<p>Dependency Injection(의존성 주입)과 혼용되어 사용되는 것을 종종 보았는데 이 글을 읽어보니 어느정도 명확해 지네요. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">IOC가 보다 광범위한 의미이고 이 것을 표현하는 여러가지 방법이 있습니다.</span> DI도 그중에 하나라고 하네요. 이번 장에서 말하고 있기로는 AOP와 DI가 IOC의 일부라고 합니다. </p>
+<p>먼저 간략히 정의를 살펴보면 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">IOC는 braod range of techniques that allow an object to become a passive participant in the system.</span> IOC를 사용하면 객체의 몇몇 특성이나 시점(aspect)에 대한 제어권을 프레임웍이나 환경에게 넘기게 됩니다. 그러한 제어권에는 객체의 생성이나 의존하는 객체들의 임명 등이 있습니다. </p>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif;" size="4"><span style="color: rgb(153, 204, 102);">AOP</span></font></p>
+<p>먼저 AOP를 사용하게 되는 경우를 살펴보겠습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1262923808.jpg" class="aligncenter" width="434" height="315" alt="" />여기 보시면 주황색 부분의 코드(인증 관련 코드)가 매번 중복되어 나타나는 것을 볼 수 있습니다.<br />
+사실 인증은 메소드 본래의 작업이 아닌 부가적인 작업에 불과함에도 본래 코드보다 많은 부분을 차지 할 뿐만 아니라 계속해서 반복되어 나타나고 있습니다.</p>
+<p>이 코드를 시스템 뒤딴으로 빼려면 Spring의 AOP(Aspect-Oriented Programming)를 사용하서 간단히 해결할 수 있습니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">Aspects are concerns of the application that apply themselves across the entire system.</span> Aspect란 전체 시스템에서 통용되어 사용되는 에플리케이션과의 관계라고 할 수 있나요...흠; 어렵네요. 위 예제에서는 SecurityManager가 시스템에서 통용되는 aspect의 하나의 예라고 할 수 있겠네요. 그리고 통용된다는 증거로 모든 BankAccount의 모든 메소드에서 hasPermission 메소드를 호출하고 있습니다. 이런 비슷한 aspect로는 logging, auditing, transaction management가 있습니다. 이 중에 auditing은 뭔지 잘 모르겠네요.</p>
+<p><img src="{{ site.baseurl }}/assets/1188781470.jpg" class="aligncenter" width="433" height="219" alt="" /><br />
+<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">Spring AoP는 이러한 aspect들을 runtime 때 또는 compile 때 도메인 모델(여기선 BankAccount)에 끼워넣습니다.(보통 weaving 한다고 합니다.) </span>이 말은 BankAccount에서 위와 같이 주황색 부분의 코드를 전부 지워도 AOP 프레임웤이 이 전과 똑같이 동작하도록 도와준다는 것입니다.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">Spring은 기본적으로 proxy-based AOP(프록시 기반 AOP)를 사용합니다.</span> 이 말은 원래 목표가 되는 객체(targer object)를 - 여기서는 BankAccount가 되겠죠- Aspect를 적용하기 위해서 Proxy로 감싸서 목표 객체 대신에 사용한다는 것입니다.&nbsp; 다음의 그림을 보시면 이해가 될 것입니다.</p>
+<p>여기서 잠깐 Spring은 프록시가 아닌 컴파일 할 때 끼워넣는 AspectJ를 지원한다는 점. 그리고 이게 단순한 프록시를 사용하는 솔루션 보다 더 많은 기능을 가지고 있다고 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1053571025.jpg" class="aligncenter" width="528" height="361" alt="" /><br />
+BankTeller가 colseOut을 호출 하면 이것은 BankAccount의 메소드를 호출하는 것이 아니라 BankAccount의 프록시를 호출하게 되고 이 프록시는 weaving된 aspect에 따라 3번 작업을 하고 그리고 본래의 작업인 4번을 BankAccount를 이용하여 처리합니다.</p>
+<blockquote><p>여기까지 정리</p>
+<ul>
+<li>IOC는 제어권을 프레임웤에 넘기는 포괄적인 개념이다.</li>
+<li>여기서 제워권이란 새로운 객체의 생성, 트랜잭션, 보안에 대한 제어들을 이야기 한다.</li>
+<li>AOP는 IOC를 실현하는 하나의 기술이다.</li>
+<li>DI또한 IOC를 실현하는 하나의 기술이다.</li>
+</ul>
+</blockquote>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif;" size="4"><span style="color: rgb(153, 204, 102);">Dependency Injection</span></font></p>
+<p>DI는 Spring 프레임웤의 핵심 기술입니다. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">DI is a technique that framework use to wire together an application.</span> 프레임웤은 에플리케이션 간의 종속성을 연결하는 작업을 하여 에플리케이션에 있는 객체 생성을 하는 코드를 제거하는 일을 합니다. </p>
+<p>DI와 Service Locator pattern을 비교할 수 있는데.. 그 둘을 비교하기 위해 간단한 예제를 보겠습니다. 이 예제는 쇼핑카트에 있는 물품들을 계산을 하는데 DB로 부터 그 물품들의 가격을 가져와서 합산하는 프로그램입니다. 따라서 먼저 간단한 인터페이스를 하나 작성을 합니다. 이 인터페이스는 CashRegister로써 쇼핑 카트를 매개변수로 받아서 그 안에 있는 물품을 계산하는 calculateTotalPrice 메소드가 있습니다. 그리고 PriceMatrix 인터페이스에는 lookup 메소드가 있어서 원하는 물품의 가격을 반환해주는 일을 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1031201765.jpg" class="aligncenter" width="393" height="60" alt="" /><img src="{{ site.baseurl }}/assets/1404166438.jpg" class="aligncenter" width="372" height="53" alt="" /><br />
+그리고 CashRegister를 구현한 CashRegisterImpl을 봅시다.</p>
+<p><img src="{{ site.baseurl }}/assets/1005195331.jpg" class="aligncenter" width="405" height="181" alt="" /><br />
+어쩌면 이렇게 한 것이 매우 자연스럽지만 다음과 같은 세가지 중요한 문제가 있습니다.<br />
+먼저 가장 중요한 것으로 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255);">인터페이스가 아닌 특정 구현에 의존한다는 것입니다</span>. 이 말은 H.F. Degisn Pattern 1장에 나오는 디자인 원칙이며 위 코드는 그것을 어겼습니다. 특정 구현에 의존하게 되면 왜 안좋은지에 대한 것은 위에서 확인하시기 바랍니다.<br />
+둘째 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255);">PriceMatrixImpl 객체가 CashRegisterImpl을 생성 할 때 마다 매번 생성된다는 것입니다.</span> 이것은 문제가 있지요. 가격표는 하나만 있으면 되는데 매번 계산할 때 마다 새로운 가격표를 생성한다는 것은 자원을 낭비하는 일입니다.<br />
+마지막으로 첫번째 발생한 일에 딸려 오는 문제로써 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(201, 237, 255);">테스트하기가 힘들다는 것입니다. </span>CashRegister를 테스트하기 위해서는 지금 PriceMatrixImpl까지 제대로 구현으르 해야 테스트가 가능합니다. 그리고 단위 테스트는 아예 할 수가 없는 상황이네요.</p>
+<p>그럼 PriceMatrix없이 테스트가 가능하기나 하냔 말인가가 궁금한데요. 저도 잘 모르는 부분인데 Mock이라는 기술을 사용하면 단위 테스트가 가능하다고 합니다. </p>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif;" size="3"><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157);">Service Locator를 사용해 봅시다.</span></font></p>
+<p>Service Locator Pattern은 객체를 생성하여 그 레퍼런스를 얻어내는 과정을 숨기는 것을 말합니다. 클라이언트를 객체가 언제, 어디서 어떻게 생성되는지 모르도록 하는 패턴입니다. 클라이언트를 보호하고 코드 중복을 줄이기 위해서 이 패턴이 만들어졌다고 합니다. 보통 static 메소드를 사용하여 요구된 객체에 대한 하나의 객체를 반환해 줍니다. (싱글턴 패턴하고 다른게 뭐죠? 첨에는 static 팩토리인가.. 생각했다가 오직 하나의 클래스에 대한 하나의 객체만 리턴 해주면 이거 싱글턴 아닌가.. 하는 생각이 들었습니다.)</p>
+<p><img src="{{ site.baseurl }}/assets/1143731015.jpg" class="aligncenter" width="391" height="278" alt="" /><br />
+이렇게 함으로써 첫번째 문제(특정 구현에 의존하던 문제)와 두번째 문제(매번 새로운 객체를 생성하던 문제)가 해결되었습니다. 하지만 세번째 단위 테스트를 하려면 Mock 객체를 사용해야 하는데 Mock객체를 끼워넣을 방법이 없습니다. 왜내면 저 위의 주황색 부분이 test할 때는 Mock 객체를 넘겨주고 실제 사용할 때는 PriceMatrix객체를 주도록 바꾸기가 어렵기 때문입니다. 이런것을 효율적으로 하려면 클라이언트 코드에서 자원을 가져오거나 생성하는 활동에 전혀 참여하면 안됩니다. 그냥 자원이 클라이언트에 주어져야 합니다.</p>
+<p><font style="font-family: verdana,arial,helvetica,sans-serif;" size="4"><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157);">Dependency Injection을 사용해 봅시다.</span></font></p>
+<p>Service Locator를 사용하는 대신에 프레임웤이 PriceMatrix type 객체의 레퍼런스를 CashRegisterImpl에 제공해 줍니다.&nbsp; 객체 생성과 객체 연결(location)에 대한 책임이 클래스에서 프레임웤으로 뒤집어졌습니다. 이러한 것을 DI라고 하며 두 가지 방법이 흔히 사용됩니다.</p>
+<p>Spring AOP의 도움을 받는 method-based injection이라고 불리는 세번째 방법도 있으나 복잡하고 잘 쓰이질 않아서 여기서 다루진 않는답니다.</p>
+<p>처음으로 볼 DI의 한 종류로는 constructor-based injection이 있습니다. 이 것은 객체가 생성될 때 종속성을 주입하는 방법입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1025727625.jpg" class="aligncenter" width="392" height="245" alt="" /><br />
+이렇게 하면 된거죠. 하지만 이 클래스는 Hollywood Principle을 따르고 있는데요. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237);">할리우드 원칙이란 "내가 전화할테니 전화하지 마!"라는 원칙입니다.</span> 다시 이 경우에 대입해 본다면 "내가 줄테니 자원을 달라고 요청하지마!" 라고 할 수 있겠습니다.</p>
+<p>다음은 Setter-based injection입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/1020851417.jpg" class="aligncenter" width="391" height="247" alt="" /><br />
+PriceMatrix type의 객체 생성 시기가 좀더 유연해 졌습니다. 생성자 기반과 세터 기반 중에 어떤 것을 사용할 지는 사용자의 선택입니다. 물론 어떤 경우를 선택하느냐에 따라 실제 종속성을 주입할 때 따르게 되는 지침에 해당하는 XML 파일의 내용이 약간 바뀔 것입니다.<br />
+<img src="{{ site.baseurl }}/assets/1102818812.jpg" class="aligncenter" width="434" height="88" alt="" />이 것은 생성자 기반 종속성 주입 시에 사용할 XML 설정 파일의 일부이며<br />
+<img src="{{ site.baseurl }}/assets/1272067653.jpg" class="aligncenter" width="434" height="80" alt="" />이 것은 세터 기반 종속성 주입 시에 사용할 XML 설정 파일의 일부입니다.</p>
+<p>첫번째 문제-특정 구현에 의존했었던-는 해결된 듯 합니다.<br />
+두번째 문제-매번 새로운 객체를 생성했던-도 역시 bean이 기본적으로 싱클턴 객체로 생성되기 때문에 해결 된 듯합니다.<br />
+그럼 남은것은 세번째 문제-단위 테스트를 할 수 없었던-것인데요.<br />
+이렇게 하면 Service Locator에서 해결 못했던 Mock을 사용한 단위 test를 어떻게 할 수 있을까요?</p>
+<p>처음 본거라 저도 잘 모르겠지만 다음과 같이 Mock을 사용한다고 합니다.<br />
+<img src="{{ site.baseurl }}/assets/1068691443.jpg" class="aligncenter" width="427" height="122" alt="" /></p>
+<blockquote><p>여기까지 정리하면..</p>
+<ul>
+<li>DI는 종속성을 필요로 하는 코드 없이 여러 클래스들을 묶는데 사용하는 기술입니다.</li>
+<li>클라이언트는 프레임웤에게 종속성의 생명주기 관리를 넘겼습니다.</li>
+<li>이렇게 함으로써 클라이언트는 테스트하기 용이해 집니다.</li>
+</ul>
+</blockquote>

@@ -1,0 +1,40 @@
+---
+layout: post
+title: "[bootstrap] 폼 만들기"
+date: 2012-02-05 13:57:50.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JavaScript
+tags:
+- bootstrap
+- form
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://twitter.github.com/bootstrap/base-css.html#forms">http://twitter.github.com/bootstrap/base-css.html#forms</a></p>
+<p>bootstrap의 CSS만 사용해서, 다음과 같이 깔끔한 폼을 쉽게 만들 수 있습니다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/02/스크린샷-2012-02-05-오후-4.05.18.png"><img class="aligncenter size-full wp-image-13490" title="스크린샷 2012-02-05 오후 4.05.18" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2012-02-05-&#50724;&#54980;-4.05.18.png" alt="" width="1192" height="988" /></a></p>
+<p>마침 봄싹 홈페이지를 개편하려던 중에 Bootstrap을 보게됐고, 유려하고 일관성있는 디자인, 다양한 UI 제공, 깔끔하고 얇게(?) 정리된 문서와 가벼워 보이는 구성 때문에  바로 도입했습니다.</p>
+<p>처음엔 네비게이션 바를 만드는 것부터 했었는데, 오늘은 폼 만드는걸 했고, 다음엔 탭 뷰를 다루게 되지 않을까 싶네요. 폼은 CSS만 class만 잘 사용하면 되는데... 구성은 다음과 같습니다.</p>
+<p>여기서 로그인 폼 코드는 다음과 같습니다.</p>
+<p>[gist id=1743738]</p>
+<ul>
+<li>form 태그에는 form-horizontal 클래스를 붙인다.</li>
+<li>form 구성 요소는 div 태그를 사용하고 control-group 클래스를 붙인다.</li>
+<li>form 구성 요소의 제목은 label 태그를 사용하고 control-label 클래스를 붙인다.</li>
+<li>form 구성 요소의 본문을 둘러싸는 div 태그를 사용하고 controls 클래스를 붙인다.</li>
+<li>form 구성 요소는 div.controls 안에 둔다.</li>
+<li>input type="text" 요소에는 input-xlarge 클래스를 사용한다.</li>
+<li>form 버튼을 둘러싸는 div 태그를 만들고 form-actions 클래스를 붙인다.</li>
+<li>form 버튼은 div.form-actions 안에 두고, button 태그를 사용하고 btn 클래스를 붙인다.</li>
+</ul>

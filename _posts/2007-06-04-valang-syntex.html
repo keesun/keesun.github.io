@@ -1,0 +1,58 @@
+---
+layout: post
+title: Valang - syntex
+date: 2007-06-04 03:31:24.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '09장 Validation'
+tags:
+- Syntax
+- Valang
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322953876'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>기본 적인 syntex 예제 입니다.</p>
+<p>{ location : ? is not blank : 'Location must be specified' : 'addressLocationEmpty' : ? }</p>
+<p><strong>1. validation syntex는 {와 } 사이에 들어가야 합니다.</strong></p>
+<p><strong>2. 인자는 총 다섯 개가 올 수 있으며 : 로 구분합니다. 마지막 인자는 생략 가능합니다.<br /></strong>- 첫 번째 인자 : 검사할 객체의 프로퍼티<br />- 두 번째 인자 : 검사하는 로직<br />- 세 번째 인자 : default message<br />- 네 번째 인자 : 프로퍼티 파일의 에러코드<br />- 다섯 번째 인자 : 아규먼트</p>
+<p><strong>3. 프로퍼티를 가져오는 방법<br /></strong>- name<br />- address.location<br />- customers[0].name<br />- salesParameters[seasonStartDate]<br />위와 같이 다양한 벙법으로 가져 올 수 있으며 기본적으로 String 타입으로 가져옵니다. 이 때 []를 사용하면 그 안의 값은 Date 타입으로 인식합니다. 현재 시각을 나타내는 T 를 사용할 수 있습니다.<br />예) 입력한 시각이 현재 시각보다 앞서지 않도록 검증<br />{ order.timestamp : ? &lt; [T] : '' : 'order.timestamp.in_past' }<br />예) 입력한 시각이 오늘이라는 시간대에 포함되는지 검증<br />{ order.timestamp : ? between [T&lt;d] and [T&gt;d] : '' : 'order.timestamp.not_today' : ? }</p>
+<p><strong>4. 로직을 작성할 때 사용할 수 있는 오퍼레이터들<br /></strong>- String 관련 오퍼레이터<br /><img src="{{ site.baseurl }}/assets/dm221.png" class="aligncenter" width="500" height="463" alt="사용자 삽입 이미지" /><img src="{{ site.baseurl }}/assets/dm220.png" class="aligncenter" width="500" height="487" alt="사용자 삽입 이미지" />- Date 관련 오퍼레이터<br /><img src="{{ site.baseurl }}/assets/cm240.png" class="aligncenter" width="500" height="390" alt="사용자 삽입 이미지" />- Date Incremental operator<br /><img src="{{ site.baseurl }}/assets/dm223.png" class="aligncenter" width="332" height="366" alt="사용자 삽입 이미지" />- Date Regural Expression<br /><img src="{{ site.baseurl }}/assets/dm222.png" class="aligncenter" width="500" height="185" alt="사용자 삽입 이미지" /></p>

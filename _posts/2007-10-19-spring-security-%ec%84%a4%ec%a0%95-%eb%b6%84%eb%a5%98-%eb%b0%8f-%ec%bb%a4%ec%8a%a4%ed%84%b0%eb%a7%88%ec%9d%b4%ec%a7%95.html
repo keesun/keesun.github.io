@@ -1,0 +1,73 @@
+---
+layout: post
+title: Spring Security 설정 분류 및 커스터마이징
+date: 2007-10-19 01:59:31.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 07. Securing Spring
+tags:
+- Acegi
+- Acegi 설정
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323158854'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>현재 1.0.5까지 나온 Acegi(Spring Security)의 설정은 매~~~우 깁니다. 하지만 대부분이 비슷한 설정을 사용하실 것이기 때문에 필요한 필터에 대한 설정을 복사해서 붙여넣고 일부분만 변경하여 사용하시면 됩니다.</p>
+<p>문제는 설정이 매~~~우 길기 때문에 어지럽다는 것입니다. 'XML 지옥'이 이런 것이구나 하는 것을 Spring 공부하고 나서 처음으로 느끼게 되었습니다. 사실 이전에는 이렇게 긴 Spring 설정을 해본적이 별로 없었거든요. 그냥 컨트롤러가 늘어나면 XML 설정이 좀 많아 지는 구나.. 하는 정도 였으니까요. 그런데 Acegi는 정말 파격적으로 XML 코드가 들어납니다. 따라서 분류가 필요하다고 생각되더군요.</p>
+<p><img src="{{ site.baseurl }}/assets/co415.jpg" class="aligncenter" width="541" height="423" alt="사용자 삽입 이미지" /></p>
+<p>제가 생각한 분류 방법은 이렇습니다.<br />1. 필터들만 모아 둔 XML =&gt; acegiFilter.xml<br />2. Authentication Manager 관련 XML -&gt; authenticationManager.xml<br />3. Authorization Manager 관련 XML -&gt; authorizationManager.xml</p>
+<p>이렇게 나누면 필터들만 따로 정리해서 볼 수 있기 때문에 그나마 덜 어지럽습니다.</p>
+<p>acegiFilter.xml에서 변경해야 할 부분은 먼저 자신이 사용할 필터들만 남기고 나머지는 제거하는 일입니다. 그 다음으로는 자신의 애플리케이션에 맞게 세부 설정을 수정하는 일입니다. httpSessionContextIntegrationFilter 이 녀석은 뭐 거의 변경할 일이 없어보이고, authenticationEntryPoint에는 loginFormUrl에 로그인 폼을 보여줄 URL을 적어 주시면 됩니다. authenticationProcessingFilter 이 녀석의 속성 중에서 authenticationFailureUrl 정도를 변경하시면 되겠습니다. 그리고 로그인 폼과 로그인 실패 화면 두 개를 만들어 줍니다. 이 때 로그인 폼의 형식은</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;form method="POST" action="j_acegi_security_check"&gt;<br />&nbsp; &nbsp; &lt;b&gt;Username: &lt;/b&gt;&lt;input type="text" name="j_username"&gt;&lt;br&gt;<br />&nbsp; &nbsp; &lt;b&gt;Password: &lt;/b&gt;&lt;input type="password" name="j_password"&gt;&lt;br&gt;<br />&nbsp; &nbsp; &lt;input type="submit" value="Login"&gt;<br />&lt;/form&gt;</div>
+<p>이것을 그대로 사용하시면 됩니다.</p>
+<p>그런 다음 authenticationManager.xml로 이동하여 authenticationManager에서 자신이 사용할 인증 방법들을 설정해 줍니다. 보통 daoAuthenticationProvider는 꼭 사용하실 것이라 생각이 됩니다. 따라서 </p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&nbsp; &nbsp; &lt;bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="providers"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;ref bean="daoAuthenticationProvider" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>이 상태의 bean 설정을 그대로 사용하시면 됩니다. 그 다음 daoAuthenticationProvider 설정은 역시 그대~로 사용하시면 되며 실제로 변경해야 할 부분은 daoAuthenticationProvider 이녀석이 사용하는 userDetailsService 설정입니다.</p>
+<p>userDetailsService로 보통은 JdbcDaoImpl을 사용할 것으로 생각됩니다. DB에 있는 사용자 정보를 가져올 때 사용할 수 있는 구현체로, 사용자 정보, 패스워드, enabled, Role 등을 가져오는 sql을 작성해 주셔야 합니다. DB 스키마를 Acegi가 기본으로 예상하고 있는 형태를 사용하고 있다면 그럴 필요가 없겠지만 말이죠.</p>
+<p>그러면 authenticationManager.xml 설정은 끝이 압니다. 복잡해 보이지만 실제로 변경해야 할 부분은 userDetailsService밖에 없었습니다.</p>
+<p>그럼 다시 acegiFilter.xml로 돌아가서 '인증'과 관련된 필터과 manager 설정은 끝났고, 이제 예외 처리를 하는 필터와 '권한'과 관련된 필터를 설정하면 최소한의 필터를 갖추게 됩니다.</p>
+<p>exceptionTranslationFilter는 인증에러가 발생하면 authenticationEntryPoint 속성에 설정된(이미 위에서 설정했습니다.) 곳으로 다시 돌아갑니다. 다시 인증을 요구하는 거죠. 그리고 accessDeniedHandler속성에 설정된 bean을 사용하여 권한 에러가 발생하면 해당 페이지로 이동합니다. 따라서 accessDeniedHandler bean의 errorPage 속성에 권한 에러 발생시 이동할 URL을 적어주시면 됩니다.</p>
+<p>마지막으로 권한 처리 필터는 filterSecurityInterceptor 이 녀석으로써, 여기서는 objectDefinitionSource 속성에 URL = 권한, 권한, 권한<br />URL = 권한<br />이런 형태로 권한이 필요한 URL과 해당 URL에 접근할 수 있는 권한을 설정해 주시면 됩니다. 물론 Ant 스타일의 정규식을 사용해서 여러 URL을 나타낼 수 있습니다.</p>
+<p>그리고 진짜 마지막으로 filterSecurityInterceptor가 사용하는 authorizationManager를 authorizationContext.xml에서 설정해 줍니다. 이 부분은 권한을 나타내는 값이 ROLE_ 이라는 접두사로 시작한다면 변경할 것이 하나도 없이 다음의 설정을 그대로 사용하시면 됩니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&nbsp; &nbsp; &lt;!-- access decision관련 : 하나의 voter만이라도 있으면 인증 통과 --&gt;<br />&nbsp; &nbsp; &lt;bean id="accessDecisionManager"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.acegisecurity.vote.AffirmativeBased"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="decisionVoters"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;ref bean="roleVoter" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="rolePrefix"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;ROLE_&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>위의 코드는 전부 <a href="http://evilimp.tistory.com/" target="_blank">한수형</a>이 작성한 secutiryContext.xml에 제가 약간의 수정을 가한 코드를 참고하였습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/co414.xml" class="aligncenter">co414.xml</a><a href="http://whiteship.epril.com/wp-content/uploads/1/do407.xml" class="aligncenter">do407.xml</a><a href="http://whiteship.epril.com/wp-content/uploads/1/do406.xml" class="aligncenter">do406.xml</a></p>

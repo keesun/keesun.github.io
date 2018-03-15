@@ -1,0 +1,7 @@
+<p>제일 간단한 @AfterrReturning 어드바이스는 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @AfterReturning("aop.newStyle.aspect.CinemaAspect.sellTicketPointcut()")<br />&nbsp; &nbsp; public void thanksAdvice(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("감사합니다. 다음에 또 오세요.");<br />&nbsp; &nbsp; }</div>
+<p>@AfterReturning 어드바이스는 대상 메소드의 리턴값을 받아 올 수 있습니다. @AfterReturning의 속성인 returning을 사용하면 됩니다. 다음과 같이 작성할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @AfterReturning(pointcut="aop.newStyle.aspect.CinemaAspect.sellTicketPointcut()", returning="ticket")<br />&nbsp;&nbsp; &nbsp;public void thanksAdvice(Ticket ticket){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(ticket.getMovie().getName() + " 를 구매하셨습니다.");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("감사합니다. 다음에 또 오세요.");<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>이렇게 하면 될 것 같지만...에러가 나지요. asm 라이브러리를 추가해줘야 합니다.<br /><img src="/assets/dl121.jpg" class="aligncenter" width="500" height="142" alt="사용자 삽입 이미지" /><br />저 두개의 라이브러리를 프로젝트에 추가하면 돌아갑니다~
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">안녕하세요. 어떤 영화를 보시겠습니까?<br />공공의적 를 구매하셨습니다.<br />감사합니다. 다음에 또 오세요.</div>
+<p></p>

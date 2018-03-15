@@ -1,0 +1,109 @@
+---
+layout: post
+title: 전자정부 프레임워크 공통 컴포넌트 실행 성공(?)
+date: 2010-06-25 06:13:51.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 전자정부 프레임워크
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323106119'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile8.uf.19569C264C244292255773.jpg" class="aligncenter" width="600" height="466" alt="" filename="3.jpg" filemime="image/jpeg" /></p>
+<div>
+이 화면 보기가 너무 힘들다;</div>
+<div>
+
+</div>
+<div>
+OSAF 예제 애플리케이션 띄우는거 보다 100배는 올래거리는것 같다.&nbsp;</div>
+<div id="">
+
+</div>
+<div>
+그나마 이 화면에서 다음으로 전개도 안된다. 왜냐면 DB가 세팅되지 않았기 떄문에;;</div>
+<div>
+
+</div>
+<div id="">
+전자 정부 사이트에서 받은 mysql용 sql 파일들을 돌리다 보면 계속 에러가 난다. 자주 보이는 건 주키가 너무 길다는 에러인데 이건 주키 컬럼 사이즈(보통 메서드 이름이 200으로 잡혀 있었다.)를 줄여가면서 지나갔다. 그런데 두번째 sql 파일의 에러는 도무지 모르겠다; MySQL을 설치한지 오래되서 새 버전으로 올린 담에 해봐야 하는건지.. 그냥 오라클로 해야하는건지... 아흑..</div>
+<div id="">
+
+</div>
+<div id="">
+맞다. DB만 만들다고 돌아가는것도 아니다. globals.properties 파일을&nbsp;C:\Documents and Settings\MyHome\egovProps 이 위치에 넣어줘야 하고 이걸 제대로 쓰려면 그 파일에 있는 각종 설정 내용을 다 손봐줘야 한다.</div>
+<div id="">
+
+</div>
+<div id="">
+이거.. 아무래도 내가 너무 무모만 것에 손을 댄것 같다. 덕분에 전자 정부 프레임워크 구조가 어떤지 파악할 수 있었다.</div>
+<div id="">
+
+</div>
+<div id="">
+개발 환경쪽에서 '구현도구'라고 되어있는 이클립스를 받아서 전자정부 웹 프로젝트를 만들어야지 필요한 pom.xml이 나오지만 사실상 이건 제대로 된 pom.xml파일이 아닌것 같다. 그래도 일단 이렇게 받는다.</div>
+<div id="">
+
+</div>
+<div id="">
+<a href="http://www.egovframe.org/wiki/doku.php?id=egovframework:%EB%B0%B0%ED%8F%AC_%ED%8C%A8%ED%82%A4%EC%A7%80_%EA%B5%AC%EC%84%B1%EC%95%88">http://www.egovframe.org/wiki/doku.php?id=egovframework:배포_패키지_구성안</a></div>
+<div id="">
+
+</div>
+<div id="">
+여기에서 공통여부 Y로 체크되어 있는 것은 무엇을 클릭하던 똑같이 egovframework-common-1.0.0를 받게 된다. 저 안에 수많은 공통 기능이 들어가 있다. 즉 저것을 넣어서 앱을 실행하면 전자정부 프레임워크 도입을 완수한거나 마찬가지다. 거기에 부가적으로 게시판이나 통계등을 넣고 싶다면 해당 메뉴를 클릭해서 소스를 받은 다음 프로젝트에 추가해줘야 한다.&nbsp;</div>
+<div id="">
+
+</div>
+<div id="">
+이 "공통 컴포넌트"라고 하는 서비스들은 "실행 환경"을 기반으로 하고 있다. 실행 환경 코드는 다시 네가지로 나뉜다. 공통기반, 데이터처리, 연계통합, 화면처리.. 이 중에서 웹 관련 기능이 궁금하다면 "화면 처리" 코드를 받아서 보면 된다.</div>
+<div id="">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+하지만 안타깝게도 이 "실행 환경"에서 받는 코드들은 pom.xml이 없다. 빌드가 되지 않는다. 아참;; 위에서 설명하려다 까먹었는데.. "개발 환경"에서 자동으로 만들어준 pom.xml은 버리고 "공통 컴포넌트" 중에서도 "공통"에 해당하는 egov~~-common-1.0.0을 받으면 들어있는 pom.xml이 있다. 그걸 쓰면 "공통 컴포넌트"에 필요한 의존성까지 설정되어 있으니 무난히 빌드할 수 있다. 어쨋거나 이 코드들은 그냥 쌩으로 봐야한다. 빌드가 안되니.. 별도의 jar 파일을 만들수도 없다. (원래 안만들어도 된다. jar 파일만 따로 다운 받을 수도 있고, 공통 컴포넌트의 pom.xml에서 의존성으로 알아서 가져오게 되어 있다.) 정... 하고 싶으면 pom.xml 만들고 필요한 의존성 다 붙여주면 되는데.. 글쎄;; 별로..</div>
+<div id="">
+
+</div>
+<div id="">
+소스 중에 유일하게 살펴본 코드로는 "화면처리(ptl)"에 들어있는 SimpleUrlAnnotationHandlerMapping이 있는데 이름에서는 추측하기 어려운 일을 해준다. 핸들러 매핑 마다 일괄적용되는 인터셉터가 부담스러워서 그걸 url 리스트를 사용해서 걸러주는 작업이다. 그런데 토비님 책을 보면 스프링 3.0의 &lt;mvc:inteceptor&gt;로 해결이 가능하다. 글로벌한 인터셉터 설정이기 때문에 핸들러 매핑을 기준으로 생각할 필요가 없어졌다. 아마도 저 클래스는 주석에도 적혀있듯이 3.0 가면서 deprecated 될 것 같다.</div>

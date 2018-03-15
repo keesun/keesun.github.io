@@ -1,0 +1,91 @@
+---
+layout: post
+title: JUnit 4.8 @Rule 확장하기
+date: 2011-01-06 11:00:25.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- JUnit 4.8
+- rule
+meta:
+  _syntaxhighlighter_encoded: '1'
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323157301'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://blog.mycila.com/2009/11/writing-your-own-junit-extensions-using.html">http://blog.mycila.com/2009/11/writing-your-own-junit-extensions-using.html</a></p>
+<p><a href="http://kentbeck.github.com/junit/javadoc/latest/">http://kentbeck.github.com/junit/javadoc/latest/</a></p>
+<p>위 두 링크를 보면 간단하게 만들 수 있다. 회사에서 일하다가 JUnit으로 테스트 돌려가면서 성능 비교를 해보게 됐는데 매번 JUnit으로 10번 정도 실행한 뒤에 평균 내는 식으로 가볍게 성능 테스트를 해봤다. 그런 일을 전문으로 하는 팀이 있기 때문에 심각하게 테스트 해볼 생각은 없었고 정말 그냥 가볍게 해볼 생각으로 JUnit을 실행하면 보이는 실행 시간을 가지고 엑셀에 옮겨적은 뒤 간단하게 함수 적용해서 평균치를 구해냈었다.</p>
+<p>몇 번 해보니까. 상당히 귀찮아졌다. 살짝 짜증도 났다. 그래서 처음엔 JUnit 라이브러리를 찾아봤다. 내가 원하는건 테스트를 반복해서 실행하는 것이고 매번 실행 시간을 구하는 것이었다.</p>
+<p>JUnitCore.runClasses() 메서드를 반복 실행한 뒤, 저 메서드가 반환하는 Result 객체의 getRuntime()이라는 메서드를 사용하면 될지 싶어서 그렇게 해봤지만, 원하는 대로 동작하지 않았다. 아니.. 제대로 동작하지 않는 줄 알았다.</p>
+<p>235</p>
+<p>0</p>
+<p>1</p>
+<p>2</p>
+<p>2</p>
+<p>2</p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<p><del datetime="2011-01-06T03:06:11+00:00">이런식으로 처음 한번만 제대로 실행 시간을 확인할 수 있을 뿐 나머진 모른다.</del> 첫번째 것만 제대로 실행된게 아니라, 첫번째 것만 이상하게 느리게 나오고 나머지 값들이 정상이었다.</p>
+<p>그런데 main 메서드 만들어서 JUnitCore로 반복문 만들기도 귀찮고 매번 반복시킬 메서드 지정하기도 귀찮으니 그냥 Rule을 만들어 사용했다.</p>
+<p>[java]<br />
+public class RuleTest {</p>
+<p>    @Rule public Repeater repeater = new Repeater(new TimeCheckingRepeatCallback());</p>
+<p>    @Test<br />
+    public void normal(){<br />
+        System.out.println(&quot;hehehe&quot;);<br />
+    }</p>
+<p>    @Test<br />
+    @Repeat(10)<br />
+    public void something() throws InterruptedException {<br />
+        System.out.println(&quot;hi&quot;);<br />
+        Thread.sleep(10l);<br />
+    }</p>
+<p>    public static void main(String[] args) {<br />
+        Result result = JUnitCore.runClasses(RuleTest.class);<br />
+        result.getRunTime()<br />
+    }</p>
+<p>}<br />
+[/java]</p>
+<p>이렇게 하면 요렇게 찍힌다. 음하핫. 반복시킬 때 행위를 변경 시킬 수 있도록 콜백을 생성자로 넘겨줄 수 있게 해뒀는데.. 뭐 성능 측정은 하지 않고 반복만 시킬거라면 new Repeater()만 사용해도 된다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2011/01/image.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: inline; padding-top: 0px; border: 0px;" title="image" src="{{ site.baseurl }}/assets/image_thumb.png" border="0" alt="image" width="596" height="135" /></a></p>

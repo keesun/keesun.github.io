@@ -1,0 +1,58 @@
+---
+layout: post
+title: WebUtils 사용하기
+date: 2007-10-24 03:37:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- WebUtils
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879891'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring MVC를 다룰 때, 요청에 딸려오는 값들을 처리할 때 유용한 ServletRequestUtils 와 더불어 하나 더 유용한 클래스가 있는데, 바로 WebUtils 입니다.</p>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/util/WebUtils.html" target="_blank">WebUtils 클래스</a>를 사용하면 Session에 담겨있는 객체들을 보다 짧은 코드로 넣고 빼고 할 수 있으며, 세션 객체나 쿠키 객체를 받아올 수 있습니다.</p>
+<p>원래는 다음과 같이 Request 객체를 직접 통해서 Session 객체에 접근해야 했습니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">UserSession userSession = (UserSession) request.getSession().getAttribute("userSession");</div>
+<p>그러나 Spring의 WebUtils를 사용하면 . 을 두 개 사용하여 길게 가지 않아도 됩니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">UserSession userSession = (UserSession) WebUtils.getSessionAttribute(request, "userSession");</div>
+<p>이렇게 보다 . 한 방으로 원하는 객체를 얻을 수 있게 됩니다.</p>

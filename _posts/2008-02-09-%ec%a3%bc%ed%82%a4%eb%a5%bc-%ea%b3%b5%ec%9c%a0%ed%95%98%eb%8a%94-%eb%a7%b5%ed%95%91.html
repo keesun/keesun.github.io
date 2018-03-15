@@ -1,0 +1,96 @@
+---
+layout: post
+title: 주키를 공유하는 맵핑
+date: 2008-02-09 01:11:29.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- OneToOne 맵핑
+- 주키 공유
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322859190'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>두 테이블에서 같은 주키값을 사용한다.</li>
+</ul>
+<ul>
+<li>문제는 A--&gt;B 에서 B가 A의 주키값을 사용하도록 하는 것이다. 주기를 공유하도록 설정해야 한다.</li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>JPA는 공유할 주키 생성기를 지원하는 표준화된 방법이 없다.</li>
+</ul>
+<ul>
+<li>하이버네이트는 커스텀 id 생성기를 위한 확장 애노테이션을 제공한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>User.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@OneToOne<br />@PrimaryKeyJoinColumn<br />@Cascade( { CascadeType.SAVE_UPDATE })<br /><span class="code-keyword">private</span> Address shippingAddress;</pre>
+</div>
+</div>
+<ul>
+<li>@PrimaryKeyJoinColumn: JOINE을 이용한 상속구조(Table Per Subclass)에서<br />
+하위 타입에서 상위 타입의 주키를 자신의 주키이자 외례키로 설정할 때 사용. 여기(1:1맵핑)서는 참조하는 쪽(User)의<br />
+주키를 참조되는 쪽(Address)의 외례키로 사용하겠다는 설정이다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Address.java</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Id<br />@GeneratedValue(generator = <span class="code-quote">"addressIdGenerator"</span>)<br />@GenericGenerator(name = <span class="code-quote">"addressIdGenerator"</span>, strategy = <span class="code-quote">"foreign"</span>, parameters = @Parameter(name = <span class="code-quote">"property"</span>, value = <span class="code-quote">"user"</span>))<br />@Column(name = <span class="code-quote">"ADDRESS_ID"</span>)<br /><span class="code-keyword">private</span> <span class="code-object">Long</span> id;<br /><br />@OneToOne<br /><span class="code-keyword">private</span> User user;</pre>
+</div>
+</div>
+<ul>
+<li>JPA에서는 커스텀 식별자 생성기를 만들 수 없기 때문에, 하이버네이트 애노테이션을 이용해야 한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>테스트 코드</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">@Test<br /><span class="code-keyword">public</span> void userAndAddress() <span class="code-keyword">throws</span> Exception {<br />	Session session = sessionFactory.openSession();<br />	User user = <span class="code-keyword">new</span> User();<br />	<br />	Address address = <span class="code-keyword">new</span> Address();<br />	<span class="code-comment">// Address의 user 속성은 null이면 안 된다. id를 세팅해 주려고 할 때 identifierGeneration 에러 난다.<br /></span>	address.setUser(user);<br />	<br />	user.setShippingAddress(address);<br />	session.save(user);<br />	<br />	session.flush();<br />	session.close();<br />	assertNotNull(user.getId());<br />	assertNotNull(user.getShippingAddress().getId());<br />}</pre>
+</div>
+</div>
+<ul>
+<li>Fake Object인가... 저렇게 하지 않으면 에러 발생.</li>
+</ul>

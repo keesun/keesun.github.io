@@ -1,0 +1,6 @@
+<p>6. 예외 다루는 필터 등록하기</p>
+<p><img src="/assets/do420.jpg" class="aligncenter" width="600" height="210" alt="사용자 삽입 이미지" /><br />org.acegisecurity.ui.ExceptionTranslationFilter 를 등록해 줍니다. 그리고 이 필터에 authenticationEntryPoint 속성과 accessDeniedHandleerImpl 속성을 설정해 줍니다. authenticationEntryPoint 는 인증 예외가 발생했을 때 인증을 요구하는 페이지로 이동하도록 설정했으며, accessDeniedHandleerImpl 는 해당 사용자가 권한이 없을 요청을 했을 때 보여질 페이지를 설정했습니다.</p>
+<p>7. 로그아웃 필터 등록하기</p>
+<p><img src="/assets/co432.jpg" class="aligncenter" width="600" height="153" alt="사용자 삽입 이미지" />이 필터는 생성자 인젝션을 사용했네요. 흠~ 독특합니다. 첫 번째 인자로는 로그아웃을 한 뒤 보여줄 URL을 설정하고, 두 번쨰 인자로는 로그아웃 핸들러를 등록해 주었습니다. 이 객체가 실제로 Session 객체에서 Security Context 객체를 제거하는 일을 담당할 것입니다.</p>
+<p>위 두 개의 필터를 역시 FilterChainProxy에 등록해주면, 잘 동작하는 모습을 확인할 수 있습니다.</p>
+<p></p>

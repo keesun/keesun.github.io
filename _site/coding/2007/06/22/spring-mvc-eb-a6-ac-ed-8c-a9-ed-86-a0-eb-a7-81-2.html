@@ -1,0 +1,20 @@
+<p>이전 글에서 Controller 단위 테스트를 변경하여 Controller 수정에 성공했습니다.<br />이번에는 MemberService를 단위 테스트 해서 MemberService의 구현을 수정하겠습니다.</p>
+<p>이번에는 MemberService의 테스트가 만들어져 있지 않은 것을 확인했습니다. 만들어야겠습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class MemberServiceImplTest {</p>
+<p>&nbsp; &nbsp; private MemberService memberService;<br />&nbsp; &nbsp; private MemberDao memberDao;</p>
+<p>&nbsp; &nbsp; @Before<br />&nbsp; &nbsp; public void setUp() {<br />&nbsp; &nbsp; &nbsp; &nbsp; memberService = new MemberServiceImpl();<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao = createMock(MemberDao.class);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberService.setMemberDao(memberDao);<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void testNotJoinedMail() {<br />&nbsp; &nbsp; &nbsp; &nbsp; String mail = "";<br />&nbsp; &nbsp; &nbsp; &nbsp; expect(memberDao.findByMail(mail)).andReturn(null);<br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = memberService.isJoined(mail);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(null, member);<br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }<br />}</div>
+<p>일단 Bad Case를 테스트 하는 코드를 작성했습니다.</p>
+<p><img src="/assets/dm249.png" class="aligncenter" width="547" height="226" alt="사용자 삽입 이미지" />이전 글에서 컨트롤러를 테스트 할 때 인터페이스 만들고 구현체에서 에러 나길래 퀵픽스로 구현해둔 곳에서 에러가 발생했습니다.</p>
+<p>이 방법은 KSUG 2회 세미나에서 영회형이 발표하실 때 언급하셨고 J2EE Development without EJB에서 Rod Johnson이 추천하는 방법이기도 합니다.</p>
+<p>어쨋든 테스트가 돌아가도록 ServiceImple 구현을 변경합니다.</p>
+<p>이런 여기서도 또하나 결정을 해야겠군요. Service 계층에서 사용할 DAO의 인터페이스를 결정해야 합니다. 이전에는 findByMail을 사용하고 있었는데 썩 나쁘지 않은 것 같습니다. 따라서 그대로 사용을 하고 대신 리턴 타입을 List&lt;Member&gt; 로 할지 Member로 할지 고민이 됩니다. 같은 mail을 가진 데이터가 들어갈 수 없다는 제약 사항이 있다면 리턴 타입을 Member로 해야하고... 혹시라도 그런 제약 사항이 없다면 List&lt;Member&gt;로 받아서 뭔가 복잡한 처리가 필요하면 View까지 그 영향이 갈 것 같네요;;;</p>
+<p>이번에도 저는 혼자 개발하고 있기 때문에 다음과 같은 장점이 있습니다.</p>
+<p>"니가 곧 개발자며 사용자이자 설계자다. 니가 다 알아서 해라! 그리고 심심하면 DBA도 해라."</p>
+<p>OK 저는 같은 mail을 가진 Member 데이터가 데이터베이스에 들어가지 않기로 정했습니다. 이 제약 사항은 다음에 DAO를 테스트할 때 확인 해야 겠습니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">&nbsp; &nbsp; public Member isJoined(String mail) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return memberDao.findByMail(mail);<br />&nbsp; &nbsp; }</div>
+<p>Service 구현은 여전히 변함없이 간단합니다. 이 순간 저는 지금 상당히 많이 돌아가고 있다는 것을 느낍니다. 단지 메소드 이름 하나 변경하는 일이였는데 너무 돌아가는 거 아닌가 싶지만 목적은 구현보다는 테스트에 익숙해지는 것이기 때문에 계속해서 진행하겠습니다.</p>
+<p>이번에는 새로운 테스트를 작성하여 해당 mail을 가지고 있는 Member를 검색했을 경우를 테스트 합니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void testJoinedMail() {<br />&nbsp; &nbsp; &nbsp; &nbsp; String mail = "keesun@mail.com";<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; member.setMail(mail);<br />&nbsp; &nbsp; &nbsp; &nbsp; expect(memberDao.findByMail(mail)).andReturn(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(member, memberService.isJoined(mail));<br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }</div>
+<p>테스트는 통과합니다.</p>
+<p><img src="/assets/dm250.png" class="aligncenter" width="553" height="209" alt="사용자 삽입 이미지" /></p>

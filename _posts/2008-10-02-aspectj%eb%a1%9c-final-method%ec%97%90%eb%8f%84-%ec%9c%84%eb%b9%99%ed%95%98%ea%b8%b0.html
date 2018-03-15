@@ -1,0 +1,64 @@
+---
+layout: post
+title: AspectJ로 final method에도 위빙하기
+date: 2008-10-02 01:03:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- AspectJ
+- AspectJ IDE
+- Spring AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323166731'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>소스 코드는 이전과 동일합니다. 그 상태에서 프록젝트에 AspectJ Nature를 추가해줍니다.</p>
+<p><img src="{{ site.baseurl }}/assets/hk070000000000.jpg" class="aligncenter" width="600" height="465" alt="사용자 삽입 이미지" /><br />그런 다음에 프로젝트 클린을 하여 기존의 클래스파일을 비우고 다시 컴파일하게 합니다.(Alt + P, N, 엔터) 지금, 저는 아무런 .aj 파일도 만들지 않았습니다. 그냥 이전에 만들어둔 Spring @AOP를 사용하고 있을 뿐입니다. </p>
+<p>@Aspect<br />public class FinalHelloAspect {</p>
+<p>&nbsp; &nbsp; @Before("execution(* org.opensprout.sandbox.proxy.withfinal.FinalHello.*(..))")<br />&nbsp; &nbsp; public void withFinalAdvice() {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("before advice from FinalHelloAspect");<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+<p>이 녀석이죠. AspecJ 프로젝트가 됐기 때문에, 빌드타임에 저 애스팩트의 포인트컷에 해당하는 클래스 파일을 조작해서 "새로운 .class 파일"을 생성하게 될 겁니다.</p>
+<p><img src="{{ site.baseurl }}/assets/hk070000000001.jpg" class="aligncenter" width="600" height="527" alt="사용자 삽입 이미지" /><br />컴파일이 끝난 후 AspectJ IDE가 발동한 모습이니다. 포인트컷 마다 저런 화살표가 표시됩니다. 보시면 final 메소드에도 화살표가 표시되어 있습니다. 해당 코드와 Cross References 뷰를 동기화 시켜두면, 해당 지점에 적용될 어드바이스까지 표시됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/jk110000000000.jpg" class="aligncenter" width="542" height="247" alt="사용자 삽입 이미지" /><br />놀랍습니다. 안 그러세요? @Aspect 캬오~ 하긴, 그리 놀랍지도... @Aspect 애노테이션이 aspectj 프로젝트에 속한 애노테이션이니까,..</p>
+<p><img src="{{ site.baseurl }}/assets/jk110000000001.jpg" class="aligncenter" width="600" height="465" alt="사용자 삽입 이미지" /><br />이 결과를 보면 더이상 프록시를 사용하고 있는것이 아니기 때문에, Advised 라는 인터페이스는 사용할 수 없다는 것을 볼 수 있습니다. ClassCastException이 보이시죠? </p>
+<p>흠냐;;</p>
+<p>회사 청소해야되서 이만.. 황급히 마무리 합니다.</p>

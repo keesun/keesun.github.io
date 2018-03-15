@@ -1,0 +1,67 @@
+<p>참조: <a href="http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/tutorial/RPC.html">http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/tutorial/RPC.html</a></p>
+<p><a href="http://whiteship.me/wp-content/uploads/2010/09/AnatomyOfServices.png"><img style="border: 1px #a2a2a2 dotted;" src="/assets/AnatomyOfServices-tm.jpg" alt="AnatomyOfServices.png" width="600" height="375" /></a></p>
+<p>이미지 출처: <a href="http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/tutorial/RPC.html">http://code.google.com/intl/ko-KR/webtoolkit/doc/latest/tutorial/RPC.html</a></p>
+<p>RPC를 사용해서 서버쪽에 서비스를 구현해 놓고 클라이언트에서 호출해서 사용하려면 RMI 하듯이 스켈레톤/스텁 코드를 써야 하나 봅니다. 그래서 만들께 세 가지인데.. 우선 클라이언트 쪽에 서비스 인터페이스 하나, 그리고 서버쪽에 그 인터페이스의 구현체 하나, 마지막으로 다시 클라이언트쪽에서 서버쪽에 있는 서비스 대신 호출할 비동기 서비스 인터페이스 하나를 만들어야 합니다.(처음 두개는 그렇다치고 마지막껀 어떻게 자동생성 안되려나...)</p>
+<p>1. 서비스 인터페이스 만들기</p>
+<p>서비스 인터페이스를 만들 때는 RemoteService 인터페이스를 상속해야 합니다.</p>
+<pre class="code" style="font-family: Courier, 'Courier New', monospace; color: #007000; font-size: 9pt; background-color: #fafafa; border-top-color: #BBBBBB; border-right-color: #BBBBBB; border-bottom-color: #BBBBBB; border-left-color: #bbbbbb; line-height: 15px; margin-top: 0.5em; margin-right: 0px; margin-bottom: 0.6em; margin-left: 0px; overflow-x: auto; overflow-y: auto; word-wrap: break-word; border-width: 1px; border-style: solid; padding: 0.99em;"><span style="font-family: Helvetica, Arial, sans-serif; font-size: small; line-height: 16px;">package com.google.gwt.sample.stockwatcher.client;import com.google.gwt.user.client.rpc.RemoteService;import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+@RemoteServiceRelativePath("stockPrices")public interface StockPriceService extends RemoteService {
+
+StockPrice[] getPrices(String[] symbols);
+}</span></pre>
+<p>이런식으로요. 이때 패키지가 중요한데 반드시 client 패키지에 만들어야 합니다.</p>
+<p>2. 서비스 구현체 만들기</p>
+<p>서비스 구현체는 RemoteServiceServlet을 상속받아야 하고 구현하려는 인터페이스를 구현합니다. 이때 RemoteServiceServlet을 반드시 상속 받아야 클라이언트와 서버간에 주고받는 데이터를 직렬화 해줍니다.</p>
+<pre class="code" style="font-family: Courier, 'Courier New', monospace; color: #007000; font-size: 9pt; background-color: #fafafa; border-top-color: #BBBBBB; border-right-color: #BBBBBB; border-bottom-color: #BBBBBB; border-left-color: #bbbbbb; line-height: 15px; margin-top: 0.5em; margin-right: 0px; margin-bottom: 0.6em; margin-left: 0px; overflow-x: auto; overflow-y: auto; word-wrap: break-word; border-width: 1px; border-style: solid; padding: 0.99em;"><span style="font-family: Helvetica, Arial, sans-serif; font-size: small; line-height: 16px;">package com.google.gwt.sample.stockwatcher.server;import com.google.gwt.sample.stockwatcher.client.StockPrice;import com.google.gwt.sample.stockwatcher.client.StockPriceService;import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+public class StockPriceServiceImpl extends RemoteServiceServlet implements StockPriceService {
+
+public StockPrice[] getPrices(String[] symbols) {// TODO Auto-generated method stubreturn null;}
+
+}</span></pre>
+<p>이때 패키지는 반드시 server에 둬서 자바스크립트로 변환되지 않도록 합니다. 이 서비스는 서버에서 제공할테니 자바스크립트로 변환될 필요도 없고 그러려면 server 패키지 밑에둬야 합니다.</p>
+<p>3. 서비스 등록하기</p>
+<p>위에서 만든 서비스를 GWT 모듈에 넣으려면 web.xml에 서블릿 매핑을 사용해서 등록해야 합니다. 이때 URL 패턴을 주의해야 하는데 URL 앞부분은 GWT 모듈 설정 파일인 ~~.gwt.xml 파일의 module 엘리먼트의 rename-to 어트리뷰트의 값을 사용해야 하고 URL 뒷 부분은 서비스 인터페이스에 선언한 애노테이션의 값을 따라갑니다. 즉 모듈 설정에 rename-to의 값이 stockwatcher고 서비스 인터페이스에 선언한 @RemoveServiceRelativePath()에 설정한 값이 stockPrices기 때문에 URL은 /stockwathcer/stockPrices가 됩니다. 그런데.. 인텔리J는 똑똑해서 web.xml에 필요한 설정을 자동으로 추가해 주는군요. @_@;; 오호.. 놀라워라.</p>
+<pre class="code" style="font-family: Courier, 'Courier New', monospace; color: #007000; font-size: 9pt; background-color: #fafafa; border-top-color: #BBBBBB; border-right-color: #bbbbbb; border-bottom-color: #bbbbbb; border-left-color: #bbbbbb; line-height: 15px; margin-top: 0.5em; margin-right: 0px; margin-bottom: 0.6em; margin-left: 0px; overflow-x: auto; overflow-y: auto; word-wrap: break-word; border-width: 1px; border-style: solid; padding: 0.99em;"><span style="font-family: Helvetica, Arial, sans-serif; font-size: small; line-height: 16px;">  &lt;!-- Servlets --&gt;
+<span class="highlight" style="background-color: #ffffcc;">  &lt;servlet&gt;
+&lt;servlet-name&gt;stockPriceServiceImpl&lt;/servlet-name&gt;
+&lt;servlet-class&gt;com.google.gwt.sample.stockwatcher.server.StockPriceServiceImpl&lt;/servlet-class&gt;
+&lt;/servlet&gt;&lt;servlet-mapping&gt;
+&lt;servlet-name&gt;stockPriceServiceImpl&lt;/servlet-name&gt;
+&lt;url-pattern&gt;/stockwatcher/stockPrices&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</span></span></pre>
+<p>GWT 1.6이전에는 GWT 모듈 설정파일에서 서블릿을 관리했는데 요즘은 web.xml에서 하는 듯.</p>
+<p>4. 비동기 호출용 인터페이스 만들기</p>
+<p>이부분은 본문을 읽어내려가면서 자동 생성되길 바랬던 클래스인데 인텔리J에서는 서비스 인터페이스 만들고 extends RemoteService를 하는 즉시 빨간불이 뜨면서 퀵픽스로 비동기 인터페이스를 만들어 줄 수 있더군요.</p>
+<pre class="code" style="font-family: Courier, 'Courier New', monospace; color: #007000; font-size: 9pt; background-color: #fafafa; border-top-color: #BBBBBB; border-right-color: #bbbbbb; border-bottom-color: #bbbbbb; border-left-color: #bbbbbb; line-height: 15px; margin-top: 0.5em; margin-right: 0px; margin-bottom: 0.6em; margin-left: 0px; overflow-x: auto; overflow-y: auto; word-wrap: break-word; border-width: 1px; border-style: solid; padding: 0.99em;"><span style="font-family: Helvetica, Arial, sans-serif; font-size: small; line-height: 16px;">package com.google.gwt.sample.stockwatcher.client;import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public interface StockPriceServiceAsync {
+
+void getPrices(String[] symbols, AsyncCallback&lt;StockPrice[]&gt; callback);
+
+}</span></pre>
+<p>자동으로 만들어준 코드를 보면 메서드 이름과 매개변수는 같지만 AsyncCallBack이라는 매개변수가 추가됐고 리턴타입이 void로 바뀐걸 볼 수 있습니다.</p>
+<p>5. 비동기 호출하기</p>
+<p>GWT.create(StockPriceService.class); 를 사용해서 비공기 호출용 인터페이스 타입의 객체를 만들 수 있고, 그 객체에 AsyncCallback 타입 객체를 만들어 넘겨주면 됩니다.</p>
+<pre class="code" style="font-family: Courier, 'Courier New', monospace; color: #007000; font-size: 9pt; background-color: #fafafa; border-top-color: #BBBBBB; border-right-color: #bbbbbb; border-bottom-color: #bbbbbb; border-left-color: #bbbbbb; line-height: 15px; margin-top: 0.5em; margin-right: 0px; margin-bottom: 0.6em; margin-left: 0px; overflow-x: auto; overflow-y: auto; word-wrap: break-word; border-width: 1px; border-style: solid; padding: 0.99em;"><span style="font-family: Helvetica, Arial, sans-serif; font-size: small; line-height: 16px;">private void refreshWatchList() {
+<span class="highlight" style="background-color: #ffffcc;">    // Initialize the service proxy.
+if (stockPriceSvc == null) {
+stockPriceSvc = GWT.create(StockPriceService.class);
+}// Set up the callback object.AsyncCallback&lt;StockPrice[]&gt; callback = new AsyncCallback&lt;StockPrice[]&gt;() {public void onFailure(Throwable caught) {// TODO: Do something with errors.}
+
+public void onSuccess(StockPrice[] result) {updateTable(result);}};
+
+// Make the call to the stock price service.
+stockPriceSvc.getPrices(stocks.toArray(new String[0]), callback);</span>
+}</span></pre>
+<p>6. 데이터 직렬화</p>
+<p>서비스 인터페이스에서 반환타입으로 사용하는 기초타입과 기초타입의 래퍼클래스는 기본으로 직렬화가 가능하고 직렬화가 가능한 타입의 배열도 역시 직렬화 할 수 있습니다.</p>
+<p>특정 클래스를 직렬화 하려면 다음 세가지 조건을 만족해야 합니다.</p>
+<ul>
+<li>자바의 Serializable 또는 GWT의 IsSerializable 구현</li>
+<li>final이나 transient가 아니어야 함</li>
+<li>생성자가 있어야 함</li>
+</ul>
+<p>직렬화와 관련된 자세한 내용은 <a href="http://code.google.com/webtoolkit/doc/latest/DevGuideServerCommunication.html#DevGuideSerializableTypes">여기</a> 참조.</p>
+<p>흠.. 역시 똑똑한 인텔리J는 이미 서비스 인터페이스 만들 때 부터 빨간불로 직렬화해야 한다고 알려주고 있었네요. 퀵픽스를 사용해서 자바의 Serializable을 구현하게 했습니다.</p>

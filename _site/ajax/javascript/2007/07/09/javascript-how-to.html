@@ -1,0 +1,14 @@
+<p>참조 : <a href="http://www.w3schools.com/js/js_howto.asp" target="_blank">http://www.w3schools.com/js/js_howto.asp</a></p>
+<p><a style="font-weight: bold;" href="http://www.w3schools.com/js/tryit.asp?filename=tryjs_text" target="_blank">화면에 글자 쓰는 예제</a></p>
+<p>document.write("Hello World!")<br /><a href="http://www.w3schools.com/js/tryit.asp?filename=tryjs_formattext" target="_blank"><br /><span style="font-weight: bold;">글자를 쓰면서 포매팅 하는 예제</span></a></p>
+<p>document.write("&lt;h1&gt;Hello World!&lt;/h1&gt;")</p>
+<p><span style="font-weight: bold;">HTML 안에 자바스크립트를 어떻게 쓸까</span></p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;html&gt;<br />&lt;body&gt;<br />&lt;script type="text/javascript"&gt;<br />document.write("Hello World!")<br />&lt;/script&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;</div>
+<p><span style="font-weight: bold;">예제 설명</span></p>
+<p>&lt;script&gt; 태그를 사용하여 자바스크립트를 삽입할 수 있으며 type 속성을 사용하여 자바스크립트 임을 명시한다.<br />따라서 &lt;script type="text/javascript"&gt; 와 &lt;/script&gt; 가 자바스크립의 시작과 끝을 나타낸다.</p>
+<p>document.write 는 표준 자바스크립트 명령어로 페이지에 출력할 때 사용합니다. 이 부분이 &lt;script type="text/javascript"&gt;와 &lt;/script&gt;로 둘러 쌓여 있기 때문에 자바스크립트로 인식하고 실행하게 됩니다. 만약에 스크립트 태그로 둘러쌓여있지 않았다면 일반 텍스트로 처리하여 그대로 화면에 보여졌을 것입니다.</p>
+<p><span style="font-weight: bold;">세미 콜론을 매 행마다 넣어야 하는가?</span></p>
+<p>그렇지 않습니다. 세미 콜론은 선택적인 요소 입니다. 따라서 한 줄에 여러 문장을 적을 경우에 각 문장을 구분하기 위해 쓰는 용도 이외에는 안써도 됩니다.</p>
+<p><span style="font-weight: bold;">옛날 브라우저들은 어떻게 처리하나?</span></p>
+<p>자바스크립트를 지원하지 않는 예전 브라우저들은 자바스크립 내부의 내용들을 본문으로 인식합니다. 따라서 다음과 같이 HTML 주석으로 묶어 줍니다.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;script type="text/javascript"&gt;<br />&lt;!--<br />document.write("Hello World!")<br />//--&gt;<br />&lt;/script&gt;</div>

@@ -1,0 +1,75 @@
+---
+layout: post
+title: Spring MVC 리팩토링 4
+date: 2007-06-22 08:39:34.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- 컨트롤러 테스트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323154512'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이전에서 단위테스트를 통해 Controller과 Service, DAO 계층을 테스트 했습니다. 
+<ol>
+<li><a href="../../945"><span class="date">13:17:31</span> Spring MVC 리팩토링 3 </a></li>
+<li><a href="../../944"><span class="date">13:04:41</span> Spring MVC 리팩토링 2 </a></li>
+<li><a href="../../943"><span class="date">12:28:58</span> Spring MVC 리팩토링 1</a></li>
+</ol>
+<p>사실 DAO 계층 테스트를 단위테스트라고 할 수 있을지 모르겠지만 테스트용 DB와 테스트 데이터를 별로도 사용해서 실제 DB에는 전혀 지장이 없었습니다. 그리고 spring-mock.jar에 있는 AbstractTransactionalDataSourceSpringContextTests를 사용하여 자동 롤백이 되도록 하여 테스트의 흔적이 테스트 DB에 남지도 않았습니다. 그러면서도 DAO를 충분히 테스트 할 수 있었습니다.</p>
+<p>이제는 Service Layer에서 DAO 계층과 함꼐 테스트를 해보고 그 다음은 Controller 에서 그 아래에 있는 Service 계층과 DAO 계층을 아울러서 테스트 할 차례입니다.<br /><img src="{{ site.baseurl }}/assets/dm252.png" class="aligncenter" width="379" height="281" alt="사용자 삽입 이미지" />먼저 위 그림의 파란색은 이전에 테스트를 했고 빨간색 부분의 테스트를 작성합니다. 이 때도 이전 글에서 사용한 osaf의 클래스를 사용합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class MemberServiceIntegrationTest extends AbstractTransactionalDataSourceSpringContextControllerTest{</p>
+<p>&nbsp; &nbsp; protected MemberService memberService;</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected String[] getConfigLocations() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new String[] {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "file:web/WEB-INF/spring/applicationContext-dao.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "file:test/applicationContext-jdbc-datasource.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "file:web/WEB-INF/spring/dao/daoContext-member.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "file:web/WEB-INF/spring/application/applicationContext-member.xml",<br />&nbsp; &nbsp; &nbsp; &nbsp; };<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected void onSetUpInTransaction() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; insertFlatXmlDataSet("test/kr/co/springframework/member/dao/memberData.xml");<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testDI() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(memberService);<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testGetAll() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(1, memberService.getAll().size());<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testNotJoinedMail() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = memberService.isJoined("");<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(null, member);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("기선", memberService.isJoined("keesun@mail.com").getName());<br />&nbsp; &nbsp; }<br />}</div>
+<p>간단하게 테스트 할 수 있습니다. 단위 테스트하고의 차이는 Spring의 컨테이너를 사용하여 의존성이 삽입된 객체를 사용하고 있으며 DB역시 DBUnit을 이용하여 사용하고 있습니다. 테스트용 DB라는 것만 빼고는 전부 같습니다. 아... 테스트용 DB(HSQL)와 실제 개발 DB(MySQL)와 다르군요. 하지만 ORM(하이버네이트)를 사용하고 있기 때문에 전~혀 문제가 없습니다. 테스트용 database.properties 파일 하나만 작성해주면 되죠.</p>
+<p><img src="{{ site.baseurl }}/assets/cm269.png" class="aligncenter" width="379" height="274" alt="사용자 삽입 이미지" />이번에는 컨트롤러를 테스트 합니다. 이것도 역시 이전에 파란색 박스는 테스트를 했고 이번에는 빨간 박스를 테스트 합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; public void testEmptyOrWhiteMail() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; mail = "";<br />&nbsp; &nbsp; &nbsp; &nbsp; MemberCommand command = new MemberCommand();<br />&nbsp; &nbsp; &nbsp; &nbsp; command.setMail(mail);<br />&nbsp; &nbsp; &nbsp; &nbsp; mav = checkController.onSubmit(null, null, command, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("redirect:join.html", mav.getViewName());<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testExistMemberMail() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; mail = "keesun@mail.com";<br />&nbsp; &nbsp; &nbsp; &nbsp; mav = checkController.onSubmit(null, null, command, null);<br />&nbsp; &nbsp; &nbsp; &nbsp; Map model = mav.getModel();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(model.get("member"));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("confirm", mav.getViewName());<br />&nbsp; &nbsp; }</div>
+<p>서비스 계층의 통합 테스트 코드와 상당부분이 같기 때문에 테스트 메소드만 붙여넣었습니다. (테스트 코드에서만 볼 수 있는)단위 테스트와의 차이는 easymock의 사용이 없어졌다는 것입니다. 이전에는 MemberService의 Mock객체를 만들어 사용했었습니다. 하지만 이제는 진짜 MemberSerive 객체를 사용하고 있죠.</p>
+<p>이것으로 매~~~우 간단한 리팩토링(메소드 이름 하나 바꾸는 것)을 매우 길~~~~게 돌아오며 테스트를 연습해 봤습니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);"><span style="font-weight: bold;">요약 및 느낀점</span><br />- Easy Mock은 생각보다 간단하다.(createMock() -&gt; expect() -&gt; replay() -&gt; verify() -&gt; reset())<br />- spring-mock.jar 에 유용한 Mock 객체들(Spring MVC 책에서는 Stub이라고 얘기하고 있지만)이 많이 있는데 그 중에 자주 사용할 것은 MockHttpServletRequest와 MockHttpServletResponse<br />- 계층 별 테스트 할 대상, 목록, 요점을 명확히 해야겠다.<br />- 테스팅(단위 테스트와 통합 테스트)은 확실히 애플리케이션에 자신감을 불어넣어준다.<br />- View를 테스트 하는 방법은 무엇일까? (Spring view test라고 구글링을 해봤지만 원하는 결과는 못봤다.)<br />- 컨트롤러를 테스트 할 때 데이터 바인딩과 벨리데이션 역시 테스트 해야겠다.<br />- 테스트 코드를 작성할 때 참고할 명세서가 있어야겠다.(비즈니스 로직을 자세히 설명한 어떤 문서...)</div>
+<p></p>

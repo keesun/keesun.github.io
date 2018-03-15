@@ -1,0 +1,68 @@
+---
+layout: post
+title: 왜 Spring MVC 컨트롤러에 AOP가 적용되지 않을까?
+date: 2007-09-13 07:27:31.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 04. Advising beans
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322969269'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>왜그럴까요? 저도 궁금해서 관련 아티클도 읽고 소스코드도 좀 해봤는데요; 아직도 조금 긴가민가 합니다.<br /><a href="http://internna.blogspot.com/2007/02/aop-ajax-enabled-controllers-in-spring.html" target="_blank"><br />AOP / AJAX Enabled Controllers in Spring MVC</a><br />위 글을 참조하였습니다.</p>
+<p>Controller<br />
+인터페이스를 직접 구현하여 컨트롤러를 만들면 handleRequest() 메소드에 AOP를 적용할 수 있습니다. 하지만 자주<br />
+사용하는 MultiActionController, SimpleFormController에는 AOP가 적용되지 않습니다.</p>
+<p>왜냐면, AbstractController에서 Controller 인터페이스를 구현하고, handleRequest 메소드를 final 메소드로 구현했습니다. 그래서 AOP가 적용되지 않는다고 합니다.</p>
+<p>왜<br />
+냐면, MultiActionController, SimpleFormController 들의 프록시 객체를 만들 때, 인터페이스<br />
+기반으로 Proxy를 만들지 않고 CGlib 라이브러리를 사용해서 하위클래스를 생성하여 Proxy를 만들려고 하는데 final<br />
+메소드를 가지고 있기 때문에 그것마저도 못하기 때문인듯 합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dn356.png" class="aligncenter" width="267" height="284" alt="사용자 삽입 이미지" />위와 같은 상속구조에서 SampleController의 handleRequest() 메소드에 BeforeAdvice를 적용하는 Aspect를 다음과 같이 정의했습니다.</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">@Aspect<br />public class SampleAspect {</p>
+<p>&nbsp; &nbsp; @Pointcut("execution(* finalClassProxying.SampleController.handleRequest())")<br />&nbsp; &nbsp; public void samplePointcut(){}</p>
+<p>&nbsp; &nbsp; @Before("samplePointcut()")<br />&nbsp; &nbsp; public void sampleAdvice(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("과연 될까?");<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>테스트를 해보면 적용이 되지 않는 것을 확인할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class FinalClassProxingTest {</p>
+<p>&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ApplicationContext context = new ClassPathXmlApplicationContext("finalClassProxying/applicationContext.xml");<br />&nbsp; &nbsp; &nbsp; &nbsp; SampleController controller = (SampleController) context.getBean("sampleController");<br />&nbsp; &nbsp; &nbsp; &nbsp; controller.handleRequest();<br />&nbsp; &nbsp; }<br />}</div>
+<p>흠냐... 로그 메시지에서 final 메소드라서 Proxy객체를 만들 수 없다는 메시지가 보고 싶었는데 보지를 못했습니다... 그래서 위에 제가 생각한 것이 맞는 건인지 아리까리 합니다.</p>

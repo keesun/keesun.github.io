@@ -1,0 +1,103 @@
+<p class="MsoNormal"><span lang="EN-US"><o:p> </o:p></span>데코레이터 패턴 레포트 상세 내용</p>
+<p class="MsoNormal"><span lang="EN-US"><o:p> </o:p></span></p>
+<p class="MsoNormal"><span lang="EN-US"></span>게임게발을하고 있습니다<span lang="EN-US">. </span>각 케릭터는 <span style="font-family: &quot" lang="EN-US">‘</span>인간<span style="font-family: &quot" lang="EN-US">’</span>이라는 한 종족으로시작을 하게 되며</p>
+<p class="MsoNormal">한 종족은 <span style="font-family: &quot" lang="EN-US">‘</span>전사<span style="font-family: &quot" lang="EN-US">’</span><span lang="EN-US">, </span><span style="font-family: &quot" lang="EN-US">‘</span>마법사<span style="font-family: &quot" lang="EN-US">’</span><span lang="EN-US">, </span><span style="font-family: &quot" lang="EN-US">‘</span>도둑<span style="font-family: &quot" lang="EN-US">’</span>세 가지의 직업을 가지게 됩니다<span lang="EN-US">. </span>각 케릭터가 착용하게 되는 아이템은 <span style="font-family: &quot" lang="EN-US">‘</span>무기<span style="font-family: &quot" lang="EN-US">’</span><span lang="EN-US">, </span><span style="font-family: &quot" lang="EN-US">‘</span>방어구<span style="font-family: &quot" lang="EN-US">’</span>를 착용하게 됩니다<span lang="EN-US">. </span>그리고 모든 직업은 공통적으로<span lang="EN-US"> HP, MP</span>라는 속성값을 가지게 됩니다<span lang="EN-US">.</span></p>
+<p class="MsoNormal"><span lang="EN-US"></span>케릭터를생성하여 전사<span lang="EN-US">, </span>마법사<span lang="EN-US">, </span>도둑 세가지의 직업으로 나누어서각 케릭이 어떠한 직업을 가지고 어떠한 이름을 가지고 있는지 보여줍니다<span lang="EN-US">. </span>그 후 아이템을 습득하여 무기및 방어구를 습득하여서 어떠한 아이템을 착용했는지 그리고 그 아이템은 어떠한 상세 내용을 가지고 있는지에 대한 메시지를 창에 보여주게 됩니다<span lang="EN-US">.</span></p>
+<p class="MsoNormal"><span lang="EN-US"></span>또한케릭터가 독에 걸리거나 상처를 입는 등 상태이상에 걸리게 되면 케릭터가 상태이상에 걸렸다는 메시지를 창에 보여주면 됩니다<span lang="EN-US">.</span></p>
+<p class="MsoNormal">각 아이템은 다음 예제와 같은 상세한 세부내용이 있습니다<span lang="EN-US">.</span></p>
+<table class="MsoTableGrid" style="border: medium none ; border-collapse: collapse" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="height: 6pt">
+<td rowspan="3" style="border: 1pt solid windowtext; padding: 0cm 5.4pt; width: 68.4pt; height: 6pt" valign="top" width="91">
+<p class="MsoNormal">무기 예제</p>
+</td>
+<td style="border-style: solid solid solid none; border-color: windowtext windowtext windowtext -moz-use-text-color; border-width: 1pt 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">단검<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></span>데미지<span lang="EN-US"> 1~10</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">롱소드<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></span>데미지<span lang="EN-US"> 10~20</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">바스타드 소드<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span>데미지<span lang="EN-US"> 10~20</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td rowspan="3" style="border-style: none solid solid; border-color: -moz-use-text-color windowtext windowtext; border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 68.4pt; height: 6pt" valign="top" width="91">
+<p class="MsoNormal">방어구 예제</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">가죽 갑옷<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span>방어 확률<span lang="EN-US"> 10%</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">플레이트 아머<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span>방어 확률<span lang="EN-US"> 20%</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 366.7pt; height: 6pt" valign="top" width="489">
+<p class="MsoNormal">풀플레이트 아머<span lang="EN-US"><span style=""> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span>방어 확률<span lang="EN-US"> 30%</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal"><span lang="EN-US"><o:p> </o:p></span></p>
+<p class="MsoNormal">상태이상은 다음 예제와 같은 상세한 세부내용이 존재합니다<span lang="EN-US">.</span></p>
+<table class="MsoTableGrid" style="border: medium none ; border-collapse: collapse" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="height: 6pt">
+<td rowspan="3" style="border: 1pt solid windowtext; padding: 0cm 5.4pt; width: 87pt; height: 6pt" valign="top" width="116">
+<p class="MsoNormal">독</p>
+</td>
+<td style="border-style: solid solid solid none; border-color: windowtext windowtext windowtext -moz-use-text-color; border-width: 1pt 1pt 1pt medium; padding: 0cm 5.4pt; width: 107.4pt; height: 6pt" valign="top" width="143">
+<p class="MsoNormal">가시독</p>
+</td>
+<td style="border-style: solid solid solid none; border-color: windowtext windowtext windowtext -moz-use-text-color; border-width: 1pt 1pt 1pt medium; padding: 0cm 5.4pt; width: 240.7pt; height: 6pt" valign="top" width="321">
+<p class="MsoNormal">이동속도가 느려집니다<span lang="EN-US">.</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 107.4pt; height: 6pt" valign="top" width="143">
+<p class="MsoNormal">맹독</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 240.7pt; height: 6pt" valign="top" width="321">
+<p class="MsoNormal">케릭터의<span lang="EN-US"> HP</span>가 감소됩니다<span lang="EN-US">.</span></p>
+</td>
+</tr>
+<tr style="height: 6pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 107.4pt; height: 6pt" valign="top" width="143">
+<p class="MsoNormal">마나독</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 240.7pt; height: 6pt" valign="top" width="321">
+<p class="MsoNormal">케릭터의<span lang="EN-US"> MP</span>가 감소됩니다<span lang="EN-US">.</span></p>
+</td>
+</tr>
+<tr style="height: 9pt">
+<td rowspan="2" style="border-style: none solid solid; border-color: -moz-use-text-color windowtext windowtext; border-width: medium 1pt 1pt; padding: 0cm 5.4pt; width: 87pt; height: 9pt" valign="top" width="116">
+<p class="MsoNormal">질병</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 107.4pt; height: 9pt" valign="top" width="143">
+<p class="MsoNormal">질병</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 240.7pt; height: 9pt" valign="top" width="321">
+<p class="MsoNormal">케릭터의<span lang="EN-US"> HP, MP</span>가 감소됩니다<span lang="EN-US">.</span></p>
+</td>
+</tr>
+<tr style="height: 9pt">
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 107.4pt; height: 9pt" valign="top" width="143">
+<p class="MsoNormal">상처</p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color windowtext windowtext -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; width: 240.7pt; height: 9pt" valign="top" width="321">
+<p class="MsoNormal">케릭터가 부상을 입어 활동을 할 수 없습니다<span lang="EN-US">.</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal"><span lang="EN-US"><o:p> </o:p></span></p>
+<p class="MsoNormal"><span lang="EN-US"><o:p>오.. 지쟈스.. 클래스가 몇개인고.. 이것도 월요일까지 제출해야 한다는거~</o:p></span></p>
+<p class="MsoNormal"><span lang="EN-US"><o:p>오늘 일단 이것부터 해결해야겠군요..<br />
+</o:p></span></p>

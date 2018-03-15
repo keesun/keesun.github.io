@@ -1,0 +1,60 @@
+---
+layout: post
+title: TDD 연습하기 - RomanNumber
+date: 2008-04-18 05:21:09.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- TDD
+- 로마숫자
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323163585'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255); font-weight: bold; text-align: center;">1부터 1000사이의 숫자를 주면 <a href="http://ko.wikipedia.org/wiki/%EB%A1%9C%EB%A7%88_%EC%88%AB%EC%9E%90" rel="nofollow">로마숫자</a>로 변환하는 프로그램을 TDD로 개발하시오.</div>
+<p>점심시간에 밥 빨리먹고 심심하신 분들 한 번 해보세요. 재밌네요. 캬캬..<br />토비형님은 자바코드 열댓줄 루비코드 대여섯줄이면 끝난다고 하네요... 워우...</p>
+<p>자바코드로 짜실 분들을 위테 테스트코드를 올려드리겠습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("I", maker.convert(1));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("II", maker.convert(2));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("III", maker.convert(3));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("IV", maker.convert(4));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("V", maker.convert(5));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("VI", maker.convert(6));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("VII", maker.convert(7));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("VIII", maker.convert(8));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("IX", maker.convert(9));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("X", maker.convert(10));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XI", maker.convert(11));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XII", maker.convert(12));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XIII", maker.convert(13));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XIV", maker.convert(14));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XV", maker.convert(15));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XIX", maker.convert(19));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XX", maker.convert(20));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XXX", maker.convert(30));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XL", maker.convert(40));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("L", maker.convert(50));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("LX", maker.convert(60));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("LXX", maker.convert(70));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("LXXX", maker.convert(80));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("XC", maker.convert(90));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("C", maker.convert(100));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("CC", maker.convert(200));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("CD", maker.convert(400));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("D", maker.convert(500));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("DCLXVI", maker.convert(666));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("CM", maker.convert(900));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("M", maker.convert(1000));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("MCMXLV", maker.convert(1945));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("MCMXCIX", maker.convert(1999));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("MM", maker.convert(2000));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("MMM", maker.convert(3000));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("ↁ", maker.convert(5000));</div>
+<p>간단하지요. 테스트 코드 짜는건 쉬운데.. (위키피디아에 있는 표를 전부 테스트 해봤습니다. 불필요한 것도 있겠지만.. 뭐 어때요. 캬캬캬) 전 구현해보니 60줄 정도 나왔습니다. 토비형님 코드의 4 배... 라인수는 Ctrl + Shift + F 기준입니다.</p>
+<p>저녁값 내기로 가장 짧은 코드로 구현하기 뭐 이런거 해도 재밌겠네요. 전 .. 그러고 놀 수 사람이... 없어요. 흑흑.. 외로워... 흑흑흑... 이젠 어려운 자바습이랑 놀아야지.. @.@ 자바습아 이리온...</p>
+<p>풀어보신 분들은 저처럼 소스 코드를 올려주세요. 부끄럽지만 제 파일도 올려둡니다. 재밌게 공유해 보아요.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/fk170000000000.java" class="aligncenter">fk170000000000.java</a></p>

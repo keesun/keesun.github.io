@@ -1,0 +1,249 @@
+<div id="" style="margin-left: 4em; ">
+<span class="Apple-style-span" style="white-space: pre;"></span></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="" style="margin-left: 4em; ">
+<span class="Apple-style-span" style="white-space: pre;" id="">@RunWith(MockitoJUnitRunner.class)<br />
+public class StudyServiceImplTest {</p>
+<p>	StudyServiceImpl service;<br />
+	@Mock SecurityService securityService;<br />
+	@Mock StudyRepositoryImpl repository;<br />
+        @Mock UnifiedNotificationService notiService;<br />
+        @Mock MemberRepository memberRepository;</p>
+<p>	@Before<br />
+	public void setUp() throws Exception {<br />
+		service = new StudyServiceImpl();<br />
+		service.securityService = securityService;<br />
+		service.repository = repository;<br />
+        service.notiService = notiService;<br />
+        service.memberRepository = memberRepository;<br />
+	}<br />
+</span></div>
+<div>
+<span class="Apple-style-span" style="white-space: pre;"><span class="Apple-style-span" style="white-space: normal;"><br />
+</span></span></div>
+<div>
+<span class="Apple-style-span" style="white-space: pre;"><span class="Apple-style-span" style="white-space: normal;">....</span></span></div>
+<div>
+<span class="Apple-style-span" style="white-space: pre;"><span class="Apple-style-span" style="white-space: normal;"><br />
+</span></span></div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>@Test</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>public void addCurrentMember() throws Exception {</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>Study study = new Study();</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>study.setMaximum(2);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>Member currentMember = new Member();</div>
+<div>
+
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>// check add 1</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>when(securityService.getPersistentMember()).thenReturn(currentMember);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>service.addCurrentMember(study);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>checkStudyAndMemberSize(study, 1, currentMember, 1);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span></div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>// check duplicated member add</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>service.addCurrentMember(study);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>checkStudyAndMemberSize(study, 1, currentMember, 1);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span></div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>// check add 2</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>currentMember = new Member("keesun@email.com");</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>when(securityService.getPersistentMember()).thenReturn(currentMember);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>service.addCurrentMember(study);</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>checkStudyAndMemberSize(study, 2, currentMember, 1);</div>
+<div>
+
+</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>// check add over limit error!!</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;service.addCurrentMember(study);</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;fail();</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch(StudyMaximumOverException e) {</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">		</span>checkStudyAndMemberSize(study, 2, currentMember, 1);</div>
+<div>
+
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;//TODO NO_LIMIT_MEMBER_COUNT test</div>
+<div>
+<span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="">
+</div>
+</div>
+<div id="">
+
+</div>
+<div id="">
+봄싹에 있는 코드입니다. 코드가 좀.. 거시기 합니다. mockito를 사용해서 테스트 했는데 사실 mockito를 잘 모르고 mock 테스트에 대해서도 잘 모르는 상태에서 저런 테스트를 이해하기는 힘듭니다.</div>
+<div id="">
+
+</div>
+<div id="">
+문제의 원인은 뭘까요?</div>
+<div id="">
+
+</div>
+<div id="">
+1. 테스트 코드가 지저분해서..</div>
+<div id="">
+2. 로직이 서비스에 있느니까..</div>
+<div id="">
+
+</div>
+<div id="">
+1번이라고 생각하셔도 별로 할 말은 없습니다. ㅋㅋㅋ 저는 2번이라고 주장하고 싶습니다. 서비스 계층에 비즈니스 로직이 들어가면 어쩔 수 없어요. 목킹을 해서 저렇게 단위테스트를 하던, 느려터진 통합 테스트를 하면 되는데.. 사실 해결책이 있는 경우가 많습니다.</div>
+<div id="">
+
+</div>
+<div id="">
+비즈니스 로직을 도메인 클래스로 옮겨주는거죠.</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>public void addCurrentMember(Study study) {</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">		</span>study.addMember(securityService.getCurrentUser());</div>
+<div id="">
+<span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+StudyService에 있던 코드입니다. 이렇게 서비스 계층에서 도메인 계층으로 로직을 모두 옮겼는데 서비스 계층의 테스트가 필요할까요?? 무엇을 테스트할까요? study의 addMember를 호출하는지? seurityService.&nbsp;.getCurrentUser()를 호출하는지? 그 결과는 잘 오는지? 글쎄요.. 호출하면 당연히 호출하겠죠; 머하러 그런걸 테스트할까요. 화이트박스 테스트인지, 행위 기반 테스트인지를 할 때는 필요할지도 모르겠지만 저는 별로 그러고 싶지 않습니다. (구현 세부 사항을 일일히 확인하느니 그냥 그 시간에 코딩을 하는게;;)</div>
+<div id="">
+
+</div>
+<div id="">
+그래서 제 나름대로 내린 결론은 저런 코드는 테스트할 필요가 없다는 겁니다. 당연히 잘 호출하겠죠. 물론 예외는 있습니다.</div>
+<div id="">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+- 트랜잭션 테스트</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+- 메서드 보안 테스트</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이 녀석들은 서비스 계층의 역할로 할당했는데 이런것들은 스터디 통합 테스트에서 하는게 적절합니다. 이번 글에서 다루고자 하는 주제와는 거리가 있으니 다음으로 미루겠습니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그럼 위의 테스트를 지우면 끝일까요?&nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+아니죠. 테스트 위치가 바뀌어야 합니다. 도메인으로 비즈니스 로직이 옮겨갔으니 도메인 클래스를 테스트해야죠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Test</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public void addMember(){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Study study = new Study();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Member member = new Member();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;study.addMember(member);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(study.getCurrentMembers().size(), is(1));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(member.getStudies().size(), is(1));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Test(expected = StudyMaximumOverException.class)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public void addMemberException(){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Study study = new Study();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;study.setMaximum(1);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Member member = new Member();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;study.addMember(member);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(study.getCurrentMembers().size(), is(1));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertThat(member.getStudies().size(), is(1));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;study.addMember(new Member());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그렇게 옮겨간 테스트가 이렇습니다. 모든 경우를 다 옮기진 않았지만 요렇습니다. 서비스에서 테스트 할 때 보다 훨씬 간결하기 때문에 테스트 작성도 쉽고 이해하기도 쉽습니다. 그쵸?? 아님 말구요.ㅋㅋ</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+사실 이 부분을 KSUG 발표 때 보여드렸어야 하는데;; 소녀시대 때문에 깜빡했어요.</div>
+</div>

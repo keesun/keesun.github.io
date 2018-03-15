@@ -1,0 +1,72 @@
+---
+layout: post
+title: 패키지 이름 설정하기
+date: 2008-01-20 04:24:48.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 04
+tags:
+- 맵핑 설정
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323115560'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>(XML 설정 파일 이용 시)</li>
+</ul>
+<ul>
+<li>Persistent 클래스 등록할 때, 패키지 이름까지 붙어있는 이름을 등록해야 한다.</li>
+</ul>
+<ul>
+<li>같은 패키지에 위치한 여러 클래스들을 등록할 때 패키지 이름을 매번 붙여주기가 귀찮다.</li>
+</ul>
+<h1>설정하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>기본 패키지 설정하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;hibernate-mapping package=<span class="code-quote">"auction.model"</span>&gt;</span><br />    <span class="code-tag">&lt;classname=<span class="code-quote">"Item"</span> table=<span class="code-quote">"ITEM"</span>&gt;</span><br />        ...<br />    <span class="code-tag">&lt;/class&gt;</span><br /><span class="code-tag">&lt;/hibernate-mapping&gt;</span></pre>
+</div>
+</div>
+<ul>
+<li>애노테이션에서는 이런 설정이 필요 없겠지. 해당 클래스에 가서 직접 붙여주는데...</li>
+</ul>

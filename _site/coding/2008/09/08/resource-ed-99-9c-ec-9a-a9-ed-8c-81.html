@@ -1,0 +1,15 @@
+<p>스프링에서 @Autowired와 @Resource. 이 둘의 가장 큰 차이는 하나는 by-type이고, 하나는 by-name이라는 것. 주로 @Autowired를 사용해서 보통 다음과 같이 코딩합니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Post {</p>
+<p>&nbsp;&nbsp; @Autowired private Cate cate;<br />&nbsp;&nbsp; ...<br />}</div>
+<p>그런데 만약에 Cate 타입이 두 종류라면.. MainCate, SubCate. 이렇게 나눴다고 치고 위의 코드를 실행하면 에러가 닙니다. NoSuchBean뭐시기 Exception이 나면서 해당 타입의 빈이 1개가 아니다. 라는 예외가 발생하요. 그럴 때 처방으로 보통..
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Post {</p>
+<p>&nbsp; <span style="font-weight: bold; color: rgb(23, 127, 205);">@Autowired @Qulifier("mainCate")</span><br />&nbsp; private Cate maincate<br />&nbsp; ...</p>
+<p>}</div>
+<p>이렇게 @Qulifier를 사용하곤 하는데.. 사실 저걸 @Resource로 바꾸면 굉장히 간단해집니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class Post {</p>
+<p>&nbsp; <span style="color: rgb(0, 153, 102); font-weight: bold;">@Resource private Cate maincate</span><br />
+&nbsp; ...</p>
+<p>}</p></div>
+<p>캬~~ 간단하죠. @Resource 애노테이션을 사용하려면 jsr250-api.jar 파일을 추가해주면 됩니다. 메이븐을 사용하고 있다면</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; &nbsp; &nbsp; &lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;groupId&gt;javax.annotation&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;jsr250-api&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;version&gt;1.0&lt;/version&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/dependency&gt;</div>
+<p>이렇게 추가해주면 끝..</p>

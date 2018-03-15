@@ -1,0 +1,14 @@
+<p><a title="[http://developer.yahoo.com/performance/rules.html#expires]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#expires">http://developer.yahoo.com/performance/rules.html#expires</a></p>
+<p>Add an Expires or a Cache-Control Header</p>
+<p>tag: server</p>
+<p>이 규칙에는 두 가지가 있다.</p>
+<p>* 정적 컴포넌트인 경우: 아주 긴 시간으로 Expires 헤더를 설정하여 "Neber expire" 정책을 구현한다.<br />
+* 동적 컴포넌트인 경우: 적절한 Cache-Control 헤더를 사용하여 브라우저를 도와준다.</p>
+<p>웹 페이지 디자인은 점점 더 풍부해지고 있다. 즉 보다 많은 스크립트, 스타일시트, 이미지, 플래시가 페이지에 들어간다는 것이다. 여러분 페이지를 처음 방문하는 사용자는 아마도 몇 개의 HTTP 요청을 보내야 할 것이다. 하지만 Expires 헤더를 사용하여 그런 컴포넌트들을 캐시가 가능하도록 설정할 수 있다. 이렇게 하면 연속하여 페이지를 참조할 때 불필요한 HTTP 요청을 줄일 수 있다. Expires 헤더는 대부분 이미지에 자주 사용하지만, 스크립트, 스타일시트, 플래시 컴포넌트를 포함한 모든 컴포넌트에도 활용할 수 있다.</p>
+<p>브라우저(와 프록시)는 캐시를 사용하여 HTTP 요청과 사이즈를 줄이고, 웹 페이지 로딩 속도를 높인다. 웹 서버는 Expires 헤더를 HTTP 응답에 사용하여 클라이언트가 얼마나 오래 컴포넌트를 캐시할지 알려준다. 다음은 아주 오래동안 캐시를 보관하도록 설정한 Expires 헤더이다. 브라우저에게 이 응답은 2010년 4월 15일까지 변하지 않을꺼라고 알려준다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Expires: Thu, 15 Apr 2010 20:00:00 GMT</p>
+<p>만약 여러분의 서버가 아파치라면, ExpiresDefault 지시자를 사용하여 현재 시간 기준으로 상대적인 만료 날자를 설정하라. 다음 예제는 만료 날짜를 요청을 받은 시점 부터 10년 뒤로 설정하는 ExpiresDefault 지시어다.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ExpiresDefault "access plus 10 years"</p>
+<p>명심해야 할 것이 있다. 만약 아주 오래 살도록 Expried 헤더를 사용한 경우에는 컴포넌트를 변경할 때 마다 반드시 컴포넌트의 파일이름을 변경해 주어야 한다. 야후에서는 이런 작업을 빌드 과정 중 하나로 만들어 사용한다. 컴포넌트의 파일 이름에 버전 넘버를 명시해주는 것이다. 예를 들어 yahoo_2.0.6.js 처럼.</p>
+<p>아주 오래 캐시를 유지하도록 설정한 Expires 헤더는 이미 여러분의 사이트를 방문했던 사용자가 보는 페이지에만 적용된다. 사이트를 처음 방문하는 사용자의 HTTP 요청이거나 브라우저의 캐시가 비어있는 경우에는 아무런 영향이 없다. 따라서 이런 성능 개선의 효과는 사용자가 어느정도 '준비된 캐시'를 가지고 페이지를 얼마나 자주 방문하느냐에 달려있다. ('준비된 캐시'에는 페이지의 모든 컴포넌트를 이미 가지고 있다.) 우리는 야후에서 이것을 측정했고 그 결과 준비된 캐시를 가지고 방문하는 페이지 뷰의 수가 75~85%에 달한다는 것을 발견했다. 아주 왜 캐시를 유지하는 Expires 헤더를 사용함으로써, 브라우저가 캐시할 컴포넌트 수를 늘리고 연쇄적으로 페이지를 볼 때 사용자 인터넷 연결에 한 바이트로 보내지 않을 수 있다.</p>
+<p>참조: <a title="[http://www.mnot.net/cache_docs/]로 이동합니다." target="_blank" href="http://www.mnot.net/cache_docs/">http://www.mnot.net/cache_docs/</a></p>

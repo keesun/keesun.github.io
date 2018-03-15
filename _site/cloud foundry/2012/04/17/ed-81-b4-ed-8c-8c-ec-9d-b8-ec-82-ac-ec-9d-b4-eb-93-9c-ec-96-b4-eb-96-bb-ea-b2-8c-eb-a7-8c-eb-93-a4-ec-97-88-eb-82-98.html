@@ -1,0 +1,64 @@
+<p><a href="http://www.slideshare.net/derekcollison/design-of-cloud-foundry" target="_blank">http://www.slideshare.net/derekcollison/design-of-cloud-foundry</a></p>
+<p><a href="http://www.infoq.com/presentations/Cloud-Foundry-Inside-the-Machine" target="_blank">http://www.infoq.com/presentations/Cloud-Foundry-Inside-the-Machine</a></p>
+<p>몇몇 핵심 요소들이 있는데...</p>
+<ul>
+<li>커널 (CloudFoundry OSS): 핵심 PaaS 시스템</li>
+<li>커널과 오케스트레이터(Orchestrator) 쉘: IaaS 상단의 레이어</li>
+<li><strong>오케스트레이터: IaaS 생성, 관리 및 관장(?)</strong></li>
+</ul>
+<p>커널이라고 부르는건 VCAP이라는 이름으로 오픈소스로 공개한 핵심 패스 시스템을 말하는 것 같고.. 오케스트레이터 쉘은 뭔지 잘 몰겠넹;; 설명도 좀 짧고. 나중에 여러 계층과 어떻게 소통하는지 자세히 설명하겠다는군요.</p>
+<p>오케스트레이터는 라이프사이클 관장으로 이 부분이 꽤 어려운 문제를 해결하는 부분이라고 합니다. 멀티 노드 설치 스크립트 등을 만들고 사용하는건 그리 어려운 부분이 아니라네요. 그런 부분보다는 "동작중인 시스템"을 만드는 것입니다. 즉.. 애플리케이션은 계속 돌면서도 그 밑단의 시스템이 죽었는지.. 전부 새로 껐다 켰는지 알 수 없게 만드는거라고 얼핏 이해했는데... 흠냐.. 맞겠지?.. 그렇게 하는게 어려운거라고 하고.. 이걸 어떻게 할 수 있게 했는지 설명하겠다고 하네요.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/04/스크린샷-2012-04-18-오전-1.45.17.png"><img class="aligncenter size-full wp-image-13566" title="cf" src="/assets/&#49828;&#53356;&#47536;&#49399;-2012-04-18-&#50724;&#51204;-1.45.17.png" alt="" width="874" height="743" /></a></p>
+<p>하드웨어 하드웨어고, IaaS 대충 알겠고, 오케스트레이터가 매우 중요하고 어려운 부분인데. 아마도 여기에 nats가 매우 중요한 역할을 하고 있을 것 같고.. CF Kernel이라는게 vcap일꺼고.. clients는 뭐.. http over json으로 통신하는 CLI나 STS 플러긴이나 웹앱이겠지.</p>
+<p>클파의 기반 전제(Basic Premises)</p>
+<ul>
+<li>Fail Fast</li>
+<li>Self Healing</li>
+<li>Horizontally Scalable Components</li>
+<li>Distributed State</li>
+<li>No Single Point of Failure</li>
+<li>Should be as simple as possible</li>
+</ul>
+<p>한글로 옮기기도 어렵고 이해하기도 어려운  용어들만 써있네. 덴장 ㅋㅋ 무학의 통찰이 필요해.</p>
+<p>제대로 동작하지도 않는 상황에서 최적화 로직을 돌릴 필요는 없으니까 Fail Fast를 시키고 그래야 빨리 복구 시킬 수 있다. 실제로 자살하는 앱을 만들어서 배포한담에 얼마나 빨리 복구되는지 실험도 해봤다. 수평확장이 가능하기 떄문에 한 인스턴스로 4천 TPS 정도가 가능하다면 4만 TPS도 문제가 아니다. 분산 시스템이란게 본래가 복잡한데.. 가능한 단순하게 만들려고 노력한다.</p>
+<p>기반 패턴</p>
+<ul>
+<li>이벤트 드리븐</li>
+<li>비동기(애싱크로너스)</li>
+<li>논 블락킹</li>
+<li><strong>Independent(인디페넌), Idempotent(아이뎀포던)</strong></li>
+<li>Message Passing</li>
+<li>Eventually Consistent</li>
+</ul>
+<p>클파의 신경 시스템(널브 시스템)에 대해서 이야길 많이 할텐데.. 그게 가능케 하는게 바로 idempotent하기 때문이다. 메시징 시스템은 내가 직접 만들었고.. 나머진 잘.. 몰겠네 블라블라</p>
+<p>기반 설계(Basic Design)</p>
+<ul>
+<li>모든 컴포넌트는 loosely coupled 시킴</li>
+<li>메시징 기반</li>
+<li>JSON 페이로드</li>
+<li>HTTP 또는 File/Blob 데이터 전송</li>
+</ul>
+<p>커널 특징</p>
+<ul>
+<li>모두 동적으로 발견한다.</li>
+<li>무작위로(? in any order) 실행하고 확장한다.</li>
+<li>필요에 따라 빠지거나 추가할 수 있다.</li>
+<li>HTTP와 JSON을 사용해서 모니터링</li>
+<li>Location independent</li>
+</ul>
+<p>"모두 동적으로 발견한다"는 말은 신경 시스템으로 메시지를 보내서 모든 컴포넌트다 나는 어딨고 나는 무슨 타입이고 실행된지 얼마나 됐고 내 모니터링 풀은 여깄다 등등을 알수있다. 애플리케이션이 돌고 있는 IP와 포트를 알아낼 수 있지만 사실 애플리케이션이 돌고 있는 곳과 아무런 의존성이 없다.</p>
+<p>커널 구성요소</p>
+<ul>
+<li>라우터</li>
+<li>클라우드 컨트롤러</li>
+<li>DEA</li>
+<li>HealthManager</li>
+<li>Service Provisioning Agent</li>
+<li>Messaging System</li>
+</ul>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/04/스크린샷-2012-04-18-오전-2.13.01.png"><img class="aligncenter size-full wp-image-13567" title="cf kernal" src="/assets/&#49828;&#53356;&#47536;&#49399;-2012-04-18-&#50724;&#51204;-2.13.01.png" alt="" width="995" height="732" /></a></p>
+<p>커널의 구성요소가 어떻게 구성되어 있는지 보여주는 논리적인 뷰인데.. HTTP REST 요청은 모두 라우터를 통해서 들어오기도 하고 일부는 애플리케이션으로 바로 들어오기도 한다. 이것은 즉 애플리케이션에 적용하는 모든 원칙을... fault tolerance, high availability, scaling을 커널 구성요소에도 그대로 적용한다는 뜻이다. DEA 풀은 매우 클수도 있고 매우 작을 수도 있다. 헬쓰매니저는 이곳에서 유일하게 싱글톤이다.</p>
+<p><a href="http://whiteship.me/wp-content/uploads/2012/04/스크린샷-2012-04-18-오전-2.22.17.png"><img class="aligncenter size-full wp-image-13568" title="클파 아키텍처" src="/assets/&#49828;&#53356;&#47536;&#49399;-2012-04-18-&#50724;&#51204;-2.22.17.png" alt="" width="1067" height="804" /></a></p>
+<p>이건 아키텍처인데 녹색은 HTTP, 파랑은 메시징, 보라는 뭐지..? 왜 말을 안해;;;</p>
+<p>오늘은 여기까지. 20분 48초.</p>
+<p>&nbsp;</p>

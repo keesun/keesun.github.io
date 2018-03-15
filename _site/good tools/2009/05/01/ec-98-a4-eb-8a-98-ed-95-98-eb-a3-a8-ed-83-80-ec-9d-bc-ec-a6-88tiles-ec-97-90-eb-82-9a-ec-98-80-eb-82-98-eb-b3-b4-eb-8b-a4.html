@@ -1,0 +1,32 @@
+<p>성윤이랑 정말 신나게 가지고 놀았는데, 집에 갈 때 쯤이 다 되서 생각해 보건데..</p>
+<p>매번 페이지를 추가할 때 마다 설정을 추가해야 한다는 건 정말 못 할 짓이다. 하루 종일 성윤이랑 씨름하며 개발중인 봄싹 사이트에 적용해 보았다.</p>
+<p>못 할 짓이다.</p>
+<p>안그래도 하면서 성윤이한테 이런 얘길 했었다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- main page&nbsp; --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;definition name="index" extends=".root"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/index.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;definition name="login" extends=".root"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/login/login.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;!-- member page&nbsp; --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;definition name="member/list" extends=".root"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/member/list.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;definition name="member/add" extends=".empty"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/member/add.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;definition name="member/view" extends=".empty"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/member/view.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;definition name="member/update" extends=".empty"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/member/update.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>이런 식으로 계속 설정하는 건 정말 안 되겠다 싶어서, definition의 name 속성에 넣는 값이랑 put-attrubute의 value 속성에 넣는 값들이 비슷해 보이니까 저런걸 CoC 적용해서 자동으로 할 수 있게 패치를 만들어 볼까? 하는 얘길했었다.</p>
+<p>
+그러나...</p>
+<p>
+못 할 짓이고, 안 해도 될 것 같다. 하루 종일 공부했는데 허탈한 기분이 들지만.. </p>
+<p>사부님이 such is life 란다. ㅋㅋ</p>
+<p>내일은 태그파일을 적용해봐야겠다.</p>
+<p></p>

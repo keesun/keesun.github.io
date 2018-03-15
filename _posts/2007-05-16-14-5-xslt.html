@@ -1,0 +1,85 @@
+---
+layout: post
+title: 14.5. XSLT
+date: 2007-05-16 03:46:44.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 14
+tags:
+- Spring Reference 14장
+- xml
+- xslt
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323086407'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>모델 데이타를 XML 형식으로 출력할 수 있습니다.</p>
+<p><span style="font-weight: bold;">1. 컨트롤러를 만들고 등록합니다.</span></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ViewMemberListWithXMLController extends AbstractController{</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; List&lt;MemberInfo&gt; infos = ServiceManager.getMemberInfoService().getAll();<br />&nbsp; &nbsp; &nbsp; &nbsp; Map&lt;String, Object&gt; members = new HashMap&lt;String, Object&gt;();<br />&nbsp; &nbsp; &nbsp; &nbsp; members.put("members", infos);<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("memberListXml", members);<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean name="/viewMemberListWithXml.html" class="net.ailgejava.members.controller.ViewMemberListWithXMLController" /&gt;</div>
+<p><span style="font-weight: bold;">2. 모델 데이타를 XML 로 만드는 view 클레스를 만듭니다.</span></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberListXMLView extends AbstractXsltView {</p>
+<p>&nbsp; &nbsp; @SuppressWarnings("unchecked")<br />&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected Source createXsltSource(Map model, String rootName, HttpServletRequest request, HttpServletResponse response) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();<br />&nbsp; &nbsp; &nbsp; &nbsp; Element root = document.createElement(rootName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; List&lt;MemberInfo&gt; memberInfos = (List&lt;MemberInfo&gt;) model.get("members");<br />&nbsp; &nbsp; &nbsp; &nbsp; for (MemberInfo memberInfo : memberInfos) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String name = memberInfo.getName();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String email = memberInfo.getEmail();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String home = memberInfo.getHome();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; String pictureAddress = memberInfo.getPictureAddress();</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Element memberInfoNode = document.createElement("memberInfo");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Text nameText = document.createTextNode(name);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Text emailText = document.createTextNode(email);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Text homeText = document.createTextNode(home);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Text pictureAddressText = document.createTextNode(pictureAddress);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfoNode.appendChild(nameText);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfoNode.appendChild(emailText);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfoNode.appendChild(homeText);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfoNode.appendChild(pictureAddressText);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; root.appendChild(memberInfoNode);<br />&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; return new DOMSource(root);<br />&nbsp; &nbsp; }<br />}</div>
+<p>이때 Text, Element, Document 객체의 패키지는 org.w3c.dom 패키지 입니다. 레퍼런스의 예제는 Generic을 사용하지 않는 Map과 List 그리고 Iterator를 명시적으로 사용하고 있더군요. Java 5버전 형태로 바꿔주면 좋을텐데 말이죠. :)</p>
+<p>변수와 메소드 이름의 작명을 잘해뒀기 때문에 직감적으로 대강 어떻게 코딩 해야 하는지 알 수 있습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. 뷰 프로퍼티 파일 정의하기.</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">memberListXml.class = net.ailgejava.members.view.xml.MemberListXMLView<br />memberListXml.stylesheetLocation=/WEB-INF/xsl/memberList.xslt<br />memberListXml.root=memberInfos</div>
+<p>class 는 위에서 만든 view 클레스<br />stylesheetLocation은 XML을 HTML로 변환하여 보여줄 xslt 의 위치<br />root 는 XML의 root 엘리먼트 이름을 나타냅니다.</p>
+<p>뷰 프로퍼티 파일을 썼다는 것은 ResourceBundleViewResolver를 사용하였다는 것입니다. 기존에 사용하던 리졸버와 상관없이 추가로 등록해 주면 됩니다. 대신 어차피 기본적으로 InternalResourceViewResolver 이 녀석이 <a href="http://whiteship.tistory.com/820" target="_blank">Resolver Chaining</a> 할 때 맨 뒤로 가긴 하지만 그래도 명시적으로 order 프로퍼티를 사용하여 순서를 명확히 해줍니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;!-- View Resolver --&gt;<br />&nbsp; &nbsp; &lt;!-- XML, Exel, PDF --&gt;<br />&nbsp; &nbsp; &lt;bean id="ExViewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="basename" value="views"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="order" value="1" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- jstl --&gt;<br />&nbsp; &nbsp; &lt;bean id="viewResolver"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="viewClass"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="org.springframework.web.servlet.view.JstlView" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="prefix" value="/WEB-INF/jsp/" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="suffix" value=".jsp" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="order" value="2" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">4. XSLT 만들기</span></p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;?xml version="1.0" encoding="utf-8"?&gt;<br />&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;</p>
+<p>&nbsp; &nbsp; &lt;xsl:output method="html" omit-xml-declaration="yes"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;xsl:template match="/"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;html&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;head&gt;&lt;title&gt;AJN Members&lt;/title&gt;&lt;/head&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;body&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;전체 회원 목록(XML)&lt;/h1&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;xsl:apply-templates/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/body&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/html&gt;<br />&nbsp; &nbsp; &lt;/xsl:template&gt;</p>
+<p>&nbsp; &nbsp; &lt;xsl:template match="<span style="color: rgb(255, 0, 0);">memberInfo</span>"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;xsl:value-of select="."/&gt;&lt;br/&gt;<br />&nbsp; &nbsp; &lt;/xsl:template&gt;</p>
+<p>&lt;/xsl:stylesheet&gt;</p></div>
+<p>&lt;xsl:apply-templates/&gt; 이녀석은 xml 보여줄 곳을 명식하는 것 같고 이 부분에 뿌려줄 내용을 아랫 부분에서 정의해 주는 것 같습니다. 저기서 memberInfo 는 위의 View 클레스 만들 때 사용한 Element의 이름과 동일해야 합니다.</p>
+<p><span style="font-weight: bold;">5. 데모</span></p>
+<p><img src="{{ site.baseurl }}/assets/cm207.jpg" class="aligncenter" width="500" height="209" alt="사용자 삽입 이미지" />&nbsp;<br /><img src="{{ site.baseurl }}/assets/cm208.jpg" class="aligncenter" width="500" height="192" alt="사용자 삽입 이미지" /></p>
+<p></p>

@@ -1,0 +1,79 @@
+---
+layout: post
+title: EJ2E Item 24. unchecked 경고를 제거하자
+date: 2010-03-29 07:16:23.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- "@SuppressWarning(&quot;unchecked&quot;)"
+- effective java 2nd edition
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322986393'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span class="Apple-style-span" style="color: rgb(80, 80, 80); font-family: Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif; line-height: 22px; font-size: 13px; " id="">참조: Effective Java 2nd Edition. Item 24: Eliminate unchecked warnings</span>
+<div>
+<span class="Apple-style-span" style="color: rgb(80, 80, 80); font-family: Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif; line-height: 22px; font-size: 13px; " id=""><br />
+</span></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">Set&lt;Lark&gt; exaltation = new HashSet();</span></font></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">다음과 같은 코드는 컴파일 시 unchecked 경고를 발생시킨다.&nbsp;</span></font></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id=""><br />
+</span></font></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">Set&lt;Lark&gt; exaltation = new HashSet&lt;Lark&gt;();</span></font></div>
+<div><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">이렇게 수정하면 경고가 사라진다. 가능한 모든 unchecked 경고를 없애자. 모든 경고를 제거했다면 코드의 타입 안전성을 확보하는 것이다. 즉 실행시에 ClassCastException을 보지 않을 것이다.</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">만약 경고를 없앨 수 없지만 타입 안전성을 확신한다면 @SupressWarnings("unchecked") 애노테이션을 사용하여 경고를 무시할 수 있다.</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="">SupressWarning 애노테이션을 사용할 때는 항상 최소 단위에 적용하도록 하자. 만약 클래스위에 붙여버리면 @_@.. 메서드에 붙여도 @_@. 메서드 내부에 코드가 많다면 그 중 어디선가 또 다른 타입 안전성 문제가 발생할 수 있다. 메서드 내부에 변수를 만들고 해당 변수에다가 붙이자. 단 한 줄짜리 메서드라면 뭐..&nbsp;</span></font></div>
+<div id=""><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><br />
+</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">SupressWarning 애노테이션을 사용할 때마다 왜 타입 안전성이 보장되는지 주석을 달아두도록 하자. 그래야 다른 사람들도 이해할 수 있다.</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;"><br />
+</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">요약: 경고는 중요하다. 무시하지 말자. 모든 unchecked 경고는 잠재적으로 런타임시의 ClassCastException에 해당한다. 이 경고들을 없애는데 주력하자. 만약 없앨 수 없지만 타입 안전성을 확신한다면 가장 최소한의 규모에 @SuppressWarning("unchecked") 애노테이션을 붙이자. 그리고 그렇게 결정한 이유를 주석으로 남기자.</span></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><font class="Apple-style-span" color="#505050" face="Arial, Verdana, Tahoma, 굴림, '맑은 고딕', sans-serif" size="3"><span class="Apple-style-span" style="font-size: 13px; line-height: 22px;">&nbsp;</span></font></div>

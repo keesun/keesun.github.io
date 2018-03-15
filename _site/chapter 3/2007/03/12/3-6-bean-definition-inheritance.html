@@ -1,0 +1,9 @@
+<p>bean 설정 내용 사이에 상속 관계를 정의할 수 있습니다. </p>
+<p>1. 부모쪽 bean 설정 파일에는 아무것도 설정하지 않아도 괜찮지만 만약 class 속성에 아무것도 지정하지 않을 경우에는 abstract="ture"를 추가해야 합니다.</p>
+<p>2. 자식쪽 bean 설정에서는 상속할 bean을 parent 속성에 적어 주면 됩니다.</p>
+<p>abstract="true"를 설정한 bean의 객체는 만들 수 없습니다. 테스트는 다음과 같이 작성했습닏.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">@Test public void beanDefinitionInheritance(){<br />&nbsp; &nbsp; &nbsp; &nbsp; try{<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Member keesun13 = getMember("keesun13");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fail("keesun13 cannot be instantiation");<br />&nbsp; &nbsp; &nbsp; &nbsp; }catch (Exception e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun14 = getMember("keesun14");<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(keesun14.getId().equals("기선이다"));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(keesun14.getPassword().equals("password"));<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(keesun14.getAge() == 26);<br />&nbsp; &nbsp; }</div>
+<p>설정 파일은 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="keesun13" abstract="true"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="id" value="기선" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="password" value="password" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="keesun14" class="beanConfiguration.Member" parent="keesun13"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="id" value="기선이다" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="age" value="26" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>테스트가 통과 합니다.</p>

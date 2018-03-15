@@ -1,0 +1,6 @@
+<p>참조<br />
+<a title="[http://blog.springsource.com/2009/07/10/pluggable-styling-with-springsource-slices/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2009/07/10/pluggable-styling-with-springsource-slices/">http://blog.springsource.com/2009/07/10/pluggable-styling-with-springsource-slices/</a><br />
+<a title="[http://blog.springsource.com/2009/06/22/modular-web-applications-with-springsource-slices/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2009/06/22/modular-web-applications-with-springsource-slices/">http://blog.springsource.com/2009/06/22/modular-web-applications-with-springsource-slices/</a></p>
+<p>음.. 웹 애플리케이션을 OSGi 번들로 구성할 때, web 번들 하나랑 기타 서비스 번들 여러 개로 쪼개야 하는구나.. 라고 만 생각하고 있었는데, 그렇지 않았네요.</p>
+<p>스프링 슬라이스를 이용해서 하나의 웹 애플리케이션에서 여러 개의 웹 번들을 구성할 수 있도록 해주는 프레임워크라고 보면 될 것 같습니다. 웹 번들이 여러 개라고 해서 ServletContext가 여러 개 생기는 건 아니고, parent/child 구조로 여러 슬라이스가 호스트의 ServletContext를 이용해서 쓰게 해주는가 봅니다. 설정은 호스트 쪽 web.xml 에 스프링 슬라이스 필터를 추가하면 되고, 슬라이스 쪽에서는 Manifest.mf에 Slice-Host와 Slice-ContextPath를 설정하면 되는 정도로 간단한 편인듯 하네요.</p>
+<p>요즘은 이것 저것 볼 여력이 없기 때문에.. 이정도만 살펴보고 패스~</p>

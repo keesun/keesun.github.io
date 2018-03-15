@@ -1,0 +1,65 @@
+---
+layout: post
+title: BeanFactory와 ApplicationContext 인터페이스
+date: 2007-03-05 03:59:40.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- ApplicationContext
+- BeanFactory
+- IoC container
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322784253'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/dk41.jpg" class="aligncenter" width="245" height="210" alt="사용자 삽입 이미지" />IoC의 가장 상위에 있는 인터페이스인 BeanFactory에 있는 메소드들 입니다. </p>
+<p><img src="{{ site.baseurl }}/assets/ck33.jpg" class="aligncenter" width="262" height="120" alt="사용자 삽입 이미지" />ApplicationContext 인터페이스에 있는 메소드 들인데 이 인터페이스는 아래의 인터페이스를 확장하고 있습니다.<br />ListableBeanFactory, HierarchicalBeanFactory, MessageSource, ApplicationEventPublisher, ResourcePatternResolver<br />[caption id="" align="align"  caption="ck35.jpg"]<img src="{{ site.baseurl }}/assets/dk42.jpg" />[/caption]위 인터페이스들의 클래스 다이어그램을 그려보면 다음과 같이 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ck36.jpg" class="aligncenter" width="400" height="316" alt="사용자 삽입 이미지" /><br />BeanFactory를 구현한 클래스들(ApplicationContext를 구현한 클래스와 중복되는 클래스는 삭제했습니다.)
+<dl>
+<dd> <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/support/AbstractBeanFactory.html" title="class in org.springframework.beans.factory.support">AbstractBeanFactory</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/support/DefaultListableBeanFactory.html" title="class in org.springframework.beans.factory.support">DefaultListableBeanFactory</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/support/StaticListableBeanFactory.html" title="class in org.springframework.beans.factory.support">StaticListableBeanFactory</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/beans/factory/xml/XmlBeanFactory.html" title="class in org.springframework.beans.factory.xml">XmlBeanFactory</a>,</dd>
+</dl>
+<p>ApplicationContext를 구현한 클래스들
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractApplicationContext.html" title="class in org.springframework.context.support">AbstractApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractRefreshableApplicationContext.html" title="class in org.springframework.context.support">AbstractRefreshableApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/AbstractRefreshablePortletApplicationContext.html" title="class in org.springframework.web.portlet.context">AbstractRefreshablePortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/AbstractRefreshableWebApplicationContext.html" title="class in org.springframework.web.context.support">AbstractRefreshableWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/AbstractXmlApplicationContext.html" title="class in org.springframework.context.support">AbstractXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/ClassPathXmlApplicationContext.html" title="class in org.springframework.context.support">ClassPathXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/FileSystemXmlApplicationContext.html" title="class in org.springframework.context.support">FileSystemXmlApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/GenericApplicationContext.html" title="class in org.springframework.context.support">GenericApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/GenericWebApplicationContext.html" title="class in org.springframework.web.context.support">GenericWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/support/StaticApplicationContext.html" title="class in org.springframework.context.support">StaticApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/StaticPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">StaticPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/StaticWebApplicationContext.html" title="class in org.springframework.web.context.support">StaticWebApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/context/XmlPortletApplicationContext.html" title="class in org.springframework.web.portlet.context">XmlPortletApplicationContext</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/support/XmlWebApplicationContext.html" title="class in org.springframework.web.context.support">XmlWebApplicationContext</a></dd>
+</dl>
+<p><span style="color: rgb(255, 0, 0);">이 많은 IoC container들 중에 언제 어떤 걸 써야 할런지....;;;;</span></p>
+<p>참조 : <a href="http://younghoe.info/428">BeanFactory 이해</a></p>

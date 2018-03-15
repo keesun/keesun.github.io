@@ -1,0 +1,57 @@
+---
+layout: post
+title: 12.2.1. Resource management
+date: 2007-04-22 15:46:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- hibernate
+- ORM
+- Spring Reference 12장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323015727'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>자원을 관리하는 코드가 보통 사방에 흩어져 있게 됩니다. 하지만 스프링에서는 이런 자원 관리간단하면서도 강력한 방법인 tamplate을 사용한 IoC를 이용해서 관리합니다.  자원을 관리하는 기능과 SQLException을 보다 구체적이고 un-checked Exception인 DataAccessException으로 래핑해줍니다.</p>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate/HibernateTemplate.html" target="_blank">HibernateTemplate</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate/HibernateInterceptor.html" target="_blank">HibernateInterceptor</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate/HibernateTransactionManager.html" target="_blank">HibernateTransactionManager </a>이런 클래스들을 제공하는 가장 주요한 목적<br />1. 어플리케이션에서 Data Access와 Transaction 기술을 깔끔하게 레이어링<br />2. 어플리케이션 객체들 간의 Loose Coupling</p>
+<p>따라서...<br />1. no more business service dependencies on the data access or transaction strategy<br />2. no more hard-coded resource lookups<br />3. no more hard-to-replace singletons<br />4. no more custom service registries.</p>
+<p></p>

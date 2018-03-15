@@ -1,0 +1,21 @@
+<p>이미 이전 글에서 XML 형식으로 모델 데이타를 보여주는 방법을 살펴 봤기 때문에 PDF와 Exel로 출력하는 방법도 비슷하게 배울 수 있을 것 같습니다. </p>
+<p>문제는 view 클레스를 만드는 기술인데 XSLT 만드는 방법은 쉬웠는데 PDF와 Exel 만드는 코딩은 어떨지 해봐야겠네요. :)<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1. 먼저 추가 적인 jar 파일들이 필요합니다.</span></p>
+<p>Exel은 poi.jar PDF는 iText.jar가 필요합니다.</p>
+<p><span style="font-weight: bold;">2. 이번에도 컨트롤러 만들고 등록 합니다.</span></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ViewMemberListWithPDFController extends AbstractController{</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; List&lt;MemberInfo&gt; infos = ServiceManager.getMemberInfoService().getAll();<br />&nbsp; &nbsp; &nbsp; &nbsp; Map&lt;String, Object&gt; members = new HashMap&lt;String, Object&gt;();<br />&nbsp; &nbsp; &nbsp; &nbsp; members.put("members", infos);<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView("memberListPdf", members);<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean name="/viewMemberListWithPdf.html" class="net.ailgejava.members.controller.ViewMemberListWithPDFController" /&gt;</div>
+<p>Xstl 예제랑 거의 같은데 view 이름만 다릅니다.</p>
+<p><span style="font-weight: bold;">3. view 클레스들을 만듭니다.</span></p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberListPdfView extends AbstractPdfView {</p>
+<p>&nbsp; &nbsp; @SuppressWarnings("unchecked")<br />&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected void buildPdfDocument(Map model, Document document, PdfWriter writer, HttpServletRequest request,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpServletResponse response) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; List&lt;MemberInfo&gt; memberInfos = (List&lt;MemberInfo&gt;) model.get("members");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; for(MemberInfo memberInfo : memberInfos){<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.add(new Paragraph(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfo.getName() + " " +<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfo.getEmail() + " " +<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberInfo.getHome()<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ));<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>몬지 모르겠지만 Paragraph 객체로 찍는 것 같군요.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">4. view 프로퍼티에 등록합니다.</span></p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">memberListXml.class = net.ailgejava.members.view.xml.MemberListXMLView<br />memberListXml.stylesheetLocation=/WEB-INF/xsl/memberList.xslt<br />memberListXml.root=memberInfos</p>
+<p>memberListPdf.class=net.ailgejava.members.view.pdf.MemberListPdfView</p></div>
+<p>이전 글에 등록했던 내용과 같이 있습니다.</p>
+<p><span style="font-weight: bold;">5. 데모</span></p>
+<p><img src="/assets/dl184.jpg" class="aligncenter" width="500" height="236" alt="사용자 삽입 이미지" /><img src="/assets/cm209.jpg" class="aligncenter" width="500" height="308" alt="사용자 삽입 이미지" />이런.. 이름이 안 찍혔네요. 흠... 왜이럴까요; 이름은 한글이라 인코딩 문제가 있는 걸까요. 흠... confluence에서 PDF로 빼낼 때도 한글 문제가 있었는데 어떻게 해결했었는지 살펴봐야겠네요.</p>

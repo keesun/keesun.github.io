@@ -1,0 +1,105 @@
+---
+layout: post
+title: Spring 2.5에 추가되는 bean() joinpoint
+date: 2007-09-25 00:59:11.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 04. Advising beans
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322794554'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://blog.interface21.com/main/2007/09/24/the-new-bean-pointcut/">http://blog.interface21.com/main/2007/09/24/the-new-bean-pointcut/</a></p>
+<p>Classic Spring AOP를 사용할 때 여러 Target에 대해 각각의 proxyFactoryBean을 정의하는 것은 매우 귀찮은 일이고 XML도 방대해 지기 때문에 AutoProxyCreator를 사용했었습니다.</p>
+<p>그 중에서도 BeanNameAutoProxyCreator는 XML에 등록되어 있는 bean 이름을 설정해 주면 해당 bean의 Proxy를 만들어 주는 편리한 API였지만, 단점은 aop 네임스페이스 기반 이나 @AspectJ 애노테이션 기반과 같이 사용할 수 없다는 것이였습니다.</p>
+<p>Spring 2.5에서는 bean() 이라는 joinpoint 표현식을 제공하여 다음과 같이 다수의 target bean을 편리하게 지칭할 수 있게 됩니다.<br /><img src="{{ site.baseurl }}/assets/dn385.png" class="aligncenter" width="600" height="396" alt="사용자 삽입 이미지" /><br />
+<table border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<th>Pointcut</th>
+<th>Join points selected in</th>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(accountRepository)</span></td>
+<td>The bean named "accountRepository"</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">!bean(accountRepository)</span></td>
+<td>Any bean except the "accountRepository" bean</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(*)</span></td>
+<td>Any bean</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(account*)</span></td>
+<td>Any bean with name starting in "account"</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(*Repository)</span></td>
+<td>Any bean with name ending in "Repository"</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(accounting/showaccount)</span></td>
+<td>The bean named accounting/showaccount (designating, say, a   controller handling that URL)</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(accounting/*)</span></td>
+<td>Any bean whose name starts with "accounting/" (designating, say, any controller handling accounting-related URLs)</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(accounting/*/edit)</span></td>
+<td>Any bean whose name starts with "accounting/" and ends with "/edit"<br />
+(designating, say, any controller handling the edit operation<br />
+functionality related to accounting)</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(*dataSource) || bean(*DataSource)</span></td>
+<td>Any bean whose name ends with either "dataSource" or   "DataSource"</td>
+</tr>
+<tr>
+<td><span style="font-family: courier;">bean(service:name=monitoring)</span></td>
+<td>The bean named "service:name=monitoring"</td>
+</tr>
+</tbody>
+</table>
+<p></p>

@@ -1,0 +1,58 @@
+---
+layout: post
+title: "[GIthub] 포크 땄는데.. 원본이 계속 커밋되고 있다면.. 싱크를 맞춰야지"
+date: 2012-02-16 12:11:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Git
+- GitHub
+- Pull
+- remote
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><strong>$ git remote add telepathy git@github.com:spring-sprout/telepathy.git</strong><br />
+<strong>$ git remote</strong><br />
+origin<br />
+telepathy<br />
+<strong>$ git pull telepathy master</strong><br />
+remote: Counting objects: 69, done.<br />
+remote: Compressing objects: 100% (37/37), done.<br />
+remote: Total 61 (delta 14), reused 55 (delta 8)<br />
+Unpacking objects: 100% (61/61), done.<br />
+From github.com:spring-sprout/telepathy<br />
+* branch master -&gt; FETCH_HEAD<br />
+Updating f29593b..15fc160<br />
+Fast-forward<br />
+.gitignore | 4 ++-<br />
+src/chapter3/Sort.java | 17 +++++++++<br />
+src/chapter3/bubblesort/BubbleSort.java | 8 ++++<br />
+src/chapter3/bubblesort/ILhyunBubbleSort.java | 32 ++++++++++++++++<br />
+.../selectionsort/ILhyunSelectionSort.java | 39 ++++++++++++++++++++<br />
+.../selectionsort/JungWooSelectionSort.java | 24 ++++++++++++<br />
+test/chapter3/bubblesort/ILhyunBubbleSortTest.java | 25 +++++++++++++<br />
+.../selectionsort/ILhyunSelectionSortTest.java | 25 +++++++++++++<br />
+.../selectionsort/JungWooSelectionSortTest.java | 26 +++++++++++++<br />
+9 files changed, 199 insertions(+), 1 deletions(-)<br />
+create mode 100644 src/chapter3/Sort.java<br />
+create mode 100644 src/chapter3/bubblesort/BubbleSort.java<br />
+create mode 100644 src/chapter3/bubblesort/ILhyunBubbleSort.java<br />
+create mode 100644 src/chapter3/selectionsort/ILhyunSelectionSort.java<br />
+create mode 100644 src/chapter3/selectionsort/JungWooSelectionSort.java<br />
+create mode 100644 test/chapter3/bubblesort/ILhyunBubbleSortTest.java<br />
+create mode 100644 test/chapter3/selectionsort/ILhyunSelectionSortTest.java<br />
+create mode 100644 test/chapter3/selectionsort/JungWooSelectionSortTest.java<br />
+<strong>$</strong></p>
+<p>끝~</p>

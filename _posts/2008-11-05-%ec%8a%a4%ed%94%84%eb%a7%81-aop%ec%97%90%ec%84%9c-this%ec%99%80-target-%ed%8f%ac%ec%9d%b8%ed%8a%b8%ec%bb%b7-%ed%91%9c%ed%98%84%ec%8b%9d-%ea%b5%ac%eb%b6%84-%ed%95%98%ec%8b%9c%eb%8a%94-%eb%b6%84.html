@@ -1,0 +1,82 @@
+---
+layout: post
+title: 스프링 AOP에서 this와 target 포인트컷 표현식 구분 하시는 분?
+date: 2008-11-05 02:42:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- AOP
+- AspectJ
+- target 표현식
+- this 표현식
+- 스프링 AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323169593'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Pro Spring 2.5에서 this 표현식에 대한 정의입니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">the semantics of the this pointcut are such that it would <span style="font-weight: bold;">match any method execution on an object whose class matches the specified expression</span>, but how could we match any class in the com package and its subpackages? Therefore, the only allowed syntax is this(class-name),</div>
+<p>Pro Spring 2.5에서 target 표현식에 대한 정의 입니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">Because the target expression defines a pointcut that would <span style="font-weight: bold;">match execution of any method on an object</span> <span style="font-weight: bold;">whose class matches the specified expression</span>, we cannot use the wildcards.</div>
+<p>뭐가 달라 보이나요??? 앞 부분에 어순이 약간 바뀐것 빼고는 도무지 차이를 알 수가 없습니다.</p>
+<p>레퍼런스를 보죠.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">this - limits matching to join points (the execution of methods when using Spring AOP) <span style="font-weight: bold;">where the <span style="color: rgb(0, 128, 0);">bean reference (Spring AOP proxy)</span> is an instance of the given type</span></div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">target - limits matching to join points (the execution of methods when using Spring AOP) <span style="font-weight: bold;">where the <span style="color: rgb(0, 153, 102);">target object (application object being proxied)</span> is an instance of the given type</span></div>
+<p>레퍼런스는 그나마 좀 차이가 보입니다. this일 때는 프록시 객체고 target 일 때는 프록시를 적용할 타겟 객체가 주체가 됩니다.</p>
+<p>즉, this 표현식은 주어진 타입에 해당하는 스프링 AOP Proxy의 조인포인트에 대응하는 표현식이고.. target 표현식은 주어진 타입에 해당하는 타겟 객체의 조인포인트에 대응하는 표현식이라는 것인데..</p>
+<p>어차피 프록시 객체의 타입이 곧 타겟 객체의 타입과 동일하기 때문에 결과는 똑같을 것 같은데 말이죠. 차이를 모르겠습니다. 아흐.. 머리야..</p>
+<p>마지막으로 AspectJ 문서를 보겠습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">this(Type or Id)<br />&nbsp; &nbsp; Picks out each join point where the <span style="font-weight: bold;">currently executing object (the object bound to this) is an instance of Type</span>, or of the type of the identifier Id (which must be bound in the enclosing advice or pointcut definition). Will not match any join points from static contexts. </div>
+<p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">target(Type or Id)<br />&nbsp; &nbsp; Picks out each join point where the <span style="font-weight: bold;">target object (the object on which a call or field operation is applied to) is an instance of Type,</span> or of the type of the identifier Id (which must be bound in the enclosing advice or pointcut definition). Will not match any calls, gets, or sets of static members. </div>
+<p>this는 동적이고 target은 정적으로 타입을 지칭하는 차이밖에 없어보입니다. 흠.. 과연..</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">@RunWith(SpringJUnit4ClassRunner.class)<br />@ContextConfiguration(locations="applicationContext.xml")<br />public class FooAspectTest {</p>
+<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; FooBean fooBean;</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void isProxy(){<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(fooBean instanceof Advised);<br />&nbsp; &nbsp; &nbsp; &nbsp; fooBean.hi();<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">@Aspect<br />public class FooAspect {</p>
+<p>&nbsp; &nbsp; @Pointcut("<span style="font-weight: bold; color: rgb(0, 153, 102);">this(org.opensprout.spring.aop.thisandtarget.FooBean)</span>")<br />&nbsp; &nbsp; public void thisPointcut(){}</p>
+<p>&nbsp; &nbsp; @Before("thisPointcut()")<br />&nbsp; &nbsp; public void say(){<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("this pointcut executed.");<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>스프링 AOP에서는 this를 target으로 고쳐도 똑같이 동작합니다. 콘솔에 메시지가 한 번 출력되죠. 그러나 AJDT로 실행하면, this의 경우 같은 메시지가 세 번 찍히고, target의 경우 같은 메시지가 네 번찍힙니다. 일단 두 번은 클래스 로딩이나 생성자 호출 조인포인트에서 찍혔다고 생각하고, 하나는 테스트에서 hi 호출 할 때 찍힌거고 가장 의아한건 target 표현식일 때의 마지막 한 번. </p>
+<p>디버깅을 돌려본 결과 저 테스트에 두 번 들어가던데;; 왜 그런지 몰겠네요. 아~ 미궁이로 구나..</p>

@@ -1,0 +1,32 @@
+<p>참조 및 번역: <a href="http://blog.springsource.com/2009/01/02/spring-security-customization-part-1-customizing-userdetails-or-extending-grantedauthority/" target="_blank">http://blog.springsource.com/2009/01/02/spring-security-customization-part-1-customizing-userdetails-or-extending-grantedauthority/</a></p>
+<p>이번 글은 스프링 시큐리티 맞춤확장과 관련된 실용적인 예제 중심의 여러 작은 글들의 시리즈 중 첫 번째 글이다. 이번 맞춤확장 요구 사항은 상상에서 온 것이 아니라 전부 현장에서 요구한 것이다.</p>
+<p>다음과 같은 요구사항이 있다고 가정해보자. 역할(role) 목록이 있고 각각의 역할은 비즈니스 기능(business function) 목록을 가지고 있다.(아래를 참조하라.)</p>
+<p>ROLE_ADMIN<br />&nbsp; BF_QUOTE_CREATE<br />&nbsp; BF_POLICY_CREATE<br />&nbsp; BF_POLICY_DELETE</p>
+<p>ROLE_AGENT<br />&nbsp; BF_QUOTE_CREATE<br />&nbsp; BF_POLICY_CREATE</p>
+<p>ROLE_USER<br />&nbsp; BF_QUOTE_CREATE</p>
+<p>필요한 기술은 권한 결정을 ROLE과 BF 모두를 가지고 결정할 수 있어야 한다는 것이다.</p>
+<p>예를 들어:</p>
+<p>ROLE_ADMIN이라는 역할을 가진 사용자는 해당 역할로 보호하고 있는 모든 리소스에 접근할 수 있어야 한다.</p>
+<p>&lt;sec:authorize ifAllGranted="ROLE_ADMIN"&gt;<br />&nbsp; &nbsp; &lt;p&gt;&lt;a href="http://www.google.com"&gt;Google&lt;/a&gt;<br />&lt;/sec:authorize&gt;</p>
+<p>또는</p>
+<p>@Secured("ROLE_ADMIN")<br />public void foo()<br />&nbsp; &nbsp; . . .<br />}</p>
+<p>또한 해당 사용자는 해당 역할이 가지고 있는 비즈니스 기능으로 제한하고 있는 모든 리소스에도 접근할 수 있어야 한다.</p>
+<p>&lt;sec:authorize ifAllGranted="BF_POLICY_DELETE"&gt;<br />&nbsp; &nbsp; &lt;p&gt;&lt;a href="http://www.google.com"&gt;Google&lt;/a&gt;<br />&lt;/sec:authorize&gt;</p>
+<p>또는 </p>
+<p>@Secured("BF_POLICY_DELETE")<br />public void foo()<br />&nbsp; &nbsp; . . .<br />}</p>
+<p>이 요구사항을 다루는 방법은 몇 가지가 있다. 그 중 하나는 RoleHierarchy를 만들고 RoleHierarchyVoter를 사용하여 역할의 계층 구조를 순회하는 것이다. 이 접근 방법의 단점은 현재 스프링 시큐리티 2.0.4 구현체의 태그 라이브러리(security: authority ...)가 AccessDecisionManager를 통해서 의사 결정을 하고 있지 않으며 게다가 어떤 Voter도 제한하고 있는 HTML 엘리먼트에 대한 결정을 할 때 Role을 신경쓰지 않는다. 하지만 스프링 시큐리티의 놀라운 유연함과 맞춤확장 힘으로 인해 이 요구사항을 매우 간단하게 해결할 수 있다.<br />스프링 시큐리티의 가장 큰 잇점 중 하나는 어떻게 Principal(UserDetail 객체)을 생성하는지 맞춤확장 할 수 있다는 것이다. UserDetail 객체를 만들 때 GrantedAutorities 목록을 생성한다. 이 목록은 나중에 리소스를 제한하고 있는 GrantedAutority와 비교해볼 때 사용된다.<br />맞춤확장을 하는 또 한 가지 방법은 UserDetail 객체를 생성할 때 GrantedAuthorities 목록을 수정하는 것이다.</p>
+<p>아래에서 제공하고 있는 예제에는 두 개의 프로퍼티 파일이 있다.(간단하게 하려고 프로퍼티 파일을 사용했지만, 여러분은 쉽게 그것을 DB나 LDAP으로 바꿀 수 있을 것이다.)</p>
+<p>파일 하나는 users.properties로 사용자를 role에 맵핑한다.</p>
+<p>oleg=powder,ROLE_ADMIN</p>
+<p>다른 파일 하나는 role-to-db.properties로 각각의 role에 비즈니스 기능 목록을 맵핑한다.</p>
+<p>ROLE_ADMIN=BF_QUOTE_CREATE,BF_POLICY_CREATE,BF_POLICY_DELETE</p>
+<p>이제 필요한 작업은 UserDetailsService 구현체를 정의하여 위 두 개의 프로퍼티 파일을 사용하여 GrantedAUthorities 목록을 만들고 그것을 UserDetails 객체에 주입하는 것이다. 이 작업은 GrantedAuthorityImpl같은 GrantedAuthority 인터페이스 구현체를 재사용할 수 있으며 매우 간단하다. 하지만, 우리는 이때 (디버깅 또는 다른 의도로) 비즈니스 기능을 표현하는 GrantedAuthority의 상위(parent) GrantedAuthority를 추적할 수 있도록 하고 싶다.<br />이 두 가지 목적을 달성하기위해 GrantedAuthorityImpl을 확장하는 BusinessFunctionGrantedAuthority 클래스를 정의하고 모든 상위 GrantedAuthority 객체에 대한 목록을 담고 있게 했다.</p>
+<p>public class BusinessFunctionGrantedAuthority extends GrantedAuthorityImpl {<br />&nbsp; &nbsp; private List&lt;GrantedAuthority&gt; parentAuthorities;<br />&nbsp; &nbsp; &nbsp; &nbsp; . . .<br />}</p>
+<p>그런 다음 UserDetailsService 구현체를 만들었고 loadUserByNames(..) 메소드를 구현하여 다음 작업을 수행하도록 했다.</p>
+<p>1. users.properties 파일 내용을 기반하여 UserAttribute 객체를 만든다. UserAttribute는 role을 나타내는 GrantedAuthority 목록을 담고 있다.<br />2. role-GrantedAuthorities 목록을 순회하면서 각각의 role-GrantedAuthorities 마다 BusinessFunctionGrantedAuthority를 만들고 그것을 미리 만들어둔 GrantedAuthority 목록에 추가한다.<br />&nbsp; 2-1. 각각의 BusinessFunctionGrantedAuthority에 parent GrantedAuthority를 추가한다.<br />3. 전체 GrantedAuthority 목록을 가지고 있는 최종 UserDetail 객체를 만든다.</p>
+<p>그런 다음 AuthenticationProvider를 스프링 시큐리티 설정 파일에 정의한다.</p>
+<p><img src="/assets/mk25.png" class="aligncenter" width="600" height="152" alt="사용자 삽입 이미지" /><br />노트: AuthenticationProvider에 커스텀 UserDetailService 구현체 ComplexAuthorityUserDetailsService 클래스(더 자세한 내용은 샘플 코드를 살펴보라.)를 주입했다.</p>
+<p>리소스를 보안하고 배포한 다음 http://localhost:8080/spring-security-sample-grantedAuthority/index.jsp에 접속하라.</p>
+<p>로그인한 뒤 여러분은 GrantedAuthorities 목록을 볼 수 있을 것이다.</p>
+<p><img src="/assets/ok170000000000.png" class="aligncenter" width="600" height="304" alt="사용자 삽입 이미지" /><br />여기서 여러분은 비즈니스 기능을 나타내는 GrantedAuthority가 해당 비즈니스 기능을 가지는 상위 GrantedAuthorities 목록도 보여주고 있다는 것을 확인할 수 있을 것이다.<br />index.jsp를 살펴보고 어떻게 security:authorize 태그를 사용ㅇ하여 role과 비즈니스 기능 목록을 사용하여 HTML 엘리먼트를 제한하는지 살펴보라<br />이게 끝이다. 여러분은 최소한의 맞춤확장으로 쉽게 Principal 구조를 확장하고 커스터마이징 할 수 있는지 살펴보았다. 그리고 이것을 비즈니스 코드를 더럽히지 않고 커스텀 GrantedAuthorities에 기반하여 선언적으로 보안을 적용하는지 살펴보았다.</p>
+<p>샘플 코드는 여기서 다운로드 할 수 있다. <a href="http://blog.springsource.com/wp-content/uploads/2009/01/spring-security-sample-grantedauthority.zip" target="_blank">spring-security-sample-grantedauthority</a></p>

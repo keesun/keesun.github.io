@@ -1,0 +1,68 @@
+<h1>특징</h1>
+<ul>
+<li>A dynamic domain model is a model that is dynamically typed.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;hibernate-mapping&gt;<br />	&lt;class entity-name=<span class="code-quote">"ItemEntity"</span> table=<span class="code-quote">"ITEM_ENTITY"</span>&gt;<br />		&lt;id name=<span class="code-quote">"id"</span> type=<span class="code-quote">"<span class="code-object">long</span>"</span> column=<span class="code-quote">"ITEM_ID"</span>&gt;<br />			&lt;generator class=<span class="code-quote">"<span class="code-keyword">native</span>"</span> /&gt;<br />		&lt;/id&gt;<br />		&lt;property name=<span class="code-quote">"initialPrice"</span> type=<span class="code-quote">"big_decimal"</span><br />			column=<span class="code-quote">"INIT_PRICE"</span> /&gt;<br />		&lt;property name=<span class="code-quote">"description"</span> type=<span class="code-quote">"string"</span> column=<span class="code-quote">"DESCRIPTION"</span> /&gt;<br />		&lt;many-to-one name=<span class="code-quote">"seller"</span> entity-name=<span class="code-quote">"UserEntity"</span><br />			column=<span class="code-quote">"USER_ID"</span> /&gt;<br />	&lt;/class&gt;<br />	&lt;class entity-name=<span class="code-quote">"UserEntity"</span> table=<span class="code-quote">"USER_ENTITY"</span>&gt;<br />		&lt;id name=<span class="code-quote">"id"</span> type=<span class="code-quote">"<span class="code-object">long</span>"</span> column=<span class="code-quote">"USER_ID"</span>&gt;<br />			&lt;generator class=<span class="code-quote">"<span class="code-keyword">native</span>"</span> /&gt;<br />		&lt;/id&gt;<br />		&lt;property name=<span class="code-quote">"username"</span> type=<span class="code-quote">"string"</span> column=<span class="code-quote">"USERNAME"</span> /&gt;<br />		&lt;bag name=<span class="code-quote">"itemsForSale"</span> inverse=<span class="code-quote">"<span class="code-keyword">true</span>"</span> cascade=<span class="code-quote">"all"</span>&gt;<br />			&lt;key column=<span class="code-quote">"USER_ID"</span> /&gt;<br />			&lt;one-to-many entity-name=<span class="code-quote">"ItemEntity"</span> /&gt;<br />		&lt;/bag&gt;<br />	&lt;/class&gt;<br />&lt;/hibernate-mapping&gt;</pre>
+</div>
+</div>
+<ul>
+<li>다수의 도메인 맵핑을 하나의 파일 안에 두고 있다. 자바 클래스를 맵핑하는 것이 아니기 때문에 메타데이터를 어떻게 구성하던 맘대로 하라.</li>
+</ul>
+<ul>
+<li>&lt;class name="..."&gt; 대신에 &lt;class entity-name="..."&gt; 를 사용했으며, 정적인 도메인 모델과 구분하기 위해 Entity를 접미어로 사용했다.</li>
+</ul>
+<ul>
+<li>&lt;many-to-one&gt; 와 &lt;one-to-many&gt; 에서 entity-name에 설정한 이름을 사용했다.</li>
+</ul>
+<h1>동적인 맵 사용하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>동적인 맵 사용 예제</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">Map user = <span class="code-keyword">new</span> HashMap();<br />user.put(<span class="code-quote">"username"</span>, <span class="code-quote">"johndoe"</span>);<br /><br />Map item1 = <span class="code-keyword">new</span> HashMap();<br />item1.put(<span class="code-quote">"description"</span>, <span class="code-quote">"An item <span class="code-keyword">for</span> auction"</span>);<br />item1.put(<span class="code-quote">"initialPrice"</span>, <span class="code-keyword">new</span> BigDecimal(99));<br />item1.put(<span class="code-quote">"seller"</span>, user);<br /><br />Map item2 = <span class="code-keyword">new</span> HashMap();<br />item2.put(<span class="code-quote">"description"</span>, <span class="code-quote">"Another item <span class="code-keyword">for</span> auction"</span>);<br />item2.put(<span class="code-quote">"initialPrice"</span>, <span class="code-keyword">new</span> BigDecimal(123));<br />item2.put(<span class="code-quote">"seller"</span>, user);<br /><br />Collection itemsForSale = <span class="code-keyword">new</span> ArrayList();<br />itemsForSale.add(item1);<br />itemsForSale.add(item2);<br />user.put(<span class="code-quote">"itemsForSale"</span>, itemsForSale);<br /><br />session.save(<span class="code-quote">"UserEntity"</span>, user);</pre>
+</div>
+</div>
+<ul>
+<li>Entity 하나 당 HashMap 객체 하나에 대응한다.</li>
+</ul>
+<ul>
+<li>ArrayList는 bag을 맵핑하려고 사용했다.</li>
+</ul>
+<ul>
+<li>Session.save(entity-name, HashMap)를 사용해서 저장했다.</li>
+</ul>
+<ul>
+<li>cascading에 의해서 user와 user와 연관을 맺고 있는 두 개의 Item 역시 DB에 저장됐다.</li>
+</ul>
+<ul>
+<li>Set을 사용하면 안 된다. Map은 equals()를 할 때 키값을 가지고 비교하기 때문에, Set을 사용하면 여러 개의 Entity를 넣을 수 없다.</li>
+</ul>
+<h1>정적인 엔티티 모드와 동적인 엔티티 모드 혼용하기</h1>
+<ul>
+<li>맵핑할 때, &lt;class name="model.UserPojo" entity-name="UserEntity" table="USER_ENTITY"&gt; 이런식으로 클래스이름과 논리적인 이름을 모두 설정해 준다.</li>
+</ul>
+<ul>
+<li>Session을 사용할 때는 entity-name을 사용해야 한다.</li>
+</ul>
+<ul>
+<li>Session의 결과로 받는 값은 기본으로 POJO 객체다.</li>
+</ul>
+<ul>
+<li>둘 모두 &lt;property name="default_entity_mode"&gt;dynamic-map&lt;/property&gt; 를 사용해서 Map을 사용하도록 설정할 수 있다.</li>
+</ul>
+<ul>
+<li>특정 세션만 Map을 사용하도록 설정할 수 있다. Session dynamicSession = session.getSession(EntityMode.MAP);</li>
+</ul>
+<ul>
+<li>Note that you can't link a map with a POJO instance. 당근이지.</li>
+</ul>
+<h1>하나의 클래스 여러번 맵핑하기</h1>
+<ul>
+<li>맵핑 할 때 entity-name에 다른 값을 주면, 같은 클래스를 사용해서 서로 다른 테이블로 맵핑할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;hibernate-mapping&gt;<br />	&lt;class name=<span class="code-quote">"model.Item"</span> entity-name=<span class="code-quote">"ItemAuction"</span><br />		table=<span class="code-quote">"ITEM_AUCTION"</span>&gt;<br />		&lt;id name=<span class="code-quote">"id"</span> column=<span class="code-quote">"ITEM_AUCTION_ID"</span>&gt;...&lt;/id&gt;<br />		&lt;property name=<span class="code-quote">"description"</span> column=<span class="code-quote">"DESCRIPTION"</span> /&gt;<br />		&lt;property name=<span class="code-quote">"initialPrice"</span> column=<span class="code-quote">"INIT_PRICE"</span> /&gt;<br />	&lt;/class&gt;<br />	&lt;class name=<span class="code-quote">"model.Item"</span> entity-name=<span class="code-quote">"ItemSale"</span> table=<span class="code-quote">"ITEM_SALE"</span>&gt;<br />		&lt;id name=<span class="code-quote">"id"</span> column=<span class="code-quote">"ITEM_SALE_ID"</span>&gt;...&lt;/id&gt;<br />		&lt;property name=<span class="code-quote">"description"</span> column=<span class="code-quote">"DESCRIPTION"</span> /&gt;<br />		&lt;property name=<span class="code-quote">"salesPrice"</span> column=<span class="code-quote">"SALES_PRICE"</span> /&gt;<br />	&lt;/class&gt;<br />&lt;/hibernate-mapping&gt;</pre>
+</div>
+</div>

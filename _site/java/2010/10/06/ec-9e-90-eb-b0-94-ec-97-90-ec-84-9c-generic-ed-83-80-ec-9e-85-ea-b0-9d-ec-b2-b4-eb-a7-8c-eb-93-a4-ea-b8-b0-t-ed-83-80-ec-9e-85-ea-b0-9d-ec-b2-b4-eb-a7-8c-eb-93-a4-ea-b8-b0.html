@@ -1,0 +1,49 @@
+<p>퀴즈.. 자바 Generic에서 타입으로 넘긴 T의 객체를 만들 수 있을까...정답은 "만들 수 있다." 인데 전 오답을 말했네요. 크헉;; 예전에 포스팅도 하고 코딩까지 해놨으면서 이런 실수를!!</p>
+<p>무슨 문제냐면..</p>
+<p>[java]</p>
+<p>public class Generic&lt;T&gt; {</p>
+<p>protected T objectT;</p>
+<p>public Generic() {</p>
+<p>//TODO T 타입 객체를 objectT에 할당하기</p>
+<p>}</p>
+<p>}</p>
+<p>[/java]</p>
+<p>[java]<br />
+public class Book {}<br />
+[/java]</p>
+<p>[java]<br />
+public class BookGeneric extends Generic&lt;Book&gt;{}<br />
+[/java]</p>
+<p>이때 다음 테스트가 돌아가야 됩니다.</p>
+<p>[java]<br />
+public class GenericTest {</p>
+<p>@Test public void typeInfer(){</p>
+<p>BookGeneric bookGeneric = new BookGeneric();</p>
+<p>assertNotNull(bookGeneric.objectT);</p>
+<p>}<br />
+}</p>
+<p>[/java]</p>
+<p>충분히 만들 수 있습니다. 요렇게 하면 됩니다. 저도 어떤 외국 블로거에서 봤던 코드인데 회사 플젝에서도 써먹고 봄싹 플젝에서도 써먹고 있습니다. 물론 전 그냥 타입만 필요해서 Class&lt;T&gt; classT 추론하는데까지만 쓰고 객체를 만들 일은 없어서 newInstance() 까지 호출한적은 거의 없지만요..</p>
+<p>[java]<br />
+public class Generic&lt;T&gt; {</p>
+<p>protected Class&lt;T&gt; classT;</p>
+<p>protected T objectT;</p>
+<p>@SuppressWarnings(&quot;unchecked&quot;)</p>
+<p>public Generic() {</p>
+<p>ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();</p>
+<p>Type type = genericSuperclass.getActualTypeArguments()[0];</p>
+<p>if (type instanceof ParameterizedType) {</p>
+<p>this.classT = (Class) ((ParameterizedType) type).getRawType();</p>
+<p>} else {</p>
+<p>this.classT = (Class) type;</p>
+<p>}</p>
+<p>try {</p>
+<p>this.objectT = classT.newInstance();</p>
+<p>} catch (InstantiationException e) {</p>
+<p>throw new RuntimeException(e);</p>
+<p>} catch (IllegalAccessException e) {</p>
+<p>throw new RuntimeException(e);</p>
+<p>}</p>
+<p>}</p>
+<p>}<br />
+[/java]</p>

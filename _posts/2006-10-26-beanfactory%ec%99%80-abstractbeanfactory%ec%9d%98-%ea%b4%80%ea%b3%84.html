@@ -1,0 +1,62 @@
+---
+layout: post
+title: BeanFactory와 AbstractBeanFactory의 관계
+date: 2006-10-26 06:57:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Mission
+tags:
+- AbstractBeanFactory
+- BeanFactory
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322731683'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1301622120.bmp" class="aligncenter" width="493" height="530" alt="">1301622120.bmp</a><br />
+AbstractBeanFactory는 총 네 개의 인터페이스 구현에 대한 책임이 있지만 abstract class인 관계로 몇몇 메소드는 abstract인 채로 하위 클래스에서 구현하도록 되있습니다.</p>
+<p>그리고 네 개의 인터페이스 중에 하나 인 SingletonBeanRegistry 인터페이스는 DefaultSingletonBeanRegistry 클래스에서 구현을 했고 이 클래스를 상속 받고 있는 구조입니다.</p>
+<p>UML에 차마 다 그리기가 힘들어서 ConfigurableBeanFactory의 메소드들과 AbstractBeanFactory의 필드와 메소드들을 비워놨습니다. </p>
+<p>현재 BeanFactory 인터페이스, HierachicalBeanFactory 인터페이스, SingletonBeanRegistry 인터페이스 만 모두 표현해 둔 상태입니다.</p>
+<p>mission1의 문제는 Xml을 읽어들여 BeanFactory가 작동하는 방식을 규명하는 것인데..</p>
+<p>결국 XmlBeanFactoy까지 내려 가야 할텐데 지금은 AbstractBeanFactory에서 BeanFactory 인터페이스의 책임들을 어떻게 구현해 두었는지 살펴보고 있습니다.</p>
+<p>
+ps : getBean 메소드 무지 길어요. 이거 리팩토링 해야되는거 아니에요? ^^</p>
+<p></p>

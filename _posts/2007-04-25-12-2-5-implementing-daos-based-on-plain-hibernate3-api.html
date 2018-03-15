@@ -1,0 +1,61 @@
+---
+layout: post
+title: 12.2.5. Implementing DAOs based on plain Hibernate3 API
+date: 2007-04-25 03:25:06.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- hibernate
+- ORM
+- Spring Reference 12장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323113812'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Hibernate 3.0.1 에서는 "Contexture Sessions"라고 부르는, 트랜잭션 당 하나의 current 세션을 사용하는 방법이 있습니다.
+<pre class="programlisting"><div style="padding: 10px; background-color: rgb(250, 255, 169);">public class ProductDaoImpl implements ProductDao {<br /><br />    private SessionFactory sessionFactory;<br /><br />    public void setSessionFactory(SessionFactory sessionFactory) {<br />        this.sessionFactory = sessionFactory;<br />    }<br /><br />    public Collection loadProductsByCategory(String category) {<br />        return this.sessionFactory.getCurrentSession()<br />                .createQuery("from test.Product product where product.category=?")<br />                .setParameter(0, category)<br />                .list();<br />    }<br />}</div></pre>
+<p>Spring 에서도 위와 같은 방법으로 코딩을 하면 트랜잭션 당 하나의 Hibernate Session객체를 사용하여 작업을 합니다.</p>
+<p>위의 소스코드는 다음과 같은 DI가 필요합니다.
+<pre class="programlisting"><div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;beans&gt;<br /><br />  &lt;bean id="myProductDao" class="product.ProductDaoImpl"&gt;<br />    &lt;property name="sessionFactory" ref="mySessionFactory"/&gt;<br />  &lt;/bean&gt;<br /><br />&lt;/beans&gt;</div></pre>
+<p>이런 스타일의 코딩의 장점은 Spring API에 종속 되지 않는 다는 것입니다. 오직 Hibernate API만 사용하고 있습니다.</p>
+<p>단점은 HibernateException을 발생시키는데 이 것으로는 optimistic locking 이 실패 했다거나 하는 것을 알려주지 못합니다.</p>
+<p>결론은  DAO를 구현할 때 Spring을 사용하여(HibernateTransactionManager) 트랜잭션 관리도 하고 DataAccessException을 사용할 수도 있지만 Hibernate3 API만 사용하여 구현할 수도 있습니다.</p>

@@ -1,0 +1,79 @@
+---
+layout: post
+title: Spring 트랜잭션 처리 1. Programmtic
+date: 2007-05-04 11:45:47.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322696115'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : Spring 프레임워크 워크북, <a href="../../713">9.6. Programmatic transaction management <span class="cnt">(1)</span></a></p>
+<p>레퍼런스와 워크북에도 나오지만 프로그래밍 적인 트랜잭션 처리 방법은 크게 두 가지가 있습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1. PlatformTransactionManager, TransactionStatus, TransactionDefinition을 사용하는 방법</span></p>
+<p>(1)TransactionManager를 만들 때는 사용하는 트랜잭션 자원에 따라 만드는 방법이 다릅니다. (2)그리고 TransactionManager로 부터 getTransaction을 사용하여 트랜잭션을 생성하게 되는데 이 때 TransactionStatus라는 객체를 받게 됩니다. (3)롤백과 커밋은 TransactionManager를 사용하며 이 때 Status객체를 넘겨줘야 합니다.</p>
+<p>서비스 계층의 구현된 코드를 보면서 위의 내용을 살펴보겠습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberServiceImplWithSpringTransaction implements MemberService {</p>
+<p>&nbsp; &nbsp; private MemberDao memberDao;</p>
+<p>&nbsp; &nbsp; private PlatformTransactionManager transactionManager;</p>
+<p>&nbsp; &nbsp; public void setMemberDao(MemberDao memberDao) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.memberDao = memberDao;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setTransactionManager(PlatformTransactionManager transactionManager) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.transactionManager = transactionManager;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void add(Member member) throws SQLException {<br />&nbsp; &nbsp; &nbsp; &nbsp; DefaultTransactionDefinition def = new DefaultTransactionDefinition();<br />&nbsp; &nbsp; &nbsp; &nbsp; def.setName("멤버 추가하는 트랜잭션");<br />&nbsp; &nbsp; &nbsp; &nbsp; def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">TransactionStatus status = transactionManager.getTransaction(def);</span> //(2)<br />&nbsp; &nbsp; &nbsp; &nbsp; try {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memberDao.add(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //TODO 예외 발생<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; TransactionTestingUtil.generateExceptionMethod();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> transactionManager.commit(status);</span> //(3)<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; catch (MyException e) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(def.getName() + " 롤백합니다.");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> transactionManager.rollback(status);</span> //(3)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw e;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>TransactionManager는 HibernateTransactionManager 를 사용하고 있습니다. XML 설정을 보면 다음과 같습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; &lt;bean id="memberService" class="com.bookbuying.member.service.MemberServiceImplWithSpringTransaction"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="memberDao" ref="memberDao" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="transactionManager" ref="transactionManager" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="memberDao" class="com.bookbuying.member.dao.MemberDaoImpleWIthSpringTransaction"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="sessionFactory" ref="sessionFactory" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" autowire="no"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="annotatedClasses" ref="annotatedClasses" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="hibernateProperties"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- 지금 사용하고 있는 데이터베에스에 최적화 된 SQL을 생성하기 위해서<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 현재 데이터베이스에 해당하는 Hibernate dialect 클래스 명 --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.dialect"&gt;${hibernate.dialect}&lt;/prop&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!--&nbsp; 콘솔 창에 사용하는 모든 SQL문을 출력할지를 선택&nbsp; --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.show_sql"&gt;true&lt;/prop&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- DB Schema에 변경사항이 발생한 경우 자동으로 수정&nbsp; --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.hbm2ddl.auto"&gt;update&lt;/prop&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- 성능 튜닝에 도움이 되는 유용한 통계를 제공&nbsp; --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key=" hibernate.generate_statistics"&gt;true&lt;/prop&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- 자동 커밋이 되는 것을 방지 --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.connection.autocommit"&gt;false&lt;/prop&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- "Current" Session의 Scope 설정.&lt;jta/thread/managed/custom&gt; --&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.current_session_context_class"&gt;thread&lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;util:list id="annotatedClasses"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;com.bookbuying.domain.Member&lt;/value&gt;<br />&nbsp; &nbsp; &lt;/util:list&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire="no"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="sessionFactory" ref="sessionFactory" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>주석은 친절한 하이버네이트 찬욱군이 달아 놓았습니다. Hibernate를 사용하여 DAO쪽 구현을 했습니다. 여기서 Session에 주목할 필요가 있습니다. 그건 다음 글에서 살펴보겠습니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class MemberDaoImpleWIthSpringTransaction implements MemberDao{</p>
+<p>&nbsp; &nbsp; private SessionFactory sessionFactory;</p>
+<p>&nbsp; &nbsp; public void setSessionFactory(SessionFactory sessionFactory) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.sessionFactory = sessionFactory;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void add(Member member) {<br />&nbsp; &nbsp; &nbsp; &nbsp; Session session = sessionFactory.getCurrentSession();<br />&nbsp; &nbsp; &nbsp; &nbsp; session.save(member);<br />&nbsp; &nbsp; }<br />}</div>
+<p></p>

@@ -1,0 +1,75 @@
+---
+layout: post
+title: Spring AOP(old) Advice
+date: 2007-03-27 16:44:08.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- Advice 유형
+- Spring AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323154088'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : SIA 3장</p>
+<p>Spring이 제공하는 Advice 종류와 특징<br />1. arond advice :: MethodInterceptor :: 대상 메소드에 대한 호출을 가로챔<br />2. before advice :: BeforeAdvice :: 대상 메소드가 실행되기 전에 호출됨<br />3. after advice :: AfterReturningAdvice :: 대상 메소드가 리턴한 후에 호출됨<br />4. throws advice :: ThrowsAdvice :: 대상 메소드가 예외를 던질 때 호출됨</p>
+<p>2.0 부터는 after finally 였나.. 대상 메소드가 끝났거나 예외가 발생했거나 종료하면 무조건 실행하는 Advice가 추가 됐습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1. Before Advice 만들기</span><br /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/MethodBeforeAdvice.html" target="_blank">MethodBeforeAdvice 인터페이스</a>를 구현합니다. 구현해야 할 메소드는 한 개 입니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">void before(Method method,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object[] args,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object target)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throws Throwable</p>
+<p>&nbsp; &nbsp; Callback before a given method is invoked.</p>
+<p>&nbsp; &nbsp; Parameters:<br />&nbsp; &nbsp; &nbsp; &nbsp; method - method being invoked<br />&nbsp; &nbsp; &nbsp; &nbsp; args - arguments to the method<br />&nbsp; &nbsp; &nbsp; &nbsp; target - target of the method invocation. May be null. <br />&nbsp; &nbsp; Throws:<br />&nbsp; &nbsp; &nbsp; &nbsp; Throwable - if this object wishes to abort the call. Any exception thrown will be returned to the caller if it's allowed by the method signature. Otherwise the exception will be wrapped as a runtime exception.</div>
+<p>첫번째 인자는 대상이 되는 메소드<br />두번째는 그 메소드에 전달하는 인자들<br />세번째는 대상 메소드를 가지고 있는 객체<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. After Advice 만들기</span><br /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/AfterReturningAdvice.html" target="_blank">AfterReturningAdvice 인터페이스</a>를 구현합니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">void afterReturning(Object returnValue,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Method method,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object[] args,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object target)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throws Throwable</p>
+<p>&nbsp; &nbsp; Callback after a given method successfully returned.</p>
+<p>&nbsp; &nbsp; Parameters:<br />&nbsp; &nbsp; &nbsp; &nbsp; returnValue - the value returned by the method, if any<br />&nbsp; &nbsp; &nbsp; &nbsp; method - method being invoked<br />&nbsp; &nbsp; &nbsp; &nbsp; args - arguments to the method<br />&nbsp; &nbsp; &nbsp; &nbsp; target - target of the method invocation. May be null. <br />&nbsp; &nbsp; Throws:<br />&nbsp; &nbsp; &nbsp; &nbsp; Throwable - if this object wishes to abort the call. Any exception thrown will be returned to the caller if it's allowed by the method signature. Otherwise the exception will be wrapped as a runtime exception.</div>
+<p>첫번째 인자에 대상 메소드의 리턴값이 추가 됐고 나머진 한칸씩 밀렸습니다.<br />메소드가 끝난 뒤 실행하는 Advice니까 가용한 정보가 하나 늘었습니다.</p>
+<p><span style="font-weight: bold;">3. Throws Advice 만들기</span><br /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/aop/ThrowsAdvice.html" target="_blank">ThrowsAdvice 인터페이스</a>를 구현합니다.</p>
+<p>void afterThrowing( ThrowableSubclass)<br />void afterThrowing(Method , args, target, ThrowableSubclass)</p>
+<p>위에 있는 두 가지 적어도 한 가지는 구현해야 합니다. <br />궁금한건... 이 인터페이스는 마커 인터페이스인데.. 어떻게 둘 중 하나만 구현하거나 둘 다 구현해도 되게 만든건지 신기합니다.</p>
+<p><span style="font-weight: bold;">4. Around Advice 만들기</span><br /><a href="http://aopalliance.sourceforge.net/doc/org/aopalliance/intercept/MethodInterceptor.html" target="_blank">MethodInterceptor 인터페이스</a>를 구현합니다.</p>
+<p>가장 자주 사용될 것 같은 Advice로 Spring의 인터페이스가 아닌 AOP alliance의 인터페이스 입니다. 따라서 다른 AOP alliance 진영에 속한 AOP 구현체에서도 이 것을 구현한 Advice를 재사용할 수 있겠습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public java.lang.Object invoke(MethodInvocation invocation)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throws java.lang.Throwable</p>
+<p>&nbsp; &nbsp; Implement this method to perform extra treatments before and after the invocation. Polite implementations would certainly like to invoke Joinpoint.proceed().</p>
+<p>&nbsp; &nbsp; Parameters:<br />&nbsp; &nbsp; &nbsp; &nbsp; invocation - the method invocation joinpoint <br />&nbsp; &nbsp; Returns:<br />&nbsp; &nbsp; &nbsp; &nbsp; the result of the call to Joinpoint.proceed(), might be intercepted by the interceptor. <br />&nbsp; &nbsp; Throws:<br />&nbsp; &nbsp; &nbsp; &nbsp; java.lang.Throwable - if the interceptors or the target-object throws an exception.</div>
+<p>유일한 인자인 MethodInvocation에는 getMethod()가 있어서 Method 타입의 객체를 넘겨 받을 수 있습니다.</p>
+<p>리턴 타입이 있는 이유? 이 Advice는 대상 메소드의 리턴값을 바꿀 수 있습니다. 대상 메소드의 수행 여부 또한 결정할 수 있는 매우 강력한 기능을 가진 Advice입니다.</p>
+<p>대상 메소드 실행 여부는 어떻게 결정하는가? invocation.proceed(); 를 넣어 주면 실행이 되고 해당 메소드가 값을 리턴 한다면 리턴 값을 받을 수도 있겠죠.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">5. Introduction Adice</span></p>
+<p>공부해야 할 것</p>

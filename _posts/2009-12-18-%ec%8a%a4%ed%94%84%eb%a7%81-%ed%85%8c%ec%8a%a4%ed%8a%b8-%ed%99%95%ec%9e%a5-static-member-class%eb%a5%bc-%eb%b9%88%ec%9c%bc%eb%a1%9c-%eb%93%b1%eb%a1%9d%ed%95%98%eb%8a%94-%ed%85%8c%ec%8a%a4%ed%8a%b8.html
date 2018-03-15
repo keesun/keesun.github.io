@@ -1,0 +1,94 @@
+---
+layout: post
+title: "[스프링 테스트 확장] static member class를 빈으로 등록하는 테스트 로더 1"
+date: 2009-12-18 04:19:56.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 스프링 테스트 확장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323135132'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a title="[http://toby.epril.com/?p=950]로 이동합니다." target="_blank" href="http://toby.epril.com/?p=950">테스트를 편하게 하기위한 기발한 아이디어</a>를 읽는 도중 조금 맘에 안 드는 부분이 있었는데.. 그건 바로 ApplicationContext를 직접 생성하는 부분이었습니다. 게다가 원래는 @Configuration이 붙어있는 클래스를 넘겨받기로 되어있는 API에 static membe class를 넣어 빈으로 만들었습니다. 굉장히 기발하지만 약간 해킹스러운 방식이고 불편한 점들이 보였습니다. 빈으로 등록할 static member class가 많아지기라도 하다면.. 흠..</p>
+<p>그래서 static member class를 빈으로 등록하겠다는 명시적인 이름을 가지고 있는 테스트 컨텍트스 로더를 만들기로 했습니다. 몇일전에 만들었던 애노테이션 설정 컨텍스트 로더를 조금만 고치면 가능할 것 같아서 시도했습니다.</p>
+<p>그 결과 다음과 같이 테스트를 작성할 수 있게됐습니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+@RunWith(SpringJUnit4ClassRunner.class)<br />
+<span style="font-weight: bold;">@ContextConfiguration(loader = StaticMemberClassLoader.class)</span><br />
+public class StaticInnerConfigTest {</p>
+<p>&nbsp;&nbsp;&nbsp; @Autowired ApplicationContext ac;<br />
+<br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(6, 134, 168);">&nbsp;&nbsp;&nbsp; static class Hello {</span><br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(6, 134, 168);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Inject Printer printer;</span><br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(6, 134, 168);">&nbsp;&nbsp;&nbsp; }</span><br style="font-weight: bold; color: rgb(6, 134, 168);" /><br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(6, 134, 168);">&nbsp;&nbsp;&nbsp; static class Printer {</span><br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(6, 134, 168);">&nbsp;&nbsp;&nbsp; }</span><br style="font-weight: bold; color: rgb(6, 134, 168);" /><br style="font-weight: bold; color: rgb(6, 134, 168);" /><span style="font-weight: bold; color: rgb(200, 66, 5);">&nbsp;&nbsp;&nbsp; class Foo {}</span></p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void inject() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(String beanName : ac.getBeanDefinitionNames()){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(beanName);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hello hello = ac.getBean(Hello.class);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assertThat(hello.printer, is(notNullValue()));<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</div>
+<p>사부님이 작성한것과 비교하자면, 우선 ApplicationContext를 직접 만들지 않아도 알아서 static member class를 빈으로 만들어주며, static member class를 ContextConfigruation으로 쓰겠다고 로더 설정이 되어있으니 좀 더 명시적이라고 할 수 있겠습니다. 음헤헷;</p>
+<p><img src="{{ site.baseurl }}/assets/cfile29.uf.1155BC194B2B0159351F24.jpg" class="aligncenter" width="600" height="209" alt="" filename="1.jpg" filemime="image/jpeg" /><br />
+콘솔에는 위와 같이 찍힙니다. StaticMemberClassLoader를 확장하거나 수정하여 빈을 등록할 때 빈 이름이나, 등록할 빈을 골라내는 작업을 얼마든지 변경할 수도 있습니다.</p>
+<p>사부님 덕분에 아침부터 잼난 코딩을 했더니 기분이좋습니다. 참고로 이 로더 구현체에는 문제가 좀 많습니다. 무슨 문제가 있는지 지적해주시는 분이 계실지 모르겠지만 퀴즈 삼아 문제가 많은 코드를 공유하고 싶어졌습니다. 발코딩을 까고 싶으신 분들에게는 절호의 기회입니다. 마음껏 까주세요!</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+public class StaticMemberClassLoader extends AnnotationContextLoader {</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; protected void createCustomBean(DefaultListableBeanFactory context, String[] locations) throws ClassNotFoundException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(String string : locations){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class beanClass = ClassUtils.forName(string, getClass().getClassLoader());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; context.registerBeanDefinition(beanClass.getSimpleName(), BeanDefinitionBuilder.rootBeanDefinition(beanClass).getBeanDefinition());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; protected String[] generateDefaultLocations(Class&lt;?&gt; clazz) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class[] classes = clazz.getDeclaredClasses();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; modifiedLocations = new ArrayList&lt;String&gt;();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; classes.length; i++) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class klass = classes[i];<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(klass.getModifiers() == Modifier.STATIC)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; modifiedLocations.add(klass.getName());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return modifiedLocations.toArray(new String[modifiedLocations.size()]);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p></div>

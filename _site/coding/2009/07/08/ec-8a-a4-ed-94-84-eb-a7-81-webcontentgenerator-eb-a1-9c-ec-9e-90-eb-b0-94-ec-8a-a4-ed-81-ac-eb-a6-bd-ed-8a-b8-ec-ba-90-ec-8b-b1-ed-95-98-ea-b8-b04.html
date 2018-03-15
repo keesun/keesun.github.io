@@ -1,0 +1,14 @@
+<p>이번엔 정말 마지막이라는 느낌입니다. </p>
+<p>스프링 ResourceEditor라는 PropertyEditor가 있었군요. ResourceEditor는 ResoruceLoader를 사용해서 Resource 인스턴스를 만드는데, 이 때 resourcePath의 prefix에 맞게 적절한 Resource 인스턴스를 만들어 줍니다. ResourceLoader가 읽어들이는 기본 prefix는 레퍼런스에 잘 설명이 되어 있으니 참고해 보시기 바랍니다. file:, classpath:, http: 입니다.</p>
+<p>재미있는건, prefix가 붙어있지 않을 때 인데, 이 때는 applicationContext 객체의 타입을 보고서 기본 Resource 타입을 결정짓습니다. ClassPathApplicationContext인 경우에는 ClassPathResource로 보는거죠. WebApplicationContext인 경우에는 ServletContextResource로 봅니다. 따라서...</p>
+<p>이전에 만든 컨트롤러에 전부 Stirng 타입 목록을 받고 type 또한 String으로 받아서 Resource를 판단하는 작업까지 했었다면, 이제 그 작업들은 전부 스프링이 기본으로 제공하는 ResourceEditor로 넘기고 List&lt;Resource&gt;를 받으면 끝납니다. 그렇다고 해서 xml에 별도로 등록해줘야 할 빈이 있는 것도 아니고, 이로인해 좀 더 유연한 설정이 가능해졌고, 설정이 짧아졌으며, 컨트롤러 코드도 줄어들었습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;bean name="/js.do" class="koma.base.main.JavaScriptController" p:cacheSeconds="300"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name="jsResources"&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;list&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;value&gt;js/koma.js&lt;/value&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;value&gt;file:c:/springsource/workspace/koma/webapp/js/jquery-1.3.2.min.js&lt;/value&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;value&gt;js/jquery-ui-1.7.2.min.js&lt;/value&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/list&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/property&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/bean&gt;</p>
+<p>테스트 삼아 이렇게 등록해 보았는데 잘 동작합니다. 이젠 정말 끝인 것 같다는 느낌이네요. 후훗</p>

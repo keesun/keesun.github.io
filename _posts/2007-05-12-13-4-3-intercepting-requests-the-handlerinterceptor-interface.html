@@ -1,0 +1,67 @@
+---
+layout: post
+title: 13.4.3. Intercepting requests - the HandlerInterceptor interface
+date: 2007-05-12 05:26:34.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- Interceptor
+- Spring Reference 13장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322991585'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>HandlerMapping 안에 interceptor를 만들어서 HandlerMapping에 들어오는 요청들 중에 일부를 처리하는 Handler 하테 요청을 세 가지 시점(넘기기 전과 후, 완료 된 후)에 특정 작업을 추가할 수 있습니다.</p>
+<p>레퍼런스에 나와있는 예제는 특정 시간 사이에 들어오는 요청이 아니면 모두 특정 페이지로 요청을 넘겨 버리게 됩니다.</p>
+<p>먼저 인터셉터를 만들려면 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/HandlerInterceptor.html" target="_blank">HandlerInterceptor 인터페이스</a>를 구현해야 합니다.<br /><img src="{{ site.baseurl }}/assets/dl178.jpg" class="aligncenter" width="500" height="131" alt="사용자 삽입 이미지" />구현해야 할 메소드는 세 개이며 저 중에서 원 하는 것만 구현해서 사용할 수 있도록 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/handler/HandlerInterceptorAdapter.html" target="_blank">어댑터 클레스</a>를 제공합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">package samples;</p>
+<p>public class TimeBasedAccessInterceptor extends HandlerInterceptorAdapter {</p>
+<p>&nbsp; &nbsp; private int openingTime;<br />&nbsp; &nbsp; private int closingTime;</p>
+<p>&nbsp; &nbsp; public void setOpeningTime(int openingTime) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.openingTime = openingTime;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void setClosingTime(int closingTime) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.closingTime = closingTime;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public boolean preHandle(<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpServletRequest request,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HttpServletResponse response,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Object handler) throws Exception {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Calendar cal = Calendar.getInstance();<br />&nbsp; &nbsp; &nbsp; &nbsp; int hour = cal.get(HOUR_OF_DAY);<br />&nbsp; &nbsp; &nbsp; &nbsp; if (openingTime &lt;= hour &lt; closingTime) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return true;<br />&nbsp; &nbsp; &nbsp; &nbsp; } else {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; response.sendRedirect("http://host.com/outsideOfficeHours.html");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return false;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }<br />}</div>
+<p>예제에서는 이 어댑터를 사용하여 구현하였으며 preHandler 메소드를 사용하여 요청을 핸들러에게 넘기기 전에 작업을 합니다. 작업의 내용은 현재 요청이 들어온 시간이 특정 시간 사이라면 true, 아니면 http://host.com/outsideOfficeHours.html 여기로 요청을 넘기고 false를 리턴합니다.</p>
+<p>인터셉터를 사용하려면 HandlerMapping의 peopertie에 등록해 주면 됩니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;beans&gt;<br />&nbsp; &nbsp; &lt;bean id="handlerMapping"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="interceptors"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;ref bean="officeHoursInterceptor"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/list&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="mappings"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /*.form=editAccountFormController<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /*.view=editAccountFormController<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="officeHoursInterceptor"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; class="samples.TimeBasedAccessInterceptor"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="openingTime" value="9"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="closingTime" value="18"/&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;<br />&lt;beans&gt;</div>
+<p>요청을 처리하기 전에 로그인 되어 있는지 확인하는 로직을 이렇게 구현해도 될 것 같네요.</p>

@@ -1,0 +1,63 @@
+---
+layout: post
+title: Transaction 관련 API
+date: 2007-04-16 03:10:56.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322668546'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>J2EE without EJB p242 의 그림입니다.<br /><img src="{{ site.baseurl }}/assets/dl136.jpg" class="aligncenter" width="500" height="235" alt="사용자 삽입 이미지" /><br />TransactionDefinition, TransactionStatus, PlatformTransactionManager<br /><img src="{{ site.baseurl }}/assets/dl137.jpg" class="aligncenter" width="500" height="409" alt="사용자 삽입 이미지" /><br />PlatformTransactionManager 인터페이스를 구현한 클래스들
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html" title="class in org.springframework.transaction.support">AbstractPlatformTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jca/cci/connection/CciLocalTransactionManager.html" title="class in org.springframework.jca.cci.connection">CciLocalTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jdbc/datasource/DataSourceTransactionManager.html" title="class in org.springframework.jdbc.datasource">DataSourceTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate/HibernateTransactionManager.html" title="class in org.springframework.orm.hibernate">HibernateTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/hibernate3/HibernateTransactionManager.html" title="class in org.springframework.orm.hibernate3">HibernateTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/jdo/JdoTransactionManager.html" title="class in org.springframework.orm.jdo">JdoTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/connection/JmsTransactionManager.html" title="class in org.springframework.jms.connection">JmsTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/jms/connection/JmsTransactionManager102.html" title="class in org.springframework.jms.connection">JmsTransactionManager102</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/jpa/JpaTransactionManager.html" title="class in org.springframework.orm.jpa">JpaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/JtaTransactionManager.html" title="class in org.springframework.transaction.jta">JtaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/OC4JJtaTransactionManager.html" title="class in org.springframework.transaction.jta">OC4JJtaTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/orm/toplink/TopLinkTransactionManager.html" title="class in org.springframework.orm.toplink">TopLinkTransactionManager</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/jta/WebLogicJtaTransactionManager.html" title="class in org.springframework.transaction.jta">WebLogicJtaTransactionManager</a></dd>
+</dl>
+<p>
+TransactionDefinition 인터페이스르 구현한 클래스들
+<dl>
+<dd><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/interceptor/DefaultTransactionAttribute.html" title="class in org.springframework.transaction.interceptor">DefaultTransactionAttribute</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/support/DefaultTransactionDefinition.html" title="class in org.springframework.transaction.support">DefaultTransactionDefinition</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/interceptor/DelegatingTransactionAttribute.html" title="class in org.springframework.transaction.interceptor">DelegatingTransactionAttribute</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.html" title="class in org.springframework.transaction.interceptor">RuleBasedTransactionAttribute</a>, <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/transaction/support/TransactionTemplate.html" title="class in org.springframework.transaction.support">TransactionTemplate</a></dd>
+</dl>
+<p>TransactionException 은 모두 RuntimeException으로 un-checked Exception입니다.<br /><img src="{{ site.baseurl }}/assets/cl150.jpg" class="aligncenter" width="500" height="284" alt="사용자 삽입 이미지" /></p>
+<p></p>

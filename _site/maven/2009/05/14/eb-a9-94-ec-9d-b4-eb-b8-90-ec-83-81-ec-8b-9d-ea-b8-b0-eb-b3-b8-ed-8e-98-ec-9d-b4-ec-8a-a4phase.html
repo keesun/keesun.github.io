@@ -1,0 +1,11 @@
+<p>참조: <a title="[http://www.sonatype.com/books/maven-book/reference/lifecycle.html#lifecycle-sect-structure]로 이동합니다." target="_blank" href="http://www.sonatype.com/books/maven-book/reference/lifecycle.html#lifecycle-sect-structure">http://www.sonatype.com/books/maven-book/reference/lifecycle.html#lifecycle-sect-structure</a></p>
+<p>달달달 외워야 할 것.</p>
+<p><img src="/assets/cfile21.uf.122C350F4A0B9BC79EE03A.png" class="aligncenter" width="600" height="598" alt="" filename="1.png" filemime="image/png" /><br />
+맨 처음에 clean을 하지않는 군요. target 폴더를 깨끗하게 청소하고 빌드 하려면, mvn clean verify 형태로 입력하면 되겠습니다. 그럼 위에서부터 쫘르륵~~ 실행해주죠.</p>
+<p>validate -&gt;<br />
+source -&gt; resource -&gt; compile -&gt; classes -&gt; <br />
+test-source -&gt; test-resource -&gt; test-compile -&gt; test -&gt; <br />
+pre-pacage -&gt; package -&gt; post-package -&gt;<br />
+pre-intefration-test -&gt; integration-test -&gt; post-integration-test -&gt;<br />
+verify -&gt; install -&gt; deploy</p>
+<p>대충 이렇군요.</p>

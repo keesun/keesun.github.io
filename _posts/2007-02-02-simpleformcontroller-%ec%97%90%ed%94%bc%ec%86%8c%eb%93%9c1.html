@@ -1,0 +1,59 @@
+---
+layout: post
+title: SimpleFormController 에피소드1
+date: 2007-02-02 07:20:53.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- SimpleFormController
+- Spring MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323093989'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이녀석을 공부하는 어제부터 현재까지 여러 가지 에피소드들이 있었습니다. 발생한 의문들에 자문 자답을 해봅니다.</p>
+<p>1. SimpleFormController가 어떻게 흘러가는 건지 이해가 되지 않았습니다.</p>
+<p>AbstractController는 ModelAndView 객체에 요청을 처리할 view이름과 그 view에서 사용할 객체를 전달해 주었습니다. 그런데 이녀석은 그렇게 처리하기엔 뭔가.. 허전하다고 느껴지거든요. 자신에게 어떤 요청이 들어왔다는 것은 무엇을 입력할 곳을 찾아 왔다는 것이고[footnote]검색을 하기 위한 링크를 클릭 했다든가 회원 가입, 글 쓰기등의 버튼을 클릭했을 것입니다.[/footnote] 그럼 일단 그 화면으로 이동을 해줘야 하고 그 때 사용자가 입력할 데이타를 받아들일 객체가 있어야겠습니다. 아마도 그녀석을 Command 객체라고 부르는 것 같습니다. 일단 여기까지는 AbstractController와 비슷합니다. 하지만 여기서 끝나면 안되겠죠. 사용자가 입력을 마치고 엔터를 쳤을 때 또 다시 요청이 날아오게 됩니다. 이것도 역시 처리를 해줘야겠죠. 이 요청도 처리를 합니다. 생성자에 setSuccessView("결과를 보여줄 view 이름") 을 생성자에 추가해주면 그쪽 페이지로 이동하게 됩니다.</p>
+<p>1.1. Command 객체는 뭔가? </p>
+<p>도메인 객체인가? 아닌것 같다는 생각이 듭니다. 물론 도메인 객체를 써도 되겠지만 Command 객체는 사용자가 입력한 값을 받아 오는 역할을 하는 객체이고 만약 사용자가 입력하는 정보다 여러개의 객체에 걸쳐있는 값들이라면 그 때는 도메인 객체만으로는 처리할 수 없겠죠. 아마 그럴 땐 Command 객체를 하나 만들어서 그 안에서 해당 객체에 정보가 들어가도록 처리를 해야될 것 같습니다.</p>
+<p>1.2. ModelAndView 객체에는 여러 객체가 들어갈 수 있는 건가?</p>
+<p>add("이름", 객체) 형태의 메소드로 여러 객체를 ModelAndView에 붙여 줄 수 있습니다. 그리고 여기서 붙인 객체들은 "첫번째 요청에 의해 보여지는 페이지"와 "두번째 요청에 의해 보여지는 페이지"[footnote]success view에서 요청한 페이지[/footnote]에서 모두 사용이 가능합니다.</p>

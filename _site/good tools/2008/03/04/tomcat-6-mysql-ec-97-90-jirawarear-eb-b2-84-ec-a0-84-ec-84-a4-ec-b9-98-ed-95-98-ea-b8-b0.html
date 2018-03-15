@@ -1,0 +1,23 @@
+<p>참조 : <a href="http://www.atlassian.com/software/jira/docs/latest/servers/tomcat60.html" target="_blank">http://www.atlassian.com/software/jira/docs/latest/servers/tomcat60.html</a></p>
+<p><span style="font-weight: bold;">1. 다운로드/압축풀기</span></p>
+<p>생략<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. %JIRA_HOME%/webapp/WEB-INF/classes/entityengine.xml 수정하기</span></p>
+<p>* MySQL을 사용할 때는 datasource 부근에서 schema-name="PUBLIC"를 꼭 삭제해줘야 합니다.</p>
+<p><span style="font-weight: bold;">3. 빌드하기</span></p>
+<p>* %JIAVA_HOME% 에서 ./build.sh 실행합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">4. %TOMCAT_HOME%/conf/server.xml 수정하기</span></p>
+<p>* 웹 문서에서는 conf/Cataliba/localhost에 위의 빌드 결과로 %JIRA_HOME%/dist-tomcat/tomcat-6/jira.xml 파일을 복사해와서 수정하라고 합니다. 그런데.. 전 그렇게 하니까 컨텍스트를 로딩하지 못하더군요.</p>
+<p>* 그래서.. 그냥 제목처럼 /conf/server.xml에 컨텍스트 설정 파일을 추가했습니다.</p>
+<p>&lt;Context path="/jira" docBase="/home/app/atlassian-jira-enterprise-3.12.2/dist-tomcat/tomcat-6/atlassian-jira-3.12.2.war" debug="0"&gt;</p>
+<p>&nbsp; &nbsp; &lt;!-- NOTE: If you use a database other than hsqldb:<br />&nbsp; &nbsp; * delete the minEvictableIdleTimeMillis and timeBetweenEvictionRunsMillis attributes<br />&nbsp; &nbsp; * change the database type in atlassian-jira/WEB-INF/classes/entityengine.xml<br />&nbsp; &nbsp; --&gt;<br />&nbsp; &nbsp; &lt;Resource name="jdbc/JiraDS" auth="Container" type="javax.sql.DataSource"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; username=""<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; password=""<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; driverClassName="com.mysql.jdbc.Driver"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; url="jdbc:mysql://localhost/jiradb?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;Resource name="UserTransaction" auth="Container" type="javax.transaction.UserTransaction"<br />&nbsp; &nbsp; factory="org.objectweb.jotm.UserTransactionFactory" jotm.timeout="60"/&gt;<br />&nbsp; &nbsp; &lt;Manager pathname=""/&gt;</p>
+<p>&lt;/Context&gt;</p>
+<p>* MySQL JDBC 드라이버와 JIRA-tomcat 압축파일에 담긴 라이브러리도 역시 톰캣/lib에 넣어줍니다.</p>
+<p><span style="font-weight: bold;">5. Tomcat 재가동하고, JIRA에 접속하기</span></p>
+<p>* 굉장히 오래 걸립니다.</p>
+<p><span style="font-weight: bold;">6. 설정하기</span></p>
+<p>* 라이선스가 필요합니다. -&gt; 평가판 라이선스를 받을 수 있습니다. 키값을 줘야 라이선스 값을 얻을 수 있는데, 키값이 설정화면에 가서야 보여줍니다. 미리 라이선스를 받아 둘 수 없다는 거죠.</p>
+<p>* 톰캣이 Out Of Memory로 뻗는 경우가 발생합니다. 그럴 땐, 톰캣/bin/setenv.sh에 다음을 추가하라고 다와있는데.. setenv.sh 파일이 안 보입니다. 그럴때는 새로 만들어서 다음의 내용을 추가해줍니다.</p>
+<p>export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true"</p>
+<p>* 흠.. 그런데 저렇게 설정했는데도.. 자꾸만 메모리가 부족해서 죽어버리네요;; 어쩐댜;;;</p>
+<p>* 좀 더 찾아 본 결과 아래 문장도 setenv.sh에 추가했더니 이제 좀 쓸만한 속도를 보여주고 있습니다. 휴~</p>
+<p>export JAVA_OPTS="-Xms512m -Xmx512m" </p>
+<p></p>

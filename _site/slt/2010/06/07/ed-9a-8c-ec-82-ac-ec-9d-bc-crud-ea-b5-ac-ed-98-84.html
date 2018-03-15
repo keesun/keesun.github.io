@@ -1,0 +1,197 @@
+<p>먼저 앞에서 만든 뷰를 가지고 컨트롤러 코드를 만드는데 이때 URL을 어떻게 가져갈지 구상해야합니다.
+<div>
+</div>
+<div>/base/code/list GET</div>
+<div id="">/base/code/add GET&nbsp;</div>
+<div>/base/code/add POST</div>
+<div>/base/code/update?id=23&nbsp;GET&nbsp;</div>
+<div>/base/code/update?id=23&nbsp;POST&nbsp;</div>
+<div>/base/code/delete?id=23&nbsp;GET&nbsp;</div>
+<div>
+</div>
+<div>
+<div id="">이전에는 이런식으로 썼었습니다. 그런데 이번에는 URL을 REST 스타일로 만들어 보고자 스프링 Roo 레퍼런스에 있는 그림을 참조했습니다.</div>
+</div>
+<div>
+</div>
+<div><a href="http://static.springsource.org/spring-roo/reference/html/beginning.html">http://static.springsource.org/spring-roo/reference/html/beginning.html</a></div>
+<div>
+</div>
+<div>
+<img src="/assets/cfile25.uf.172A35034C0C9FBB36B7CA.png" class="aligncenter" width="450" height="230" alt="" filename="restmappings.png" filemime="image/png" /></div>
+<div>
+</div>
+<div>
+그래서 이번에는</div>
+<div>
+</div>
+<div>
+/base/code/ GET</div>
+<div>/base/code/form GET</div>
+<div>/base/code POST</div>
+<div id="">/base/code/{id}/form GET</div>
+<div id="">/base/code/{id} PUT</div>
+<div id="">/base/code/{id} DELETE
+</div>
+<div id="">
+</div>
+<div id="">이런식으로 구성했습니다. 아직 하나 안만든건 view인데 그건 /base/code/{id} GET이 될겁니다.&nbsp;</div>
+<div id="">
+</div>
+<div id="">
+아직 익숙하지 않아서 잘 적응되고 있진 않은데 이렇게 만들어 두면 나중에 웹 서비스 별도로 만들 필요없이 저 런 RESTful URL과 스프링 3.0의 컨텐츠 네고 기능을 이용해서 모바일 용 앱을 만들때 한결 편할 것 같습니다.</div>
+<div id="">
+</div>
+<div id="">
+암튼 이 다음은 스프링 3.0의 @Validation 기능을 적용하는 것인데 이때 하이버 벨리데이터를 의존성에 추가해 줬습니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;!-- Validation --&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.org.hibernate.validator&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;4.0.0.GA&lt;/version&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;dependency&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;groupId&gt;javax.xml.bind&lt;/groupId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;artifactId&gt;com.springsource.javax.xml.bind&lt;/artifactId&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;version&gt;2.1.7&lt;/version&gt;</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&lt;/dependency&gt;</div>
+<div id=""></div>
+</div>
+<div id="">
+</div>
+<div id="">스프링 웹 설정은 변경한것이 없습니다.</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre"></span>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;mvc:annotation-driven /&gt;</div>
+</div>
+<div id="">
+</div>
+<div id="">이게 전부이고 나머진 예외-뷰 설정과 컨텐츠 네고 설정 뿐입니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+@Controller</div>
+<div id="">@RequestMapping("/base/code/*")</div>
+<div id="">@SessionAttributes("code")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class CodeController {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Autowired CodeService codeService;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="mgt")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void mgt(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("searchParam", new CodeSearchParam());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void list(Model model, CodeSearchParam searchParam, PageParam pageParam) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("codeList", codeService.list(pageParam, searchParam));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "form", method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String addForm(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("code", new Code());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return "/base/code/new";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.POST)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String addFormSubmit(Model model, @Valid Code code, BindingResult result, SessionStatus status){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "base/code/new";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.add(code);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:/base/code/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "{id}/form", method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String editForm(@PathVariable int id, Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("code", codeService.getById(id));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return "/base/code/edit";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "{id}", method = RequestMethod.PUT)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String editFormSubmit(Model model, @Valid Code code, BindingResult result, SessionStatus status){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return "base/code/edit";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.update(code);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:/base/code/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "{id}", method = RequestMethod.DELETE)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String delete(@PathVariable int id){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.deleteBy(id);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:/base/code/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">컨트롤러는 이렇게 구현했는데 URL을 클래스 선언부와 메서드 선언부에 분할해서 설정했습니다. 그래야 나중에 상위클래스로 빼서 프레임워크화 할 때 용이하기 때문입니다.&nbsp;서비스와 DAO 코드는 간단하기 때문에 생략입니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+참 컨트롤러에서 PUT, DELETE 같은 method를 사용하고 있는데 사실은 화면에서 넘어올땐 걍 POST일 뿐이고 _method라는 히든 파람을 스프링이 읽어서 적절한 애노테이션 핸들러를 찾아주게 되어 있습니다. 히든 파람으로 RESTfult 한 API를 만들기 위해서는 web.xml에 필터를 하나 등록해줘야 합니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre"></span></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;filter-mapping&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;/filter-mapping&gt;</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">자 그럼 오늘은 이만하고 내일은 Code에 새로운 속성들을 추가해 봐야겠습니다. 시간이 남으면 User 도메인 CRUD까지 구현해야겠네요. 그 다음부터는 드뎌 OSAF 3.0 코드가 조금씩 간추려 지겠군요.</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>

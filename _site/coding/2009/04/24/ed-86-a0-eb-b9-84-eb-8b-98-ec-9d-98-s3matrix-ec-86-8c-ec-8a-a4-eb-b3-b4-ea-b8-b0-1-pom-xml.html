@@ -1,0 +1,72 @@
+<p>하루(실제로는 몇 시간 만에 작성했으로 예상되지만)만에 TDD로 개발한 프로젝트 소스를 볼 수 있다니 정말 즐겁습니다. </p>
+<p>이 프로젝트는 취지부터가 멋집니다. 사부님이 자신이 하던 일이 반복적이여서 그걸 프로그래밍으로 간편화한 것이 바로 이 프로젝트 입니다. pom.xml 파일을 뒤져가며 엑셀로 그 의존성들을 정리하던 것을 자동화 한 거죠. 멋집니다. +_+ 그러면서도 다른 사람들에게 유용한 정보를 줄 수 있으니... 그저 멋지다는 표현밖엔 안 떠오르네요. 역시 사부님이라고 부를만 합니다.</p>
+<p>생각난김에 이쯤에서 왜 자꾸 토비님을 사부님이라고 하는지 언급해야겠네요. 토비님은 제가 '토비님'이라고 부르는걸 달갑지 않게 생각하십니다. 채팅에서도 몇 번이나 지적을 받았고, 실제 업무 중에도 오프라인에서 '토비님'이라고 불렀다가 '이건 아니다.' 싶었습니다. 그래서 회사에서 직책 명칭인 '이사님'이라고 불렀지만 업무 중이 아닐 때에도 자꾸 '이사님'이라고 부르기는 뭐해서 마땅한 표현이 없을까 고민하던 중 떠오른 단어가 '사부님'입니다. 원래는 형이라고 부르라고 했었는데, '형'이라고 하기엔 나이차도 좀 있으시고 '형'같지 않은 포스가 느껴져서 '형님'이라고 하니까 무슨 안 그래도 덩치도 좀 있으신데 '형님' '형님'하면 안 좋은 이미지가 떠오르자나요. 그래서 이것 저것 많이 알려주시기도 하고, 업무 할 때 사수 역할도 해주시니까 '사부님'이라고 부르기로 했습니다.</p>
+<p>사설이 엄청 길었는데요. 각설하고, 본론으로 들어가겠습니다. 일단 사부님 코드를 받으시면 에러가 납니다. 의존성 에러죠. 해결하기가 힘들겁니다. 왜냐면, 상위 pom을 사용했는데 그 상위 pom이 여러분 로컬에 있을리 만무하자나요.ㅋㅋ 하지만 그렇다고 해서 pom.xml에 상위 pom이 배포되어 있는 저장소 정보가 있는 것도 아닙니다. 결국 빨간 불이 들어온 소스 코드를 보시면서 테스트도 돌려보지 못하고 눈팅만 해야 할지도 모릅니다.</p>
+<p>캬캬캬. 그래서 제가 pom.xml을 조금 수정했습니다. 이걸 쓰시면 테스트를 돌려보실 수 있을 겁니다.</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+&nbsp;&nbsp;&nbsp; xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.opensprout&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;s3matrix&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;dependencies&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- opensprout's spring --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;org.springframework.web.servlet&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;[3.0.0.BUILD-00000000000000,9.9.9.BUILD]&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;org.springframework.aspects&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;[3.0.0.BUILD-00000000000000,9.9.9.BUILD]&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;org.springframework.orm&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;[3.0.0.BUILD-00000000000000,9.9.9.BUILD]&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.springframework&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;org.springframework.test&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;[3.0.0.BUILD-00000000000000,9.9.9.BUILD]&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- excel --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;net.sourceforge.jexcelapi&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.jxl&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.6.6&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- test --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;junit&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;junit&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;4.6&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;scope&gt;test&lt;/scope&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.hamcrest&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;hamcrest-library&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;1.1&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/dependencies&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;repositories&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;id&gt;spring-latest&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;name&gt;Spring Latest by OpenSprout&lt;/name&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;url&gt;http://www.opensprout.org/nexus/content/repositories/spring-latest&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;id&gt;com.springsource.repository.bundles.external&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;name&gt;SpringSource Enterprise Bundle Repository - External Bundle Releases&lt;/name&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;url&gt;http://repository.springsource.com/maven/bundles/external&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;id&gt;opensprout nexus&lt;/id&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;name&gt;OpenSprout Nexus public&lt;/name&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;url&gt;http://www.opensprout.org/nexus/content/groups/public&lt;/url&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/repository&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/repositories&gt;<br />
+&lt;/project&gt;
+</div>

@@ -1,0 +1,27 @@
+<p><a href="http://www.atlassian.com/" target="_blank">http://www.atlassian.com/</a><br />위 사이트에서 confluence download를 클릭하여 다운로드 화면으로 넘어갑니다.</p>
+<p>돈을 내고 사용해야 하는 WIki지만..평가용으로 한 달을 사용할 수 있는 라이센스를 제공해 줍니다. 이번이 두 번째로 평가용 라이센스를 받아서 설치해 보는 건데요. 전부 기록에 남는군요.<br /><img src="/assets/bm279.jpg" class="aligncenter" width="442" height="188" alt="사용자 삽입 이미지" />제가 설치한 Confluence의 유형은 2.3.1 EAR/WAR 버젼으로 리눅스에 설치했습니다.<br /><img src="/assets/bm280.jpg" class="aligncenter" width="441" height="131" alt="사용자 삽입 이미지" />Confluence를 설치하려면 sevlet container와 DB가 필요한데요. HSQL을 사용할 거라면 별도로 필요하지 않습니다. 자체 내장하고 있는듯 합니다. 저는 Tomcat 6.0과 MySQL5.0을 사용하도록 설치했습니다.</p>
+<p>참조 :<a href="http://confluence.atlassian.com/display/DOC/Installing+the+Confluence+EAR-WAR+edition" target="_blank"> http://confluence.atlassian.com/display/DOC/Installing+the+Confluence+EAR-WAR+edition</a></p>
+<p><span style="font-weight: bold;">1. 압축 풀기.</span></p>
+<p>tar zxvf ~~~.tar.gz<br />이렇게 하면 압축이 풀리고 적당한 폴더로 mv를 이용해서 옮깁니다. tomcat밑에 있는webapp 로 옮기지 않습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. confluence-init.properties 파일 설정.</span></p>
+<p>압축이 풀린 폴더안에 confluence라는 폴더가 있고 그안에 WEB-INF/classes에 보면 저 파일이 있습니다. 이 파일에 폴더 하나를 지정해 주면 됩니다. 백업이나 첨부 파일들이 저장될 장소를 지정해 주는 것인데 vi로 열어 보면 예를 들어 주고 있어서 이름 짓기를 고민하지 않아도 됩니다.</p>
+<p>/var/confluence로 지정해 줍니다.<br />이때 저 폴더에 confluence가 파일을 작성할 수 있도록 폴더를 만들어 주고 <br />chomod 777 /var/confluence로 권한 설정을 변경해줍니다.</p>
+<p><span style="font-weight: bold;">3. Tomcat에 context descriptor만들기.</span></p>
+<p>tomcat/conf/Catalina/localhost 디렉토리에 confluence.xml 파일을 만들어 줍니다.</p>
+<p>vi ./confluence.xml
+<div class="code">
+<div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;Context path=<span class="code-quote">"/confluence"</span> docBase=<span class="code-quote">"<span style="color: rgb(255, 0, 0);">압축을 풀어 제낀 폴더/confluence</span>"</span> debug=<span class="code-quote">"0"</span> reloadable=<span class="code-quote">"true"</span>&gt;</span><br />&lt;Logger className=<span class="code-quote">"org.apache.catalina.logger.FileLogger"</span><br />prefix=<span class="code-quote">"atlassian-confluence."</span> suffix=<span class="code-quote">".log"</span> timestamp=<span class="code-quote">"true"</span>/&gt;<br /><span class="code-tag">&lt;/Context&gt;</span></pre>
+</div>
+</div>
+<p>파일 안에는 이렇게 넣어 줍니다. 빨간색 부분만 적당하게 수정해 주시면 됩니다. 저는 뒤에 /confluence를 안붙였다가 조금 해맷었습니다.</p>
+<p><span style="font-weight: bold;">4. Tomcar가동.</span></p>
+<p>이미 가동 중이셨다면 껐다 켜줍니다. 그리고 브라우져에서 접속해 봅니다.</p>
+<p>http://localhost:포트/confluence/<br />이렇게 접속이 되지 않으시면 무언가 잘못된겁니다. setup 화면이 뜨면 제대로 된겁니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">5. setup 시작.</span></p>
+<p>setup화면이 떠서 끝난줄 알고 좋아라 했는데 아니더구요. 여기서 라이센스키를 입력하라는 창이 뜹니다. 그럼 아틀라시안 홈피로 가셔서 라이센스를 달라고 하면 바로 줍니다. 물론 평가용 라이센스를 달라고 하셔야 합니다. 다른건 돈을 내야 하는 걸로 알고 있는데.. 얼만지 모르겠네요..</p>
+<p><span style="font-weight: bold;">6. db 선택.</span></p>
+<p><img src="/assets/bm281.jpg" class="aligncenter" width="500" height="217" alt="사용자 삽입 이미지" />이런 화면이 보입니다. 저는 MySQL을 사용할 것이기 때문에 External DB에서 MySQL로 선택하고 버튼을 클릭합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7. connection 선택 &amp; 설정.</span></p>
+<p>Standard DB Connection을 사용할지 Datasource Connection을 사용할지 선택하라고 합니다. 저는 Standard DB Connection을 선택 했습니다. 그럼 일반적으로 DB Connection에 필요한 정보를 입력하라고 합니다.</p>
+<p>여기서 잠깐...이 작업을 하기 전에... mysql-connector-java-5.0.4-bin.jar 이런 파일을 class path가 잡힌 곳으로 넣어 줘야 합니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bm282.jar" class="aligncenter">bm282.jar</a>저는 /confluence-2.3.1/confluence/WEB-INF/lib 이 안에다 넣어놨습니다.<br /><img src="/assets/bm283.jpg" class="aligncenter" width="500" height="129" alt="사용자 삽입 이미지" />그런 다음 위 화면에 적당한 값을 입력해 주는데요. 이 때 DB 인코딩을 UTF-8로 해주기 위해서 DB URL뒤에 ~~~~ 라고 붙이라고 화면에 적혀 있습니다. 그걸 복사해서 뒤에 붙여 주고 MySQL 계정을 적어 줍니다.</p>
+<p><span style="font-weight: bold;">8. load contents.</span></p>
+<p>이건 뭐 빈 화면이라 썰렁할까봐 넣어 준것 같은데요. 그냥 Empty Site를 선택하고 설치를 끝냈습니다.</p>
+<p><img src="/assets/bm284.jpg" class="aligncenter" width="500" height="245" alt="사용자 삽입 이미지" /></p>

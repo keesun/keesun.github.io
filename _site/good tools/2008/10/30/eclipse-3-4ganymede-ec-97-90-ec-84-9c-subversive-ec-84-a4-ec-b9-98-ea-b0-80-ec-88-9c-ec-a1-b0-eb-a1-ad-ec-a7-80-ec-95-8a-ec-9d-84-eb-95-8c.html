@@ -1,0 +1,27 @@
+<p><a href="http://thecoffeemachine.wordpress.com/2008/08/20/subversive-in-eclipse-ganymede/" target="_blank">http://thecoffeemachine.wordpress.com/2008/08/20/subversive-in-eclipse-ganymede/</a></p>
+<p>어떤 상황이냐면, 플러그인 설치할 때 Ganymede -&gt; Collaborate를 사용해서 subversive를 설치할 때 플러그인 다운로드가 잘 안 되서 죽어버리는 현상입니다.</p>
+<p>위 링크 마지막에 나와있는 순서대로 하면 잘 됩니다.</p>
+<ol style="text-align: justify;">
+<li>Go to Help-&gt;Software Updates.</li>
+<li>Click on the “Available Software” tab.</li>
+<li>Unfold the Ganymede-&gt;Collaboration Tools node, and if your<br />
+experience is like mine, you will see the “SVN Team Provider<br />
+(Incubation)” item with this version identifier,<br />
+“0.7.1.I20080612-1500″. What you really need (since the<br />
+Subversive/Polarion team posted updates) is the version from 2008-08-01.</li>
+<li>Click on “Manage Sites…”.</li>
+<li>Uncheck the “Ganymede” checkbox (http://download.eclipse.org/releases/ganymede)</li>
+<li>Scroll down to find “http://download.eclipse.org/technology/subversive/0.7/update-site/”, select it and click “OK”.</li>
+<li>You should be back on the “Available Software” tab, with only the<br />
+subversive items present. Unfold the “Subversive SVN Team Provider<br />
+Plugin (Incubation)” item, and you will see the “SVN Team Provider<br />
+(Incubation)” item. Note that the version identifier is<br />
+“0.7.3.I20080814-1500″.</li>
+<li>Check the box, and click”install”. The install will be change to an update. Restart Eclipse at the end of the install.</li>
+<li>Go to “Help-&gt;Software Updates”.</li>
+<li>Choose the “Available Software” tab.</li>
+<li>Click the “Add Site” button, and add “http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/”.</li>
+<li>Check the SVNKit Connectors and click “Install”. Restart Eclipse at the end of the install.</li>
+<li>Subversive should be working !</li>
+</ol>
+<p></p>

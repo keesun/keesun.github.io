@@ -1,0 +1,72 @@
+---
+layout: post
+title: "[구글 Visualization API] Fluent Interface 적용하기"
+date: 2010-03-11 05:18:50.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Fluent Interface
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322743789'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a title="[http://martinfowler.com/bliki/FluentInterface.html]로 이동합니다." target="_blank" href="http://martinfowler.com/bliki/FluentInterface.html">http://martinfowler.com/bliki/FluentInterface.html</a></p>
+<p>이름은 좀 멋지지만 별거 아니라는... </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Statistics statistics = new Statistics(StatisticsChartType.MOTION, "스터디 참석자 통계 그래프");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.STRING, "스터디 이름");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.DATE, "모임 날짜");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.NUMBER, "참석자 수");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.NUMBER, "모임 횟수");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.NUMBER, "참석율");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.STRING, "스터디 상태");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statistics.addColumn(StatisticsColumnType.STRING, "모임명 이름");</p>
+<p>이 코드는 얼마전에 봄싹 사이트에 Statistics 메뉴를 추가하면서 코딩한 것인데 오늘 보다가 갑자기 Fluent Interface가 떠올랐습니다. 그래서 적용해봤지요.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Statistics statistics = new Statistics(StatisticsChartType.MOTION, "스터디 참석자 통계 그래프")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.STRING, "스터디 이름")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.DATE, "모임 날짜")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.NUMBER, "참석자 수")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.NUMBER, "모임 횟수")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.NUMBER, "참석율")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.STRING, "스터디 상태")<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .withColumn(StatisticsColumnType.STRING, "모임명 이름");</p>
+<p>조금 fluent 하게 보이나요??ㅋ 객체를 다 만든 다음에 추가하는게 아니라 객체 만들 때 메서드를 연달아 호출하는 모양이여서 메서드 이름을 add -&gt; with로 변경했습니다. 메서드 리턴 타입도 당연히 바꿨지요. </p>
+<p>장점은 저렇게 조금 API가 이쁘고 사용하기 편해진다는 것이고 단점은 디버깅할 때 조금 불편할 수 있다는데.. 머.. 글쎄요. 그다지...</p>

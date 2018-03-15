@@ -1,0 +1,60 @@
+---
+layout: post
+title: Acegi 사용시 사용자 정보 접근하기
+date: 2007-10-21 23:23:24.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- article
+tags:
+- Acegi
+- 사용자 정보 접근
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322770879'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Acegi를 사용하여 인증을 거치면, 사용자 아이디(principal)가 session에 <span style="background-color: rgb(255, 218, 237);">ACEGI_SECURITY_LAST_USERNAME</span> 라는 속성으로 저장됩니다.</p>
+<p>따라서, 뷰에서는 EL을 사용하여 ${ACEGI_SECURITY_LAST_USERNAME} 이런식으로 접근할 수 있으며, 컨트롤러 계층에서는 </p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">String loginId = (String) request.getSession().getAttribute("ACEGI_SECURITY_LAST_USERNAME");</div>
+<p>이런식으로 접근할 수 있습니다.</p>
+<p>HttpServletRequest 변수에 직접 전근할 수 없는 계층에서도 현재 로그인 되어 있는 사용자 정보에 접근할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237);">String username = SecurityContextHolder.getContext().getAuthentication().getName();</div>
+<p>이런 식으로 SecurityContextHolder를 통해서 현재 로그인 되어 있는 사용자의 정보를 가져올 수 있습니다.</p>
+<p></p>

@@ -1,0 +1,139 @@
+---
+layout: post
+title: Propagation behavior
+date: 2007-04-13 02:48:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 09
+tags:
+- Propagation behavior
+- Spring Reference 9장
+- 트랜잭션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323135850'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring In Action을 보니 다음과 같이 적혀 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">Propagation behavior defines the boundaries of the transaction with respect to<br />the client and to the method being called.</div>
+<p>클라이언트(?)와 메소드가 실행되는 트랜잭션 경계를 정의하는 속성인 듯 합니다. 7 가지 전달 방식이 있습니다.</p>
+<table class="1-1" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+<tr style="">
+<td style="border-style: solid none solid solid; border-color: rgb(123, 160, 205) -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: 1pt medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">Propagation Behavior<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: solid solid solid none; border-color: rgb(123, 160, 205) rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: 1pt 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(79, 129, 189) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span style="color: white;" lang="EN-US">What it means<o:p></o:p></span></b></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_MANDATORY<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>반드시 트랜잭션 안에서 실행되어야 합니다<span lang="EN-US">. <o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●</span>현재 진행중인 트랜잭션이 없다면 예외가 발생합니다<span lang="EN-US">.<o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_NESTED<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>현재 진행중인 트랜잭션이 존재 한다면 그 트랜잭션 내부의 트랜잭션을<br />
+  생성하여 그 안에서 실행합니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●</span>내부 트랜잭션은 자기를 감싸고 있는 외부 트랜잭션에 독립적입니다<span lang="EN-US">(</span>외부 트랜잭션이 커밋 <span lang="EN-US">or </span>롤백 되든 말든 난 나대로 커밋<span lang="EN-US"> or </span>롤백 하겠다<span lang="EN-US">.)<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●</span>만약에 외부 트랜잭션이 없다면 <span lang="EN-US">PROPAGATION_REQUIRED</span>로 지정한 것과 동일하게 수행 됩니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●</span>이 기능을 지원하지 않는 벤더도 있기 때문에 문서를 참조 하시기<br />
+  바랍니다<span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_NEVER<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>반드시 트랜잭션 처리 없이 실행되어야 합니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●현재 진행중인 트랜잭션이 있다면 예외가 발생합니다<span lang="EN-US">.</span></span><span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_NOT_SUPPORTED<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>반드시 트랜잭션 처리 없이 실행되어야 합니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●현재 진행중인 트랜잭션이 있다면 해당 메소드 실행이 끝날 때까지 트랜잭션을<br />
+  일시 정지합니다<span lang="EN-US">.</span></span><span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_REQUIRED<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>반드시 트랜잭션 안에서 실행되어야 합니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●현재 진행중인 트랜잭션이 있다면 그것을 사용하고 없다면 새로운 트랜잭션을<br />
+  시작합니다<span lang="EN-US">.</span></span><span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_REQUIRES_NEW<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt;" valign="top">
+<p class="MsoNormal" style=""><span style="">●</span>반드시 자신만을 위한 트랜잭션 만들고 그 안에서 실행되어야 합니다<span lang="EN-US">.<o:p></o:p></span></p>
+<p class="MsoNormal" style=""><span style="">●현재 진행중인 트랜잭션이 있다면 해당 메소드 실행이 끝날 때까지 트랜잭션을<br />
+  일시 정지 합니다<span lang="EN-US">.</span></span><span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+<tr style="">
+<td style="border-style: none none solid solid; border-color: -moz-use-text-color -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205); border-width: medium medium 1pt 1pt; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><b><span lang="EN-US">PROPAGATION_SUPPORTS<o:p></o:p></span></b></p>
+</td>
+<td style="border-style: none solid solid none; border-color: -moz-use-text-color rgb(123, 160, 205) rgb(123, 160, 205) -moz-use-text-color; border-width: medium 1pt 1pt medium; padding: 0cm 5.4pt; background: rgb(211, 223, 238) none repeat scroll 0% 50%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" valign="top">
+<p class="MsoNormal" style=""><span style="">●반드시 트랜잭션 안에서 처리해야 할 필요는 없습니다<span lang="EN-US">.<o:p></o:p></span></span></p>
+<p class="MsoNormal" style=""><span style="">●진행중인 트랜잭션이 있다면 트랜잭션 안에서 처리하고 없으면 트랜잭션 없이 처리.</span><span lang="EN-US"><o:p></o:p></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>참조 : Spring 워크북, Spring In Action</p>

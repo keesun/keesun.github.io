@@ -1,0 +1,90 @@
+---
+layout: post
+title: 스프링 이메일 확장하기
+date: 2009-07-29 12:49:08.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- JavaMailSender
+- Spring Mail
+- 스프링 Mail 확장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323187268'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Gmail의 SMTP를 이용하여 회원 가입시 메일을 보내서 회원 인증 링크를 보낸다. 그리고 해당 링크를 클릭할 시 회원 가입을 승인한다.</p>
+<p>이러한 요구사항이 있습니다. 여기서 앞부분에 스프링 이메일을 사용하여 기능 구현을 하려고합니다. </p>
+<p>먼저 GmailSender라는 녀석을 만들었습니다. 그러나 그런 클래스는 필요가 없었습니다. host, port, username, password만 설정하면 스프링이 제공하는 JavaMailSender가 GmailSender와 같은 녀석이 되기 때문이죠. 혹여나 그런 설정 이외에도 send()의 결과를 확인하고 싶어서 boolen 값을 반환해주도록 JavaMailSender의&nbsp; send 메서드를 try-catch로 랩핑한 클래스를 만들었습니다. 하지만, 생각해보면 어차피 MailException은 런타임 예외기 때문에 false를 반환한다는 건 불가능한 일입니다. 오직 true 값을 반환하거나/MailExcpetion을 던지는 메서드가 되고 마는데... 이런 녀석이 존재할 필요가 있을까 싶어서 없애기로 결정했습니다.</p>
+<p>없앨 코드 1.</p>
+<p>&nbsp;&nbsp;&nbsp; public boolean send(SpringSproutSimpleMailMessage mailMessage) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mailSender.send(mailMessage);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } catch (MailException e) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; throw e;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return true;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>또 하나 떠오르는 녀석은 SignupMailSender입니다. 이 Sender는 특정 Member를 인자로 받으면 해당 Member의 email로 Signup 관련 URL을 만들어서 보내주는 녀석입니다. 하지만 이 녀석도 잘 생각해보면, Sender의 책임이 두 가지가 되고 말았습니다. SRP를 위반하게 된거죠. 메시지를 만드는 일과 메일을 보내는 일이 합쳐졌습니다. 따라서 아래 코드의 대부분은&nbsp; MailMessage 쪽으로 넘기는게 좋겠습니다.</p>
+<p>리팩토링할 코드 2</p>
+<p>&nbsp;&nbsp;&nbsp; public boolean sendConfirmMail(Member receveMember) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; List&lt;Member&gt; receives = new ArrayList&lt;Member&gt;();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; receives.add(receveMember);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String authUrl;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; try {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; authUrl =<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "http://localhost:8080/springsprout2/signupconfirm.do?email="+<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; URLEncoder.encode(receveMember.getEmail(), "UTF-8") +<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "&amp;authCode="+<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; URLEncoder.encode(receveMember.getAuthCode(), "UTF-8");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; } catch (UnsupportedEncodingException e) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; throw new RuntimeException("can not encoding url", e);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SpringSproutSimpleMailMessage message = new SpringSproutSimpleMailMessage(<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "[봄싹 SpringSprout] 사용자 인증 메일",<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "사용자 계정을 활성화 하려면 다음 링크를 클릭하세요. &lt;a href=\""+authUrl+"\"&gt;"+authUrl+"&lt;/a&gt;",<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; receives);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return mailSendService.send(message);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>마지막으로 한 개의 클래스가 더 떠오르는데, 바로 위에 보이는 MailMessage를 확장한 S3M2(SpringSproutSimpleMailMessage) 클래스입니다. 하지만 이 클래스의 이름에서 클래스가 무슨 일을 하는지 의도를 파악하기가 힘듭니다. 이 클래스는 생성자로 subjer, text, member list를 받아서 from, subject, text, to 등의 속성을 세팅해주는 클래스 입니다. 아쉬운 건 아직 이 녀석 생성자에 단일 member 객체를 받는 생성자가 없다는 것이죠. 그래서 위의 코드를 보면 Member List를 만들어서 보내는 모습을 볼 수 있었죠.ㅎㅎ 이 MailMessage는 봄싹에서 사용할 기본 메일 메시지를 설정하기 때문에, Abstract 클래스로 만들고, 좀 더 구체적인 메시지로 가입승인메시지(SignupConfirmMailMessage) 같은 녀석이 그것을 확장하는 것이 좋아보입니다. 그러면 클래스의 이름에서 의도도 알 수 있고, S3M2에 있던 과중한 업무도 분담이 될테니 말이죠.</p>
+<p>결국 아래와 같은 구조가 될 듯 합니다. 오늘 밤... 코드를 조금 뜯어 고쳐야겠습니다. 새기능 만들것도 많은데 이번 주는 뜯어 고치는데 시간을 다 쓰네요~ 유후~</p>
+<p><img src="{{ site.baseurl }}/assets/cfile2.uf.17562E174A704509B2033F.jpg" class="aligncenter" width="600" height="361" alt="" filename="SpringSprout.jpg" filemime="image/jpeg" /><br />
+ps: 참..오늘의 영어과제부터 하고나서 </p>

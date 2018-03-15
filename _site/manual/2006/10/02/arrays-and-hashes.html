@@ -1,0 +1,128 @@
+<p><a name="S3"><font color="#ff7635" size="6">Arrays and Hashes</font></a></p>
+<p>
+Ruby의 array와 hash는 인덱스가 있는 collection입니다. 둘 다 객체를 담아 두고 key를 사용하여 접근하는 콜렉션입니다. array에서 key는 정수이지만 hash는 어떤 객체도 key가 될 수 있습니다. 둘 모두 새로운 요소를 추가할 때 커기제 됩니다. array에 접근을 하는게 보다 효율 적이지만 hash는 보다 유연함을 제공합니다. 어떤 array이나 hash들도 여러 타입의 객체를 담아 둘 수 있습니다. 이 말은 하나의 array에 정수, 문자열, 실수를 담을 수 있다는 것입니다.</p>
+<p>
+[ ] 이 괄호 사이에 요소들을 나열 하는 array literal을 사용하여 새로운 배열을 생성하고 초기화 할 수 있습니다. array 객체를 가지고 객체에 있는 각각의 요소들에 [] 안에 index를 사용하여 접근할 수 있습니다. 다음의 예에서 봅시다.</p>
+<blockquote><table class="codebox" border="0" cellpadding="3" cellspacing="0" width="500">
+<tbody>
+<tr>
+<td colspan="3" valign="top"><code>a = [ 1, 'cat', 3.14 ]&nbsp; &nbsp;# array with three elements</code> </td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><code># access the first element</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>a[0]</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>1</code> </td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><code># set the third element</code> </td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><code>a[2] = nil</code> </td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><code># dump out the array</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>a</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>[1, "cat", nil]</code> </td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>array 객체의 생성자를 사용하여 생성하거나 요소들이 없는 비어있는 괄호 [] 를 사용하여 배열을 생성할 수도 있습니다. <a href="http://www.ruby-doc.org/docs/ProgrammingRuby/html/ref_c_array.html#Array.new"><code>Array.new</code> </a>.<br />
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="400">
+<tbody>
+<tr>
+<td>
+<blockquote dir="ltr" style="margin-right: 0px">
+<pre>empty1 = []<br />
+empty2 = Array.new<br />
+</pre>
+</blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p>단어들의 배열을 생성할 때 "" 와 , 를 사용하기가 매우 번거로울 수 있는데 이 때 사용하기 편한 것이 있습니다. 바로 %w 입니다. 다음과 같이 사용할 수 있습니다.</p>
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="500">
+<tbody>
+<tr>
+<td colspan="3" valign="top"><code>a = %w{ ant bee cat dog elk }</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>a[0]</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>"ant"</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>a[3]</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>"dog"</code> </td>
+</tr>
+</tbody>
+</table>
+<p>Ruby의 hash는 배열과 비슷합니다. hash는 [] 말고 {} 이 괄호를 사용합니다. 반드시 하나의 요소에는 두 개의 객체가 제공되어야 합니다. 하나는 key 하나는 value입니다.</p>
+<p>
+예를들어, 악기들을 오케스크라 위치에 따라 매핑하고 싶다면 다음과 같이 할 수 있습니다.</p>
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="400">
+<tbody>
+<tr>
+<td>
+<blockquote dir="ltr" style="margin-right: 0px">
+<pre>instSection = { &nbsp;'cello' &nbsp; &nbsp; =&gt; 'string', &nbsp;<br />
+	'clarinet' &nbsp;=&gt; 'woodwind', &nbsp;<br />
+	'drum' &nbsp; &nbsp; &nbsp;=&gt; 'percussion', &nbsp;<br />
+	'oboe' &nbsp; &nbsp; &nbsp;=&gt; 'woodwind', &nbsp;<br />
+	'trumpet' &nbsp; =&gt; 'brass', &nbsp;<br />
+	'violin' &nbsp; &nbsp;=&gt; 'string'}</pre>
+</blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Hash는 array와 같이 [] 괄호를 사용하여 index화 됩니다.</p>
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="500">
+<tbody>
+<tr>
+<td valign="top"><code>instSection['oboe']</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>"woodwind"</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>instSection['cello']</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>"string"</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>instSection['bassoon']</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>nil</code> </td>
+</tr>
+</tbody>
+</table>
+<p>마지막 예가 보여주듯이 hash에 해당하는 key가 없는 경우에 기본적으로 nil을 반환합니다. 하지만 가끔은 여러분이 원하는 기본값을 반환하도록 하고 싶을 것입니다. 예를 들어 해당하는 key가 몇 번 출현하는지 카운팅하는 hash의 경우 기본값을 0으로 하고 싶을 것입니다. 이것은 hash를 생성할 때 생성자에 기본값을 인자로 넘겨 주는 방식으로 할 수 있습니다.</p>
+<table class="codebox" border="0" cellpadding="3" cellspacing="0" width="500">
+<tbody>
+<tr>
+<td colspan="3" valign="top"><code>histogram = Hash.new(0)</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>histogram['key1']</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>0</code> </td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><code>histogram['key1'] = histogram['key1'] + 1</code> </td>
+</tr>
+<tr>
+<td valign="top"><code>histogram['key1']</code> </td>
+<td valign="top">»</td>
+<td valign="top"><code>1</code> </td>
+</tr>
+</tbody>
+</table>
+<p>배열과 해쉬 객체는 매우 유용한 메소드들을 많이 가지고 있습니다. 33page와 278page~317page에 걸쳐 이 메소드들에 대해 자세하게 나와있습니다.</p>

@@ -1,0 +1,30 @@
+<p><font style="font-family: verdana,arial,helvetica,sans-serif" size="5"><span style="color: rgb(255, 118, 53);">긴 메소드(Long Method)</span></font></p>
+<p>최적의 상태로 가장 오래 살아 남는 객체 프로그램은 메소드가 짧다. 인디렉션(indirection)의 이점은 모두 짧은 메소드에 의해 제공되는 것이다.</p>
+<p>인디렉션이란?</p>
+<p>[#M_위키피디아의 정의 펼쳐 보기|닫기|<br />
+<h1 class="firstHeading">Indirection</h1>
+<h3 id="siteSub">From Wikipedia, the free encyclopedia</h3>
+<div id="jump-to-nav">Jump to: <a href="http://en.wikipedia.org/wiki/Indirection#column-one">navigation</a>, <a href="http://en.wikipedia.org/wiki/Indirection#searchInput">search</a></div>
+<p>			<!-- start content -->
+<p>In <a href="http://en.wikipedia.org/wiki/Computer_programming" title="Computer programming">computer programming</a>, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"><strong>indirection</strong> is the ability to reference something using a name, reference, or container instead of the value itself.</span></p>
+<p>The simplest form of indirection is the act of manipulating a value through its <a href="http://en.wikipedia.org/wiki/Memory_address" title="Memory address">memory address</a>. For example, accessing a <a href="http://en.wikipedia.org/wiki/Variable" title="Variable">variable</a> through the use of a <a href="http://en.wikipedia.org/wiki/Pointer" title="Pointer">pointer</a>. <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">A stored pointer that exists to provide a reference to an object by double indirection is called an <em>indirection node</em>.</span></p>
+<p>In some older computer architectures, indirect words supported a variety of more-or-less complicated <a href="http://en.wikipedia.org/wiki/Addressing_mode" title="Addressing mode">addressing modes</a>.</p>
+<p><a href="http://en.wikipedia.org/wiki/Object-oriented_programming" title="Object-oriented programming">Object-oriented programming</a> makes use of indirection extensively, <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">a simple example being <a href="http://en.wikipedia.org/wiki/Dynamic_dispatch" title="Dynamic dispatch">dynamic dispatch</a>. </span>Higher-level examples of indirection are the <a href="http://en.wikipedia.org/wiki/Design_pattern_%28computer_science%29" title="Design pattern (computer science)">design patterns</a> of the<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)"> <a href="http://en.wikipedia.org/wiki/Proxy_pattern" title="Proxy pattern">proxy</a> and the <a href="http://en.wikipedia.org/wiki/Proxy_server" title="Proxy server">proxy server</a>.</span> <a href="http://en.wikipedia.org/wiki/Delegation_%28programming%29" title="Delegation (programming)">Delegation</a> is another classic example of an indirection pattern.</p>
+<p>In <a href="http://en.wikipedia.org/wiki/Strongly-typed_programming_language" title="Strongly-typed programming language">strongly-typed</a> <a href="http://en.wikipedia.org/wiki/Interpreted_language" title="Interpreted language">interpreted languages</a> with dynamic <a href="http://en.wikipedia.org/wiki/Datatype" title="Datatype">datatypes</a>,most variable references require a level of indirection: first the typeof the variable is checked for safety, and then the pointer to theactual value is dereferenced and acted on.</p>
+<p>_M#]<br />
+<a href="http://en.wikipedia.org/wiki/Indirection">원문</a>에는 더 많은 내용이 나와있지만 간략히 요약하면 인디렉션이란 실제 값 자체가 아닌 그것을 참조하는 다른 이름을 사용하는 기능을 말한다는 것 같다. 이렇게 함으로써 프록시와 dynamic dispatch도 가능한 듯하다.</p>
+<p>책의 82쪽에는 이런말이 있다.</p>
+<div style="text-align: right">
+<blockquote>컴퓨터 과학은 인디렉션 계층을 한 단계 더 만들면 모든 문제를 풀 수 있다고 믿는 학문이다. <br />
+-Dennis DeBruler
+</p></blockquote>
+</div>
+<p>
+프로그래밍 초창기에는 서브루틴을 호출 할 때 오버헤드가 있어서 짧은 메소드 사용을 꺼려 했다고 한다. 그러나 요즘엔 프로세스 내부 호출(in-process call)로 인런 오버헤드가 상당부분 제거됐다고 한다. 하지만 서브루틴이 무엇인지 보려면 일단 그 부분으로 가보야 하기 때문에 사람들에게는 여전히 오버헤드가 존재한다. 그 오버헤드를 줄이기 위해서는 메소드의 이름을 잘 지어야 한다.</p>
+<p><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">대</span><span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">부분의 경우 메소드의 길이를 줄이기 위해서는 <a href="http://whiteship.tistory.com/36">Extract Method</a>를 사용한다.</span> 메소드에 파라미터와 임시변수가 많으면 메소드를 추출하기가 어렵다.</p>
+<ul>
+<li>임시변수를 줄이기 위해서는 Replace Temp with Query를 사용할 수 있고</li>
+<li>긴 파라미터 리스트는 Introduce Parameter Object와 Preserve Whole Object로 짧게 할 수 있다.</li>
+<li>그럼에도 여전히 임시변수와 파라미터가 많다면 Replace Method with Method Object를 사용한다.</li>
+</ul>
+<p>뽑아낼 코드 덩어리 식별 방법으로는 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)">주석을 찾는 것이 좋다</span>. 그리고<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(250, 255, 169)"> 조건문과 루프 또한 추출이 필요하다는 신호</span>를 준다. 조건식을 다루지 위해서는 Decompose Conditional을 사용한다. 루프의 경우는 <a href="http://whiteship.tistory.com/36">Extract Method</a>에서 예제로 다루고 있다. </p>

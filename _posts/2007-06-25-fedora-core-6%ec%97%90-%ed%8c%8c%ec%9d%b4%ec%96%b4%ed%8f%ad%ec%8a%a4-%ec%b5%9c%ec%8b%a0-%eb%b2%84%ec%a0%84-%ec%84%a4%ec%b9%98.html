@@ -1,0 +1,61 @@
+---
+layout: post
+title: Fedora Core 6에 파이어폭스 최신 버전 설치
+date: 2007-06-25 03:42:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Linux
+tags:
+- 리눅스에서 파이어폭스 설치
+- 페도라
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322774789'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>페도라 리눅스에 yum이 알아서 최신 버전으로 업데이트 해줄 줄 알았습니다.<br />아니면 파이어폭스 브라우저 자체 업데이트로 알아서 버전업을 해줄 줄 알았습니다.</p>
+<p>둘 다 아니였습니다;;<br /><a href="http://www.mozilla.or.kr/products/firefox/" target="_blank"><br />http://www.mozilla.or.kr/products/firefox/</a><br />위 링크에 들어가시면 국제화도 지원하고 OS까지 알아 맞추는 대단한 사이트기 때문에... 다운 받아야 할 파일이 첫 화면에 바로 뜹니다. 리눅스의 경우 tar.gz 파일이 잡혔습니다.</p>
+<p>다운을 받고 압축을 풉니다. 저는 /usr/local 에 tar.gz 파일을 갖다 놓고<br /><span style="font-weight: bold;">tar zxvf f탭</span>[footnote]탭을 사용하면 자동완성 기능을 사용할 수 있습니다.[/footnote]</p>
+<p><span style="font-weight: bold;">ls -al</span> 로 /usr/local에 있는 파일과 디렉토리를 확인합니다.<br />그러면 압축이 풀리고 /usr/local/firefox 디렉토리가 생기고 그 안에 파일들이 생겼습니다.</p>
+<p><span style="font-weight: bold;">rm -rf f탭</span> <br />으로 tar.gz파일을 지우거나 다른 곳으로 옮겨둡니다.</p>
+<p><span style="font-weight: bold;">cd ./f탭</span><br />으로 /usr/local/firefox 폴더로 이동합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">./firefox</span><br />로 <span style="color: rgb(0, 153, 102);">파이어 폭스를 실행하면... 실행이 되지 않고 에러 메시지가 나옵니다.</span></p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">~~~~ libstdc++.so.5 가 어쩌구 저쩌구..<br />아마도 저게 없다고 뭐라고 하는 것 같습니다.<br /><span style="font-weight: bold;">yum install libstdc++.so.5</span><br />으로 설치해줍니다.</div>
+<p>그런 다음 다시<span style="font-weight: bold;"> ./firefox</span>로 파폭을 실행시킬 수 있습니다.</p>
+<p>파이어폭스를 설치한 다음 제일 먼저 할 일은 플러그인 설치하는 일.. All-in-one 제스처가 1순위 그 다음은 마음대로죠.<br /><a href="http://update.mozilla.or.kr/" target="_blank">http://update.mozilla.or.kr/</a></p>

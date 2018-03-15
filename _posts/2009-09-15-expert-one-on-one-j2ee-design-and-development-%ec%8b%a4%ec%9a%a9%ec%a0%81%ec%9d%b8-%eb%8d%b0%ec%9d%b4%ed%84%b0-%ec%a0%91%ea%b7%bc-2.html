@@ -1,0 +1,150 @@
+---
+layout: post
+title: "[Expert One-on-One J2EE Design and Development] 실용적인 데이터 접근 2"
+date: 2009-09-15 12:05:51.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- J2EE D&amp;D
+tags:
+- 스프링 DAO
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322988445'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참고: Expert One-on-One J2EE Design and Development 9장<span style="font-weight: bold;"><span style="font-size: 11pt;"><span style="font-size: 14pt;"></span></span></span></p>
+<p><span style="font-weight: bold;"><span style="font-size: 14pt;">일반적인 JDBC 추상 프레임워크</span></span></p>
+<p>JDBC API와 그 이슈를 이해하는 것으로 충분하지 않다. </p>
+<p>JDBC API를 사용할 때는 항상 도무이 클래스를 사용하여 애플리케이션 코드를 간편화하라. 하지만, O/R 맵핑 계층을 손수 작성하지는 말자. O/R 맵핑이 필요하다면 기존의 솔루션을 사용하라.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">동기</span></span></p>
+<p>저수준 JDBC 코딩을 하는 것은 고통스럽다. 문제는 SQL이 아니라, 코드량이다. JDBC API는 일부 엘레강트하지 않으며 애플리케이션 코드에서 사용하기에는 너무 저수준이다.</p>
+<p>SQL 자체는 간단하지만 이 쿼리를 조회하는데 30줄의 JDBC 코드가 필요하다. 거기에 중첩 try-catch까지 보니까 프레임워크 클래스로 리팩토링하고 싶은 강한 욕구를 느낀다.</p>
+<p>*고수준 추상화 API*</p>
+<p>간단한 추상화 프레임워크를 만들어서 JDBC API 사용을 훨씬 간편하게 할 수 있다.</p>
+<p>AvailabilityQuery&nbsp; availabilityQuery&nbsp; =&nbsp; new AvailabilityQuery (ds);&nbsp; <br />
+List 1= availabilityQuery.execute(1, 1) ; </p>
+<p>이렇게 할 수 있다. 이 쿼리 객체를 재사용할 수 있으며, execute() 메서드는 런타임 예외를 던진다. 즉 복구가 가능할 경우 필요에 따라 예외를 잡아서 처리할 수도 있다. JDO의 Query 인터페이스와 비슷하다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">목표</span></span></p>
+<p>파레토 원칙을 기억하는가(80:20) 최선의 결과는 JDBC 추상화 계층으로부터 얻을 수 있다. 추상화 계층은 다음 요소들에 초점을 맞춘다.</p>
+<p>- 너무 많은 코드<br />
+- 에러 발생시 깔끔한 클린업 - 대부분이 깨진 try-catch를 사용하는데 이를 방지한다.<br />
+- SQLException 다루리 - 검증형 예외일 필요가 없다.<br />
+- 사용자 코드를 작성하기 쉽게한다.</p>
+<p>놀랍게도 이 문제를 다루는 프레임워크와 라이브러리가 많지 않다. 따라서 내가(로드 존슨) 예제 애플리케이션에서 사용할 용도로 프레임워클 개발했다.</p>
+<p>이게 유일한 방법은 아니지만, 간단하고 매우 효율적이다.<br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;"><span style="font-size: 11pt;">예외 처리</span></span></p>
+<p>JDBC API는 예외를 어떻게 사용하지 말하야하는지에 대한 교훈이다.</p>
+<p>JDBC는 단일 예외 클래스를 사용한다. "뭔가 잘못됐다" 라는 것 빼고는 알 수가 없다. 이미 살펴봤다시피, 벤더 관련 코드와 SQL 예외를 구분할 수 있다.</p>
+<p>다음은 모든 RDBMS에서 의미가 있는 에러들이다.<br />
+- 문법 에러<br />
+- 데이터 무결성 제약 위반<br />
+- SQL의 값을 부적절한 타입의 변수에 바인딩 시도</p>
+<p>이런 문제는 java.lang.SQLException의 하위 클래스로 만들어져야 한다. 우리가 만들 추상화 프레임워크에서 풍부한 에러 계층 구조를 제공할 것이다.</p>
+<p>JDBC 에러 처리를 할 때 다음의 이슈들도 다룬다.</p>
+<p>- 우리가 만들 추상화 계층 코드가 JDBC에 묶이지 않기를 원한다. DAO 패턴 구현체에서 사용할 수 있도록 의도하고 있다. 만약 DAO를 사용하는 코드가 SQLException 같은 특정 리소스에 국한된 것을 처리해야 한다면 비즈니스 로직과 (DAO 패턴을 구현한)데이터 접근 구현체 간의 디커플링(decoupling)을 할 수가 없다. (메서드 시그너처에 들어가기 떄문에..) 따라서 JDBC API는 JDBC 관련 예외를 사용하더라도 우리가 만들 예외 계층 구조는 JDBC에 묶이지 않게 만들겠다.</p>
+<p>- 4자에서의 검증형 예외와 비검증형 예외 논의에 따라 모든 예외를 런타임 예외로 만들겠다. JDO가 이런 접근 방법을 통해 좋은 결고를 냈다. JDBC 예외는 대부분 복구가 불가능하기 때문에 이런 방법이 적절하다.</p>
+<p>- EJB를 쓴다면 블라 블라. 생략.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">일반적인 데이터 접근 예외 계층구조</span></span></p>
+<p>일반적인 데이터 접근 예외 계층구조를 만들어서 위와 같은 요구사항을 만족시킬 수 있다. JDBC 사용에만 국한 되지 않고 데이터베이스를 사용하는 DAO에서 모두 사용할 수 있다.</p>
+<p>계층 구조의 최상위는 DataAccessException 클래스다. NestedRunitmeException을 상속받았다. 이 상위 클래스는 감쌓아야 할 예외를 스택 트레이스에 유지할 수 있게 해준다. 자세한건 4장에..</p>
+<p>DataAccessException은 구체적인 데이터 접근 문제를 나타내는 하위 클래스를 가지고 있다.<br />
+- DataAccessResourceFailureException<br />
+자원을 가져오지 못한 경우에 발생. JDBC용 구현에서는 데이터베이스에서 connectino을 가져오지 못했을 때 발생한다.<br />
+- CleanupFailureDataAccessException<br />
+작업 수행을 잘 마치고 깨끗히 정리를 못했을 때 발생. JDBC용 구현에서는 Connection을 닫지 못했을 때 발생.<br />
+- Datalntegr ityViolationExcept ion <br />
+- InvalidDataAccessApiUsageException <br />
+- InvalidDataAccessResourceUsageException <br />
+부적절한 SQL을 날릴 때 발생<br />
+- OptimisticLockingViolationException<br />
+- DeadlockLoserDataAccessException <br />
+- UncategorizedDataAccessException <br />
+차마 분류하지 못한 것들...</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">JDBC 예외를 일반적인 예외로 변환하기</span></span></p>
+<p>지금까지는 SQL 예외를 일반적인 예외로 변환하는 방법을 생각하지 않았다. 그렇게 하려면 SQLState 코드와 벤더 코드를 분석해야 한다. 하지만 SQLState로는 모든 문제를 분석하기에 적절치 않다. RDBMS 구현체 특화된 옵션들을 분석해야 한다.</p>
+<p>변환 기능을 제공하는 인터페이스를 만든다. (보통 인터페이스를 사용하는 설계가 이식성을 얻을 수 있는 최선책이다.) 이 책에서는 SQLExceptionTranslater 인터페이스를 구현할 것이다.</p>
+<p>public interface SQLExceptionTranslater { <br />
+&nbsp;&nbsp;&nbsp; DataAccessException translate(String task, String sql, SQLException&nbsp; sqlex); <br />
+}</p>
+<p>*SQLState 코드를 사용하는 SQLExceptionTranslater 기본 구현체 코드*</p>
+<p>정적인 데이터 구조(HasSet)를 만들어서 if/else 문을 줄였다.(묶을 수 있는 에러덩어리들을 하나의 맵에 넣어두고 map.contains()를 사용하여 if문 사용을 줄였군요.. 오호...)</p>
+<p>*오라클에 특화된 구현체 OracleSQLExceptionTranslater*</p>
+<p>벤더 코드가 SQLState 코드 보다 훨씬 많다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">2 단계 추상화 계층</span></span></p>
+<p>강력하면서도 데이터베이스에 종속적이지 않은 예외 처리 계층 구조를 가지게 되었다. JDBC 사용을 간편하게하는 추상화 프레임워크를 구현해보자.</p>
+<p>JDBC 프레임워크를 2 단계 추상화 계층으로 나눌 수 있다.</p>
+<p>낮은 수준의 추상화는 com.interface21.jdbc.core 패키지에 있다. JDBC 워크프롤우와 예외 처리를 담당한다. 콜백 접근 방법을 취하였으며 애플리케이션 코드가 콜백 인터페이스를 구현토록 한다.</p>
+<p>높은 수준의 추상화는 com.interface21.jdbc.core.object 패키지에 있다. JDO와 비슷하게 보다 객체 지향적인 방법을 제공한다. RDBMS 작업을 자바 객체로 표현할 수 있다.</p>
+<p>JDBC 워크프롤우와 에러 처리를 담당하는 프레임워크</p>
+<p>낮은 수준의 추상화는 JDBC 쿼리를 보내고 SQLException을 SQLExceptionTranslater를 사용하여 일반적인 예외 계층 구조로 변환한다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">다시 보는 "Inversion of Control"</span></span></p>
+<p>일반적인 클래스 라이브러리 있는것처럼 애플리케이션 코드가 인프라 코드를 호출하는 것이 아니라.. 인프라 코드가 애플리케이션 코드를 사용하도록(이 부분이 "IoC"라 불리는 접근방법) 복잡한 예외 처리 코드를 그(인프라 코드) 안으로 넣어서 해결하는 방법을 보았다. 이런 접근 방법을 사용한 패키지를 "프레임워크"라 하고 그렇지 않은 것을 라이브러리라 한다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">com.interface21.jdbc.core 패키지</span></span></p>
+<p>이 패키지에서 가장 중요한 클래스는 JdbcTemplate이다(오오.. 드디어.. 등장이다.) 핵심 워크 프롤우와 애플리케이션 코드 호출을 담당한다. jdbcTemplate에 있는 코드는 PreparedStatements 생성을 위임하여 쿼리를 실행하고 그 결과를 JDBC ResultSet에서 뽑아내는 콜백을 사용한다. 그 두 인터페이스가 바로 PreparedStatementCreator와 RowCallbackHandler 인터페이스다. 애플리케이션 개발자는 이 두 인터페이스 구현체만 만들면 된다. JDBC statement를 직접 실행하거나 예외를 처리할 필요가 없다.</p>
+<p><span style="font-weight: bold;">preparedStatementCreator 인터페이스와 관련 클래스</span></p>
+<p>preparedStatementCreator 인터페이스는 java.sql.PreparedStatement를 만들 애플리케이션 클래스가 반드시 구현해야 한다. 즉 SQL과 매개변수만 바인딩 시키면 jdbcTemplate이 실행해줄 것이다. 이것을 구현할 때 Connection을 가져오는 것이나 SQLException 처리는 신경쓰지 않아도 된다. </p>
+<p>public interface PreparedStatementCreator { <br />
+PreparedStatement createPreparedStatement(Connection conn) <br />
+throws&nbsp;&nbsp; SQLException; } </p>
+<p>PreparedStatementCreatorFactory는 동일한 SQL에 매번 다른 매개변수로 PreparedStatementCreator 객체를 만들 때 도와주는 클래스다. 이 클래스는 높은 수준 추상화 프레임워크에서 빈번하게 사용한다.</p>
+<p><span style="font-weight: bold;">RowCallbackHandler 인터페이스와 관련 클래스</span><br style="font-weight: bold;" /><br />
+RowCallbackHandler는 쿼리가 반환하는 ResultSet의 행에서 컬럼 값을 축출하는 클래스가 구현해야하는 인터페이스다. JdbcTemplate이 모든 ResultSet을 순회할 때 사용한다. 이 인터페이스는 SQLException을 그대로 나뒀다. JdbcTemplate이 처리한다.</p>
+<p>public&nbsp; interface RowCallbackHandler&nbsp; { <br />
+void processRow(ResultSet&nbsp; rs)&nbsp;&nbsp; throws&nbsp; SQLException; } </p>
+<p>구현체는 컬럼의 수와 데이터 타입을 알고 있어야 한다.</p>
+<p>RowCountCallbackHandler 클래스는 이 인터페이스의 구현체로 컬럼 이름과 타입 그리고 ResultSet의 행 갯수에 대한 정보를 가지고 있다. 비록 구체적인 클래스이지만, 애플리케이션 클래스가 이것을 상속받아서 사용한다.</p>
+<p>ResultReader 인터페이스는 RowCallbackHandler를 확장하여 가져온 결과를 java.util.List에 저장하는 인터페이스다.</p>
+<p><span style="font-weight: bold;">그밖의 클래스</span></p>
+<p>JdbcTemplate 클래스는 SQLExceptionTranslator 객체 하나를 사용하여 SQLException을 일반화된 예외 계층구조로 변환한다. 중요한 건 JdbcTemplate의 동작을 매개변수화 했다는 것이다.</p>
+<p>DataSourceUtils 클래는 javax.sql.DataSrouce 에서 Connection을 가져오는 static 메서드, SQLException을 일반화된 계층 구조로 변환하는 메서드, Connection을 닫는 메서드, JNDI에서 DataSource를 가져오는 메서드를 담고 있다.</p>
+<p>JdbcTemplate은 DataSourceUtils 클래스를 사용한다.</p>
+<p><span style="font-weight: bold;">JdbcTemplate 클래스의 핵심 워크 플로우</span></p>
+<p>이 API가 전반적으로 java.sql.Connection 객체가 아니라 DataSource를 사용하는 이유는 다음과 같다.<br />
+- 그렇게 하지 않으면 connection을 어디에선가 얻어와야 하는데 그럼 애플리케이션 코드가 복잡해지고 DatsSrource.getConnection() 메서드를 사용한다면, 애플리케이션 코드에서 SQLException을 처리해야 할 것이다.</p>
+<p>- JdbcTemplate이 사용한 connection을 닫는 것이 중요한데 connection을 닫을 때 예외가 발생할 수 있기 때문에 모든 JDBC 예외를 처리를 우리 프레임워크에 맡기고 싶다. 그러나 connection을 사요하면 connection을 외부에서 가져오고 그것을 JdbcTemplate에서 닫는 건 이상하고 이미 닫혀버린 connectino을 사용할 수 있는 여지를 만들게 된다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">JdbcTemplate 클래스 사용하기</span></span></p>
+<p><span style="font-weight: bold;">조회하기</span></p>
+<p>*JdbcTemplate 사용하여 조회(query)하는 예제 코드*</p>
+<p>익명 내부 클래스르 사용하여 RowCallbackHandler와 PreparedStatementCreator 인터페이스를 구현했다.</p>
+<p>가장 중요한 것은 JdbcTemplate을 사용함으로써 주요 에러 발생을 제거했다는 것이다. Connection이 닫히지 않을 위험이 없어졌다.</p>
+<p><span style="font-weight: bold;">갱신하기</span></p>
+<p>*JdbcTemplate 사용하여 갱신(update)하는 예제 코드*</p>
+<p>PreparedStatementCreator 구현체를 만들고 그 객체를 jdbcTemplate.update()에 넘겨주면 끝. 단 한줄이다.</p>
+<p></p>

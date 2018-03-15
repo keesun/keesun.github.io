@@ -1,0 +1,24 @@
+<h1>Sorted 타입 맵핑하기</h1>
+<ul>
+<li>@Sort 애노테이션을 사용해서, Sorter Set과 Sorted Map 타입으로 맵핑할 수 있다.</li>
+</ul>
+<ul>
+<li>type 속성에서 Comparator를 사용할 수도 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@CollectionOfElements<br />	@JoinTable(name = <span class="code-quote">"ITEM_IMAGE"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br />	@Column(name = <span class="code-quote">"FILENAME"</span>)<br />	@Sort(type = SortType.NATURAL)<br />	<span class="code-keyword">private</span> SortedSet&lt;<span class="code-object">String</span>&gt; images = <span class="code-keyword">new</span> TreeSet&lt;<span class="code-object">String</span>&gt;();</pre>
+</div>
+</div>
+<h1>Ordered 타입 맵핑하기</h1>
+<ul>
+<li>Map, Set 그리고 Bag을 DB에서 읽어올 때 정렬해서 가져올 수 있다.</li>
+</ul>
+<ul>
+<li>하이버 @OrderBy 애노테이션의 clause 속성의 값은 DB에 직접 전달되는 SQL이다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@CollectionOfElements<br />	@JoinTable(name = <span class="code-quote">"ITEM_IMAGE"</span>, joinColumns = @JoinColumn(name = <span class="code-quote">"ITEM_ID"</span>))<br />	@Column(name = <span class="code-quote">"FILENAME"</span>)<br />	@OrderBy(clause = <span class="code-quote">"FILENAME asc"</span>)<br />	<span class="code-keyword">private</span> Set&lt;<span class="code-object">String</span>&gt; images2 = <span class="code-keyword">new</span> HashSet&lt;<span class="code-object">String</span>&gt;();</pre>
+</div>
+</div>

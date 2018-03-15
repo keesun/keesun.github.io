@@ -1,0 +1,90 @@
+<h1>Hypertext를 좀 더 멋지게 보이게 하는 방법</h1>
+<h2>Times They are a-Changing</h2>
+<ul>
+<li>Times(Times new roman) 글자체는 여러 브라우저의 기본 글자체다. however, this<br />
+could easily be changed by users to whatever they fancy, and of course<br />
+shouldn't be relied upon.</li>
+</ul>
+<h2>줄 높이 설정하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">body {<br /><br />  line-height: 1.5em;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>줄 높이를 설정하여 가독성을 높일 수 있다.</li>
+</ul>
+<h2>글자체 설정하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">body {<br /><br />  font-family: <span class="code-quote">"Lucida Grande"</span>, <span class="code-quote">"Trebuchet MS"</span>, sans-serif;<br /><br />  line-height: 1.5em;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>사용자의 컴퓨터에 설치되어 있는 폰트를 고려하여 여러 개의 폰트를 설정한다.</li>
+</ul>
+<ul>
+<li>맨 앞에 것이 없으면 그 다음 것을 적용한다.</li>
+</ul>
+<ul>
+<li>글자체가 여러 단어로 구성되어 있다면, 따옴표로 묶는다.</li>
+</ul>
+<h2>Kerning (a.k.a. Letter-Spacing)</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">h1 {<br /><br />  letter-spacing: -2px;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>글자들의 간격을 조정할 수 있다.</li>
+</ul>
+<h2>Drop Caps</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;p&gt;&lt;span class=<span class="code-quote">"drop"</span>&gt;I&lt;/span&gt;f you're painting with latex paints, and</pre>
+</div>
+</div>
+<ul>
+<li>문단을 멋지게 표현하기 위한 스타일 훅이 필요하다.</li>
+</ul>
+<ul>
+<li>CSS2를 적용하는 브라우저들은 이런 훅이 필요없이 :first-letter 사용하면 된다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">.drop {<br /><br />  <span class="code-object">float</span>: left;<br /><br />  font-size: 400%;<br /><br />  line-height: 1em;<br /><br />  margin: 4px 10px 10px 0;<br /><br />  padding: 4px 10px;<br /><br />  border: 2px solid #ccc;<br /><br />  background: #eee;<br /><br />  }</pre>
+</div>
+</div>
+<h2>Text alignment</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">body {<br /><br />  font-family: Georgia, Times, serif;<br /><br />  line-height: 1.5em;<br /><br />  text-align: justify;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>text-align: justify를 사용하면 양쪽으로 정렬된다.</li>
+</ul>
+<h2>Transforming Text</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">h1 {<br /><br />  letter-spacing: 4px;<br /><br />  font-style: italic;<br /><br />  text-align: center;<br /><br />  text-transform: uppercase;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>text-transform: uppercase;를 사용해서 글자를 모두 대문자로 바꿀 수 있다.</li>
+</ul>
+<h2>Small Caps</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">h1 {<br /><br />  letter-spacing: 4px;<br /><br />  text-align: center;<br /><br />  font-variant: small-caps;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>font-variant: small-caps;를 사용해서 전부 대문자로 바꿔주고, 단어의 첫 글자 이외의 글자들을 조금 작게 보여준다.</li>
+</ul>
+<h2>문단 들여쓰기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">p {<br /><br />  text-indent: 3em;<br /><br />  }</pre>
+</div>
+</div>

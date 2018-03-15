@@ -1,0 +1,71 @@
+<h1>문서의 제목을 나타내는 방법</h1>
+<h2>CSS를 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">pan class=<span class="code-quote">"heading"</span>&gt;Super Cool Page Title&lt;/span&gt;<br /><br />.heading {<br /><br />  font-size: 24px;<br /><br />  font-weight: bold;<br /><br />  color: blue;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>CSS를 인식하지 못하는 장치나, 외부 CSS로 빼냈을 때는 예전 브라우저들이 인식하지 못할 수도 있다.</li>
+</ul>
+<ul>
+<li>검색 엔진이 &lt;span&gt;태그로 둘러쌓인 부분은 중요하게 여기지 않는다.</li>
+</ul>
+<ul>
+<li>&lt;span&gt;은 inline 엘리먼트기 때문에, 추가적으로 불필요한 &lt;p&gt;나 &lt;div&gt; 태그와 같은 block-level 엘리먼트를 사용해야한다.</li>
+</ul>
+<h2>p와 b 콤보 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;p&gt;&lt;b&gt;Super Cool Page Title&lt;/b&gt;&lt;/p&gt;</pre>
+</div>
+</div>
+<ul>
+<li>CSS를 인식하지 못하더라도 굵게 표시할 수는 있다.</li>
+</ul>
+<ul>
+<li>검색 엔진이 &lt;b&gt;로 둘러쌓인 부분을 중요하게 인식하지 않는다.</li>
+</ul>
+<h2>&lt;h1&gt; 부터 &lt;h6&gt; 사용하기</h2>
+<ul>
+<li>적달한 헤딩 태그는 표현이 아니라 의미에 가깝다.</li>
+</ul>
+<ul>
+<li>&lt;h1&gt;, &lt;h2&gt;가 너무 크게 표현되서 기피하는 경향이 있는데, 이것은 CSS로 조정이 가능하다.</li>
+</ul>
+<ul>
+<li>검색 엔진이 이 태그들을 중요하게 여긴다.</li>
+</ul>
+<ul>
+<li>헤딩 레벨 순서를 건너뛰지 않는 것이 좋다.</li>
+</ul>
+<h1>간단한 스타일 추가하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-html"><span class="code-tag">&lt;h1&gt;</span>Super Cool Page Title<span class="code-tag">&lt;/h1&gt;</span><br /><br />h1 {<br /><br />  font-family: Arial, sans-serif;<br /><br />  font-size: 24px;<br /><br />  color: #369;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>글자체와 크기 그리고 색상 설정하기.</li>
+</ul>
+<h1>배경 추가하기</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">background: url(10x10.gif) repeat-x  bottom;<br /><br />background: url(icon.gif) no-repeat 0 50%;</pre>
+</div>
+</div>
+<ul>
+<li>repeat-x 는 수평으로 반복. repeat-y는 수직으로 이미지 반복.</li>
+</ul>
+<ul>
+<li>no-repeat은 한 번만 보여주겠다<img class="emoticon" src="/assets/help_16.gif" alt="" align="absmiddle" border="0" height="16" width="16" />는 설정. 0 50%는 맨 왼쪽 가운데(수직)에 위치시킨다.</li>
+</ul>
+<h1>카멜레온 효과</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;h3&gt;&lt;img src=<span class="code-quote">"http:<span class="code-comment">//images.fastcompany.com/icon/first_imp.gif"</span> width=<span class="code-quote">"13"</span> height=<span class="code-quote">"13"</span> alt=<span class="code-quote">"*"</span> /&gt; FIRST IMPRESSION&lt;/h3&gt;<br /></span><br /><br />h3 img {<br /><br />  background: #696;<br /><br />  vertical-align: middle;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>배경색을 주고, 투명한 배경에 하얀색으로 그린 이미지를 삽입한다.</li>
+</ul>

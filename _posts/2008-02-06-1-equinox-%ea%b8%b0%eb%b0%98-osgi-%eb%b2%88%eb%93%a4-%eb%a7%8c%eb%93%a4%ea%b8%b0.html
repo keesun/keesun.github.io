@@ -1,0 +1,91 @@
+---
+layout: post
+title: 1. Equinox 기반 OSGi 번들 만들기
+date: 2008-02-06 01:06:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- exercise
+tags:
+- Bundle Life Cycle
+- BundleActivator
+- Equinox Platform
+- OSGi
+- 번들 라이프사이클
+- 번들 만들기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322790145'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. Eclipse를 다운로드 합니다.<br /><a href="http://www.eclipse.org/downloads/" target="_blank">http://www.eclipse.org/downloads/</a> 이 곳에서 Ecliipse Classic 3.3.1.1을 다운 받습니다.</p>
+<p>2. Eclipse를 실행하고, 새 프러그인 프로젝트를 생성합니다.<br />Ctrl + N -&gt; Plug 입력<br /><img src="{{ site.baseurl }}/assets/fk30.png" class="aligncenter" width="525" height="500" alt="사용자 삽입 이미지" /><br />3. 프로젝트 이름을 넣고, 맨 아래 Target Platform을 OSGi 프레임워크 Equinox로 선택합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk46.png" class="aligncenter" width="525" height="500" alt="사용자 삽입 이미지" /><br />4. Next를 클릭합니다. 여기서 버전이 중요한데, OSGi에서는 같은 번들 여럿이 다른 버전으로 동시에 동작할 수 있습니다. A라는 번들이 B_1.0.0.jar 번들을 사용하면서, C라는 번들이 B_1.1.0.jar 번들을 사용할 수 있습니다. 그 상태에서 이 상태에서 A번들을 잠시 멈췄다가 B_1.0.0.jar 번들대신에 B_1.1.0.jar 번들을 사용하도록 수정한 다음에 다시 시작시키는 등의 컨트롤이 가능합니다. </p>
+<p>또 하나 중요한 것은 Plug-in Options에 있는 Activator입니다. 이 녀석은 해당 번들을 시작시켜서 Active 상태가 되면 자동으로 콜백 메소드(start)를 호출하고, 멈출 때도 자동으로 콜백 메소드(stop)를 호출해 줍니다. 따라서 해당 번들을 가동시킬 때 어떤 일을 하고 싶다면, 이 옵션이 체크된 상태(기본)로 만들면 되고, 그렇치 않다면 체크를 없애고 넘어갑니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk31.png" class="aligncenter" width="525" height="500" alt="사용자 삽입 이미지" /><br />저는 일단 Activator로 만들겠습니다. 위 상태 그대로 Next를 클릭합니다.</p>
+<p>5. 탬플릿을 선택합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk47.png" class="aligncenter" width="525" height="500" alt="사용자 삽입 이미지" /><br />탬플릿을 선택하는 이유는 코드 탬플릿과 필요한 번들을 자동으로 추가해 주기 때문입니다. Bundle의 경우 org.osgi.framework를 추가해 주는데 그 이유는 이 번들이 가지고 있는 BundleActivator라는 인터페이스를 구현해야 하기 때문입니다. 이 인터페이스가 위에서 말한 콜백 메소드를 가지고 있습니다.</p>
+<p>이제 Finish를 합니다. Next가 한번 더 있긴 하지만 별거 아닙니다. 궁금하신 분들은 눌러보셔도 됩니다.</p>
+<p>6. 자 그러면 다음과 같이 프로젝트가 생성된 것을 볼 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk48.png" class="aligncenter" width="600" height="450" alt="사용자 삽입 이미지" />위에 보이는 화면은 MENIFEST.MF 파일을 비주얼하게 보여주는 편집기 입니다. 저곳의 하단에 있는 Depedency에서는 번들과 패키지 종속성을 설정할 수 있으며, Runtime에서는 외부로 노출 시킬 패키지를 설정할 수 있습니다.</p>
+<p>일단 자동으로 만들어준 Activator부터 확인해보겠습니다.</p>
+<p>7. Activator.java 파일을 열어 봅니다.</p>
+<p>start와 stop 메소드에 간단한 메시지를 출력하도록 구현되어 있는 것을 볼 수 있습니다. 이 부분을 적당하게 수정해보겠습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek30.png" class="aligncenter" width="600" height="248" alt="사용자 삽입 이미지" /><br />8. 이제 이 번들을 osgi 플랫폼 Equinox에서 실행해 보겠습니다.</p>
+<p>Ctrl + 3 -&gt; Run Dia 엔터&nbsp; 를 입력하여, Open Run Dialog 창을 띄우고, 왼쪽 맨 아래에 있는 OSGi Framework를 더블클릭합니다. 그러면 화면 중앙에 Equinox에서 가동시킬 모든 번들 목록이 표시 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk49.png" class="aligncenter" width="600" height="431" alt="사용자 삽입 이미지" /><br />여기서 지금 제가 가동시키려는 것은 딱 하나, 맨 위에 있는 Store 뿐이니까 나머지는 모두 체크박스를 없애 줍니다. 아예 나타나지 않게 할 수도 있는데, Ctrl + 3 -&gt; Target Plat 엔터를 입력하여, 이클립스가 로딩 될 때 읽어들인 번들 목록을 다음과 같이 모두 해제 시켜준 다음에 Apply를 클릭합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk32.png" class="aligncenter" width="600" height="349" alt="사용자 삽입 이미지" /><br />자 그러면 프로젝트에서 에러가 납니다. 왜? org.eclise.osgi 번들까지 목록에서 제거했기 때문입니다. 그 녀석은 있어야 하니까(BundleActivator 때문에...) 그 녀석만 추가해 줍니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk33.png" class="aligncenter" width="600" height="243" alt="사용자 삽입 이미지" /><br />자 그러면 이제 에러도 없어지고, 정말 필요한 번들만 Target Platform에 선택해 두었습니다. 다시 Run Dialog로 돌아갑니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek31.png" class="aligncenter" width="600" height="372" alt="사용자 삽입 이미지" /><br />이제 Run을 클릭합니다.</p>
+<p>9. 콘솔에 메시지가 출력된 것을 확인할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk50.png" class="aligncenter" width="475" height="164" alt="사용자 삽입 이미지" />OSGi 플랫폼을 가동시키자 마자, Store 번들이 가동됐기 때문입니다.</p>
+<p>ss 명력을 사용해서, 현재 이 플랫폼에 존재하는 번들들의 상태를 확인할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek32.png" class="aligncenter" width="497" height="244" alt="사용자 삽입 이미지" /><br />stop [id] 명령을 사용해서 id에 해당하는 번들을 멈출 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk34.png" class="aligncenter" width="488" height="274" alt="사용자 삽입 이미지" /><br />bundle [id]를 입력하면 번들에 대한 구체적인 정보를 확이할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek33.png" class="aligncenter" width="499" height="312" alt="사용자 삽입 이미지" /><br />현재 이 번들은 등록 된 서비스도 없고, 사용하는 서비스도 없고, 공개한 패키지도 없고, 가져온 패키지가 하나 있습니다. org.osgi.framework</p>
+<p>uninstall [id]를 입력하면, 해당 번들을 플랫폼에서 없앱니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk35.png" class="aligncenter" width="502" height="312" alt="사용자 삽입 이미지" /><br />install [url]&nbsp; 명령을 사용해서, 번들을 설치할 수 있습니다. 이렇게 가져오려면 일단 Export를 해서 배포 가능한 jar 파일로 만들어 주어야 합니다. 프로젝트를 우클릭하고, Export를 클릭합니다. 그리고 deployable 머시기를 선택합니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek34.png" class="aligncenter" width="525" height="550" alt="사용자 삽입 이미지" /><br />Next를 클릭하고, destination은 C:\으로 선택합니다. </p>
+<p><img src="{{ site.baseurl }}/assets/gk51.png" class="aligncenter" width="507" height="460" alt="사용자 삽입 이미지" /><br />Options에 가서 이 과정을 빌드 파일로 만들 수 있는데, 글이 너무 길어져서 생략하겠습니다. Finish 클릭하면 C:\plugins 폴더가 만들어지고, 그 안에 Store_1.0.0.jar 파일이 들어있는 것을 볼 수 있습니다.</p>
+<p>다시 콘솔로 돌아와서</p>
+<p>install file:c:/plugins/Store_1.0.0.jar</p>
+<p>이렇게 입력하면 번들이 설치됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk52.png" class="aligncenter" width="476" height="268" alt="사용자 삽입 이미지" /><br />상태는 INSTALLED 상태이고, 이 상태에서 Start를 시켰을 때, 필요한 종속성이 모두 충족되면, ACTIVE 상태로 넘어갑니다. 필요한 종속성을 확인하려면, diag [id] 명령을 사용하면 됩니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk36.png" class="aligncenter" width="480" height="268" alt="사용자 삽입 이미지" /><br />이제 start [id] 명력을 사용해서 해당 번들을 가동하겠습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk53.png" class="aligncenter" width="476" height="268" alt="사용자 삽입 이미지" /><br />1부 끝!!</p>

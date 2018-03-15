@@ -1,0 +1,67 @@
+---
+layout: post
+title: "[봄싹] 스터디용 게시판 설계하기"
+date: 2010-10-03 23:53:33.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323206834'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>
+<a href="http://whiteship.me/wp-content/uploads/2010/10/Post.jpg"><img src="{{ site.baseurl }}/assets/Post-tm.gif" width="600" height="278" alt="Post.gif" /></a></p>
+<p>사실 전 설계도를 마인드맵으로 그리던 UML에 맞춰 그리던 별로 신경쓰지 않습니다. 그리는 사람 따로 개발할 사람 따로인 개발팀이라면 규약에 맞춰서 그리고 규약에 맞춰서 이해하면 되겠지만 봄싹에선 그런 과정이 불필요하고 시간 낭비일뿐입니다. 어차피 개발할 사람은 몇명 안되고 개발할 사람들이 원하는 기능까지도 정하는 상황에서 굳이.. UML이 어저꾸 저쩌구 저 선은 뭘 어떻게 그려야 하고 속성은 머가 있고 메서드는 머가 있고.. @_@;;</p>
+<p>중요한건 봄싹 스터디에 추가할 게시판에서 다룰 기능에 필요한 모델을 뽑아내는거라 생각했습니다. 그리고 바로 연습장을 하나 펼치고 회의에 들어갔죠. 무슨 무슨 기능이 필요한지 그리고 그 기능을 운용할 도메인 클래스가 무엇이고 그것과 관계를 맺고 있는 도메인은 무엇인지.. 그려나갔습니다. 설계를 마치고 제일 막내인 윤석군에게 그림을 부탁했고 그렇게 해서 만들어진 그림이 위에 있는 마인드맵입니다. 머.. 저걸로도 훌륭하지만 사실 도메인 클래스 개발에 들어가기엔 뭔가 좀 아쉬운게 있어 직접 다시 그렸습니다.</p>
+<p>
+<a href="http://whiteship.me/wp-content/uploads/2010/10/SpringSprout-Board.jpg"><img src="{{ site.baseurl }}/assets/SpringSprout-Board-tm.jpg" width="480" height="245" alt="SpringSprout-Board.jpg" /></a></p>
+<p>세부 속성은 개발하다가 이것 저것 추가될테니 다 나타내긴 귀찮고 적어도 우선은 필요한 도메인 클래스가 무엇일지 뽑아내는게 주력했습니다. 처음엔 Post의 속성으로 글 종류를 구분할까 했었지만 그럼 분명 코딩 중에 if나 switch-case가 나올께 뻔해보였고 무엇보다 글 종류에 따라 전혀 다른 속성들이 필요했기 때문에 Post를 상속구조로 설계하기로 결정했습니다.</p>
+<ol>
+<li>스터디당 게시판이 하나씩 생기는데.</li>
+<li>게시판에 여러 글을 등록할 수 있다.</li>
+<li>글 종류는 네가지가 있고</li>
+<li>그 중에 이미지 글에는 댓글만 달 수 있다.</li>
+<li>일반 글에는 댓글과 덧글을 달 수 있는데 덧들은 1단계로만 제한한다. 따라서 부모글을 가지고 있는 글에는 덧글을 달 수 없다.</li>
+<li>설문형 글에는 여러 선택지가 있고 그 중에서 하나를 선택하는 식으로 댓글을 단다. 이때 선택지 + 추가로 할 말을 남길 수 있다.</li>
+<li>토론형 글에는 찬성과 반대 입장중 하나를 선택해서 댓글을 남길 수 있다.</li>
+</ol>
+<p>주로 표현한 기능은 위와 같고 이제 여기에 필요한 속성과 메서드를 추가해서 클래스 다이어그램 비스무리한 걸 그려도 좋고 안 그리고 그냥 TDD로 주요 시나리오를 코딩하면서 클래스의 역할과 관계에 대해 검증해 보는 것도 좋겠습니다. 이 작업도 윤석군에게 넘기렵니다.</p>

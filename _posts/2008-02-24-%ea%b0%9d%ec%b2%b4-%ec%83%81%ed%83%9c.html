@@ -1,0 +1,140 @@
+---
+layout: post
+title: 객체 상태
+date: 2008-02-24 04:56:33.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 9
+tags:
+- Detached 상태
+- Persistent 상태
+- Removed 상태
+- Transient 상태
+- 객체 상태
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323152596'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>ORM 솔루션마다 서로 다른 용어와 서로 다른 상태를 정의하고 영속성 라이프사이클의 상태 전이를 다룬다.</li>
+</ul>
+<ul>
+<li>하이버네이트는 네 가지 상태를 가지고 있다.</li>
+</ul>
+<p><img src="{{ site.baseurl }}/assets/objectState.png" align="absmiddle" border="0" /></p>
+<ul>
+<li>이탤릭체의 메소드 이름은 JPA의 EntityManager와 Hibernate의 Session에서 공통으로 사용할 수 있는 API</li>
+</ul>
+<h1>Transient Object</h1>
+<ul>
+<li>new 연산자를 사용하여 생성한 객체는 곧바로 persistent 상태가 되지 않는다.</li>
+</ul>
+<ul>
+<li>데이터베이스의 레코드와 아무 연관이 없기 때문에, 메모리에서 없어지면 그 상태 정보도 없어진다.</li>
+</ul>
+<ul>
+<li>JPA에는 이 상태를 나타내는 용어가 없다.</li>
+</ul>
+<ul>
+<li>이 상태의 객체는 nontransactional로, Persistence Context에 변경 사항이 기록되지 않는다. 따라서 롤백을 지원하지 않는다.</li>
+</ul>
+<ul>
+<li>이 상태의 객체가 참조하는 객체들도 기본적으로는 Transient 상태다.</li>
+</ul>
+<h1>Persistent Object</h1>
+<ul>
+<li>데이터베이스 식별자를 가지고 있는 엔티티다.</li>
+</ul>
+<ul>
+<li>Persistent 상태의 객체에 의해 참조되었기 때문에 이 상태가 되는 객체도 있다.</li>
+</ul>
+<ul>
+<li>DB에서 쿼리, 식별자 룩업, 다른 Pesistent 객체로 부터 시작한 객체 그래프 네비게이션 등을 통해서 이 상태가 되는 객체도 있다.</li>
+</ul>
+<ul>
+<li>이 상태의 객체는 항상 Persistent Context와 연관을 맺고 있다.</li>
+</ul>
+<ul>
+<li>하이버네이트는 그들을 캐쉬하고 애플리케이션 내에서의 변경 사항을 감지할 수 있다.</li>
+</ul>
+<h1>Removed Object</h1>
+<ul>
+<li>엔티티 개체를 여러 방법으로 제거할 수 있다.</li>
+</ul>
+<ul>
+<li>Persistent Manager의 메소드를 사용하여 제거할 수 있다.</li>
+</ul>
+<ul>
+<li>Orpahn Deletion(해당 하는 객체를 참조하는 녀석이 없을 때 지우기)을 할 수 있다.</li>
+</ul>
+<ul>
+<li>Unit of work가 끝나면 곧 사라질 객체지만 여전히 Persistent Context에는 남아있을 수 있다.</li>
+</ul>
+<ul>
+<li>따라서, 애플리케이션 내에서 해당 객체에 대한 참조를 모두 제거해야 한다.</li>
+</ul>
+<h1>Detached Object</h1>
+<ul>
+<li>Unit of work를 마친 뒤에 여전히 애플리케이션에서 참조되고 있는 객체.</li>
+</ul>
+<ul>
+<li>Persistent Context가 활성화 되어 있을 동안 만 Persistent 상태였다.</li>
+</ul>
+<ul>
+<li>이 상태의 객체들은 더이상 DB와 동기화 하지 않는다.</li>
+</ul>
+<ul>
+<li>Persistent Context에 연관되어 있지 않다.</li>
+</ul>
+<ul>
+<li>이 상태의 객체를 가지고 여러 변경 작업을 할 수 있고, 후에 다시 Persistent 상태로 돌리고 싶을 수 있다.</li>
+</ul>
+<ul>
+<li>하이버는 그런 상황을 위해 reattachment와 merging을 제공한다.</li>
+</ul>
+<ul>
+<li>JP는 오직 merging만 표준화했다.</li>
+</ul>
+<ul>
+<li>Conversation: long units of work</li>
+</ul>

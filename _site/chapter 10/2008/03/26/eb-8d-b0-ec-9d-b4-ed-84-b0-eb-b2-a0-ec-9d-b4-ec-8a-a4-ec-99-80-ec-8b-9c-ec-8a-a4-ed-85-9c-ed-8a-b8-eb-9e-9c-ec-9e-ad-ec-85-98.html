@@ -1,0 +1,36 @@
+<h1>특징</h1>
+<ul>
+<li>모든 SQL은 반드시 트랜잭션 안에서 수행된다.</li>
+</ul>
+<ul>
+<li>트랜잭션은 Commit 되거나 Rollback 된다.</li>
+</ul>
+<ul>
+<li>Unit of work의 경계를 정해주어야 한다.</li>
+</ul>
+<ul>
+<li>특정 시점에 트랜잭션을 시작하고, 나중에 커밋하거나 예외가 발생했을 때 롤백하도록 해야 한다. 이것을 Transaction demarcation이라고 한다.</li>
+</ul>
+<h1>코딩을 통한 transaction demarcation</h1>
+<ul>
+<li>일반적인 JDBC API를 사용할 때에는 Connection의 setAutoCommit(false)로 설정한 다음, 작업이 끝날 때, commit()을 호출하고, 예외가 발생하면, rollback()을 호출한다.</li>
+</ul>
+<ul>
+<li>여러 DB를 사용하는 작업을 하는 경우, JDBC만 가지고는 원자성을 처리 할 수 없다. 하나의 시스템 트랜잭션으로 여러 자원을 묶어서 처리하는 transaction manager가 필요하다.</li>
+</ul>
+<ul>
+<li>Java Transaction API가 바로 그러한 트랜잭션 처리를 위한 용도이다. JTA의 UserTransaction 인터페이스에 begin()과 commit()을 사용하여 시스템 트랜잭션을 처리할 수 있다.</li>
+</ul>
+<ul>
+<li>하이버네이트는 자체에서 Transaction 인터페이스를 제공한다. 이 API를 쓰도록 강요하지는 않는다. JDBC의 트랜잭션 API를 사용할 수도 있다. 하지만 그러면 여러분의 코드가 JDBC에 종송적이게 된다.</li>
+</ul>
+<ul>
+<li>하이버네이트의 Transaction은 JTA 위에서도 동작한다.</li>
+</ul>
+<h1>선언적인 transactiondemarcation</h1>
+<ul>
+<li>EJB 컨테이너가 선언적인 트랜잭션 서비스를 제공하며, 이것을 CMT라고 부른다.</li>
+</ul>
+<ul>
+<li>스프링도 제공해 주는데, 이 책은 스프링 얘기가 하나도 없네.</li>
+</ul>

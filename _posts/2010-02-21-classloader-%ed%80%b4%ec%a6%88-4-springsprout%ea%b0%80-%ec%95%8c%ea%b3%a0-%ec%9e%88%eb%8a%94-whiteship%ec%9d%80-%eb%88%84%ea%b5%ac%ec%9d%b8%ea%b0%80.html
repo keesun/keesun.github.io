@@ -1,0 +1,86 @@
+---
+layout: post
+title: "[ClassLoader 퀴즈 4] SpringSprout가 알고 있는 Whiteship은 누구인가?"
+date: 2010-02-21 12:29:57.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- ClassCastException
+- IllegalArgumentException
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323119838'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>퀴즈 3번을 다시 낸거라 생각히셔도 되겠습니다. 2, 3번을 푸셨다면 이 문제도 역시 간단하게 푸실 수 있을 겁니다.</p>
+<p>&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void classCastException() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL1 = new FileUrlClassLoader(TEMP_CLASSPATH);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class springSproutClass = uCL1.loadClass(TEMP_SPRING_SPROUT);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object springSprout = springSproutClass.newInstance();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass1 = uCL1.loadClass(TEMP_WHITESHIP);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object whiteship1 = whiteshipClass1.newInstance();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL2 = new FileUrlClassLoader(TEMP_CLASSPATH);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass2 = uCL2.loadClass(TEMP_WHITESHIP);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object whiteship2 = whiteshipClass2.newInstance();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">Method cast = springSproutClass.getMethod("castWhiteship", Object.class);</span><br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cast.invoke(springSprout, whiteship1);</span> // C1<br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cast.invoke(springSprout, whiteship2); </span>// C2<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>TEMP_CLASSPATH는 이 프로젝트의 기본 클래스패스가 아닙니다.<br />
+TEMP_SPRING_SPROUT는 SpringSprout.java 클래스의 이름이고<br />
+TEMP_WHITESHIP은 Whiteship.java 클래스의 이름을 줍니다.</p>
+<p>SpringSprout 클래스에 있는 castWhiteship 메서드는 다음과 같습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; public void castWhiteship(Object object){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold;"> Whiteship2 whiteship = (Whiteship2)object;</span><br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>C1에서는 아무 일 없지만 C2에서는 바로 저 부분에서 ClassCastException이 발생하죠. 그 이유는 퀴즈 3에 대한 답으로 성윤군이 달아줬지요.</p>
+<p>그럼 이번 문제는 조금 다르게...</p>
+<p>public void hi(Whiteship whipteship){<br />
+&nbsp;&nbsp;&nbsp; // 띵까 띵까..<br />
+}</p>
+<p>SpringSprout에 이런 메서드가 있을 때 저 메서드를 호출할 때 whiteship1와 whiteship2 객체를 각각 전달해 준다면 어떤 일이 벌어질까요?</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">Method cast =<br />
+springSproutClass.getMethod("hi", whiteshipClass1);</span><br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cast.invoke(springSprout,<br />
+whiteship1);</span> // H1<br style="font-weight: bold;" /><br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cast.invoke(springSprout,<br />
+whiteship2); </span>// H2</p>
+<p></p>

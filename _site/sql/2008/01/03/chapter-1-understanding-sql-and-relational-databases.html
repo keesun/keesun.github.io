@@ -1,0 +1,45 @@
+<div style="text-align: left;">참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a> (중고로 2달러 짜리도 있네요.)</div>
+<ul>
+<li>SQL을 DDL, DML, DCL로 나눠볼 수 있다.</li>
+<li>SQL의 역사 : SQL-89 =&gt; SQL-92 =&gt; SQL-99</li>
+<li>비교 연산의 결과는 세 가지. True, False, Unknown.</li>
+<li>NULL 인지 확인할 때 = NULL 이 아니라 is NULL 로 물어봐야 해.</li>
+<ul>
+<li>= 는 비교 연산자인데, NULL 과 다른 값들을 비교하면 결과는 UNKNOWN.</li>
+</ul>
+<li>1대다 관계 맺기</li>
+<ul>
+<li>'다'쪽에 외례키 컬럼(상대방의 주키를 가지고 있는 컬럼)추가.</li>
+<ul>
+<li>그래서 '다'쪽의 테이블을 referencing table이라고 함.</li>
+</ul>
+<ul>
+<li>그래서  '1'쪽의 테이블을 referenced table이라고 함.</li>
+</ul>
+<li>무결성 제약 사항 생김.</li>
+</ul>
+<li>다대다에서 연관 테이블은 영어로 junction table, linking table, associate table, bridge table</li>
+</ul>
+<div style="text-align: left;">
+<ul>
+<li>오라클에 접속하기</li>
+<ul>
+<li>Connect username/password</li>
+</ul>
+<li>접속 끝내기</li>
+<ul>
+<li>Disconnet</li>
+</ul>
+<li>10g는 Database가 한 개이기 때문에, Create Database XXX; 사용 못함.</li>
+</ul>
+</div>
+<p><img src="/assets/fk13.png" class="aligncenter" width="600" height="276" alt="사용자 삽입 이미지" />ORA-01501: CREATE DATABASE 문 오류입니다<br />
+ORA-01100: 데이터베이스가 이미 마운트되었습니다<br />만들려고 하면, 이런 메시지를 만나게 됩니다.
+<ul>
+<li>오라클에서 한 번에 여러 Statement 실행하기.</li>
+<ul>
+<li>BEGIN END;/ 사용.</li>
+</ul>
+</ul>
+<p><img src="/assets/fk14.png" class="aligncenter" width="600" height="391" alt="사용자 삽입 이미지" /></p>
+<p></p>

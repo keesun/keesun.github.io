@@ -1,0 +1,57 @@
+---
+layout: post
+title: HibernateTemplate
+date: 2007-01-26 05:20:25.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- study
+tags:
+- HibernateTemplate
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322951257'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.tistory.com/417" target="_blank">8.4. 기능구현</a> 여기서 던졌던 의문에 실마리를 찾은 듯...</p>
+<p>HibernateTemplate은 Spring에 있는 API로 Hibernate를 사용해서 데이타에 접근하는 것을 좀 더 편리하게 해주고 Checked Exception인 HibernateException을 Unchecked인 DataAccessException으로 바꿔 준다고 합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @SuppressWarnings("unchecked")<br />&nbsp; &nbsp; public List&lt;KMember&gt; getMembers(final String name) {<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102);"> return getHibernateTemplate().executeFind(new HibernateCallback(){</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; public Object doInHibernate(Session s) throws HibernateException, SQLException {</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Query q = s.createQuery("from k_Member m where m.name like :name order by m.name asc")</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; .setParameter("name", "%" + name +"%");</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return q.list();</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; });</span><br />&nbsp; &nbsp; }</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @SuppressWarnings("unchecked")<br />&nbsp; &nbsp; public List&lt;KMember&gt; getMembers(final String name) {<br />&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102);"> Session s = getSession();</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; Query q = s.createQuery("from k_Member m where m.name like :name order by m.name asc")</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; .setParameter("name", "%" + name +"%");</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; return q.list();</span><br />&nbsp; &nbsp; }</div>
+<p>위나 아래나 같은 일을 하는 것 처럼 보이지만.. 아래는 Exception에 대한 고려도 없고 Session을 열고 닫아 주는 일을 수동으로 해줘야 하는 군요. <a href="http://www.springframework.org/docs/api/org/springframework/orm/hibernate/HibernateTemplate.html" target="_blank">HibernateTemplate API</a>를 대강 읽어봤는데 역시 영어 실력이 OTL...</p>

@@ -1,0 +1,179 @@
+---
+layout: post
+title: 스프링 MVC에서 타일즈 2 사용하기
+date: 2009-05-01 10:10:37.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags: []
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323105863'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a title="[http://richardbarabe.wordpress.com/2009/02/23/apache-tiles-2-integration-with-spring-mvc/]로 이동합니다." target="_blank" href="http://richardbarabe.wordpress.com/2009/02/23/apache-tiles-2-integration-with-spring-mvc/">http://richardbarabe.wordpress.com/2009/02/23/apache-tiles-2-integration-with-spring-mvc/</a></p>
+<p>오늘은 노동자의 날(?)이라 쉬는 사람들이 많은데도 출근한 성윤군이랑 열심히 타일즈를 적용하고 있습니다. 아파치 타일즈 2 홈페이지, 프로 스프링 2.5, 스프링 3.0 레퍼런스를 보면서 적용했지만... 잘 안되더군요.&nbsp; 결국은 위 블로거가 제공하는 패치를 사용해서 해결했습니다.</p>
+<p><span style="font-weight: bold;">0. pom.xml에 Tiles 라이브러리 추가하기</span></p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;!-- tiles --&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.apache.tiles&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.org.apache.tiles&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.1.2.osgi&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.apache.tiles&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.org.apache.tiles.core&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.1.2.osgi&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.apache.tiles&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.org.apache.tiles.servlet&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.1.2&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;dependency&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;groupId&gt;org.apache.tiles&lt;/groupId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;artifactId&gt;com.springsource.org.apache.tiles.jsp&lt;/artifactId&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;version&gt;2.1.2&lt;/version&gt;<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/dependency&gt;</div>
+<p>
+<span style="font-weight: bold;">1. xxx-servlet.xml에 TilesConfigurer 추가하기</span></p>
+<div style="border: 1px solid rgb(243, 197, 52); padding: 10px; background-color: rgb(254, 254, 184);" class="txc-textbox">&nbsp;&nbsp;&nbsp; &lt;!-- ============================================================= --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;!--&nbsp; Tiles&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;!-- ============================================================= --&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;bean id="tilesConfigurer" class="springsprout.web.SpringTilesConfigurer"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name="definitions"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;list&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;value&gt;/WEB-INF/tiles/general-layout.xml&lt;/value&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;value&gt;/WEB-INF/tiles/tiles-content.xml&lt;/value&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/list&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/property&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/bean&gt;</div>
+<p><span style="font-weight: bold;">2. xxx-servlet.xml에 뷰 리졸버 추가하기</span></p>
+<div style="border: 1px solid rgb(243, 197, 52); padding: 10px; background-color: rgb(254, 254, 184);" class="txc-textbox">&nbsp;&nbsp;&nbsp; &lt;bean id="tilesViewResolver"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class="org.springframework.web.servlet.view.UrlBasedViewResolver"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p:viewClass="org.springframework.web.servlet.view.tiles2.TilesView" /&gt;</div>
+<p>
+<span style="font-weight: bold;">3. 타일즈 설정 파일 추가하기</span></p>
+<p>위 설정대로 /WEB-INF/ 밑에 tiles라는 폴더를 만들고 그 안에 파일 두 개를 만들어 줍니다.</p>
+<p>저희는 제일 간단한 3단 구조로 설정했습니다. </p>
+<p>general-layout.xml</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;<br />
+&lt;!DOCTYPE tiles-definitions PUBLIC<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "http://tiles.apache.org/dtds/tiles-config_2_1.dtd"&gt;<br />
+&lt;tiles-definitions&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;definition name=".root" template="jsp/root.jsp"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="header" value="/jsp/layout/header.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="footer" value="/jsp/layout/footer.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;<br />
+&lt;/tiles-definitions&gt;
+</div>
+<p>tiles-content.xml</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;<br />
+&lt;!DOCTYPE tiles-definitions PUBLIC<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "http://tiles.apache.org/dtds/tiles-config_2_1.dtd"&gt;<br />
+&lt;tiles-definitions&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;definition name="index" extends=".root"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/index.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;definition name="login" extends=".root"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;put-attribute name="content" value="/jsp/login/login.jsp" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/definition&gt;<br />
+&lt;/tiles-definitions&gt;</div>
+<p>general-layout.xml은 그야말로 템플릿 레이아웃이고 이 레이아웃을 tiles-context.xml에 상속 받아서 사용합니다. 이렇게 해야 설정을 최소화 할 수 있겠죠. 불편한 거 하나는.. 모든 뷰를 명시적으로 저렇게 설정이 한 덩어리씩 추가가 되어야 한다는 거죠. 이걸 CoC로 어떻게 간편화 할 수 없을지 고민입니다. 타일즈에서 만들어 주세요~</p>
+<p><span style="font-weight: bold;">4. 템플릿 만들기</span></p>
+<p>general-layout.xml에 정의한 root.jsp, header,jsp, footer.jsp, empty.jsp 파일을 만듭니다. 이 JSP 페이지가 기본 레이아웃을 그리는 JSP 페이지입니다.</p>
+<p>roo.jsp</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+&lt;%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%&gt;<br />
+&lt;%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%&gt;<br />
+&lt;%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %&gt;<br />
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %&gt;</p>
+<p>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;<br />
+&lt;html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"&gt;<br />
+&nbsp; &lt;head&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8" /&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;title&gt;SpringSprout&lt;/title&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;link href="/css/main.css" media="screen" rel="stylesheet" type="text/css" /&gt;<br />
+&nbsp; &lt;/head&gt;<br />
+&lt;body&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;div id="main"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;tiles:insertAttribute name="header"/&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;tiles:insertAttribute name="content"/&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;tiles:insertAttribute name="footer"/&gt;<br />
+&lt;/body&gt;<br />
+&lt;/html&gt;</div>
+<p>header.jsp</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">&lt;div id="header" class="basic"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;div class="site"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="logo"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;&lt;img src="images/logo.png" alt="springsprout" /&gt;&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="actions"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Home&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Studies&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Seminars&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Blog&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Wiki&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/"&gt;Signup&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="/login.do"&gt;Login&lt;/a&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br />
+&lt;/div&gt;</div>
+<p>
+footer.jsp</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">&lt;div id="footer"&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;div class="site"&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h2&gt;Good Bye ~~~!!&lt;/h2&gt;<br />
+&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br />
+&lt;/div&gt;</div>
+<p>empty.jsp</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">&lt;%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%&gt;<br />
+&lt;%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %&gt;<br />
+&lt;tiles:insertAttribute name="content"/&gt;</div>
+<p>
+끝입니다. 이제 새로운 페이지를 만들 때 마다 헤더와 푸터를 제외하고 몸통 부분만 만들면 됩니다. </p>
+<p><span style="font-weight: bold;">5. 패치</span></p>
+<p>1번에서 설정한 tilesConfigurer를 등록하시려면 아래 파일이 필요하실 겁니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/cfile25.uf.110CF31749FACA0BE30768.java" class="aligncenter" filename="SpringTilesConfigurer.java" filemime="text/x-c; charset=us-ascii">cfile25.uf.110CF31749FACA0BE30768.java</a><br />
+이 파일을 사용하지 않고 스프링이 제공하는 클래스를 사용하시면 맨 위 링크의 글에 나타나 있는 에러가 발생할 겁니다.</p>

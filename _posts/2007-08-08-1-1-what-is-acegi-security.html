@@ -1,0 +1,108 @@
+---
+layout: post
+title: 1.1. What is Acegi Security?
+date: 2007-08-08 03:22:44.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 01. Overall Architecture
+tags:
+- Acegi Security는 무엇인가?
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322645209'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Acegi Security는 J2EE 기반 엔터프라이즈 애플리케이션에 폭넓은 보안 서비스를 제공한다. 특히 Spring을 사용하고 있다면 보다 쉽게 Acegi에 접근할 수 있을 것이다.</p>
+<p>기존 Servlet이나 EJB 스펙의 보안은 WAR나 EAR단위로 이식을 할 수 없었기 때문에, 서버 환경이 바뀌면 새 환경에 맞게 여러 설정을 변경해야했다. Acegi는 이러한 불편을 극복함은 물론이고, 이밖에도 여러 유용한 기능을 포함하고 있다.</p>
+<p>두 가지 주요 기능을 제공한다.
+<ul>
+<li>Authentication(인증) : principal[footnote]일반적인 user를 의미[/footnote]을 인식</li>
+<li>Authorization(권한) : principal이 애플리케이션에서 해당 행위를 할 수 있는지 결정</li>
+</ul>
+<p>인증 차원에서 Acegi는 다양한 인증 모델을 지원한다.
+<ul compact="compact" type="disc">
+<li>
+<p><a id="what-is-acegi-security">HTTP Digest authentication headers (an IEFT RFC-based<br />
+            standard)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">HTTP X.509 client certificate exchange (an IEFT RFC-based<br />
+            standard)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">LDAP (플랫폼 간의 인증이 필요한 경우 흔히 사용하는 접근 방법이며, 특히 대규모 환경에서...)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Form-based authentication (for simple user interface<br />
+            needs)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Computer Associates Siteminder</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">JA-SIG Central Authentication Service (CAS로도 알려져 있으며, 시스템에 단일 로그인을 제공하는 오픈소스로 유명하다.)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Transparent authentication context propagation for Remote<br />
+            Method Invocation (RMI) and HttpInvoker (a Spring remoting<br />
+            protocol)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Automatic "remember-me" authentication (따라서 일정 기간 동안 재 인증할 필요 없이 박스에 체크만 하면 된다.)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Anonymous authentication (모든 호출을 자동으로 특정 security indentity로 취급한다.)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Run-as authentication (어떤 호출을 별도의 security identity로 처리하고 싶을 때 유용하다.)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Java Authentication and Authorization Service (JAAS)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Container integration with JBoss, Jetty, Resin and Tomcat<br />
+            (따라서 원한다면 여전히 CMA[footnote]</a><a id="what-is-acegi-security">Container Manager Authentication[/footnote]</a><a id="what-is-acegi-security"> 를 사용할 수 있다.)</a></p>
+</li>
+<li>
+<p><a id="what-is-acegi-security">Your own authentication systems (see below)</a></p>
+</li>
+</ul>
+<p>위와 같이 다양한 인증 모델을 지원하기 때문에 많은 곳에서 사용하고 있지만, 혹여나 Acegi에서 지원하고 있지 않은 인증 모델들 중에 맘에 드는 것이 없을 수도 있다. Acegi는 오픈 프레임임웤이기 때문에 알아서 구현하면 된다. 표준을 사용하지 않는 별도의 인증 시스템을 구현하여 사용하고 있는 기존 시스템에 적용하고 싶을 수도 있다. 이 때도 Acegi는 잘~ 적용될 수 있다.</p>
+<p>어떻게 인증을 거치느냐에 따라 세 종류의 권한 기능을 제공한다. authorizing web requests, authorizing methods can be invoked, authorizing access to individual domain object instances 이 녀석들을 이해 하려면 Servlet 스팩의 웹 패턴 보안, EJB 컨테이너가 관리하는 보안(CMS)과 파일 시스템 보안에 대해 살펴보라. Acegi는 이들 모두에 대해 고려했으며, 차후에 자세히 설명하겠다.</p>

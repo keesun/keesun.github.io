@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[jQuery] 날짜 선택하기"
+date: 2009-07-08 11:33:54.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JavaScript
+tags:
+- datepicker
+- daterangepicker
+- jquery
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323144218'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>jQuery UI 위젯이 제공하는 기본 달력은 다음과 같습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile21.uf.134FCE244A547FAA7F01B6.png" class="aligncenter" width="278" height="209" alt="" filename="1.png" filemime="image/png" /><br />
+흠.. 이것까진 간단했습니다. 이 것을 이용한 태그 파일 두개를 만들었습니다. 하나는 검색 필드용 하나는 폼 필드용. 검색 필드는 get 방식으로 url뒤에 줄줄이 붙여서 가져올 것이고 폼 필드는 post 방식에서 사용하여 model의 특정 속성에 바로 바인딩 할 겁니다. 둘 다.. 자바스크립트 코드 부분은 다음과 같습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; $(function() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; $("#${id}").datepicker({ <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dateFormat: 'yy/mm/dd', <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; changeMonth: true, <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; changeYear: true, <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; yearRange: '${fromNS}:${toNS}'<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;});<br />
+&nbsp;&nbsp;&nbsp; });</p>
+<p>적당한 포맷을 설정하고, 연도와 달을 좀 더 변경하기 쉽게 드랍다운으로 설정했고, 연도 범위를 설정했는데, 이 값은 태그에 전달해준 값을 쓰기로 했습니다. 값을 전달해 주지 않으면 기본값을 쓰도록 했지요.</p>
+<p>복잡한건, 날짜 범위를 선택하는 것인데, 이건 <a title="[http://www.ajaxline.com/10-best-jquery-datepickers-plugins]로 이동합니다." target="_blank" href="http://www.ajaxline.com/10-best-jquery-datepickers-plugins">Ajaxian에서 10가지 date picker</a>중 하나로 선정된 <a title="[http://www.filamentgroup.com/lab/date_range_picker_using_jquery_ui_16_and_jquery_ui_css_framework/]로 이동합니다." target="_blank" href="http://www.filamentgroup.com/lab/date_range_picker_using_jquery_ui_16_and_jquery_ui_css_framework/">filament group의 daterangepricker</a>를 이용했습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/cfile3.uf.1652A81E4A54814F179BFB.png" class="aligncenter" width="600" height="264" alt="" filename="3.png" filemime="image/png" /><br />
+&nbsp;&nbsp;&nbsp; $(function() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; $("#${id}").daterangepicker({<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dateFormat: 'yy/mm/dd',<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; datepickerOptions: {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; changeMonth: true, <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; changeYear: true, <br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; yearRange: '${fromNS}:${toNS}'<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; });<br />
+&nbsp;&nbsp;&nbsp; });</p>
+<p>대충 이렇게 보여집니다. 옵션이 다양해서 이 녀석을 써봤습니다. 문제는 하나의 필드에 두 개 날짜 값을 넣어주고 있어서 DateRange라는 클래스를 만들고, DateRangePropertyEditor도 만들어줬습니다. DateRange 클래스는 테스트를 통해서 문자열 값을 생성자에 넣어줬을 때 제대로 동작하는지 확인을 해보았고, DRPE를 등록해서 돌아가는지 웹에서 확인도 해봤습니다.</p>
+<p>이 녀석은 검색용 태그파일만 만들었는데.. 만들고 보니 날짜를 한 개만 받는 녀석이랑 용도가 겹치더군요. Today랑 Specific Date는 메뉴에서 빼고 싶어서 옵션들을 살펴봤는데 영~~ 시원찮네요. 흠.. 뺄 수 있을텐데 말이죠.</p>
+<p></p>

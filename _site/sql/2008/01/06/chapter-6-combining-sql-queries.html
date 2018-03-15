@@ -1,0 +1,35 @@
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a></p>
+<p>두 개 이상의 테이블의 데이터가 필요할 때 서브쿼리나 조인을 사용할 수 있다. 이번 챕터는 서브쿼리에 대해 공부한다.</p>
+<p>서브쿼리에는 두종류가 있다.
+<ul>
+<li>독립적인 서브쿼리 non-correlated subquery : 포함된 쿼리가 한 번만 수행되며, 그 결과가 외부 쿼리에 전달된다.</li>
+<li>연관된 서브쿼리 correlated : 외부 쿼리의 데이터를 필요로 하며, 외부 쿼리의 결과 레코드 마다 한 번씩 수행하게 된다.</li>
+</ul>
+<p>성능은 당연히 독립적인 서브쿼리가 좋아보인다. 그렇다고 연관된 서브쿼리를 안 쓸 수도 없을테고 외부 쿼리Outter Query의 레코드 수를 줄이면 그나마 Inner Query 수행 횟수가 줄어 들테니 이 점을 유의해야겠다.</p>
+<p>연관된 서브쿼리 예제1</p>
+<p>SELECT CustomerID, CustomerName, (<br />&nbsp;&nbsp; SELECT COUNT(*) FROM CreditCards<br />&nbsp;&nbsp; WHERE CreditCards.CustomerID = Customers.CustomerID)<br />&nbsp;&nbsp; AS NumberOfCreditCards<br />FROM Customers</p>
+<p>- 고객ID, 고객이름, 고객의 신용카드 거래 합계를 보여준다.<br />- Customers 테이블의 레코드 갯 수 만큼 서브 쿼리가 실행된다.</p>
+<p>연관된 서브쿼리 예제2</p>
+<p>SELECT e1.StudentID, e1.ClassID, (<br />&nbsp;&nbsp; SELECT COUNT(*) FROM Enrollment e2<br />&nbsp;&nbsp; WHERE e1.ClassID = e2.ClassID)—1<br />&nbsp;&nbsp; AS OtherStudentsInClass<br />FROM Enrollment e1<br />WHERE StudentID = 6;</p>
+<p>- ID가 6인 학생이 등록한 수업에 참여하는 다른 학생들의 합계를 구한다.<br />- Enrollment 테이블에서 SudentID가 6인 레코드 갯수 만큼 서브쿼리를 수행한다.</p>
+<p>독립적인 서브쿼리 예제 1</p>
+<p>SELECT ExamID, SustainedOn FROM Exam<br />WHERE SustainedOn &lt;= (<br />&nbsp;&nbsp; SELECT SustainedOn FROM Exam WHERE ExamID = 5)<br />ORDER BY SustainedOn DESC;</p>
+<p>- 시험 ID가 5인 시험이 치뤄지기 이전에 치뤄진 모든 시험 목록을 역순으로 보여준다.<br />- 내부 쿼리는 한 번만 수행되고 그 결과를 외부 쿼리에서 사용한다.</p>
+<p>독립적인 서브쿼리 예제 2</p>
+<p>SELECT StudentID, Name FROM Student WHERE StudentID IN<br />&nbsp; (SELECT StudentID FROM Enrollment WHERE ClassID IN<br />&nbsp; &nbsp; &nbsp; &nbsp; (SELECT ClassID FROM Class WHERE ProfessorID IN<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (SELECT ProfessorID FROM Professor<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; WHERE Name LIKE '%Williams%')));</p>
+<p>- Williams 라는 이름이 들어가는 교수가 가르치는 학급에 등록한 학생들의 정보를 보여준다.<br />- 역시 전부 독립적인 서브쿼리로 여러개의 결과를 반환하기 때문에 IN을 사용했다.</p>
+<p>EXISTS 연산자<br />- 외부 쿼리의 결과 레코드가 내부 쿼리 레코드 집합안에 포함되어 있다면, true.<br />- 따라서 연관된 쿼리로 작성해야 함.<br />- 따라서 a.커럼id = b.컬럼id 와 같은 공식이 내부 쿼리에 추가되어야 함.<br />- 그래야 외부 쿼리와 내부 쿼리가 연결 됨.</p>
+<p>- 예제<br />SELECT StudentID, Name FROM Student s<br />WHERE EXISTS (<br />&nbsp;&nbsp; SELECT StudentID FROM StudentExam e<br />&nbsp;&nbsp; WHERE Mark &lt; 40 AND e.StudentID = s.StudentID);<br />- Mark가 40점 이하인 학생 정보.<br />- AND e.StudentID = s.StudentID 없으면 그냥 Student 테이블의 모든 레코드 보여줌.</p>
+<p>ALL 연산자<br />- 외부쿼리가 ALL 뒤에 있는 내부 쿼리의 결과를 모두 만족 시키는 경우 true.</p>
+<p>-예제<br />SELECT StudentID, Grade FROM Enrollment e<br />WHERE Grade &gt; ALL (<br />&nbsp;&nbsp; SELECT Mark FROM StudentExam s<br />&nbsp;&nbsp; WHERE s.StudentID = e.StudentID);<br />- 등록 정보 중에서 Grade가 그 학생이 치룬 모든 시험의 Mark보다 높은 학생 정보를 보여줌.</p>
+<p>ANY 연산자<br />- 외부쿼리가 ANY 뒤에 있는 내부 쿼리의 결과에 하나라도 만족하는 경우 true.</p>
+<p>- 예제<br />SELECT StudentID, Grade FROM Enrollment e<br />WHERE Grade &lt; ANY (<br />&nbsp;&nbsp; SELECT Mark/2 FROM StudentExam s<br />&nbsp;&nbsp; WHERE s.StudentID = e.StudentID);<br />-등록 정보 중에서 Grade가 그 학생이 치룬 모든 시험의 Mark의 절반도 안되는 학생 정보를 보여줌.</p>
+<p>쿼리 결과 데이터 조합하기<br />SELECT ColumnA, ColumnB FROM TableA<br />&lt;Operator&gt;<br />SELECT ColumnC, ColumnD FROM TableB;</p>
+<p>Operator(오라클)
+<ul>
+<li>UNION : 합집합</li>
+<li>UNION ALL : 합집합 + 교집합</li>
+<li>INTERSECT : 교집합</li>
+<li>MINUS : 차집합</li>
+</ul>
+<p>흠.. EXISTS, ALL, ANY 어렵... -_-;;</p>

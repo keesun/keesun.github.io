@@ -1,0 +1,69 @@
+---
+layout: post
+title: 완소 구글 코드
+date: 2007-09-18 01:57:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- 구글코드
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323025093'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>예전에도 사용했었지만 이슈 트래킹 기능은 별로 사용해본 적이 없었습니다. 요즘들어 사용해보고 있는데 굉장히 좋습니다.</p>
+<p>구글 코드 프로젝트 호스팅에서 지원해주고 있는 기능들은 다음과 같습니다.<br /><img src="{{ site.baseurl }}/assets/cn379.png" class="aligncenter" width="541" height="92" alt="사용자 삽입 이미지" />
+<ul>
+<li>다운로드 탭은 사용하기 나름이겠지만, 팀원들끼리 공유해야할 문서나 파일들을 공유할 수도 있고 소스 코드를 zip파일로 묶어서 공개할 수도 있습니다.</li>
+</ul>
+<ul>
+<li>Wiki는 사용하기 나름이겠지만, 일반 게시판으로 사용해도 되고 프로젝트 관련 공지 게시판으로 사용해도 됩니다.</li>
+</ul>
+<ul>
+<li>Source탭에는 해당 프로젝트의 소스코드를 담고 있는 svn 주소를 볼 수 있고, 해당 프로젝트에 Member로 등록되어 있는 사람은 https 주소가 보입니다. 이 URL을 사용하여 svn에 접근하면 commit할 수 있는 권한이 있습니다.</li>
+</ul>
+<ul>
+<li>Administrater에서는 위에서 살펴본 메뉴들의 설정이나 프로젝트 멤버를 관리할 수 있습니다.</li>
+</ul>
+<p>이 중에서도 가장 멋지다고 생각하는 것은 바로 완전 간편한 이슈 트랙커!!<br /><img src="{{ site.baseurl }}/assets/dn360.png" class="aligncenter" width="600" height="178" alt="사용자 삽입 이미지" /><a href="http://evilimp.tistory.com/324" target="_blank">Eclipse와 Mylyn 플러그인을 사용하면 위의 이슈 트래커와 연동</a>도 쉽게 할 수 있습니다.</p>
+<p>그리고 화면의 오른쪽 위를 잘 보시면 List/Grid가 있는데 여기서 Grid를 선택하면 완전 멋진 UI를 볼 수 있습니다.<br /><img src="{{ site.baseurl }}/assets/dn361.png" class="aligncenter" width="600" height="113" alt="사용자 삽입 이미지" />모든 이슈들이 카드 모양으로 나열되어 있습니다. 이 상태에서 Rows를 Priority로 변경해 보겠습니다.<br /><img src="{{ site.baseurl }}/assets/dn362.png" class="aligncenter" width="600" height="127" alt="사용자 삽입 이미지" />짜잔~ 완전 멋진 구글 코드! 대단합니다. 이런식으로 여러 이슈들을 한 눈에 구분하여 볼 수 있도록 되어 있습니다.</p>
+<p>JIRA도 좋겠지만, 설치도 복잡하고, 서버도 있어야 되는데 반해 구글 코드는 아무것도 안해도 그냥 매우 간단하게 프로젝트 호스팅에서 몇 가지 입력 조금 하고 만들면 바로 사용할 수 있는 장점이 있습니다.</p>
+<p>하지만... 소스 코드 업데이트하고 커밋할 때 느리기 때문에 자칫 라이브러리 파일 올리다가 커넥션이 끊길 수 있다는 매우 큰 단점이 있습니다. 이 문제는 라이브러리 파일은 소스 파일 공유에서 제외시키면 해결이 되겠지만, 자주 업데이트 할 필요가 없는 라이브러리 파일들은 처음에만 신경쓰일 뿐 그 담부턴 상관이 없긴 합니다.</p>

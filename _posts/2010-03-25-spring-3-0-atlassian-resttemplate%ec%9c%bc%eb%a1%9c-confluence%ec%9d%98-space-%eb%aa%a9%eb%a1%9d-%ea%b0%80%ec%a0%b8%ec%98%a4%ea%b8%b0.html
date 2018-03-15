@@ -1,0 +1,129 @@
+---
+layout: post
+title: "[Spring 3.0 & Atlassian] RestTemplate으로 Confluence의 Space 목록 가져오기"
+date: 2010-03-25 15:51:46.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Atlassian
+- Spring 3.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323114967'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>public class ConfluenceRestTest {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public static final String SPACE_LIST_URL = "http://dev.springsprout.org/wiki/rest/prototype/1/space?os_authType=basic";</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;/**</div>
+<div>&nbsp;&nbsp; &nbsp; * <a href="http://confluence.atlassian.com/display/CONFDEV/Using+the+REST+APIs" target="_blank" title="[http://confluence.atlassian.com/display/CONFDEV/Using+the+REST+APIs]로 이동합니다.">http://confluence.atlassian.com/display/CONFDEV/Using+the+REST+APIs</a></div>
+<div>&nbsp;&nbsp; &nbsp; */</div>
+<div>&nbsp;&nbsp; &nbsp;@Test</div>
+<div>&nbsp;&nbsp; &nbsp;public void testGetWikiSpaceList() {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;RestTemplate restTemplate = new RestTemplate();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;String result = restTemplate.execute(SPACE_LIST_URL, HttpMethod.GET,</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new JsonRestRequestCallBack(),</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new&nbsp;BodyToStringRestResponseExtractor());</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(result);</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;static class&nbsp;JsonRestRequestCallBack&nbsp;implements RequestCallback {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;public void doWithRequest(ClientHttpRequest clientHttpRequest) throws IOException {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;HttpHeaders headers = clientHttpRequest.getHeaders();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;headers.add("Authorization", "Basic XXXXXXXX(base64 encoded username:passwd)");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;headers.add("Accept", "application/json");</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;static class BodyToStringRestResponseExtractor implements ResponseExtractor&lt;String&gt; {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;public String extractData(ClientHttpResponse clientHttpResponse) throws IOException {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return convertStreamToString(clientHttpResponse.getBody());</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;....</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+}</div>
+</div>
+<div>
+</div>
+<div>
+</div>
+<div>봄싹 위키를 컨플루언스로 바꾸었기 때문에 기존 메뉴를 컨플루언스에 있는 정보를 끌어다 보여주는 것으로 바꾸려고 합니다. 그래서 파일럿(?) 겸사해서 코딩을 해봤는데 잘 됐네요.</div>
+<div>
+</div>
+<div>
+<div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(159, 211, 49); border-right-color: rgb(159, 211, 49); border-bottom-color: rgb(159, 211, 49); border-left-color: rgb(159, 211, 49); background-color: rgb(231, 253, 181); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+{"expand":"space","space":[{"name":"개발툴","key":"DTL","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/DTL"},"description":"개발툴 관련 내용을 정리하는 공간입니다."},{"name":"베타리딩","key":"BTR","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/BTR"},"description":"봄싹 베타리딩 관련 공간입니다."},{"name":"봄싹 Modules","key":"BSM","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/BSM"},"description":"봄싹 Module과 관련된 정보를 정리하는 공간입니다."},{"name":"봄싹 개발","key":"SSD","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/SSD"},"description":"봄싹에서 진행하는 개발과 관련된 정보를 정리하는 공간입니다."},{"name":"스프링 3.0 레퍼런스 번역","key":"SRK","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/SRK"},"description":"스프링 3.0 레퍼런스를 번역하는 공간입니다."},{"name":"스프링 시큐리티 3.0 레퍼런스 번역","key":"springsecurity","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/springsecurity"},"description":""},{"name":"스프링소스 블로그 번역","key":"SBK","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/SBK"},"description":"스프링소스 블로그를 번역하는 공간입니다."},{"name":"연습장","key":"ds","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/ds"},"description":"봄싹 위키 사용법을 익히는 공간입니다."},{"name":"자바","key":"JAVA","link":{"rel":"self","href":"http://dev.springsprout.org/wiki/rest/prototype/1/space/JAVA"},"description":"자바 학습 공간입니다."}]}</div>
+</div>
+<div>
+</div>
+<div>막상 해보고 나니 고민이 생기네요. "저 작업을 뷰에서 할 것이냐 서버단에서 할 것이냐?"</div>
+<div>
+</div>
+<div>
+뷰에서 하면 저 페이지로 이동 할 때 마다 요청을 보낼테니 Confluence 응답이 늦어지면 문제고 Confluence 입장에서 부담이 될 수도 있고, Confluence가 죽었을땐 위키 페이지까지 마비가 되지만 구현하는 입장에선 뷰 코드만 지지고 볶으면 되니까 간단할 것 같은데..</div>
+<div>
+</div>
+<div>
+서버단에서 하면 DB에 저장해두거나 캐싱을 해둘 수 있으니 Confluence의 부담도 덜고 Confluence가 죽어도 위키 정보는 보여줄 수 있지만 구현하면서 이것 저것 신경쓸게 많아지네;; 정보를 읽어올 주기, 배치로 돌릴 것이냐? JSON말고 XML로 받아온다음 OXM을 이용해서 XML-&gt;Object로 바로 변환해버리는 ResponseExtracter를 만들까나.. 캐싱은 이미 Ehcache를 하이버 땜시 쓰고 있으니 캐싱도 해보고?</div>
+<div>
+</div>
+<div>
+흠.. 서버단에서 할까나 어쩔까나.. Confluence가 죽어있으면 어차피 봄싹 Wiki에서 목록 본다음에 링크 클릭해도 이동을 못하니까 그냥.. 뷰에서 읽을까나.. +_+ 그럼 나 머하러 RestTemplate 사용한거지.. @_@.. 기왕에 썼으니까 OXM도 적용해서 서버 단에서 해버렷?ㅋ&nbsp;</div>
+</div>

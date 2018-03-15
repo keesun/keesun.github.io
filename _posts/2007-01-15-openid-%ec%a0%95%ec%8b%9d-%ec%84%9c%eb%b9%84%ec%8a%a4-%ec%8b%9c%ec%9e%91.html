@@ -1,0 +1,64 @@
+---
+layout: post
+title: OpenID 정식 서비스 시작
+date: 2007-01-15 15:47:10.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Blogging
+tags:
+- OpenID
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322988924'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>내일 모래[footnote]정확히 말하자면 내일 모래 글피[/footnote]면 와우 확장팩 오픈베타가 시작하는데 공부는 점점 슬럼프에 빠져가고 책은 읽어서 어떻게 해야 되는 건지는 알겠는데 몸이 안따라 주니 원...</p>
+<p>이런 와중에 OpenID라는 서비스를 myId.net에서 어제 저녁에 정식 서비스를 시작했다고 합니다. 귀찮은 가입이나 로그인 없이 블로그 주소 하나만 입력하면 인터넷 어디로든 사방 팔방 서핑을 즐길 수 있는 기반을 제공해 주는 것 같습니다.</p>
+<p><a href="http://openid.co.kr/" target="_blank">OpenID란?</a> -&gt; 그냥 읽어 보세요.<br /><a href="http://openid.co.kr/about.html" target="_blank">어떻게 돌아가는 건가?</a> -&gt; 이것도 그냥 읽어보세요.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);"><span style="font-weight: bold;">어떻게 쓰나?</span></p>
+<p>이게 제일 중요하죠. 하지만 저도 잘 모른다는거~ 일단 OpenID로 로그인 할 수 있게 해주는 사이트가 별로 안되는 것 처럼 보이는데요. 하지만 그래도 뜻이 좋으니 언젠간 널리 퍼지리라 생각합니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/bl191.bmp" class="aligncenter" width="198" height="179" alt="사용자 삽입 이미지">bl191.bmp</a>이런 로그인 화면이 있는 곳이 OpenID 사용을 할 수 있는 사이트 인데요. 여기다가 myID.net에서 만든 ID를 입력하시면 됩니다. 저같은 경우는 keesun.myid.net 인데요.</p>
+<p><a href="http://iwantmyopenid.org/" target="_blank">이곳</a>에서 test 해볼 수 있습니다.</p>
+<p>keesun.myid.net 말고 자신의 블로그 주소로 하고 싶을 때는 저 같은 경우는 whiteship.tistory.com 로 다소 길지만 이걸로 하고 싶을 때는 블로그의 index 페이지에 있는 html소스의 head 안에 다가 다음의 소스를 붙여 넣습니다.</p>
+<p>&lt;link rel="openid.server" href="http://www.myid.net/server" /&gt;<br />
+&lt;link rel="openid.delegate" href="http://자기아이디.myid.net/" /&gt;<br />
+&lt;meta http-equiv="X-XRDS-Location" content="http://자기아이디.myid.net/xrds" /&gt;</p>
+<p>자기아이디 부분을 저같은 경우는 keesun으로 바꿔주면 됩니다.</p></div>
+<p>부디 쓸 수 있는 곳이 많아지길 바라며...</p>

@@ -1,0 +1,18 @@
+<p><span style="font-weight: bold;">Resources</span></p>
+<p>process-resource는 간단하게, src/main/resources 디렉터리에 있는 파일들을 복사하여 target/classes 디렉터리에 복사한다고 생각할 수 있습니다. 이때, ${...}를 텍스트로 대체할 수 있는 필터를 사용할 수 있습니다.</p>
+<p>예를들어, src/main/resources/META-INF/service.xml 이 다음과 같을 때..</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;service&gt;<br />&nbsp; &lt;!-- This URL was set by project version ${project.version} --&gt;<br />&nbsp; &lt;url&gt;${jdbc.url}&lt;/url&gt;<br />&nbsp; &lt;user&gt;${jdbc.username}&lt;/user&gt;<br />&nbsp; &lt;password&gt;${jdbc.password}&lt;/password&gt;<br />&lt;/service&gt;</div>
+<p>src/main/filters/default.properties 파일에 그 값들을 외부로 빼낼 수 있습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">jdbc.url=jdbc:hsqldb:mem:mydb<br />jdbc.username=sa<br />jdbc.password=</div>
+<p>이 두개의 파일을 다음과 같이 설정하여 사용할 수 있습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;build&gt;<br />&nbsp; &lt;filters&gt;<br />&nbsp; &nbsp; &lt;filter&gt;src/main/filters/default.properties&lt;/filter&gt;<br />&nbsp; &lt;/filters&gt;<br />&nbsp; &lt;resources&gt;<br />&nbsp; &nbsp; &lt;resource&gt;<br />&nbsp; &nbsp; &nbsp; &lt;directory&gt;src/main/resources&lt;/directory&gt;<br />&nbsp; &nbsp; &nbsp; &lt;filtering&gt;true&lt;/filtering&gt;<br />&nbsp; &nbsp; &lt;/resource&gt;<br />&nbsp; &lt;/resources&gt;<br />&lt;/build&gt;</div>
+<p>POM에 프로퍼티 파일에 명시했던 값들을 설정하면, 프로퍼티 파일을 사용하지 않을 수도 있다고 합니다.</p>
+<p><span style="font-weight: bold;">Compile</span></p>
+<p>컴파일 할 자바 버전을 명시할 수 있습니다. 기본으로 JDK 1.3 호환 코드로 컴파일 것으로 가정하기 때문에, 다음과 같이 명시적으로 사용할 버전을 설정해주어야 합니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;project&gt;<br />&nbsp; ...<br />&nbsp; &lt;build&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &nbsp; &lt;plugins&gt;<br />&nbsp; &nbsp; &nbsp; &lt;plugin&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;configuration&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;source&gt;1.5&lt;/source&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;target&gt;1.5&lt;/target&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/configuration&gt;<br />&nbsp; &nbsp; &nbsp; &lt;/plugin&gt;<br />&nbsp; &nbsp; &lt;/plugins&gt;<br />&nbsp; &nbsp; ...<br />&nbsp; &lt;/build&gt;<br />&nbsp; ...<br />&lt;/project&gt;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">Test Resource</span></p>
+<p>process-test-resource는 process-resource와 거의 같습니다. 차이가 있다면 POM에 testResources 엘리먼트 내부에 testResouce 엘리먼트로 정의해둔 Test Resource들을 target/test-classes에 복사합니다.</p>
+<p><span style="font-weight: bold;">Test</span></p>
+<p>이 Phase는 surefire:test Goal과 연관되어있습니다. Surefire는 *Test.java로 끝나는 파일들을 기본으로 실행합니다. 물론 별도로 설정할 수도 있는데, Appendix A에서 다룹니다. JUnit을 기본 테스트 프레임워크로 기대하고 있지만, TestNG를 다음과 같이 설정할 수도 있습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;dependency&gt;<br />&nbsp; &nbsp; &nbsp; &lt;groupId&gt;org.testng&lt;/groupId&gt;<br />&nbsp; &nbsp; &nbsp; &lt;artifactId&gt;testng&lt;/artifactId&gt;<br />&nbsp; &nbsp; &nbsp; &lt;version&gt;4.7&lt;/version&gt;<br />&nbsp; &nbsp; &nbsp; &lt;scope&gt;test&lt;/scope&gt;<br />&nbsp; &nbsp; &nbsp; &lt;classifier&gt;jdk14&lt;/classifier&gt;<br />&lt;/dependency&gt;</div>
+<p></p>

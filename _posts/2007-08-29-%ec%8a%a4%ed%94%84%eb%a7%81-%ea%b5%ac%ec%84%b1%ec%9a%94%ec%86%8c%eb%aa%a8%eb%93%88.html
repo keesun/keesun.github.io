@@ -1,0 +1,64 @@
+---
+layout: post
+title: 스프링 구성요소(모듈)
+date: 2007-08-29 00:06:38.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 01. Springing into action
+tags:
+- Spring Modules
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323080096'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/dn338.png" class="aligncenter" width="600" height="327" alt="사용자 삽입 이미지" /><br />The Code Container<br />- provides the fundamental functionality of the Spring<br />- org.springframework.beans.factory.BeanFactory<br />&nbsp; &nbsp; - 스프링의 가장 기본이 되는 컨테이너.<br />&nbsp; &nbsp; - 스프링 DI를 제공하는 기반 시설.<br />- Chapter 2에서 자세히 다룬다.</p>
+<p>Application context module<br />- context module is what makes it a framework.<br />&nbsp; &nbsp; - BeanFactory를 확장하여 다음의 기능들을 추가함.<br />&nbsp; &nbsp; &nbsp; &nbsp; - I18N 메시징<br />&nbsp; &nbsp; &nbsp; &nbsp; - 이벤트 핸들링<br />&nbsp; &nbsp; &nbsp; &nbsp; - Validation<br />- supplies many enterprise services<br />&nbsp; &nbsp; - email<br />&nbsp; &nbsp; - JNDI<br />&nbsp; &nbsp; - EJB와의 연동<br />&nbsp; &nbsp; - templating frameworks(Velocity, FreeMarker)와의 연동</p>
+<p>Spring’s AOP module<br />- serves as the basis for developing your own aspects for your Spring enabled application.<br />- AOP Alliance 인터페이스에 기반하였다.<br />- AspectJ 지원.<br />- Chapter 4에서 자세히 다룬다.</p>
+<p>JDBC abstraction and the DAO module<br />- 반복 되는 코드를 추상화 시켜서 코드 작성을 간결하고 깔끔하게 할 수 있다.<br />- 각 DB 벤더들의 에러 코드를 의미가 있는 에러 메시지로 변환하여 RuntimeException으로 던지는 추상화 계층 제공.<br />- Chapter 5에서 자세히 다룬다.</p>
+<p>Object-relational mapping (ORM) integration module<br />- JDBC를 직접 사용하는 대신 ORM 사용을 선호하는 분들을 위해 만들어둔 추상화 계층.<br />- Hibernate, JPA, JDO, iBATIS SQL Maps 지원.<br />- Chapter 5에서 자세히 다룬다.</p>
+<p>Java Management Extensions (JMX)<br />- makes it easy to expose your application’s beans as JMX Mbeans.<br />- makes it possible to monitor and reconfigure a running application.<br />- Chapter 12에서 자세히 다룬다.</p>
+<p>Java EE Connector API (JCA)<br />- Java EE Connection API (JCA)는 여러 메인 프레임과 DB를 포함하고 있는 엔터프라이즈 시스템들을 통합하기 위한 표준 API.<br />- JDBC 지원 기능과 마찬가지로 JCA 코딩에서 반복되는 부분을 추상화 시키는 형태로 지원.</p>
+<p>The Spring MVC framework<br />- Model, View, Controller(MVC) 패턴은 UI와 애플리케이션 로직을 분리하기 위한 접근 방법<br />- 자체 MVC 기능 구현 함.<br />- Chapter 14, 15에서 자세히 다룬다.</p>
+<p>Spring Portlet MVC<br />- portlet-based applications aggregate several bits of functionality on a single web page.<br />- Spring Portlet MVC builds on Spring MVC to provide a set of controllers that support Java’s portlet API.</p>
+<p>Spring’s web module<br />- Spring MVC 와 Spring Portlet MVC를 지원하기 위해 기반이 되는 클래스들.<br />- Apache Struts 또는 Java-Server Faces (JSF)와 연동 지원.</p>
+<p>Remoting<br />- 자신의 자바 객체를 remote 객체로 공개할 수 있으며, 외부의 remote 객체를 애플리케이션에 엮어서 마치 local - POJO 인 것처럼 사용하기 쉽게 해준다.<br />- RMI, Hessian, Burlap, JAX-RPC, Spring의 Http Invoker<br />- Chapter 8에서 자세히 다룬다.</p>
+<p>Java Message Service (JMS)<br />- Remoting에 비해 보다 신뢰성있는 통신이 가능.<br />- helps you send messages to JMS message queues and topics.<br />- helps message-driven POJOs that are capable of consuming asynchronous messages.<br />- Chapter 10에서 자세히 다룬다.</p>
+<p>참조 : Spring In Action 2nd edition</p>

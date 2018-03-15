@@ -1,0 +1,92 @@
+---
+layout: post
+title: "[NullPE] NullPointerException 때문에 고민 1"
+date: 2010-02-10 02:46:35.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- Null Object Pattern
+- NullPointerException
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323111210'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>레퍼런스를 사용하는 쪽에서 null 체크를 하면 되지만.. 그러지 못하는 경우가 있어서..</p>
+<p>MVEL.eval(column.getPath(), entity, Integer.class)</p>
+<p>column의 getPath()에는 item의 속성을 타고 타고 들어가는 경로도 들어옵니다. 그럴 때 타고 가는 중간에 null을 만나면 에러가 나죠. 제어할 수가 있다면 null 체크 하는 구문만 넣어서 버그를 수정하겠지만.. 지금은.. 좀.. @_@;;</p>
+<p>그래서 Null Object Pattern이라는게 생각났고 이걸 적용해볼까 했습니다.</p>
+<p><a title="[http://www.refactoring.com/catalog/introduceNullObject.html]로 이동합니다." target="_blank" href="http://www.refactoring.com/catalog/introduceNullObject.html">http://www.refactoring.com/catalog/introduceNullObject.html</a><br />
+<a title="[http://en.wikipedia.org/wiki/Null_Object_pattern]로 이동합니다." target="_blank" href="http://en.wikipedia.org/wiki/Null_Object_pattern">http://en.wikipedia.org/wiki/Null_Object_pattern</a></p>
+<p>Item 클래스의 레퍼런스 타입 변수를 반환하는 게터들이 다음과 같이 바꼈습니다.</p>
+<p>&nbsp;&nbsp;&nbsp; public Code getDelivery() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return NullObjectUtil.eval(delivery);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public Code getCar() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return NullObjectUtil.eval(car);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public Code getItemGroup() {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return NullObjectUtil.eval(itemGroup);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public Supp getSupp() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return NullObjectUtil.eval(supp);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>public class NullObjectUtil {<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; public static Code eval(Code code) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return code != null ? code : new NullCode();<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public static Supp eval(Supp supp) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return supp != null ? supp : new NullSupp();<br />
+&nbsp;&nbsp;&nbsp; }<br />
+}</p>
+<p>그리고 domain.nullobject 패키지를 만들고</p>
+<p>public class NullCode extends Code {<br />
+}</p>
+<p>public class NullSupp extends Supp {<br />
+}</p>
+<p>이렇게 NullObject 클래스들을 만들어 줬습니다. </p>
+<p>이렇게 할지;;;</p>
+<p>public Code getProcess(){<br />
+&nbsp; &nbsp; return Code.basicIfNull(process);<br />
+}</p>
+<p>이런식으로 할지. 고민입니다. 어떤게 왜 나은걸까나;; @_@</p>
+<p></p>

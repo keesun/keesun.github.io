@@ -1,0 +1,168 @@
+---
+layout: post
+title: "[회사일] JPA로 계층구조 매핑하기"
+date: 2010-06-18 06:24:27.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SLT
+tags:
+- 상속관계 매핑
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322983669'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>하이버 번역서를 보시면 여러가지 방법이 나와있는데 그 중에서 가장 간단하면서, 성능도 좋고, 다형성까지 살릴 수 있는 방법으로 "계층 구조 당 테이블" 매핑 방법을 소개하고 있습니다.
+<div>
+</div>
+<div>원래 이 회사에서 다루는 재고가 '신발' 하나였는데 이제 곧 '가방'까지 늘어날 예정인가 봅니다. 고객(울 회사 대표님)과 대화를 하지 않았다면 몰랐을텐데.. 초기에 알았으니 그나마 다행입니다. Item이라는 클래스에 신발 정보 다 넣어놓고 이런 얘기 했다면... @_@ 좀 피곤했을텐데 말이죠. 다행히 테스트용으로 두 세개 밖에 안넣어봤거든요.ㅋ</div>
+<div>
+</div>
+<div>
+어쨋든..</div>
+<div>
+</div>
+<div>
+Item을 상위클래스로 두고, Shoes와 Bag을 하위 클래스로 설계하고 싶어졌습니다.</div>
+<div>
+</div>
+<div>
+그래서 모든 상품에 기본적으로 들어갈만한 속성은 Item에 남겨두고 JPA 계층 구조 매핑을 추가했습니다.</div>
+<div>
+</div>
+<div>
+<div></div>
+</div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+<div>
+@Entity</div>
+<div>@Inheritance(strategy = InheritanceType.SINGLE_TABLE)</div>
+<div>@DiscriminatorColumn(</div>
+<div>&nbsp;&nbsp; &nbsp;name = "ITEM_TYPE",</div>
+<div>&nbsp;&nbsp; &nbsp;discriminatorType = DiscriminatorType.STRING</div>
+<div>)</div>
+<div>public class Item {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Id</div>
+<div>&nbsp;&nbsp; &nbsp;@GeneratedValue(strategy = GenerationType.AUTO)</div>
+<div>&nbsp;&nbsp; &nbsp;private int id;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column</div>
+<div>&nbsp;&nbsp; &nbsp;@Type(type = "text")</div>
+<div>&nbsp;&nbsp; &nbsp;private String descr;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column(length = 50)</div>
+<div>&nbsp;&nbsp; &nbsp;private String name;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column(length = 50)</div>
+<div>&nbsp;&nbsp; &nbsp;private String number;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column</div>
+<div>&nbsp;&nbsp; &nbsp;private String image;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Column</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>@Type(type="smdis.domain.usertype.SexUserType")</div>
+<div>&nbsp;&nbsp; &nbsp;private Sex sex;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@ManyToOne</div>
+<div>&nbsp;&nbsp; &nbsp;private Color color;</div>
+</div>
+<div>
+...</div>
+<div>}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="">그다음 이 클래스를 상속받는 Shoes라는 도메인을 만들었습니다.</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+@Entity</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">@DiscriminatorValue("SHO")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class Shoes extends Item {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;@Column(name = "SHO_SIZE")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>@Type(type="smdis.domain.usertype.ShoesSizeUserType")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;private ShoesSize size;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public ShoesSize getSize() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return size;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public void setSize(ShoesSize size) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.size = size;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">간단하네요. Bag도 추가해봐야겠습니다.</div>
+<div>
+</div>
+<div>
+</div>
+</div>
+<div>
+</div>

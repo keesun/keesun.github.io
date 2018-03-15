@@ -1,0 +1,303 @@
+<p>CodeController에서 구체적인 정보는 최대한 추상화 시킵니다. 예를 들어 "code" 같은 문자열은 별로 좋치 않습니다. 이걸 차라리 "model"이라는 추상적인 이름으로 바꾸면 다른 도메인에서도 사용하기 좋을 겁니다. 애초에 문자열 자체가 그다지 추상화는데 좋치 않긴 하지만 그렇게라도 해야지요. ㅋ
+<div>
+</div>
+<div>그렇게 해서 일단 추상화 시킨 코드가 이렇습니다.</div>
+<div>
+</div>
+<div>
+<div></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div>
+@Controller</div>
+<div>@RequestMapping("/base/code")</div>
+<div>@SessionAttributes("model")</div>
+<div>public class CodeController {</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@Autowired CodeService codeService;</div>
+<div>&nbsp;&nbsp; &nbsp;@Autowired CodeRef ref;</div>
+<div>&nbsp;&nbsp; &nbsp;String baseUrl;</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;public CodeController() {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;RequestMapping rm = this.getClass().getAnnotation(RequestMapping.class);</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>this.baseUrl = rm.value()[0];</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@ModelAttribute("ref")</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>public CodeRef ref() {</div>
+<div><span class="Apple-tab-span" style="white-space:pre">		</span>return ref;</div>
+<div><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="/mgt")</div>
+<div>&nbsp;&nbsp; &nbsp;public void mgt(Model model){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("searchParam", new CodeSearchParam());</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.GET)</div>
+<div>&nbsp;&nbsp; &nbsp;public void list(Model model, CodeSearchParam searchParam, PageParam pageParam) {</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("list", codeService.list(pageParam, searchParam));</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/form", method = RequestMethod.GET)</div>
+<div>&nbsp;&nbsp; &nbsp;public String addForm(Model model){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", new Code());</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/new";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.POST)</div>
+<div>&nbsp;&nbsp; &nbsp;public String addFormSubmit(Model model, @Valid @ModelAttribute("model") Code code, BindingResult result, SessionStatus status){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/new";</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.add(code);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}/form", method = RequestMethod.GET)</div>
+<div>&nbsp;&nbsp; &nbsp;public String editForm(@PathVariable int id, Model model){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", codeService.getById(id));</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/edit";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.PUT)</div>
+<div>&nbsp;&nbsp; &nbsp;public String editFormSubmit(Model model, @Valid @ModelAttribute("model") Code code, BindingResult result, SessionStatus status){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/edit";</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.update(code);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)</div>
+<div>&nbsp;&nbsp; &nbsp;public String delete(@PathVariable int id){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;codeService.deleteBy(id);</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div>
+</div>
+<div>&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.GET)</div>
+<div>&nbsp;&nbsp; &nbsp;public String view(@PathVariable int id, Model model){</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", codeService.getById(id));</div>
+<div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/view";</div>
+<div>&nbsp;&nbsp; &nbsp;}</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+<div>
+</div>
+<div>
+이전 코드에 비해서 달라진게 별로 없지만.. 일단은 baseUrl 속성을 둬서 @RequestMapping에 넣어주는 값을 읽어서 사용하도록 코드를 수정했습니다. 그리고 "code"를 "model"로 바꿨고, "codeList"를 "list"로 바꿨습니다. "ref"애초부터 추상화 시킨 이름을 사용했으니 손댈 필요가 없었습니다.</div>
+<div id="">
+</div>
+<div id="">
+다음에 할 작업은 화면과 연결하는 겁니다. 화면에 전달하는 객체 이름이 바꼈으니 화면에서 EL 부분을 손봐줍니다.</div>
+<div id="">
+</div>
+<div id="">
+다음은 GenericControlle을 만듭니다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+@SessionAttributes("model")</div>
+<div id="">public abstract class GenericController&lt;GS extends GenericService&lt;E, S&gt;, R, E, S&gt; {</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@Autowired ApplicationContext applicationContext;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;GS service;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;R ref;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;Class&lt;GS&gt; serviceClass;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;Class&lt;R&gt; refClass;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;Class&lt;E&gt; entityClass;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;Class&lt;S&gt; searchParamClass;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;protected String baseUrl;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;public GenericController() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;RequestMapping rm = this.getClass().getAnnotation(RequestMapping.class);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>this.baseUrl = rm.value()[0];</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.serviceClass = GenericUtils.getClassOfGenericTypeIn(getClass(), 0);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.refClass = GenericUtils.getClassOfGenericTypeIn(getClass(), 1);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.entityClass = GenericUtils.getClassOfGenericTypeIn(getClass(), 2);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.searchParamClass = GenericUtils.getClassOfGenericTypeIn(getClass(), 3);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@ModelAttribute("ref")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>public R ref() {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">		</span>return ref;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><span class="Apple-tab-span" style="white-space:pre">	</span>}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="/mgt")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void mgt(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("searchParam", searchParamClass.newInstance());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (Exception e) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;throw new RuntimeException(e);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void list(Model model, S searchParam, PageParam pageParam) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("list", service.list(pageParam, searchParam));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/form", method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String addForm(Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", entityClass.newInstance());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (Exception e) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;throw new RuntimeException(e);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/new";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(method = RequestMethod.POST)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String addFormSubmit(Model model, @Valid @ModelAttribute("model") E e, BindingResult result, SessionStatus status){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/new";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;service.add(e);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}/form", method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String editForm(@PathVariable int id, Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", service.getById(id));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/edit";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.PUT)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String editFormSubmit(Model model, @Valid @ModelAttribute("model") E e, BindingResult result, SessionStatus status){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if(result.hasErrors())</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/edit";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;status.setComplete();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;service.update(e);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String delete(@PathVariable int id){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;service.deleteBy(id);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return &nbsp;"redirect:" + baseUrl + "/mgt";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value = "/{id}", method = RequestMethod.GET)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public String view(@PathVariable int id, Model model){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("model", service.getById(id));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return baseUrl + "/view";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@PostConstruct</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public void setUp(){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.service = applicationContext.getBean(serviceClass);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.ref = applicationContext.getBean(refClass);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div>이전 글에서 만든 GenericUtils를 이용해서 타입 추론을 하고 그렇게 알아낸 타입을 사용해서 new Code() 하던 부분은 codeClass.newInstance()로 바꾸고, GS service = applicationContext.getBean(serviceClass) 이렇게 applicationContext에서 Class 타입으로 빈을 가져올 때 사용합니다.</div>
+<div>
+</div>
+<div>
+필요한 타입은 4개&nbsp;GenericService, Ref, Entity, SearchParam</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+Code 도메인 기준으로는 : CodeService, COdeRef, Code, CodeSearchParam이 필요합니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+자 이제 CodeController 코드를 GenericController를 사용하도록 수정합니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+@Controller</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">@RequestMapping("/base/code")</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">public class CodeController extends GenericController&lt;CodeService, CodeRef, Code, CodeSearchParam&gt; {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">끝입니다. 맨 위에 있는 CodeController 코드와 비교하면.. 뭐. 거의 10배는 코드량을 줄인것 같네요. 이제 부터 찍어내는 일만... 아... 아니군요;;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+뷰 코드까지 정리해야 찍어낼 수 있습니다. 컨트롤러까지만 만들면 뭐하나요. 화면이 안나오는데.. OTL...</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>

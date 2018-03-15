@@ -1,0 +1,62 @@
+---
+layout: post
+title: 어드바이스 예제
+date: 2007-04-06 02:44:12.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- Schema-based AOP
+- Spring Reference 6장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322705338'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>around 어드바이스 역할을 메소드를 만듭니다. <a href="../../664">@Around 어드바이스 예제</a> 의 예제와 거의 동일합니다.</p>
+<p>메소드의 첫번째 인자로 ProceedingJoinPoint가 와야 하며 throws Throwable을 붙여줍니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; public Object <span style="color: rgb(255, 0, 0);">aroundSellTicket</span>(ProceedingJoinPoint pjp) throws Throwable{<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("왔어? 영화 뭐 볼껀데?");<br />&nbsp; &nbsp; &nbsp; &nbsp; Ticket ticket = (Ticket) pjp.proceed();<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("쌩큐&nbsp; " + ticket.getMovie().getName() + "잘봐!");<br />&nbsp; &nbsp; &nbsp; &nbsp; return ticket;<br />&nbsp; &nbsp; }</div>
+<p>xml 설정 파일에 aound 어드바이스를 설정해 줍니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;aop:aspect id="cinema" ref="aspect"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="checkTicket" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:after-returning method="afterSellTicket" pointcut-ref="sellTicket" returning="ticket"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 153, 102);">&lt;aop:around method="<span style="color: rgb(255, 0, 0);">aroundSellTicket</span>" pointcut-ref="sellTicket"/&gt;</span><br />&lt;/aop:aspect&gt;</div>
+<p>테스트를 실행합니다.
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void sellTicket() {<br />&nbsp; &nbsp; &nbsp; &nbsp; cinema.sellTicket(movie, new Date());<br />&nbsp; &nbsp; }</div>
+<p>어서 오세요. 무엇을 도와드릴까요?<br /><span style="font-weight: bold;">왔어? 영화 뭐 볼껀데?</span><br />감사합니다. 공공의적을 구매 하셨습니다.<br /><span style="font-weight: bold;">쌩큐&nbsp; 공공의적잘봐!</span></p>
+<p>이 전에 사용했던 예제의 어드바이스가 같이 적용이 됐기 때문에 결과가 저러헤게 나왔습니다. 어드바이스가 적용되는 순서는 <a href="../../668">Advice ordering</a> 여기서도 살펴봤지만 간단하게 aspect에 등록되어 있는 순이라고 생각해도 될 것 같습니다.</p>
+<p></p>

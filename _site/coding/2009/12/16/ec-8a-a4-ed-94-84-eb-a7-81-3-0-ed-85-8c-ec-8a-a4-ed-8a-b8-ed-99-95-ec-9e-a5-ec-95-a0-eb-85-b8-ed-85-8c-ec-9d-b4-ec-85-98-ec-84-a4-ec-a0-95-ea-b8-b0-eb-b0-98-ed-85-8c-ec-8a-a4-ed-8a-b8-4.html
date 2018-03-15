@@ -1,0 +1,84 @@
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+/**<br />
+&nbsp;* @author Keesun Baik(Whiteship)<br />
+&nbsp;* @author Seongyoon Kim(Is윤군)<br />
+&nbsp;*/<br />
+public class AnnotationContextLoader extends AbstractContextLoader {</p>
+<p>&nbsp;&nbsp;&nbsp; private static final String JAVA_FILE_SUFFIX = ".java";<br />
+&nbsp;&nbsp;&nbsp; private static final String APP_CONFIG_FILE_PREFIX = "AppConfig";</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; public String getResourceSuffix() {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return APP_CONFIG_FILE_PREFIX + JAVA_FILE_SUFFIX;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; protected String[] generateDefaultLocations(Class&lt;?&gt; clazz) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assert.notNull(clazz, "Class must not be null");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String suffix = getResourceSuffix();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Assert.hasText(suffix, "Resource suffix must not be empty");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return new String[] { clazz.getName() + suffix };<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; @Override<br />
+&nbsp;&nbsp;&nbsp; protected String[] modifyLocations(Class&lt;?&gt; clazz, String... locations) {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; String[] modifiedLocations = new String[locations.length];<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; locations.length; i++) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String path = locations[i];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(path.endsWith("/"))<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path = path.substring(0, path.length() - 1);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (path.startsWith("/")) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; modifiedLocations[i] = ClassUtils.convertResourcePathToClassName(path.substring(1));<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; else if (!ResourcePatternUtils.isUrl(path)) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; modifiedLocations[i] = getClassName(clazz, path);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; else {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new UnsupportedOperationException();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return modifiedLocations;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private String getClassName(Class clazz, String path) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ClassUtils.convertResourcePathToClassName(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; StringUtils.cleanPath(ClassUtils.classPackageAsResourcePath(clazz) + "/" + path));<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; public final ConfigurableApplicationContext loadContext(String... locations) throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; prepareContext(context);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; customizeBeanFactory(context.getDefaultListableBeanFactory());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; context.register(getAppConfigClasses(context.getClassLoader(), locations));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; context.scan(getAppConfigPackages(context.getClassLoader(), locations));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AnnotationConfigUtils.registerAnnotationConfigProcessors(context);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; context.refresh();<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; context.registerShutdownHook();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return context;<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private String[] getAppConfigPackages(ClassLoader classLoader, String[] locations) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;String&gt; packages = new ArrayList&lt;String&gt;();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(String location : locations){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(!location.contains(JAVA_FILE_SUFFIX))<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; packages.add(location);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return packages.toArray(new String[packages.size()]);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; private Class&lt;?&gt;[] getAppConfigClasses(ClassLoader classLoader, String[] locations) throws ClassNotFoundException {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;Class&lt;?&gt;&gt;();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(String location : locations){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(location.contains(JAVA_FILE_SUFFIX))<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; classes.add(ClassUtils.forName(location.replace(JAVA_FILE_SUFFIX, ""), classLoader));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return classes.toArray(new Class&lt;?&gt;[classes.size()]);<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; protected void prepareContext(GenericApplicationContext context) {<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {<br />
+&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;&nbsp;&nbsp; protected void customizeContext(GenericApplicationContext context) {<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>
+이걸 사용하시면 됩니다. 이제 스프링 이슈에 올려야지. 캬캬캬<br />
+스프링 레퍼런스 공부할 때 오타 찾아서 이슈 등록하던게 엊그제 같은데 이젠 코드도 기여할 수 있으려나.. </p>
+<p>코드를 보시면 아시겠지만, classpath:, file:, url: 등의 prefix 지원은 포기했습니다. 그래도..</p>
+<p>1. 스프링 애노테이션 설정 파일만 가지고 쉽게 테스트 할 수 있으며<br />
+2. 스프링 애노테이션 설정 파일을 명시적으로 설정할 수 있으며<br />
+3. 임의의 패키지를 명시적으로 설정할 수 있습니다.</p>
+<p>딱 제가 원하던 만큼이니 이정도면 저는 만족합니다. 이걸 스프링에서 고쳐서 넣어주던 말던~ 일단은 try.</p>
+<p>ps: 같이 코딩해주고 상의해준 성윤군과, 스프링 러너와 로더 설정 방법 알려주신 사부님 썡큐!</p>

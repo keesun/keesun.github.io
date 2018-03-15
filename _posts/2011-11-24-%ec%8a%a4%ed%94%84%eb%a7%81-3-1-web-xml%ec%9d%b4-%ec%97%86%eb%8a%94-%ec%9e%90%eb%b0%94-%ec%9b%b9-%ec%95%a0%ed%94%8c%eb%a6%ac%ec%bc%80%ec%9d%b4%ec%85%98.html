@@ -1,0 +1,68 @@
+---
+layout: post
+title: "[스프링 3.1] web.xml이 없는 자바 웹 애플리케이션"
+date: 2011-11-24 15:58:00.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.1'
+tags:
+- Spring 3.1 MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323191741'
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring 3.1부터 Servlet 3.0을 지원하는데, Servelt 3.0 부터 web.xml 없이 자바 웹 애플리케이션을 배포하는 것이 가능합니다. 따라서 정확히는 스프링 3.1 없이도 web.xml 없는 자바 웹 애플리케이션을 만들 수 있습니다.</p>
+<p>그런데.. 조금 귀찮은 부분이 있거든요; 그런 귀찮은 작업을 스프링이 대신 해주고 개발자는 서블릿이나 필터만 등록할 수 있게 해줍니다.</p>
+<p>귀찮은 작업엔 뭐가 있냐면… 일단 자바 SPI를 사용하는 방식이기 때문에, META-INF/services 디렉토리에 javax.servlet.ServletContainerInitializer라는 이름의 파일을 만들어 줘야 합니다.</p>
+<p>그리고 ServletContainerInitializer의 구현체를 만들고 그 위에 @HandlerTypes라는 애노테이션을 붙이면서 @HandlerTypes 애노테이션 안에.. ServletContainerInitializer의 onStart 메서드의 첫번째 매개변수로 받을 클래스 타입을 명시해 줘야 합니다. 그 타입을 A라고 해보죠.</p>
+<p>그럼 이제 A 타입의 구현체를 만들거나, 상속 받은 클래스가 onStart 메서드의 첫번째 매개변수로 전달 됩니다.</p>
+<p>귀찮죠;; 그래서 스프링이 다 해뒀고, 우리는 그냥 WebApplicationInitializer 인터페이스만 구현하면 됩니다.</p>
+<p>[gist id=1390672]</p>
+<p>이렇게요. 이게 web.xml을 대신한다고 보면 됩니다.</p>
+<p>나머지 XML은 스프링 빈 설정 파일이 있는데, 스프링 3.0부터 이미 자바로 빈 설정을 할 수 있었습니다. 그런데, 이번 스프링 3.1은 그 기능을 대폭 강화하여 XML 네임스페이스에 해당하는 빈 설정도 자바 설정으로 가능하게 해줍니다. 물론 전부는 아니구요. 일부만요… (그래서 사실 스프링 자바 설정을 그리 많이 사용될 것 같진 않다고 생각합니다.)</p>
+<p>[gist id=1390926]</p>
+<p>자바 설정도 xml 처럼 웹용 설정과 비웹용 설정으로 나눠서 설정할 수 있습니다. 이건 Root ACWAC에서 사용할 비웹용 설정이고…</p>
+<p>[gist id=1390928]</p>
+<p>이건 웹용 빈을 설정한 Child ACWAC입니다.</p>
+<p>전체 앱은 Github에 올려두었습니다.</p>
+<p><a href="https://github.com/keesun/swagger-noxml-mvc">https://github.com/keesun/swagger-noxml-mvc</a></p>
+<p>자세한 내용은 이번주 토요일 <a href="http://www.springsprout.org/study/4494/meeting/6044">봄싹 스웨거 책걸이</a>때 말씀드리겠습니다.</p>

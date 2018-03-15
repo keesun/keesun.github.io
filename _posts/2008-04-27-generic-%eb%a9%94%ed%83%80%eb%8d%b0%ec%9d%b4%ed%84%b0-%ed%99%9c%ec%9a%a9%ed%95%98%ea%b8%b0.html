@@ -1,0 +1,61 @@
+---
+layout: post
+title: Generic 메타데이터 활용하기
+date: 2008-04-27 01:21:41.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- erasure
+- Generic
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322788565'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://blog.springsource.com/main/2006/09/29/exploiting-generics-metadata/" target="_blank">http://blog.springsource.com/main/2006/09/29/exploiting-generics-metadata/</a></p>
+<p>윗글 재미있습니다. 자바에서 욕을 많이 먹고 있는 기능 중에 하나가 Generic인데 사실 그렇게 욕먹을 필요까진 없다고 봅니다. 타입 캐스팅을 줄여주는 것 만으로도 충분히 좋은 기능이고 컴파일 시점에 타입 체크를 할 수 있다는 것도 좋다고 생각합니다. 단지 복잡해 보일 수도 있고 가독성을 떨어트릴 수도 있다는 것 때문에 사장되어야 할 정도로 엉망진창인 기능은 아니라고 생각합니다.</p>
+<p>어쨋든 자바의 Generic은 자바 1.4 이하 버전들과의 호환 때문에 erasure 방식을 사용하고 따라서 런타임 시에 어떤 타입을 가지고 있는지 알겨를이 없습니다.</p>
+<p>그런데 바로 이 Erasure 방식 때문에 오해가 생기기도 하나봅니다. 즉, 자바의 Generic은 타입 정보를 지워버린다는 오해입니다. 클래스 파일에 붙어있는 타입 정보는 지워지지 않습니다. 코딩을 해놨는데 그걸 굳이 지워버릴 필요는 없겠죠. 단지 런타임 시에 해당 클래스 타입의 객체에서 지워져버릴 뿐이죠. 따라서 클래스 파일에 붙어있는 타입 정보를 얼마든지 활용할 수도 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">private Class extractTypeParameter(Class&lt;? extends EntitlementCalculator&gt; calculatorType) {<br />&nbsp; &nbsp; Type[] genericInterfaces = calculatorType.getGenericInterfaces();</p>
+<p>&nbsp; &nbsp; // find the generic interface declaration for EntitlementCalculator&lt;E&gt;<br />&nbsp; &nbsp; ParameterizedType genericInterface = null;<br />&nbsp; &nbsp; for (Type t : genericInterfaces) {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (t instanceof ParameterizedType) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ParameterizedType pt = (ParameterizedType)t;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (EntitlementCalculator.class.equals(pt.getRawType())) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; genericInterface = pt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; break;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; if(genericInterface == null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; throw new IllegalArgumentException("Type '" + calculatorType<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; + "' does not implement EntitlementCalculator&lt;E&gt;.");<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; return (Class)genericInterface.getActualTypeArguments()[0];<br />}</div>
+<p>위 코드는 메소드 파라미터로 넘어온 클래스가 가지고 있는 타입 정보를 반환해주는 메소드 입니다. 객체가 아니라 클래스를 받고 있기 때문에 가능한 일이죠.</p>

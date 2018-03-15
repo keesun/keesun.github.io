@@ -1,0 +1,47 @@
+<p>구글맵API 예제가 주로 자바스크립트로 되어 있습니다. 참고로 전 자바스크립트는 손도 안대봤지요. 그래도 스톱모션을 하던 사람처럼 할 수 있을 것 같은 생각이 듭니다.</p>
+<p>기본구조는 아래와 같습니다.<br />
+[#M_ more.. | less.. | </p>
+<pre class="code">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"<br />
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;<br />
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;<br />
+  &lt;head&gt;<br />
+    &lt;meta http-equiv="content-type" content="text/html; charset=utf-8"/&gt;<br />
+    &lt;title&gt;Google Maps JavaScript API Example&lt;/title&gt;<br />
+    &lt;script src="http://maps.google.com/maps?file=api&amp;amp;v=2&amp;amp;key=<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">abcdefg</span>"<br />
+            type="text/javascript"&gt;&lt;/script&gt;<br />
+    &lt;script type="text/javascript"&gt;<br />
+    //&lt;![CDATA[<br />
+<br />
+    function load() {<br />
+      if (GBrowserIsCompatible()) {        <div style="padding: 10px; background-color: rgb(208, 255, 157)">	var map = new GMap2(document.getElementById("map"));<br />
+        map.setCenter(new GLatLng(37.4419, -122.1419), 13);</div>      }<br />
+    }<br />
+<br />
+    //]]&gt;<br />
+    &lt;/script&gt;<br />
+  &lt;/head&gt;<br />
+  &lt;body onload="load()" onunload="GUnload()"&gt;<br />
+    &lt;div id="map" style="width: 500px; height: 300px"&gt;&lt;/div&gt;<br />
+  &lt;/body&gt;<br />
+&lt;/html&gt;</pre>
+<p>
+_M#]</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228)"><font style="color: rgb(255, 51, 153);" size="3">구글 맵 API Key</font></p>
+<p>위에서 분홍색 부분의 key값에 해당하는 것을 Maps API key라고 하는데 <a href="http://www.google.com/apis/maps/signup.html">여기</a>서 받아오면 됩니다. key값을 생성할 때 주의 할 것이 있습니다. 이 페이지가 돌아갈 서버의 주소를 넣어줘야 합니다. 도메인이 있어야 하나..라고 생각을 해봤었는데 그렇지는 않습니다.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1222906210.bmp" class="aligncenter" width="479" height="98" alt="">1222906210.bmp</a>이런식으로 적어준뒤 생성 버튼을 눌러서 받은 키 값을 분홍색 부분을 바꿔 주면 됩니다. 이렇게까지 해서 돌릴 필요가 있는 경우는 웹서버에서 돌릴 경우이고 그냥 웹브라우져로 파일을 읽어보며 테스트를 할 때는 굳이 key값을 받아와서 바꿔주지 않아도 테스트 해볼 수 있습니다.</div>
+<div style="padding: 10px; background-color: rgb(228, 228, 228)"><font style="color: rgb(153, 204, 102)" size="3">구글 맵 API</font></p>
+<p>저 위의 소스 코드를 템플릿으로 봤을 때 바뀌는 부분은 녹색 박스 부분입니다. 저 안에서 <a href="http://www.google.com/apis/maps/documentation/reference.html">구글맵 API</a>를 보고 코딩을 해주면 화면이 바뀌는 것을 볼 수 있습니다.</p>
+<p>구글맵은 인공위성 맵이 최곤데 안타깝게 지금 저 코드상태로는 아래의 화면 밖에 볼 수 없습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1156937504.bmp" class="aligncenter" width="514" height="312" alt="">1156937504.bmp</a><br />
+이 화면에 (1)맵을 선택해서 보여줄 수 있는 컨트롤러와 (2)화면 축소 및 이동을 위한 컨트롤러를 붙이고 (3)기본 화면을 현재는 맵으로 되어 있는데 위성이 기본 화면이 되도록 바꾸고 (4) 화면 중앙에 한글로 메시지를 보여주고 싶습니다.</p>
+<p>그럼 소스 코드에서 녹색 박스 부분을 아래와 같이 바꿉니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">var map = new GMap2(document.getElementById("map"));<br />
+map.addControl(new GSmallMapControl());<br />
+map.addControl(new GMapTypeControl());<br />
+map.setCenter(new GLatLng(35.15549, 128.93563), 15);<br />
+map.setMapType(G_SATELLITE_MAP);<br />
+map.openInfoWindow(map.getCenter(), document.createTextNode("안녕 백기선"));</div>
+<p>
+그리고 웹브라우져에 띄워보면~<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1095155188.bmp" class="aligncenter" width="512" height="315" alt="">1095155188.bmp</a>짜잔~</div>
+<p></p>

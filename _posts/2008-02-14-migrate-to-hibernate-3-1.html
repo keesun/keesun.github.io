@@ -1,0 +1,84 @@
+---
+layout: post
+title: Migrate To Hibernate 3.1
+date: 2008-02-14 10:03:11.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- migration
+tags:
+- 마이그레이션
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322842095'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>API 변경사항</h1>
+<h2>NamingStrategy 인터페이스로 업데이트</h2>
+<ul>
+<li>인터페이스에 추가된 새로운 메소드를 구현하거나, DefaultNamingStrategy 또는 ImprovedNamingStrategy 클래스를 상속받아라.</li>
+</ul>
+<h2>이벤트 리스너</h2>
+<ul>
+<li>이벤트 하나에 여러 개의 리스너를 등록할 수 있다. 이벤트 리스너의 API들이 리스너 배열을 받도록 수정되었다.</li>
+</ul>
+<h1>설정 변경사항</h1>
+<h2>JDBC 커넥션 release mode</h2>
+<ul>
+<li>이전(2.0, 3.0)까지는 기본값이 ON_CLOSE였는데, 기본값이 이제(3.1)는 auto로 바꼈다.</li>
+<li>session.connection()을 호출했을 때는 close()를 호출해야한다. 이 뒤에 배포에서 이 부분은 변경 될 것이다.</li>
+</ul>
+<h2>이벤트 리스너</h2>
+<ul>
+<li>이벤트에 여러 개의 리스너를 등록할 수 있다.</li>
+<li>hibernate.cfg.xml에서 &lt;listener&gt; 대신에 좀 더 정확한 &lt;event&gt; 엘리먼트를 사용한다.</li>
+</ul>
+<h1>쿼리 언어 변경사항</h1>
+<h2>Stricter checking of invalid queries</h2>
+<ul>
+<li>from Entity e where e.collection.property 이런 쿼리는 작성할 수 없다. 명시적으로 join을 사용해야 한다.</li>
+</ul>
+<ul>
+<li>fetch를 사용할 때, 주가 되는 쪽을 가져오지 않는 쿼리는 의미가 없으므로 예외를 발생시킨다. ex) select b from A join fetch a.bees b</li>
+</ul>
+<h2>hbm2java</h2>
+<ul>
+<li>별도의 툴이 아니라, tools.hibernate.org에 통합됐다. 이 과정에서 깨지거나 유지보수 하지 않는 기능은 제거했다. Hbm2javaCompability을 참조하라.</li>
+</ul>

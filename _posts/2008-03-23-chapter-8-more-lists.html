@@ -1,0 +1,94 @@
+---
+layout: post
+title: Chapter 8. More Lists
+date: 2008-03-23 06:20:35.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- HTML/CSS
+tags:
+- CSS
+- dl
+- HTML
+- ol
+- 웹 표준
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322772258'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>순서가 있는 목록을 표현하는 방법</h1>
+<h2>&lt;ul&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;ul&gt;<br /><br />  &lt;li&gt;1. Chop the onions.&lt;/li&gt;<br /><br />  &lt;li&gt;2. Saute the onions <span class="code-keyword">for</span> 3 minutes.&lt;/li&gt;<br /><br />  &lt;li&gt;3. Add 3 cloves of garlic.&lt;/li&gt;<br /><br />  &lt;li&gt;4. Cook <span class="code-keyword">for</span> another 3 minutes.&lt;/li&gt;<br /><br />  &lt;li&gt;5. Eat.&lt;/li&gt;<br /><br />&lt;/ul&gt;</pre>
+</div>
+</div>
+<ul>
+<li>중간에 새로운 요소를 추가하면 번호를 전부 수정해야 한다.</li>
+</ul>
+<ul>
+<li>숫자들 앞에 bullet이 붙는다. 이건 CSS로 띄어낼 수도 있지만, CSS를 모르는 옛날 브라우저들은 어떻게 하나..</li>
+</ul>
+<h2>&lt;ol&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;ol&gt;<br /><br />  &lt;li&gt;Chop the onions.&lt;/li&gt;<br /><br />  &lt;li&gt;Saute the onions <span class="code-keyword">for</span> 3 minutes.&lt;/li&gt;<br /><br />  &lt;li&gt;Add 3 cloves of garlic.&lt;/li&gt;<br /><br />  &lt;li&gt;Cook <span class="code-keyword">for</span> another 3 minutes.&lt;/li&gt;<br /><br />  &lt;li&gt;Eat.&lt;/li&gt;<br /><br />&lt;/ol&gt;</pre>
+</div>
+</div>
+<ul>
+<li>자동으로 넘버링 해준다.</li>
+</ul>
+<ul>
+<li>type 속성으로 여러가지 타입의 넘버링을 할 수 있지만, CSS 설정하는 것이 좋다. HTML 4.01에서 deprecated 됐다.</li>
+</ul>
+<h1>용어와 설명을 표현하는 방법은?</h1>
+<h2>&lt;ul&gt; 사용하기</h2>
+<ul>
+<li>용어에만 따로 스타일을 적용해야 한다면?</li>
+</ul>
+<h2>&lt;dl&gt;, &lt;dt&gt;, &lt;dd&gt; 사용하기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;dl&gt;<br /><br />  &lt;dt&gt;CSS&lt;/dt&gt;<br /><br />  &lt;dd&gt;A simple mechanism <span class="code-keyword">for</span> adding style (e.g. fonts, colors, spacing)<br /><br />  to Web documents.&lt;/dd&gt;<br /><br />  &lt;dt&gt;XHTML&lt;/dt&gt;<br /><br />  &lt;dd&gt;A family of current and <span class="code-keyword">future</span> document types and modules that<br /><br />  reproduce, subset, and extend HTML, reformulated in XML.&lt;/dd&gt;<br /><br />  &lt;dt&gt;XML&lt;/dt&gt;<br /><br />  &lt;dd&gt;A simple, very flexible text format derived from SGML.&lt;/dd&gt;<br /><br />&lt;/dl&gt;</pre>
+</div>
+</div>
+<ul>
+<li>term과 description에 각각 스타일을 적용할 수 있다.</li>
+</ul>

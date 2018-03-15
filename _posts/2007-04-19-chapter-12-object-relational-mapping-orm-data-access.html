@@ -1,0 +1,81 @@
+---
+layout: post
+title: Chapter 12. Object Relational Mapping (ORM) data access
+date: 2007-04-19 12:39:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 12
+tags:
+- ORM
+- Spring Reference 12장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323116503'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">12.1. Introduction</span></p>
+<p>Hibernate, JDO, Oracle TopLink, iBATIS SQL Maps, JPA 같은 ORM 과 Spring을 통합하여 Spring 의 Transaction 관리과 Exception 정책을 사용할 수 있습니다.</p>
+<p>통합 하는 방법은 두 가지<br />1. using Spring's DAO 'templates'.<br />2. coding DAOs against plain Hibernate/JDO/TopLink/etc APIs.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">12.2. Hibernate</span></p>
+<p>Hibernate 와 연동하는 방법을 설명합니다. 주로 Hibernate 3.0 중심으로 설명 합니다.</p>
+<p><span style="font-weight: bold;">12.3. JDO</span></p>
+<p>Spring supports the standard JDO 1.0/2.0 API as data access<br />
+    strategy<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">12.4. Oracle TopLink</span></p>
+<p>Since Spring 1.2, Spring supports Oracle TopLink (<a href="http://www.oracle.com/technology/products/ias/toplink" target="_top">http://www.oracle.com/technology/products/ias/toplink</a>) as<br />
+    data access strategy</p>
+<p>TopLink 9.0.4, 10.1.3<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">12.5. iBATIS SQL Maps</span></p>
+<p>The iBATIS support in the Spring Framework much resembles<br />
+    the JDBC / Hibernate support in that it supports the same template style<br />
+    programming and just as with JDBC or Hibernate, the iBATIS support works<br />
+    with Spring's exception hierarchy and let's you enjoy the all IoC features<br />
+    Spring has.</p>
+<p><span style="font-weight: bold;">12.6. JPA</span></p>
+<p>Spring JPA offers<br />
+    comprehensive support for the <a href="http://java.sun.com/developer/technicalArticles/J2EE/jpa/index.html" target="_top">Java<br />
+    Persistence API</a> in a similar manner to the integration with<br />
+    Hibernate or JDO</p>
+<p><span style="font-weight: bold;">12.7. Transaction Management</span></p>
+<p>선언적인 트랜잭션 관리를 위한 설정 내용 입니다.<br />[#M_ more.. | less.. |&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:aop="http://www.springframework.org/schema/aop"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:tx="http://www.springframework.org/schema/tx"<br />&nbsp; &nbsp; &nbsp;&nbsp; xsi:schemaLocation="<br />&nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd<br />&nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd<br />&nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;</p>
+<p>&nbsp; &lt;bean id="myTxManager" class="org.springframework.orm.jpa.JpaTransactionManager"&gt;<br />&nbsp; &nbsp; &lt;property name="entityManagerFactory" ref="myEmf"/&gt;<br />&nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &lt;bean id="myProductService" class="product.ProductServiceImpl"&gt;<br />&nbsp; &nbsp; &lt;property name="productDao" ref="myProductDao"/&gt;<br />&nbsp; &lt;/bean&gt;<br />&nbsp; <br />&nbsp; &lt;aop:config&gt;<br />&nbsp; &nbsp; &lt;aop:pointcut id="productServiceMethods" expression="execution(* product.ProductService.*(..))"/&gt;<br />&nbsp; &nbsp; &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="productServiceMethods"/&gt;<br />&nbsp; &lt;/aop:config&gt;</p>
+<p>&nbsp; &lt;tx:advice id="txAdvice" transaction-manager="myTxManager"&gt;<br />&nbsp; &nbsp; &lt;tx:attributes&gt;<br />&nbsp; &nbsp; &nbsp; &lt;tx:method name="increasePrice*" propagation="REQUIRED"/&gt;<br />&nbsp; &nbsp; &nbsp; &lt;tx:method name="someOtherBusinessMethod" propagation="REQUIRES_NEW"/&gt;<br />&nbsp; &nbsp; &nbsp; &lt;tx:method name="*" propagation="SUPPORTS" read-only="true"/&gt;<br />&nbsp; &nbsp; &lt;/tx:attributes&gt;<br />&nbsp; &lt;/tx:advice&gt;</p>
+<p>&lt;/beans&gt; <br />_M#]위 예제는 JpaTransactionManager를 사용한 경우입니다. Hibernate, Toplink, OpenJPA 를 위한 클래스도 제공합니다.</p>
+<p><span style="font-weight: bold;">12.8. JpaDialect</span></p>
+<p>Dialect 클래스를 사용함으로써 얻을 수 있는 장점들은 다음과 같습니다.<br />* applying specific transaction semantics (such as custom isolation level or transaction timeout)<br />* retrieving the transactional JDBC Connection (for exposure to JDBC-based DAOs)<br />* advanced translation of PersistenceExceptions&nbsp; to Spring DataAccessExceptions</p>
+<p>JDBC connection의 편리한 사용과 Transaction 그리고 DataAccessExcepion에 대한 장점은 10장, 11장에 이어 12장에서 까지 계속 얘기하네요.</p>

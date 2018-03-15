@@ -1,0 +1,11 @@
+<p>참조: <a href="http://www.ibm.com/developerworks/kr/library/j-jtp04298.html" target="_blank">http://www.ibm.com/developerworks/kr/library/j-jtp04298.html</a></p>
+<p>흠.. 제네렉 타입을 사용한 객체를 생성할 때 유용할 것 같습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Box&lt;String&gt; box = new BoxImpl&lt;String&gt;();</div>
+<p>보통 제네릭 타입을 사용한 객체를 생성할 때 저렇게 String이라는 타입을 두 번이나 입력해야 하는데..</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class BoxImpl&lt;T&gt; implements Box&lt;T&gt; {</p>
+<p><span style="font-weight: bold;">&nbsp; &nbsp; public static&lt;V&gt; Box&lt;V&gt; make() {</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; return new BoxImpl&lt;V&gt;();</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; }</span></p>
+<p>&nbsp; &nbsp; ...<br />}</div>
+<p>이렇게 make라는 팩토리 메소드를 만들어 두면..</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">Box&lt;String&gt; myBox = BoxImpl.make();</div>
+<p>이렇게 타입을 한 번만 지정해도 되는군요. 오호~ 괜찮군요. 근데 굳이 V 라고 안하고 그냥 T 계속 써도 될텐데, 굳이 구분할 필요가 있었나..흠. <span style="text-decoration: line-through;">어차피 같은 타입 지칭하는건데</span>.. </p>
+<p>V대신 T를 써도 무방하긴 하지만, 이 예제는 왠지 컴파일러가 제네릭 타입을 선택하는 과정을 보여주기 위해, V를 둔것 같습니다.</p>

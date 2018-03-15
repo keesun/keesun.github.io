@@ -1,0 +1,9 @@
+<p>createMock()을 사용해서 얻어낸 Mock 객체는 기본적으로 메소드를 호출하는 순서를 확인하지는 않습니다. 그런데 경우에 떄라서는 메소드가 호출되는 순서가 중요할 수 있는데, 그럴 땐는 두 가지 방법이 있습니다.</p>
+<p>1. Mock객체를 생성할 때 createMock()이 아니라, createStrickMock()을 호출하여 mock 객체를 생성하면, 순서까지 확인합니다.</p>
+<p>MemberDaoMock = createStrickMocek(MemberDao.class);</p>
+<p>2. Mock객체에 레코딩을 시작하기 전에, checkOrder(mock 객체, true); 를 사용해서 메소드의 호출 순서도 확인하도록 설정할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">//테스트 코드</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void add() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">checkOrder(memberDao, true);</span><br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.add(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.get(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; replay(memberDao);<br />&nbsp; &nbsp; &nbsp; &nbsp; memberServiceImpl.add(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; &nbsp; &nbsp; verify(memberDao);<br />&nbsp; &nbsp; }</p>
+<p>// MemberServiceImpl 코드</p>
+<p>&nbsp; &nbsp; public void add(Member member) {<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.get(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; // ToDo check email<br />&nbsp; &nbsp; &nbsp; &nbsp; memberDao.add(member);<br />&nbsp; &nbsp; }</div>
+<p>get()으로 먼저 가져와서 확인한 다음에 추가해야 하기 때문에 위의 테스트 코드를 에러가 발생합니다.</p>

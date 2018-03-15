@@ -1,0 +1,71 @@
+<p>참조: <a title="[http://code.google.com/p/webdriver/wiki/NextSteps]로 이동합니다." target="_blank" href="http://code.google.com/p/webdriver/wiki/NextSteps">http://code.google.com/p/webdriver/wiki/NextSteps</a></p>
+<p><span style="font-weight: bold;">어떤 웹 드라이버 구현체를 사용해야 하는가?</span></p>
+<p>HtmlUnitDriver: 모든 OS 지원<br />
+FirefoxDriver: 모든 OS 지원<br />
+InternetExplorerDriver: 윈도우만 지원<br />
+SafariDriver: 맥 OS X만 지원</p>
+<p>빠르게 테스트하고 싶다면, HtmlUnitDriver가 제격이지만, 실제 브라우저를 통해서 어떤 일이 벌어지는지 보고 싶다면, 각 브라우저에 대한하는 드라이버를 이용. 대신 속도는 떨어질 수 있다.</p>
+<p>WebDriver 인터페이스를 사용하여 각각의 구현체를 교체해가며 테스트 할 수 있다.</p>
+<p>WebDriver driver = new HtmlUnitDriver();</p>
+<p><span style="font-weight: bold;">네비게이션</span></p>
+<p>페이지 이동을 테스트 할 때는 get()을 사용한다.</p>
+<p>driver.get("http://www.google.com");</p>
+<p>또는 driver.navigate().to("http://www.google.com"); 이런 식으로 이동할 수도 있다.</p>
+<p><span style="font-weight: bold;">페이지 다루기</span></p>
+<p>&lt;input type="text" name="passwd" id="passwd-id" /&gt;</p>
+<p>이 엘리먼트를 참조하는 객체를 만들려면 아래와 같이 사용할 수 있다.</p>
+<p>WebElement element;<br />
+element = driver.findElement(By.id("passwd-id"));<br />
+element = driver.findElement(By.name("passwd"));<br />
+element = driver.findElement(By.xpath("//input[@id='passwd-oid']"));</p>
+<p>XpathInWebDriver를 사용할 때, 쿼리에 해당하는 엘리먼트가 여러개 라면 그 중에서 가장 첫 번째 엘리먼트를 참조하게 되고, 해당하는 엘리먼트가 없다면, NoSuchElementException이 발생한다.</p>
+<p>값을 입력할 수도 있다.</p>
+<p>element.sendKeys("some text");</p>
+<p>방향키를 누른 효과를 낼 수 도 있다.</p>
+<p>element.sendKeys(" and some", Keys.ARROW_DOWN);</p>
+<p>텍스트 필드에 입력한 값은 자동으로 지워지지 않기 때문에 원하는 곳에서 clear()로 지워야 한다</p>
+<p>element.clear();</p>
+<p><span style="font-weight: bold;">폼 채우기</span></p>
+<p>WebElement select = driver.findElement(By.xpath("//select"));<br />
+List&lt;WebElement&gt; allOptions = select.getChildrenOfType("option");<br />
+for (WebElement option : allOptions) {<br />
+&nbsp;&nbsp;&nbsp; System.out.println(String.format("Value is: %s", option.getValue()));<br />
+&nbsp;&nbsp;&nbsp; option.setSelected();<br />
+}</p>
+<p>위 코드는 화면에서 SELECT 엘리먼트를 찾고 그 안에 있는 OPTION을 순회하면서 화면에 값을 출력하고 모두 체크한다.</p>
+<p>폼을 서브밋 할 수도 있다.</p>
+<p>driver.findElement(By.id("submit")).click();&nbsp; // Assume the button has the ID "submit" :)</p>
+<p>또는 모든 엘리먼트에 있는 submit() 메서드를 이용할 수도 있다.</p>
+<p>element.submit();</p>
+<p><span style="font-weight: bold;">비주얼 정보와 드래그 앤 드랍</span></p>
+<p>화면에 보여줄 엘리먼트인지 감추는 엘리먼트인지는 캐스팅을 통해 알 수 있다</p>
+<p>WebElement plain = driver.findElement(By.name("q"));<br />
+RenderedWebElement element = (RenderedWebElement) element;</p>
+<p>만약 화면에 보여주는 엘리먼트라면 그 위치와 크기 정보를 알 수 있으며 드래그 앤 드랍도 할 수 있다.</p>
+<p>RenderedWebElement element = (RenderedWebElement) driver.findElement(By.name("source"));<br />
+RenderedWebElement target = (RenderedWebElement) driver.findElement(By.name("target"));</p>
+<p>element.dragAndDropOn(target);</p>
+<p>윈도우와 프레임 이동하기</p>
+<p>화면을 전환할 수 있다.</p>
+<p>driver.switchTo().window("windowName");</p>
+<p>프레임을 이동할 수도 있다.</p>
+<p>driver.switchTo().frame("frameName");</p>
+<p>닷(.)을 이용해서 서브 프레임으로 이동할 수도 있다.</p>
+<p>driver.switchTo().frame("frameName.0.child");</p>
+<p><span style="font-weight: bold;">네비게이션: 히스토리와 위치</span></p>
+<p>처음에 살펴본 get()을 사용할 수도 있지만, navigate()를 이용해서 이동할 수도 있다.</p>
+<p>driver.navigate().to("http://www.example.com");</p>
+<p>navigate를 사용하면, forward()와 back()을 이용하여 히스토리 정보를 이용할 수 있다.</p>
+<p>driver.navigate().forward();<br />
+driver.navigate().back();</p>
+<p><span style="font-weight: bold;">쿠키</span></p>
+<p>// Go to the correct domain<br />
+driver.get("http://www.example.com");</p>
+<p>// Now set the cookie. This one's valid for the entire domain<br />
+Cookie cookie = new Cookie("key", "value");<br />
+driver.manage().addCookie(cookie);</p>
+<p>// And now output all the available cookies for the current URL<br />
+Set&lt;Cookie&gt; allCookies = driver.manage().getCookies();<br />
+for (Cookie loadedCookie : allCookies) {<br />
+&nbsp;&nbsp;&nbsp; System.out.println(String.format("%s -&gt; %s", loadedCookie.getName(), loadedCookie.getValue()));<br />
+}</p>

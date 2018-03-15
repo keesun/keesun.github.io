@@ -1,0 +1,84 @@
+---
+layout: post
+title: The IoC container
+date: 2007-03-10 02:51:51.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323111095'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(208, 255, 157); text-align: left;"><span style="font-weight: bold;">3.1. Introduction</span></div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">이번 장에서는 Spring 프레임웤이 구현한 IoC에 관해 다룹니다. IoC는 Spring이 제공하는 여러 기능들에 가장 기본이 됩니다.</p>
+<p>IoC 컨테이너의 기능은 BeanFactory와 ApplicationContext 인터페이스를 통해 제공되며 BeanFactory가 객체를 관리하기 위한 기본적인 기능을 제공하는 반면 ApplicationContext는 거기에 추가해서 보다 다양한 기능을 제공합니다.</p>
+<p><a href="http://whiteship.tistory.com/518" target="_blank">BeanFactory와 ApplicationContext 인터페이스 비교</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.2. Basics - containers and beans</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">bean은 IoC container에 의해 관리 되는 객체를 말합니다. 이 둘에 대한 기본적인 내용들을 담고 있습니다.</p>
+<p><a href="http://whiteship.tistory.com/519" target="_blank">http://whiteship.tistory.com/519</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.3. Dependencies</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">bean들 간의 종속성을 주입하는 방법에 대해 나와있습니다.<br /><a href="../../../../530">3.3. Dependencies</a></div>
+<p><br style="font-weight: bold;" />
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.4. Bean scopes</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">종속성 뿐만 아니라 bean의 scope도 설정할 수 있습니다.<br /><a href="../../../../544">3.4. Bean scopes</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.5. Customizing the nature of a bean</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">bean 생명주기에 껴들어서 좀 더 bean의 설정을 취미에 맞게 바꿀수 있습니다.<br /><a href="../../../../549">3.5. Customizing the nature of a bean</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.6. Bean definition inheritance</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">bean 설정 파일간에 상속을 통해 bean 설정을 재사용할 수 있습니다.<br /><a href="../../../558">3.6. Bean definition inheritance</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.7. Container extension points</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Spring 프레임웤의 IoC 컴포넌트는 확장을 고려하여 설계했습니다.</p>
+<p><a href="../../../../560">3.7. Container extension points</a></div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157); font-weight: bold;">3.8. The ApplicationContext</div>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">BeanFactory의 기본 기능에 ApplicationContext가 추가한 기능들에 대한 설명이 있습니다.</p>
+<p><a href="../../../../563">3.8. The ApplicationContext</a></div>
+<p>3.9. Glue code and the evil singleton</p>
+<p>The majority of the code inside an application is best written in a<br />
+		DI style, where that code is served out of a Spring IoC container, has its own<br />
+		dependencies supplied by the container when it is created, and is<br />
+		completely unaware of the container.</p>

@@ -1,0 +1,20 @@
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">문제는 다음과 같습니다.<br />[#M_ more.. | less.. | <br />3) [20점] Quick Sort는 Pivot을 선택하는 방법에 따라 여러 가지 종류가 있다. 즉, 알고리즘의 다른 부분은 같고 Pivot을 정하는 방법만 다른 여러 개의 알고리즘이 있다. Template Method Pattern을 사용하여 hook을 사용하면 간단하게 여러 가지 알고리즘을 구현 할 수 있다. 아래 3개의 다른 알고리즘들을 hook을 이용하여 구현하라._M#]</div>
+<p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">Test 클래스를 먼저 작성했습니다.<br />[#M_ more.. | less.. |<br /> public abstract class AbstractSortingTest {</p>
+<p> &nbsp; &nbsp;QuickSorting quickSorting;</p>
+<p> &nbsp; &nbsp;@Before<br /> &nbsp; &nbsp;public void setup() {<br /> &nbsp; &nbsp; &nbsp; &nbsp;quickSorting = createQuickSorting();<br /> &nbsp; &nbsp;}</p>
+<p> &nbsp; &nbsp;abstract public QuickSorting createQuickSorting();</p>
+<p> &nbsp; &nbsp;@Test<br /> &nbsp; &nbsp;public final void sorting() {<br /> &nbsp; &nbsp; &nbsp; &nbsp;int[] values = { 2, 5, 6, 3, 1, 8, 7, 9, 4 };<br /> &nbsp; &nbsp; &nbsp; &nbsp;quickSorting.setValues(values);<br /> &nbsp; &nbsp; &nbsp; &nbsp;// for (int a : values)<br /> &nbsp; &nbsp; &nbsp; &nbsp;// System.out.print(a);<br /> &nbsp; &nbsp; &nbsp; &nbsp;// System.out.println();<br /> &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(values, quickSorting.getValues());<br /> &nbsp; &nbsp; &nbsp; &nbsp;quickSorting.sort(values);<br /> &nbsp; &nbsp; &nbsp; &nbsp;// for (int a : values)<br /> &nbsp; &nbsp; &nbsp; &nbsp;// System.out.print(a);<br /> &nbsp; &nbsp; &nbsp; &nbsp;int[] sorterdValues = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };<br /> &nbsp; &nbsp; &nbsp; &nbsp;assertEquals(sorterdValues, quickSorting.getValues());<br /> &nbsp; &nbsp;}<br />}_M#]</div>
+<p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">그리고 탬플릿 역활을 하는 QuickSorting 메소드를 작성했습니다.<br />[#M_ more.. | less.. | <br />public abstract class QuickSorting {</p>
+<p> &nbsp;&nbsp; private int[] values;</p>
+<p> &nbsp;&nbsp; public int[] getValues() {<br /> &nbsp;&nbsp; &nbsp; &nbsp; return values;<br /> &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; abstract public int getPivot(int[] a, int first, int last);</p>
+<p> &nbsp;&nbsp; public void sort(int a[], int _first, int _last) {<br /> &nbsp;&nbsp; &nbsp;&nbsp; ...<br /> &nbsp;&nbsp; &nbsp; &nbsp; int pivot = getPivot(a, first, last);</p>
+<p> &nbsp;&nbsp; &nbsp; &nbsp; ...<br /> &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void sort(int a[]) {<br /> &nbsp;&nbsp; &nbsp; &nbsp; sort(a, 0, a.length - 1);<br /> &nbsp;&nbsp; }</p>
+<p> &nbsp;&nbsp; public void setValues(int[] values) {<br /> &nbsp;&nbsp; &nbsp; &nbsp; this.values = values;<br /> &nbsp;&nbsp; }</p>
+<p>}<br />_M#] 여기서 getPivoit 메소드가 비어있는 탬플릿이 됩니다. 이 것을 구현하는 하위 클래스들은 pivot을 구하는 방법에 따라 getPivot 메소드를 다르게 구현할 것입니다.</p>
+<p>Pivot은 다음과 같이 세가지 방법으로 구현하라고 하였습니다.<br /> &nbsp;&nbsp; a. 가장 오른쪽 인자를 Pivot으로 하는 경우.<br /> &nbsp;&nbsp; b. 가장 오른쪽 인자를 Pivot으로 하는 경우.<br /> &nbsp;&nbsp; c. Random하게 Pivot을 선택하는 경우.</div>
+<p>간단하게 구현과 테스트가 가능합니다.</p>
+<p></p>

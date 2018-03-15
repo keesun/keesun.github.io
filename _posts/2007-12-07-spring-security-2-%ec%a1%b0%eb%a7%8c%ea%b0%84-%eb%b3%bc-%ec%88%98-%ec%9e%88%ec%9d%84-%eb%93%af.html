@@ -1,0 +1,58 @@
+---
+layout: post
+title: Spring Security 2 조만간 볼 수 있을 듯
+date: 2007-12-07 00:08:03.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- article
+tags:
+- Spring Security
+- TSE 2007
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323156199'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://blog.interface21.com/main/2007/12/06/whats-new-in-spring-security-2/" target="_blank">http://blog.interface21.com/main/2007/12/06/whats-new-in-spring-security-2/</a></p>
+<p>다음 주 쯤에 배포가 될 것 같습니다. 벌써부터 기다려지네요. Ben Alext가 올린 글을 보면, 설정이 상당히 간결해 진것 같은데, 너무 간결해져서 다시 공부해야 할 것 같습니다. 수 많은 필터들을 직관적인 엘리먼트와 속성이름을 사용해서 감춰주길 기대하고 있습니다.</p>
+<p>대강 보니, 사용법은 일단 web.xml에 Filter To Chain Proxy를 등록하던 저번과 비슷한데, 대신 등록하는&nbsp; 클레스가 Filter To Chain Proxyr가 아니라 org.springframework.web.filter.DelegatingFilterProxy 로 바뀐 것 같습니다. 그리고 수 많은 필터를 빈으로 등록해야 했던 부분이 다음과 같은 한 덩어리로 뭉쳐진 것 같습니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; &lt;http autoConfig="true"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBER" /&gt;<br />&nbsp; &nbsp; &lt;/http&gt;</p>
+<p>&nbsp; &nbsp; &lt;repository&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;user-service hash="md5:hex"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;user name="rod" password="a564de63c2d0da68cf47586ee05984d7" authorities="ROLE_SUPERVISOR,ROLE_USER" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/user-service&gt;<br />&nbsp; &nbsp; &lt;/repository&gt;</div>
+<p>TSE 2007에서 Spring Security와 관련된 세션이 세 개나 된다고 하는데, 내년에도 올해처럼 재밌는 발표들이 가득한 TSE가 되면 좋겠습니다.</p>

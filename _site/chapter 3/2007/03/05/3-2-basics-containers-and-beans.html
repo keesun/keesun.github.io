@@ -1,0 +1,32 @@
+<p><span style="font-weight: bold;">3.2.1. The container</span></p>
+<p><img src="/assets/ck37.jpg" class="aligncenter" width="333" height="364" alt="사용자 삽입 이미지" /><span style="color: rgb(0, 0, 0);">3.2.1.1. Configuration metadata</span></p>
+<p>Spring IoC Container가 어떻게 bean을 만들고, 설정하고, 엮을지 적어 놓은 것으로 주로 XML을 사용하지만 XML이 유일한 방법은 아닙니다.</p>
+<p>XML 기반의 Configuration metadata 예.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp;&nbsp; xsi:schemaLocation="<br />http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"&gt;<br />&nbsp; &lt;bean id="..." class="..."&gt;<br />&nbsp; &nbsp; &lt;!-- collaborators and configuration for this bean go here --&gt;<br />&nbsp; &lt;/bean&gt;<br />&nbsp; &lt;bean id="..." class="..."&gt;<br />&nbsp; &nbsp; &lt;!-- collaborators and configuration for this bean go here --&gt;<br />&nbsp; &lt;/bean&gt;<br />&nbsp; &lt;!-- more bean definitions go here... --&gt;<br />&lt;/beans&gt;</div>
+<p><a href="http://younghoe.info/431">Configuration Metadata 이해</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.2.2. Instantiating a container</span></p>
+<p>Container를 생성하는 방법은 쉽습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">Resource resource = new FileSystemResource("beans.xml");<br />BeanFactory factory = new XmlBeanFactory(resource);</div>
+<p>요래..
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">ClassPathResource resource = new ClassPathResource("beans.xml");<br />BeanFactory factory = new XmlBeanFactory(resource);</div>
+<p>요래..
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">ApplicationContext context = new ClassPathXmlApplicationContext(<br />&nbsp; &nbsp; &nbsp; &nbsp; new String[] {"applicationContext.xml", "applicationContext-part2.xml"});<br />// of course, an ApplicationContext is just a BeanFactory<br />BeanFactory factory = (BeanFactory) context;</div>
+<p>할 수 있습니다. 마지막 꺼는 xml 설정 파일 두 개를 Container에 불러 왔네요.</p>
+<p><a href="../../../522">FileSystemResource vs ClassPathResource <span class="cnt">(2)</span></a><br /><a href="../../../../524">id, name and BeanDefinitionName</a></p>
+<p>3.2.2.1. Composing XML-based configuration metadata</p>
+<p>설정을 여러 개의 파일로 나눠 둘 수 있고 당연히 여러 개의 설정 파일을 위에 나온 방식 처럼 Container를 만들 때 사용할 수 있습니다. 그러나 위에 처럼 설정 파일 명을 프로그램 파일 내부에 표기 하는 것 보다는 xml 안에 숨겨 두는 것이 좋습니다. &lt;import /&gt; 를 사용하여 설정 파일을 지정할 수 있습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;beans&gt;</p>
+<p>&nbsp; &nbsp; &lt;import resource="services.xml"/&gt;<br />&nbsp; &nbsp; &lt;import resource="resources/messageSource.xml"/&gt;<br />&nbsp; &nbsp; &lt;import resource="/resources/themeSource.xml"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="bean1" class="..."/&gt;<br />&nbsp; &nbsp; &lt;bean id="bean2" class="..."/&gt;</p>
+<p>&lt;/beans&gt;</p></div>
+<p><span style="font-weight: bold;">3.2.3. The beans</span></p>
+<p>bean 설정 데이타는 <a href="http://static.springframework.org/spring/docs/2.0.x/api/index.html" target="_blank">BeanDefinition</a>이라는 객체로 표현됩니다.</p>
+<p>3.2.3.1. Naming beans</p>
+<p>모든 bean들은 하나 이상의 id를 가집니다. 이런 id들은 유일해야 하며 하나 이상의 id를 가지는 bean의 경우 하나를 제외한 나머지는 별칭으로 취급 됩니다. &lt;bean /&gt; 태그의 id와 name속성을 사용하여 지정할 수 있습니다.</p>
+<p><a href="http://younghoe.info/434">빈(bean)의 이름 지정</a><br /><a href="http://younghoe.info/435">Spring의 naming/aliasing 정책에 대한 수사 (상)</a><br /><a href="http://younghoe.info/436">Spring의 naming/aliasing 정책에 대한 수사 (중)</a><br /><a href="http://younghoe.info/437">Spring의 naming/aliasing 정책에 대한 수사 (하)</a></p>
+<p>이쪽은 뭔가 좀더 자세히 봐야 겠습니다.</p>
+<p><a href="../../../../527">Aliasing Beans <span class="cnt">(4)</span></a><br /><a href="../../../../528">복잡한 Alias</a><br /><a href="../../../../529">Bean 생성하기</a></p>
+<p><span style="font-weight: bold;">3.2.4. Using the container</span></p>
+<p>BeanFactory를 사용하는 방법입니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">InputStream is = new FileInputStream("beans.xml");<br />BeanFactory factory = new XmlBeanFactory(is);</div>
+<p>위 코드는 맨 위에 있는 그림 중에 빡스와 설정 파일 부분에 해당하며..</p>
+<p>application에서는 BeanFactory에 있는 메소드들을 호출하여 사용하면 됩니다.</p>

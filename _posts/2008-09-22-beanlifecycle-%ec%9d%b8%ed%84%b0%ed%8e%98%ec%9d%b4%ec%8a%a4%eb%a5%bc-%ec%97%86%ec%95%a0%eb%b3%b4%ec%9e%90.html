@@ -1,0 +1,100 @@
+---
+layout: post
+title: BeanLifeCycle 인터페이스를 없애보자.
+date: 2008-09-22 07:50:32.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- "@Autowired"
+- BeanLifeCycle
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323187265'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.me/791" target="_blank">BeanLifeCycle</a>에 등장하는 여러 인터페이스 들 중에서 BeanFactoryAware, ApplicationContextAware, MessageSoruceAware, ApplicationEventPublisherAware, ResourceLoaderAware 인터페이스를 사용하지 않고도 이들이 해주는 일과 똑같은 작업을 할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+@Component<br />
+public class Bean {</p>
+<p>&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; ApplicationContext applicationContext;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; MessageSource messageSource;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; ApplicationEventPublisher applicationEventPublisher;</p>
+<p>&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; ResourceLoader resourceLoader;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; BeanFactory beanFactory;<br />
+&nbsp; &nbsp; <br />
+}</div>
+<p>
+이런식으로 @Autowired를 사용하시면 됩니다. 물론 저 중에서 BeanFactory를 뺀 나머지는 ApplicationContext를 사용할 때 이용할 수 있겠죠. 라이프사이클 중에 InitializingBean 인터페이스는 bean 엘리먼트의 init-method 또는 @PostConstruct를 사용하면 대체할 수 있습니다.</p>
+<p>꼭 필요하진 않고, 있을 때만 주입하고 싶다면, @Autowired(required=false) 이렇게 설정하면 되겠죠.</p>
+<p>다음은 위 코드의 테스트 코드입니다,.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">
+@ContextConfiguration(locations="springContext.xml")<br />
+public class BeanTest extends AbstractJUnit4SpringContextTests{</p>
+<p>&nbsp; &nbsp; @Autowired<br />
+&nbsp; &nbsp; Bean bean;<br />
+&nbsp; &nbsp; <br />
+&nbsp; &nbsp; @Test<br />
+&nbsp; &nbsp; public void lifecycle() {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(bean.beanFactory);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(bean.applicationContext);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(bean.messageSource);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(bean.applicationEventPublisher);<br />
+&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(bean.resourceLoader);<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <br />
+}
+</div>
+<p>
+테스트는 당연히 잘 돌아갑니다.</p>
+<p>아차. 빈 설정파일은 딱 <span style="text-decoration: line-through;">두 줄</span> 한 줄 입니다.</p>
+<div style="border: 3px double rgb(254, 137, 67); padding: 10px; background-color: rgb(254, 222, 199);" class="txc-textbox">
+&nbsp;&nbsp;&nbsp; &lt;context:component-scan base-package="org.opensprout.sandbox.lifecycle" /&gt;<br />
+&nbsp;&nbsp;&nbsp; <br />
+&nbsp;&nbsp;&nbsp; <span style="text-decoration: line-through;">&lt;context:annotation-config /&gt;</span></div>
+<p></p>

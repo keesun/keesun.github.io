@@ -1,0 +1,73 @@
+---
+layout: post
+title: 스프링 JSON view와 jQuery 이용하여 자동완성 기능 만들기 1
+date: 2009-07-13 14:29:42.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- jQuery Ajax
+- JSON
+- JSON view
+- Spring 3.0
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168758'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>간만에 11시에 집에 왔습니다. 음... 오랜만이네요.</p>
+<p>오늘은 jQuery Ajax로 자동완성 기능을 만들다가 왔습니다. 스프링 JSONView를 이용해서 스프링이 보내준 JSON을 가지고 자동완성을 만드는 겁니다.</p>
+<p>1. MappingJacksonJsonView 라는 클래스가 있는데, 좀 전까지만 해도 BindingJacksonJsonVIew였습니다. 아직은 배포된 버전에 이 클래스가 없고, 개발중인 프로젝트에 fisheye에 접속해서 보면 소스를 볼 수 있습니다. 또는 톱님이 배포하시는 최신 스프링을 사용하시면 이용할 수 있을 겁니다.</p>
+<p>2. 일단 필요한 라이브러리를 구합니다. 최신 스프링 or 저 파일만 구하면 됩니다. 또 Jackson 관련 라이브러리를 추가합니다.</p>
+<p>3. 컨트롤러를 만들고, ModelAndView를 반환합니다. ModelMap에는 컬렉션을 주던, 필요한 모델 객체를 주던 주면 되고, viewname에는 MappingJacksonJsonView의 빈 이름을 설정해 줍니다.</p>
+<p>4. xxx-servlet.xml에서 MJJV 빈을 등록하고, 빈 이름은 jsonView라고 했습니다. 3번 컨트롤러에서도 jsonView란 이름을 사용했죠. 그리고 뷰리졸버를 하나 추가했습니다. BeanName머시기 뷰리졸버가 있죠. 그걸 추가했습니다.</p>
+<p>5. jQuery.getJson(url, param, function)를 이용해서 저 컨트롤러에 요청을 보내고, 컨트롤러가 돌려주는 값을 확인해 봤습니다.</p>
+<p>usernames:List&lt;String&gt; =&gt; {"userNames":["aaa", "vvv", "dddd"]}<br />
+users:List&lt;User&gt; =&gt; {"users":[["1", "기선", "whiteship@email.com"],["2", "toby", "toby@email.com"]]}<br />
+user:User =&gt; {"user":[name:"기선", "id":1, "email":email]}<br />
+user1:User, user2:User=&gt; {"user1":[name:"기선", "id":1, "email":email],"user2":[name:"기선", "id":1, "email":email]}</p>
+<p>이런 형태의 결과가 나왔습니다.(기억으로 적은거라 틀릴 수도 있습니다.) 주로 사용하게 될 첫 번째 형태를 보니, 맵(문자열-배열) 형태의 JSON으로 보입니다. 필드명이 없어서 인덱스로 접근해야 한다는게 불편해 보입니다. 세번째 결과를 보면 객체 하나를 줬을 때는 필드명까지 읽어서 넣어주는데 말이죠. 컬렉션도 그렇게 해주면 좋을텐데.. 좀 아쉽습니다.</p>
+<p>6. 다음은 jQuery Ajax로 JSON 데이터를 받아왔으니, 이제 자동완성 기능만 구현하면 됩니다.</p>
+<p>6-1. 텍스트 박스에 어떤 값을 입력하면, 서버로 요청을 보내고 그 결과를 리스트로 뿌리고, 그 중에 하나를 선택하면 텍스트 박스에 채워주고, 텍스트 박스 옆에 기타 자세한 정보를 뿌려줍니다.</p>
+<p>6-2. 텍스트 박스에 값을 입력해서 검색 리스트가 나왔을 때, 키보드의 화살표로 상하 이동이 가능해야 합니다.</p>
+<p>6-3. 캐시 설정을 통해 같은 검색어의 경우 매번 요청을 보내는 것이 아니라, 특정 시간동안은 캐시에서 데이터를 읽어서 보여줍니다. 캐시 유효 시간을 설정할 수 있어야겠네요.</p>
+<p>대략 이정도 기능인데, 여기서 좀 시간이 많이 걸리고 있네요. 내일은 꼭 마무리 해야겠습니다.<br />
+비도 오는데 허리가 쑤실만큼 앉아있었지만 결과는 좀 허무하네요.<br />
+에잇... 내일은 파이팅.</p>

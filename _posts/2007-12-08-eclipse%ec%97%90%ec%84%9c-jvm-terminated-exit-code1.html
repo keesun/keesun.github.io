@@ -1,0 +1,60 @@
+---
+layout: post
+title: Eclipse에서 jvm terminated. exit code=1
+date: 2007-12-08 23:46:09.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Eclipse
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323152034'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이클립스를 실행하다가 다음과 같은 에러를 만나게 됐습니다. 실행하자마자 에러 메시지가 보입니다.</p>
+<p><img src="{{ site.baseurl }}/assets/fk5.png" class="aligncenter" width="332" height="581" alt="사용자 삽입 이미지" /><br />
+해결책<br />
+(참조 : <a href="http://www.ibm.com/developerworks/forums/message.jspa?messageID=13974129" target="_blank">http://www.ibm.com/developerworks/forums/message.jspa?messageID=13974129</a>)</p>
+<ul>
+<li>바탕화면에 Eclipse.exe 의 바로가기 아이콘을 만듭니다.</li>
+<li>바탕화면에서 해당 아이콘을 우클릭하여 속성의 대상에서 아규먼트를 추가해 줍니다.</li>
+<li>(-vm c:\jdk1.4.2\bin\javaw -vmargs -Xmx256M 요런식으로..)</li>
+</ul>

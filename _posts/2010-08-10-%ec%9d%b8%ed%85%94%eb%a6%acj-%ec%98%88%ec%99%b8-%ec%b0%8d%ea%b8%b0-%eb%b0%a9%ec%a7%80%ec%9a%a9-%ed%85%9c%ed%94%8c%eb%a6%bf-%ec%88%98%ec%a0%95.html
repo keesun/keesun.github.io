@@ -1,0 +1,58 @@
+---
+layout: post
+title: "[인텔리J] 예외 찍기 방지용 템플릿 수정"
+date: 2010-08-10 05:04:34.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- 예외처리
+- 인텔리J
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323116745'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/cfile21.uf.116711054C60DCB2A78074.jpg" class="aligncenter" width="600" height="420" alt="" filename="1.jpg" filemime="image/jpeg" /></p>
+<div id="">이렇게 간단한 템플릿 수정 만으로 예외 먹는 기본 템플릿 코드를 수정할 수 있다. 이클립스에도 try-catch 문 자동 생성시 catch 문에서 예외를 냠냠 하게 되어 있을텐데.. 그보다는 차라리 저렇게 RuntimeException으로 변화해서 던져주는게 더 낫다.</div>
+<div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+예외를 먹지 않으니까 예외가 발생한 지점 찾기도 좋을 뿐더러, RuntimeException으로 변환해주면 저 API를 사용하는 입장에서 잡아도 되고 안잡아도 되고 선택권이 생기니까 더 좋다. 머.. 잡아서 확실하게 예외를 어떻게 처리할 방법이 있다면 그렇게 처리하는게 더 좋겠지만 대부분은..흠냐..</div>

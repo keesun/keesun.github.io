@@ -1,0 +1,57 @@
+---
+layout: post
+title: "[웹 사이트 속도 향상 베스트 프랙티스 6] 스크립트를 바닦에 두기"
+date: 2009-11-24 02:24:41.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- 웹 사이트 성능 향상
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322979181'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a title="[http://developer.yahoo.com/performance/rules.html#js_bottom]로 이동합니다." target="_blank" href="http://developer.yahoo.com/performance/rules.html#js_bottom">http://developer.yahoo.com/performance/rules.html#js_bottom</a></p>
+<p>Put Scripts at the Bottom</p>
+<p>tag: javascript</p>
+<p>스크립트가 야기할 수 있는 문제는 병렬적인 다운로드를 막는다는 것이다. HTTP/1.1 표준은 브라우저가 호스트 이름당 두 개 이상의 컴포넌트를 병렬적으로 다운로지 하지 않도록 제안하고 있다. 만약 이미지를 여러 호스트 이름에서 제공한다면, 병렬적으로 두 개 이상의 다운로드가 발생하게 할 수 있다. 하지만, 어떤 스크립트를 하나 다운로드 할 때, 브라우저는 심지어 다른 호스트 이름에 있는 것이라 하더라도, 어떠한 다운로드도 시작하지 않는다.</p>
+<p>어떤 상황에서는 스크립트를 바닦으로 옮기는 것이 쉽지 않을 수 있다. 예를들어, 만약 스크립트가 document를 사용하여 페이지의 내용 중 일부를 채우는 것이라면 페이지 하단으로 옮길 수가 없다. 또한 스코프와 관련된 이슈도 있을 수 있다. 대부분의 경우, 이런 상황에 대한 차선책이 있기 마련이다.</p>
+<p>보통 자주 사용하는 차선책으로 지연된(deffered) 스크립트를 사용하는 방법이 있다. DEFER 속성은 해당 스크립트가 document.write를 가지고 있지 않다고 알려주며 브라우저가 계속해서 랜더링을 할 수 있는 단서가 된다. 불행히도, 파이어폭스는 DEFER 속성을 지원하지 않는다. IE에서는 스크립트를 지연시킬 수 있지만, 원하는 만큼은 아니다. 만약 스크립트를 지연시킬 수 있다면, 페이지의 바닦으로 옮길 수도 있을 것이다. 그렇게 하면 웹 페이지의 로딩 속도가 더 빨라질 것이다.</p>

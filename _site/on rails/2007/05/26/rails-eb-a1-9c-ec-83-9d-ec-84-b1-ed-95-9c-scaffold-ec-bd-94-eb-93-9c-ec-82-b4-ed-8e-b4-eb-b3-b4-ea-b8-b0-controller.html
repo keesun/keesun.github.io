@@ -1,0 +1,8 @@
+<p></p>
+<div style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: rgb(250,255,169)">class CategoriesController &lt; ApplicationController<br />&nbsp; def index<br />&nbsp; &nbsp; list<br />&nbsp; &nbsp; <span style="COLOR: rgb(255,0,0)">render :action =&gt; 'list'</span><br />&nbsp; end</div>
+<p>컨트롤러의 첫부분 입니다. list 메소드를 호출하고 list라는 이름의 뷰를 사용하도록 render :action 을 사용합니다.</p>
+<div style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: rgb(250,255,169)">&nbsp; def destroy<br />&nbsp; &nbsp; Category.find(params[:id]).destroy<br />&nbsp; &nbsp; <span style="COLOR: rgb(255,0,0)">redirect_to :action =&gt; 'list'</span><br />&nbsp; end</div>
+<p>컨트롤러의 마지막 부분으로 지우고 난 뒤 list 페이지로 이동하도록 redirect_to :action 을 사용합니다.</p>
+<p>컨트롤러 곳곳에서 사용하고 있는 find, find_all, new, save, update_attributes, destroy 이런 메소드들은 ActiveRecord에 있는 메소드를 사용한다고 합니다. ActiveRecord에 대한 공부가 필요하군요. 이 전 글에서 제가 궁금해 했었던 Dao 역할을 하는 녀석이 바로 이 녀석이였던 것 같습니다.</p>
+<p>RadRails의 RI 탭에서 검색하면 바로 레퍼런스를 참조 할 수 있습니다. 그런데 조금 오래 걸립니다. 뻗어버린 줄 알았습니다...<br /><img src="/assets/dm207.jpg" class="aligncenter" width="500" height="124" alt="사용자 삽입 이미지" /></p>
+<p></p>

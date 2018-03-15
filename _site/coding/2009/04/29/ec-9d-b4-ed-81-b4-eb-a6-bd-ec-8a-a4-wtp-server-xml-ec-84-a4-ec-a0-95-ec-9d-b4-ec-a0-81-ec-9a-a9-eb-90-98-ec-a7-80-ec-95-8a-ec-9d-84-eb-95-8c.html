@@ -1,0 +1,9 @@
+<p>&lt;Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" /&gt;</p>
+<p>server.xml에 이런 설정이 들어있는데 이것을 인코딩 문제로 </p>
+<p>&lt;Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" useBodyEncodingForURI="true"/&gt;</p>
+<p>이렇게 변경했습니다. 그런데 변경한 설정이 먹질 않더군요.</p>
+<p>server를 우클릭하고 cleanup도 해봤습니다. 적용되지 않았습니다.</p>
+<p>그래서 server를 더블클릭하고 HTTP/1,1 포트를 변경한 다음에 서버를 재가동 해봤더니 설정이 적용되서 원하는 결과를 얻을 수 있었습니다.</p>
+<p>다시 포트를 원래대로 돌린다음에 실행해 봤더니 이번에도 적용이 됐습니다.</p>
+<p>server.xml을 직접 편집할 경우 설정이 제대로 안 먹을 수 있으니, server를 더블클릭해서 어떤 설정을 변경한 다음 저장하고 다시 시도해보시기 바랍니다. 저처럼 될지도 몰라요~</p>
+<p></p>

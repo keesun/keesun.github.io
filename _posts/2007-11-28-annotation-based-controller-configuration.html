@@ -1,0 +1,88 @@
+---
+layout: post
+title: Annotation-based controller configuration
+date: 2007-11-28 14:51:38.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- Spring MVC
+- 애노테이션
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322386632'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">0. 컴포넌트 스캐너 등록하기</span></p>
+<p>우선, 컴포넌트 스캔 기능을 사용해서 @Controller 애노테이션이 붙어있는 클래스들을 bean으로 인식하도록 해야합니다. 따라서 context:component-scan 엘리먼트로 컨트롤러들이 위치한 패키지를 명시해 줍니다.</p>
+<p>&lt;context:component-scan base-package="org.springframework.samples.petclinic.web" /&gt;</p>
+<p><span style="font-weight: bold;">1. 컨트롤러 작성하기</span></p>
+<p>완전 POJO로 컨트롤러를 작성할 수 있습니다. 획기적이네요. 일단 컨트롤러로 사용할 클래스는 이제 더이상 아무런 클래스도 상속받지 않아도 됩니다. 정말 그야말로 POJO입니다. 이 POJO에다가 @Controller 애노테이션을 붙여주면 컨트롤러가 됩니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. Request Mapping 하기</span></p>
+<p>원래는 Handler Mapper가 하던 일인데, 이제는 이것도 애노테이션이 해줍니다. @RequestMapping 애노테이션으로 해당 클래스 또는 메소드가 처리할 요청을 명시해주면 됩니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. Form Controller로 사용하기</span></p>
+<p>클래스 선언부에 @RequestMapping 애노테이션으로 폼을 요청할 Request를 설정해줍니다. 이 애노테이션이 붙어있는 클래스 안의 메소드 위에 같은 애노테이션을 사용하여 Request의 method에 따라 호출될 메소드를 설정할 수 있습니다.</p>
+<p>@SessionAttributes 엘리먼트는 Session에 담을 attribute 를 나타냅니다. 주로 여러 폼에 걸쳐서 보여줄 데이터를 명시합니다.</p>
+<p>@ModelAttribute는 두 가지 경우에 사용할 수 있는데, 메소드 위에 사용하면 폼에서 참조할 객체(Reference Data)를 나타낼 때 사용합니다. 아래의 예제에서 populatePetTypes() 메소드가 그 예에 해당합니다. 또 다른 경우는 메소드의 매개변수 앞에 이 애노테이션을 사용할 경우 인데, 이 때는 폼에 입력된 정보를 해당 애노테이션이 붙어있는 객체로 맵핑해 줍니다. processSubmit() 메소드의 인자를 보시면 됩니다.</p>
+<p>@RequestParam은 Request의 특정 파라미터의 값을 가져옵니다. 물론 자동으로 해당 값을 이 애노테이션이 붙어있는 타입으로 변환해 줍니다. 기본타입만 가능하겠죠.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">@Controller<br /><span style="font-weight: bold;">@RequestMapping("/editPet.do")</span><br /><span style="font-weight: bold;">@SessionAttributes("pet")</span><br />public class EditPetForm {</p>
+<p>&nbsp; &nbsp; private final Clinic clinic;</p>
+<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; public EditPetForm(Clinic clinic) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.clinic = clinic;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="font-weight: bold;">@ModelAttribute("types")</span><br />&nbsp; &nbsp; public Collection&lt;PetType&gt; populatePetTypes() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return this.clinic.getPetTypes();<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="font-weight: bold;">@RequestMapping(method = RequestMethod.GET)</span><br />&nbsp; &nbsp; public String setupForm(<span style="font-weight: bold;">@RequestParam("petId")</span> int petId, ModelMap model) {<br />&nbsp; &nbsp; &nbsp; &nbsp; Pet pet = this.clinic.loadPet(petId);<br />&nbsp; &nbsp; &nbsp; &nbsp; model.addAttribute("pet", pet);<br />&nbsp; &nbsp; &nbsp; &nbsp; return "petForm";<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="font-weight: bold;">@RequestMapping(method = RequestMethod.POST)</span><br />&nbsp; &nbsp; public String processSubmit(<span style="font-weight: bold;">@ModelAttribute("pet")</span> Pet pet, BindingResult result, <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SessionStatus status) {<br />&nbsp; &nbsp; &nbsp; &nbsp; new PetValidator().validate(pet, result);<br />&nbsp; &nbsp; &nbsp; &nbsp; if (result.hasErrors()) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return "petForm";<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; else {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.clinic.storePet(pet);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; status.setComplete();<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return "redirect:owner.do?ownerId=" + pet.getOwner().getId();<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p><span style="font-weight: bold;">4. MultiActionController로 사용하기</span></p>
+<p>@RequestMapping 애노테이션으로 처리할 URL을 메소드 위에 표기해 줍니다. 물론 class위에는 적을 필요가없겠죠. 메소드 단위니까요.</p>
+<p>뷰는 CoC에 따라 요청 URL을 보고 판단합니다. <br />뷰를 명시할 수 있는 다른 방법이 있는지 궁금해지네요. <span style="color: rgb(255, 0, 0);">이 부분은 살펴봐야겠습니다.</span><br />ModelAndView 객체를 리턴타입으로 사용할 수 있다면 간단해 지겠지만 말이죠.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);"><span style="font-weight: bold;">@Controller</span><br />public class ClinicController {</p>
+<p>&nbsp; &nbsp; private final Clinic clinic;</p>
+<p>&nbsp; &nbsp; @Autowired<br />&nbsp; &nbsp; public ClinicController(Clinic clinic) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.clinic = clinic;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="font-weight: bold;">@RequestMapping("/welcome.do")</span><br />&nbsp; &nbsp; public <span style="font-weight: bold;">void </span>welcomeHandler() {<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp;<span style="font-weight: bold;"> @RequestMapping("/vets.do")</span><br />&nbsp; &nbsp; public <span style="font-weight: bold;">ModelMap </span>vetsHandler() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelMap(this.clinic.getVets());<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; <span style="font-weight: bold;">@RequestMapping("/owner.do")</span><br />&nbsp; &nbsp; public <span style="font-weight: bold;">ModelMap </span>ownerHandler(<span style="font-weight: bold;">@RequestParam("ownerId")</span> int ownerId) {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelMap(this.clinic.loadOwner(ownerId));<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p><span style="font-weight: bold;">5. 커스텀 프로퍼티 에디터 등록하기.</span></p>
+<p>다음과 같이 @InitBinder를 사용하여 바인딩 하는 녀석을 등록할 수 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@Controller<br />public class MyFormController {</p>
+<p>&nbsp; &nbsp; @InitBinder<br />&nbsp; &nbsp; public void initBinder(WebDataBinder binder) {<br />&nbsp; &nbsp; &nbsp; &nbsp; SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");<br />&nbsp; &nbsp; &nbsp; &nbsp; dateFormat.setLenient(false);<br />&nbsp; &nbsp; &nbsp; &nbsp; binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; // ...<br />}</div>
+<p>해당 바인더는 커맨드나 폼 객체 그리고 그에 따른 에러 객체를 제외한 @RequestMapping이 지원하는 모든 아규먼트에 적용됩니다. 흠.. 폼에서 사용자가 입력한 값은 이걸로 바인딩 하지 않는다는 건가?? -_-?? 이상하네.. <span style="color: rgb(255, 0, 0);">이 부분도 공부나 추가 정보가 필요함.</span><br style="color: rgb(255, 0, 0);" /><br />커스텀 프로퍼티 에디터 등록을 xml에서 하기</p>
+<p>WebBindingInitializer 인터페이스 구현체에 프로퍼티 에디터를 등록해서 다음과 같이 설정해주는 듯 합니다. <span style="color: rgb(255, 0, 0);">이 것 역시 어떻게 구현하는지 공부가 필요함.</span></p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"&gt;<br />&nbsp; &nbsp; &lt;property name="cacheSeconds" value="0" /&gt;<br />&nbsp; &nbsp; &lt;property name="webBindingInitializer"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;bean class="org.springframework.samples.petclinic.web.ClinicBindingInitializer" /&gt;<br />&nbsp; &nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
+<p></p>

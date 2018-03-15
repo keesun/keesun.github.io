@@ -1,0 +1,89 @@
+---
+layout: post
+title: MultipartResolver 사용하여 파일 업로드 구현 예제
+date: 2007-05-14 08:23:22.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 13
+tags:
+- MultipartResolver
+- Spring Reference 13장
+- 파일 업로드
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323208023'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">1. 사용할 Resolver 선택 및 등록<br />1.1. 필요한 jar 파일 추가</p>
+<p>2. 폼 만들기</p>
+<p>3. 모델 객체에 파일 다룰 속성 추가<br />3.1. String, bate[], MultupartFile 중 어떤 타입으로 받을 것인가 선택 및 코딩</p>
+<p>4. 컨트롤러 만들기<br />(4.0. 바인딩 할 꺼면-String, byte[] 사용할 때- PropertyEditor 사용해서 바인딩 하기)<br />4.1. 디렉토리 설정<br />4.2. 디렉토리로 원본의 사본을 만들어 넣어 둡니다.</div>
+<p>제 나름대로 책보고 예제 만들어 보다가 정리한 순서이지 꼭 저 위에 있는 순서대로 해야 하는건 아닙니다.</p>
+<p><span style="font-weight: bold;">1. 사용할 Resolver 선택 및 등록</span></p>
+<p>Cos와 Commons 라이브러리 중에 선택할 수 있습니다. Spring Reference, Pro Spring, Spring MVC 책 모두 Commons 라이브러리를 사용하고 있었습니다. 그래서 저도 그냥 Commons 라이브러리 사용했습니다.</p>
+<p><span style="font-weight: bold;">1.1 필요한 Jar 파일 추가</span></p>
+<p>Commons 라이브러리를 사용할 때 필요한 jar 파일은 두 개 입니다. 레퍼런스에는 commons-fileupload.jar 만 필요하다고 나오는데 저 jar 가 commons-io.jar 에 의존성을 가지고 있기 때문에 commons-io.jar도 추가해야 합니다.</p>
+<p><span style="font-weight: bold;">2. 폼 만들기</span></p>
+<p>간단합니다. &lt;input type="file"&gt; 로 해주면 파일 업로드 할 수 있는 버튼이 추가 됩니다. 이 때 폼태그에는 추가해줘야 할 것이 있습니다. request 타입을 multipart를 포함하는 request임을 알려주기 위한 것 같네요.</p>
+<div style="padding: 10px; background-color: rgb(201, 237, 255);">&lt;form:form commandName="fileCommand" method="post" <span style="color: rgb(255, 0, 0); font-weight: bold;">enctype="multipart/form-data"</span>&gt;<br />&nbsp; &nbsp; 파일 선택 &lt;input type="<span style="color: rgb(255, 0, 0); font-weight: bold;">file</span>" name="file"/&gt;&lt;br/&gt;<br />&nbsp; &nbsp; &lt;input type="submit" value="Submit"/&gt;<br />&lt;/form:form&gt;</div>
+<p><span style="font-weight: bold;">3. 모델 객체에 파일 다룰 속성 추가</span></p>
+<p>굳이 모델 객체에 추가하지 않고 커맨드 객체를 사용할 것이라면 커맨드 객체에 속성을 추가해 줍니다. 하지만 전 객체 하나 만드는 것 보다 필드 하나 추가하는 걸 선택했습니다. 따라서 FILE 도메인에 속성 하나를 추가할 것입니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.1. String, bate[], MultupartFile 중 어떤 타입으로 받을 것인가 선택 및 코딩</span></p>
+<p>폼에서 입력되는 파일을 객체의 속성으로 받기 위해 Spring에서 지원해주는 기능으로 사용할 수 있는 타입은 String, byte[], MultipartFile 세가지 입니다. 이 중에서 File 타입으로 받아서 File의 이름과 사이즈 등을 구하려면 역시 MultipartFile을 선택하는 것이 편하겠습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; private String name;<br />&nbsp; &nbsp; private Long size;<br />&nbsp; &nbsp; private String filePath;<br />&nbsp; &nbsp; private MultipartFile file;</div>
+<p><br style="font-weight: bold;" /><span style="font-weight: bold;">4. 컨트롤러 만들기</span></p>
+<p><span style="font-weight: bold;">4.0 String, bytep[], Multipart 로 바인딩 하기</span></p>
+<p>Spring Reference 13.8.3에 보면 예제가 잘 나와있습니다. 저 세가지 중에서 String과 byte[]로 바인딩 할 때는 Spring이 제공하는 별도의 PropertyEditor를 등록해줘야 합니다. 하지만 MultipartFile은 그럴 필요가 없이 그냥 알아서 바인딩 해줍니다.</p>
+<p><span style="font-weight: bold;">4.1. 디렉토리 설정</span></p>
+<p>Spring 워크북에는 조금 다른 방식으로 등록했지만 저는 Spring MVC에 나와있는 예제가 사용한 방식을 사용했습니다.<br />컨트롤러에 File 타입으로 디렉토리를 속성으로 주고 setter injection을 사용합니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&nbsp; &nbsp; &lt;!-- MusicFile&nbsp; --&gt;<br />&nbsp; &nbsp; &lt;bean name="/fileUpload.html"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="com.classicMania.controller.file.UploadFileController"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="destinationDir" value="D://down" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p><span style="font-weight: bold;">4.2. 디렉토리로 원본의 사본을 만들어 넣어 둡니다.</span></p>
+<p>Spring이 제공하는 FileCopyUtils 를 사용하여 간단하게 원본(웹에서 입력하고 있는 파일)을 사본(위에서 설정한 디렉토리로)을 만들 수 있습니다.</p>
+<p>컨트롤러의 소스코드를 보면 다음과 같습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class UploadFileController extends SimpleFormController implements InitializingBean {<br />&nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">// 4.1</span><br />&nbsp;<span style="color: rgb(23, 127, 205);">&nbsp;&nbsp; private File destinationDir;</span><br style="color: rgb(23, 127, 205);" /><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; public void setDestinationDir(File destinationDir) {</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; &nbsp; &nbsp; this.destinationDir = destinationDir;</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; }</span></p>
+<p>&nbsp; &nbsp; public UploadFileController() {<br />&nbsp; &nbsp; &nbsp; &nbsp; setCommandName("fileCommand");<br />&nbsp; &nbsp; &nbsp; &nbsp; setCommandClass(FILE.class);<br />&nbsp; &nbsp; &nbsp; &nbsp; setFormView("file/uploadFile");<br />&nbsp; &nbsp; &nbsp; &nbsp; setSuccessView("file/viewFileList");<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void afterPropertiesSet() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; if (destinationDir == null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new IllegalArgumentException("Must specify destinationDir");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; else if (!destinationDir.isDirectory() &amp;&amp; !destinationDir.mkdir()) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; throw new IllegalArgumentException(destinationDir + " is not a " + "directory, or it couldn't be created");<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BindException exception) throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; response.setContentType("text/plain");<br />&nbsp; &nbsp; &nbsp; &nbsp; if (! (request instanceof MultipartHttpServletRequest)) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Expected multipart request");<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return null;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;<br />&nbsp; &nbsp; &nbsp; &nbsp; MultipartFile file = multipartRequest.getFile("file");<br />&nbsp; &nbsp; &nbsp; &nbsp; String fileName = file.getOriginalFilename();<br />&nbsp; &nbsp; &nbsp; &nbsp; File destination = File.createTempFile("file", fileName, destinationDir);<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">//4.2</span><br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(destination));</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Member member = (Member) request.getSession().getAttribute("user");</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; FILE newFile = (FILE) command;<br />&nbsp; &nbsp; &nbsp; &nbsp; newFile.setMember(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; newFile.setFilePath(destination.getAbsolutePath());<br />&nbsp; &nbsp; &nbsp; &nbsp; newFile.setName(file.getOriginalFilename());<br />&nbsp; &nbsp; &nbsp; &nbsp; newFile.setSize(file.getSize());<br />&nbsp; &nbsp; &nbsp; &nbsp; newFile.setFile(file);<br />&nbsp; &nbsp; &nbsp; &nbsp; ServiceManager.getMemberService().update(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; ServiceManager.getFileService().add(newFile);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; Map&lt;String, Object&gt; model = new HashMap&lt;String, Object&gt;();<br />&nbsp; &nbsp; &nbsp; &nbsp; model.put("files", ServiceManager.getFileService().getAll());<br />&nbsp; &nbsp; &nbsp; &nbsp; model.put("owner", member.getName());<br />&nbsp; &nbsp; &nbsp; &nbsp; return new ModelAndView(getSuccessView(), model);<br />&nbsp; &nbsp; }</p>
+<p>}</p>
+</div>
+<p>아~ Spring 좋아라~ 너무 좋아라~</p>
+<p>파일 업로드 화면<br /><img src="{{ site.baseurl }}/assets/dl180.jpg" class="aligncenter" width="322" height="106" alt="사용자 삽입 이미지" />파일 선택 화면<br /><img src="{{ site.baseurl }}/assets/cm200.jpg" class="aligncenter" width="379" height="162" alt="사용자 삽입 이미지" />파일 업로드 선택<br /><img src="{{ site.baseurl }}/assets/cm201.jpg" class="aligncenter" width="320" height="109" alt="사용자 삽입 이미지" />파일 업로드 결과<br /><img src="{{ site.baseurl }}/assets/cl199.jpg" class="aligncenter" width="500" height="54" alt="사용자 삽입 이미지" /><br />위 컨트롤러에서 설정한 패스(D:\down)에 잘 들어갔습니다.</p>

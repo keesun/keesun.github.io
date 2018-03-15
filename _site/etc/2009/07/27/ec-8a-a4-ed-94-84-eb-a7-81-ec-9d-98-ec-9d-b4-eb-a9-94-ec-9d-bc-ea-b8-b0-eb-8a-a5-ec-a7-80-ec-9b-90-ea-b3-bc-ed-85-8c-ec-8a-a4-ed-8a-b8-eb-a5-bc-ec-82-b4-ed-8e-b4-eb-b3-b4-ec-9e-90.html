@@ -1,0 +1,28 @@
+<p>스프링이 지원하는 이메일은 JavaMail과 JAF라는 것이 있습니다. 사용법은 간단하니.. 다음에 심심할 때 살펴보기로 하고, 지금은 사부님이 올리신 글과 관련 된 부분을 찾아보는게 급선무입니다.</p>
+<p>스프링 이메일 기능은 context.support 모듈에 들어있습니다. 주요 클래스는 o.s.mail.javamail에 들어있는 JavaMailSender 인터페이스와 그 구현체인 JavaMailSenderImpl 클래스입니다. 인터페이스의 API를 읽어보면 다음과 같은 내용이 있습니다.</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+...</p>
+<p>Clients should talk to the mail sender through this interface if they need mail functionality beyond SimpleMailMessage. The production implementation is JavaMailSenderImpl; <span style="font-weight: bold;">for testing</span>, <span style="font-weight: bold;">mocks can be created based on this interface</span>. Clients will typically receive the JavaMailSender reference through dependency injection. </p>
+<p>...</p>
+<p>The entire JavaMail Session management is abstracted by the JavaMailSender. <span style="font-weight: bold;">Client code should not deal with a Session in any way, rather leave the entire JavaMail configuration and resource handling to the JavaMailSender implementation</span>. This also increases testability.</p>
+<p>A JavaMailSender client is not as easy to test as a plain MailSender client, but still straightforward compared to traditional JavaMail code: <span style="font-weight: bold;">Just let createMimeMessage() return a plain MimeMessage created with a Session.getInstance(new Properties()) call, and check the passed-in messages in your mock implementations of the various send methods</span>. </div>
+<p>즉, 이 API를 만든 의도에 사용성 편의 뿐만 아니라, 테스트 편의성도 포함되어 있다는 암시를 읽어낼 수 있습니다. JavaMail의 Session API를 사용하지 않고 스프링의 JavaMailSender를 목킹해서 테스트 하라는 것인데, 왜 그렇게 했는지는 맨 마지막 부분의 JavaMail의 Session API 사용법(Session.getInstance(new Properties())에서 볼 수 있습니다. 바로 static 메서드입니다.</p>
+<p><a title="[http://java.sun.com/developer/EJTechTips/2004/tt0426.html#1]로 이동합니다." target="_blank" href="http://java.sun.com/developer/EJTechTips/2004/tt0426.html#1">JavaMail 레퍼런스에서 그 사용법</a>을 보면, 다음과 같은 코드로 JavaMail을 이용하는 모습을 볼 수 있습니다.</p>
+<div style="border: 1px solid rgb(203, 203, 203); padding: 10px; background-color: rgb(255, 255, 255);" class="txc-textbox">
+//메시지를 만들고,,<br />
+&nbsp;&nbsp;&nbsp;&nbsp; Properties props = new Properties();<br />
+&nbsp;&nbsp;&nbsp;&nbsp; props.load(new FileInputStream(propfile));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; Session session = <span style="font-weight: bold;">Session.getInstance(props, null);</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp; MimeMessage msg = new MimeMessage(session);</p>
+<p>...</p>
+<p>//전송합니다.<br />
+&nbsp;&nbsp;&nbsp; // Set the content for the message and transmit<br />
+&nbsp;&nbsp;&nbsp; msg.setContent(mp);<br />
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">Transport.send(msg);</span></div>
+<p>코드 대부분을 생략했습니다. 중요한 부분은 위에 다 나와있습니다. 바로 static 메서드를 사용한다는 것이 중요한 부분입니다.</p>
+<p>이런 API 사용을 클래스를 단위 테스트 하려면 막막합니다. 도무지 static 메서드를 호출하는 부분을 mock으로 바꿀 수가 없습니다. 그렇다고 테스트를 하는데 실제로 메일을 매번 보내기도 뭐하고 말이죠. 그래서 테스트 하려면 static 메서드 호출을 사용한 클래스를 거의 다시 만들다시피 구현한 stub을 만들어서 테스트 해야 하는데 이건 엄청난 수고가 필요합니다. JavaMail 예를 들면 거의 Transport를 테스트용으로 다시 구현해서.. sendMessage에서 실제로 메일을 보내지 않고 그냥 보내는 메시지 목록에 메시지만 모아두는 식의 작업이 필요해집니다. 그리고 테스트 할 떄는 그런 스텁 Transport를 사용하는 또 다른 스텁 MailSender가 필요해지겠죠.(실제로 이 작업들은 스프링의 JavaMailSenderTests에서 수행하고 있습니다.)</p>
+<p>하지만, 테스트를 편하게 하는 방법이 아주 없는 건 아니었습니다. 오늘 톱님께서 올리신 글을 보면 static 메서드를 호출하는 코드를 비교적 편하게 테스트하는 방법 세 가지를 알 수 있습니다. </p>
+<p>하나는 JavaMailSender처럼 static 메서드 호출 부분을 랩핑한 클래스를 만들고, 그 클래스를 목킹한 다음 해당 메서드가 호출되는지 테스트하는 것입니다. 그렇게 만들어 두면, 테스트 하려는 대상이 JavaMail의 Transport.send 같은 static 메서드를 호출하지 않고, 그것을 사용한 JavaMailSender를 사용하기 때문에 JavaMailSender의 mock을 만들고 그 객체의 send가 호출될 때 어떤걸 하라고 mocking 한다던지 해서 호출이 제대로 됐는지, 어떤 메시지가 넘어갔는지 등을 확인할 수 있겠습니다.</p>
+<p>두 번째 방법은 로드존슨이 만들었다는 AspectJ를 이용하는 방법이고, 세 번째 방법은 PowerMock을 이용하는 방법인데, 둘 다 결국 바이트코드를 조작해서 static 호출 부분을 mock으로 호출로 교체하는 기술 인듯합니다. 이 두 가지는 일단 논외로 치</p>
+<p>결론은.. 스프링의 JavaMailSender를 사용하면 JavaMail의 static 메서드 호출과 관련하여 테스트를 어떻게 작성할까 고민할 필요없이, JavaMailSender를 목킹해서 테스트를 만들면 된다는 것입니다.</p>
+<p>덤으로 JavaMail의 static 메서드 호출을 사용한 JavaMailSender의 테스트 클래스를 보면, static 메서드 호출을 하는 클래스에 대한 테스트 실마리를 얻을 수 있습니다. static 메서드를 호출해서 가져오는 객체를 가져오는 부분을 별도의 메서드로 분리하고 그 부분을 테스트 용으로 재구현하고 그것을 테스트에서 사용하는 방법인데.. 이거 이거.. 귀찮아서 원... @_@..&nbsp; 그래서 static은 테스트의 적인가 봅니다. 그래도 이길 수 있는 적이라는거..</p>

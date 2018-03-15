@@ -1,0 +1,63 @@
+---
+layout: post
+title: XQuared 사용하기 2
+date: 2007-11-07 07:46:10.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Xquared
+- 이미지 경로 수정
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322992545'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>나이스!!!</p>
+<p>이전 글에서 감기 때문에 비실거리며 중단 했었던 <a href="http://whiteship.tistory.com/1247" target="_blank">XQuared 사용하기</a>의 문제를 해결했습니다.</p>
+<p>문제는 상당히 단순한 경로 문제였습니다. 아이콘의 이미지를 자바스크립트에서 참조하지 못해서 이상한 화면이 나왔었는데 이제는 깔끔하게 다음과 같이 편집기를 볼 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk180000000000.png" class="aligncenter" width="600" height="404" alt="사용자 삽입 이미지" /><br />이전 글을 작성하다가 예측한 부분이 제대로 맞았습니다. 자바스크립트에서 이미지의 기본 폴더를 지정한 곳을 수정해 주어야 합니다.</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; this.config.imagePathForDefaultToobar = 'img/toolbar/';</p>
+<p>이 부분을 다음과 같이 수정했습니다.</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; this.config.imagePathForDefaultToobar = '/whiteship/img/toolbar/';</p>
+<p>음헤헷! 사용해 봐야겠습니다.</p>
+<p>헉.. 사용하자마자 문제가 발생하는군요.<br />1. 파이어폭스에서 아이콘 부분의 이미지가 이상하게 보입니다.<br />2. IE에서 글을 입력하고, 버튼을 몇개 누르다보면, 갑자기 IE가 꺼져버립니다.</p>
+<p>흠...아직은 안정적이지 않은 것 같습니다.</p>
+<p></p>

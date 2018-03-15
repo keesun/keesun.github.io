@@ -1,0 +1,45 @@
+<p>원문 : <a href="http://www.agiledata.org/essays/tdd.html">http://www.agiledata.org/essays/tdd.html</a><br />
+<font size="2"><br />
+테스트 주도 개발은 선-테스트 개발(test를 먼저 작성하고 그 test를 만족시키지 위한 코드를 작성하는 개발 기법)과 리팩토링을 조합한 개발에 대한 진보적인 접근이다. TDD의 주요 목적은 무엇인가? </font><font size="2">One view is the goal of TDD is specification and not validation (</font><a href="http://www.amazon.com/exec/obidos/ASIN/0135974445/ambysoftinc">Martin,Newkirk, and Kess 2003</a><font size="2">). 다른 말로, 코드를 작성하기 전에 설계에 대해 생각하는 하나의 방법이라는 관점이다. 또다른 관점은 TDD는 프로그래밍 기술이라는 관점입니다. Ron Jeffries는 TDD의 목표가 제대로 동작하는 깰끔한 코드를 작성하는 것이라고 말한다.&nbsp;  나는 각각의&nbsp; 주장에 모두 장점이 있다고 생각하고 따라서 선택은 여러분에게 맡긴다.</p>
+<p>Table of Contents<br />
+1. What is TDD<br />
+<a href="http://whiteship.tistory.com/175">2. TDD and Traditional Testing</a></p>
+<p>1. What is TDD?<br />
+</font><br />
+선 테스트 개발의 과정은 UML의 활동 다이어그램으로 Figure1에 나타나있다. 가장 먼저 해야할 것은 test를 빨리 추가하는 것이고 기본적으로 fail이 되는 코드로 충분하다. 다음은 test를 실행한다. 속도 때문에 새로 추가된 test가 fail되는 것을 보기 위해 일부만 test 할 수도 있겠지만 보통은 전체를 test한다. 그리고 코드가 추가된 test를 통과하도록 수정한다. 네번째로 test를 다시 실행한다. 만약 test에 실패하면 코드를 다시 수정하고 다시 테스트한다. 테스트가 통과하면 다시 첫번째 단계로 돌아간다.(만약에 design결과 중복을 제거할 필요가 생겼다면 TFD에서 TDD로 전환할 필요가 있다.)</p>
+<p>Figure1. The Step of Test-First Development<br />
+<img src="/assets/1148965545.jpg" class="aligncenter" width="380" height="732" alt="" /><br />
+I like to describe TDD with this simple formula:</p>
+<p>나는 TDD를 간단한 공식으로 표현하길 좋아한다:</p>
+<p> &nbsp;&nbsp; TDD = TFD + refactoring.</p>
+<p>TDD는 전통적인 개발 방법을 완전히 바꿨다. 기능 코드를 먼저 작성하고 뒤늦게 테스트하는 코드를 작성하는 대신에 기능 코드를 작성하기 전에 테스트 코드를 작성한다. 게다가 이런 방법으로 매우 조금씩 개발해 나간다.(하나의 테스트가 하나의 기능에 대응되게 한다.) TDD 접근 방법을 받아들인 개발자는 기능 코드가 존재 하지 않기 떄문에 실패하는 테스트 코드가 존재하기 전까지 기능 코드를 작성하는 것을 거부한다. 그들은 기능 코드를 위한 테스트가 존재하지 않으면 단 한줄의 코드도 추가하려 들지 않는다. 테스트 코드가 존재하게 되는 순간 그들은 그 테스트가 패스 되도록 작업을 한다. (your new code may break several existing tests aswell as the new one). 코드가 제대로 작동하면 질을 향상 시키지 위해 리팩토링한다. 이론적으로는 매우 간단해 보이지만 처음 TDD 접근 방법을 배울 때는 상당한 훈련을 필요로 한다. 처음에는 test 코드 없이 기능 코드를 구현하거나 실수하기 쉽기 떄문이다. 짝 프로그래밍의 장점 중 하나 (Williams and Kessler 2002)는 짝꿍이 여러분을 이러한 훈련을 계속 하도록 지켜주기 때문이다. </p>
+<p>여러분이 단위 테스트 프레임웍을 사용한다는 것이 TDD에 깔려있는 전제 조건이다. Agile 소프트웨어 개발자들은 보통 뭐Unit 식의 오픈소스 툴을 사용한다. <a href="http://www.junit.org/">JUnit</a>이나 <a href="http://www.vbunit.org/">VBUnit</a>같은 것을 사용하는데 물론 사용툴도 좋은 대안이 될 수있다. 이러한 툴 없이는 TDD는 사실상 불가능하다. Figure2는 UML의 상태 다이어그램으로 뭐Unit 툴들이 일반적으로 동작하는 방법을 보여주고 있다. 이 다이어그램은 <a href="http://homepage.mac.com/keithray/blog/index.html">Keith Ray</a>에 의해 제안 되었다.</p>
+<p>Figure2 Testing via the xUnit Framework.<br />
+<img src="/assets/1223903307.jpg" class="aligncenter" width="600" height="234" alt="" /></p>
+<p class="MsoNormal">XP(<a href="http://www.amazon.com/exec/obidos/ASIN/0201616416/ambysoftinc">Beck2000</a>)에서 TDD를 공표한 Kent Beck은 TDD를 위한 두 개의 간단한 법칙을 정의했다.(<a href="http://www.amazon.com/exec/obidos/ASIN/0321146530/ambysoftinc">Beck2003</a>) 하나, automated test가 실패했을 때만 새로운 비즈니스 코드를 작성하라. 둘, 찾아낸 어떠한 중복이라도 제거하라. Beck은 어떻게 이 두가지 단순한 법칙이 복잡한 개인과 그룹의 행동들을 발생시키는지 설명한다.</p>
+<ul>
+<li>여러 의견들 간의 피드백을 제공하는 코드를 가지고 유기적으로 설계하라.</li>
+<li><span style="">하루에 20시간은 누간가 자신을 위해 테스트 코드를 작성해 주길 기다리지 말고 직접 만들어라.</span></li>
+<li>사용하고 있는 개발 환경은 작은 변화에도 빠른 반응을 보여야 합니다.(빠른 컴파일러와 회기 테스트 suite이 필요합니다.)
+</li>
+<li>설계는 반드시 결합도가 높고(e.g. your design is highly normalized) 구성요소들 간의 종속성은 낮아야(this also makes evolution and maintenance of your system easier    too) 쉽게 테스트 할 수 있다.
+</li>
+</ul>
+<p class="MsoNormal">개발자들은 효율적인 단위 테스트를 어떻게 작성하는지 배우는 것이 필요하다. Beck’sexperience is that good unit tests:</p>
+<ul>
+<li>
+<p class="MsoNormal">Run fast (they have short setups, run times, and break    downs).</p>
+</li>
+<li>
+<p class="MsoNormal">Run in isolation (you should be able to reorder them).  </p>
+</li>
+<li>
+<p class="MsoNormal">Use data that makes them easy to read and to    understand.  </p>
+</li>
+<li>
+<p class="MsoNormal">Use real data (e.g. copies of production data) when    they need to.  </p>
+</li>
+<li>
+<p class="MsoNormal">Represent one step towards your overall goal.</p>
+</li>
+</ul>

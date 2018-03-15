@@ -1,0 +1,64 @@
+---
+layout: post
+title: 3.8. The ApplicationContext
+date: 2007-03-14 07:27:51.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- ApplicationContext
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322771523'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/ck77.jpg" class="aligncenter" width="462" height="324" alt="사용자 삽입 이미지" /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.8.1. Internationalization using MessageSources</span><br /><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/MessageSource.html" target="_blank"><br />MessageSource 인터페이스</a>를 상속하고 있기 때문에 다음의 메소드들을 사용하여 Message를 받아 올 수 있습니다.</p>
+<p>ApplicationContext가 로딩 될 때 context에 정의되어 있는 MessageSource를 자동으로 읽어 들입니다. 이때 bean의 이름은 messageSource 여야 합니다.</p>
+<p><a href="../../../../566">MessageSource 인터페이스 <span class="cnt">(2)</span></a><br /><a href="../../../../570">MessageSource 사용 예</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.8.2. Events</span></p>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/ApplicationEvent.html" target="_blank">ApplicationEvent 클래스</a>와 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/context/ApplicationListener.html" target="_blank">ApplicationListener 인터페이스</a>를 사용해서 ApplicationContext에서 이벤트 처리를 지원합니다.</p>
+<p><a href="../../../../572">ApplicationEvent 사용 예</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.8.3. Convenient access to low-level resources</span></p>
+<p>4장 Resources에서 자세히 다룰 예정이오니 pass.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3.8.4. Convenient ApplicationContext instantiation for web applications</span></p>
+<p><a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/ContextLoader.html" target="_blank">ContextLoader</a>를 사용해서 웹 어플리케이션에서 ApplicationContext를 선언적으로 생성할 수 있다. </p>
+<p>일반적으로 ContexLoader를 구현한 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/ContextLoaderListener.html" target="_blank">ContextLoaderListener</a> 나 <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/context/ContextLoaderServlet.html" target="_blank">ContextLoaderServlet</a>를 다음과 같이 사용합니다. Servlet 2.2 나 2.3 에서는 ContextLoderServlet을 사용해야 합니다.</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&lt;context-param&gt;<br />&nbsp; &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;<br />&nbsp; &lt;param-value&gt;/WEB-INF/daoContext.xml /WEB-INF/applicationContext.xml&lt;/param-value&gt;<br />&lt;/context-param&gt;</p>
+<p>&lt;listener&gt;<br />&nbsp;&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;<br />&lt;/listener&gt;</p>
+<p>&lt;!-- or use the ContextLoaderServlet instead of the above listener<br />&lt;servlet&gt;<br />&nbsp; &lt;servlet-name&gt;context&lt;/servlet-name&gt;<br />&nbsp; &lt;servlet-class&gt;org.springframework.web.context.ContextLoaderServlet&lt;/servlet-class&gt;<br />&nbsp; &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br />&lt;/servlet&gt;<br />--&gt;</div>
+<p></p>

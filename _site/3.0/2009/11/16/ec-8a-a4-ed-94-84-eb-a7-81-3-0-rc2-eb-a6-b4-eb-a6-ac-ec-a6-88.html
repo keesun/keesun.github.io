@@ -1,0 +1,40 @@
+<p>요즘 스프링에 관심이 슬슬 가시기 시작하네요. 벌써 3일이나 지나서야 RC2로 버전을 올리다니.. 예전 같았으면 공개되자마자 버전을 올렸을텐데 말이죠. 하긴.. 뭐 3일 정도 늦었지만, 그래도 봄싹은 아마도 한국에서 가장 빨리 스프링 최신 버전을 적용한 프로젝트가 될 것 같습니다. 후훗</p>
+<p>중요 변경 사항을 살펴보겠습니다.</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">
+* updated to final versions of <span style="font-weight: bold;">JSR-330</span> "javax.inject" and <span style="font-weight: bold;">JSR-303</span> "javax.validation" APIs<br />
+* full compliance with the JSR-330 TCK (i.e. full compliance with the final specification)<br />
+* support for <span style="font-weight: bold;">Hibernate Validator 4.0 GA</span> (as the JSR-303 reference implementation)<br />
+* added support for <span style="font-weight: bold;">load-time weaving in JBoss 5.x</span><br />
+* added <span style="font-weight: bold;">support for recent EHCache 1.6 configuration properties to EHCacheFactoryBean</span><br />
+* added AnnotatedBeanDefinitionReader helper for programmatic registration of annotated classes<br />
+* added <span style="font-weight: bold;">AnnotationConfig(Web)ApplicationContext</span> for convenient registration/scanning of classes<br />
+* added GenericXmlApplicationContext with flexible configuration options for its XML support<br />
+* AbstractApplicationContext can also start up in case of system properties access failure<br />
+* internal MergedBeanDefinitionPostProcessors apply after all other post-processors<br />
+* inner beans detected as ApplicationListeners as well (only supported for inner singletons)<br />
+* child bean definition's scope attribute can be inherited from parent bean definition now<br />
+* introduced SmartLifecycle interface with auto-startup and shutdown order support<br />
+* introduced LifecycleProcessor delegate, customizable through "lifecycleProcessor" bean<br />
+* MessageListenerContainers and Quartz SchedulerFactoryBean start up on refresh instead of init<br />
+* added initialize-database tag to jdbc namespace for populating external data sources with data<br />
+* PathMatchingResourcePatternResolver leniently ignores non-existing root directories<br />
+* <span style="font-weight: bold;">DefaultConversionService understands "on"/"off", "yes"/"no", "1"/"0" as boolean values</span><br />
+* CustomEditorConfigurer supports PropertyEditor instances again (with deprecation warning)<br />
+* revised MethodParameter's annotation accessor methods<br />
+* ClassUtils is now parameterized with Class&lt;?&gt; and Class&lt;T&gt; where appropriate<br />
+* DataBinder now accepts var-args to set allowed, disallowed, and required fields<br />
+* DataBinder auto-grows nested paths on traversal (avoiding NullValueInNestedPathException)<br />
+* fixed enum binding regression with WebRequestDataBinder (as used by @MVC data binding now)<br />
+* fixed FieldError to expose rejected input value as String value instead of as array<br />
+* JSR-303 Validator will only register validation failures if no binding failure happened<br />
+* ContentNegotiatingViewResolver works with ignoreAcceptHeader and defaultContentType as well<br />
+* <span style="font-weight: bold;">added Spring MVC namespace, with convenient mvc:annotation-driven configuration element</span><br />
+* <span style="font-weight: bold;">default number and datetime formatters configured when using the Spring MVC namespace</span><br />
+* full support for datetime formatting using the Joda Time library (automatically enabled)<br />
+* <span style="font-weight: bold;">added convenient @NumberFormat and @DateTimeFormat annotations for declarative formatting</span><br />
+* implicit T.valueOf(S) and constructor T(S) lookup if no explicit S-&gt;T converter matches<br />
+* AbstractExcelView is compatible with Apache POI 3.0 as well as 3.5 now<br />
+* TilesConfigurer only sets up EL support if JSP 2.1 is present (for JSP 2.0 compatibility)<br />
+* re-introduced Struts 1.x support ("org.springframework.web.struts") in deprecated form<br />
+* deprecated scheduling support for JDK 1.3 Timer ("org.springframework.scheduling.timer")<br />
+* deprecated remoting support for JAX-RPC (in favor of JAX-WS)</div>

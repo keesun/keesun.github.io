@@ -1,0 +1,67 @@
+<p>9.1. 도입</p>
+<p>이번 장에서는 웹 플로우 시스템을 웹 환경에서 사용하기 적당하도록 설정하는 방법을 살펴본다.</p>
+<p>9.2. webflow-config.xsd</p>
+<p>웹 플로우는 스프링 스키마를 제공하여 여러분이 시스템을 설정할 수 있도록 한다. 이 스키마를 사용하려면 그것을 기반시설 계층의 빈 파일 중 하나에 추가하라.</p>
+<p>&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />&nbsp; &nbsp; &nbsp;&nbsp; xmlns:webflow="http://www.springframework.org/schema/webflow-config"<br />&nbsp; &nbsp; &nbsp;&nbsp; xsi:schemaLocation="<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/beans<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/beans/spring-beans-2.5.xsd<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/webflow-config<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd"&gt; &nbsp;&nbsp; &nbsp; &nbsp; </p>
+<p>&nbsp; &nbsp; &lt;!-- Setup Web Flow here --&gt;<br />&nbsp; &nbsp; <br />&lt;/beans&gt;</p>
+<p>9.3. 기본 시스템 설정</p>
+<p>다음 절에서 웹 플로우 시스템을 여러분 애플리케이션에 설정할 때 필요한 최소한의 설정을 살펴보겠다</p>
+<p>9.3.1. FlowRegistry</p>
+<p>플로우를 FlowRegistry에 등록하라.</p>
+<p>&lt;webflow:flow-registry id="flowRegistry"&gt;<br />&nbsp; &nbsp; &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;<br />&lt;/webflow:flow-registry&gt;</p>
+<p>9.3.2. FlowExecutor</p>
+<p>플로우를 실행하는 핵심 서비스 FlowExecutor를 배포하라.</p>
+<p>&lt;webflow:flow-executor id="flowExecutor" /&gt;</p>
+<p>스프링 MVC와 스프링 Faces 부분에서 웹 플로우 시스템을 어떻게 MVC와 JSF에 통합하는지 살펴보라.</p>
+<p>9.4. flow-registry 옵션</p>
+<p>이번 절은 flow-registry 설정 옵션을 살펴본다</p>
+<p>9.4.1. 플로우 위치 명시하기</p>
+<p>location 엘리먼트를 사용하여 등록할 플로우 정의 경로를 명시한다. 기본으로 base-path가 정의되어 있지 않다면 플로우는 자신의 파일 이름에서 확장자를 뺀 식별자를 부여받는다.</p>
+<p>&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <br />9.4.2. 커스텀 플로우 식별자 부여하기</p>
+<p>id를 명시하여 커스텀 등록 식별자를 플로우에 부여한다.</p>
+<p>&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />9.4.3. 플로우 meta-attributes 부여하기</p>
+<p>flow-definition-attributes 엘리먼틀르 사용하여 등록한 플로우에 커스텀 meta-attributes를 부여한다.</p>
+<p>&lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml"&gt;<br />&nbsp; &nbsp; &lt;flow-definition-attributes&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;attribute name="caption" value="Books a hotel" /&gt;<br />&nbsp; &nbsp; &lt;/flow-definition-attributes&gt;<br />&lt;/webflow:flow-location&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>9.4.4. 위치 패턴으로 플로우 등록하기</p>
+<p>flow-location-pattern 엘리먼트를 사용하여 명시한 리소스 위치 패턴에 대응하는 플로우를 등록한다.</p>
+<p>&lt;webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />9.4.5. 플로우 위치 기반 경로</p>
+<p>base-path 엘리먼트를 사용하여 애플리케이션의 모든 플로우에 대한 기본 위치를 정의한다. 모든 플로우 위치는 기본 경로를 기준으로 상대 경로가 된다. 기본 경로는 '/WEB-INF'같은 리소스 경로 또는 'classpath:org/springframework/webflow/samples' 같은 클래스패스 위치가 될 수 있다.</p>
+<p>&lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF"&gt;<br />&nbsp; &nbsp; &lt;webflow:flow-location path="/hotels/booking/booking.xml" /&gt;<br />&lt;/webflow:flow-registry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />With a base path defined, the algorithm that assigns flow identifiers changes slightly. Flows will now be assigned registry identifiers equal to the the path segment between their base path and file name. For example, if a flow definition is located at '/WEB-INF/hotels/booking/booking-flow.xml' and the base path is '/WEB-INF' the remaining path to this flow is 'hotels/booking' which becomes the flow id.</p>
+<p>기본 경로를 정의함으로서 플로우 식별자를 부여하는 알고리즘이 약간 바뀐다. 플로우는 이제 기본 경로와 파일이름 사아의 값을 등록 식별자로 부여받는다. 예를 들어, 플로우가 정의되어 있는 위치가 '/WEB-INF/hotels/booking/booking-flow.xml' 이렇고 기본 경로가<br />
+'/WEB-INF' 라면 남는 부분인&nbsp; 'hotels/booking'가 플로우의 id가 된다.</p>
+<p>[팁] &nbsp;&nbsp; 디렉토리 당 플로우 정의<br />각각의 플로우 정의를 별도의 디렉토리로 묶는 것이 좋은 습관이라는 것을 기억해두자. 이렇게 하면 모듈화를 증진시키고 독립적인 리소스를 프로우 정의와 함께 묶을 수 있다. 또한 규약을 이용할 때 두 개의 플로우가 같은 식별자를 갖는 것을 방지할 수 있다.</p>
+<p>만약 기본 경로가 명시되어 있지 않거나 플로우 정의가 기본 경로에 있다면 파일이름(에서 확장자를 뺸)것을 사용하여 id를 대입한다. 예를 들어, 만약 플로우 정의 파일이 'booking.xml'라면 플로우 식별자는 간단하게 'booking'이 된다.</p>
+<p>위치 패턴은 등록 기본 경로와 함께 사용하면 매우 막강하다. 플로우 식별자가 '*-flow'가 되지 않고 디렉토리 경로 기반이 된다. 예를 들어..</p>
+<p>&lt;webflow:flow-registry id="flowRegistry" base-path="/WEB-INF"&gt;<br />&nbsp; &nbsp; &lt;webflow:flow-location-pattern value="/**/*-flow.xml" /&gt;<br />&lt;/webflow:flow-registry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />위 예제에서 WEB-INF 밑에 /user/login, /user/registration, /hotels/booking, /flights/booking에 위치한 플로우들이 있다고 했을 때 플로우 id는 각각 user/login, user/registration, hotels/booking,&nbsp; flights/booking가 된다.</p>
+<p>9.4.6. FlowRegistry 계층구조 설정하기</p>
+<p>Use the parent attribute to link two flow registries together in a hierarchy. When the child registry is queried, if it cannot find the requested flow it will delegate to its parent.</p>
+<p>parent 속성을 사용하여 두 플로우 등록을 하나의 계층구조로 묶을 수 있다. 요청받은 플로우를 하위 레지스트리에서 찾지 못하면 parent로 위임한다.</p>
+<p>&lt;!-- my-system-config.xml --&gt;<br />&lt;webflow:flow-registry id="flowRegistry" parent="sharedFlowRegistry"&gt;<br />&nbsp; &nbsp; &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;<br />&lt;/webflow:flow-registry&gt;</p>
+<p>&lt;!-- shared-config.xml --&gt;<br />&lt;webflow:flow-registry id="sharedFlowRegistry"&gt;<br />&nbsp; &nbsp; &lt;!-- Global flows shared by several applications --&gt;<br />&lt;/webflow:flow-registry&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />9.4.7. 커스텀 FlowBuilder 서비스 설정하기</p>
+<p>flow-builder-services 속성을 사용하여 flow-registry에서 플로우를 만들 때 사용할 서비스와 설정을 커스터마이징할 수 있다. 만약 flow-builder-services 태그가 명시되어 있지 않다면 기본 서비스 구현체를 사용한다. 태그가 정의되어 있다면 커스터마이징 하고 싶은 서비스를 참조하면 된다.</p>
+<p>&lt;webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices"&gt;<br />&nbsp; &nbsp; &lt;webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" /&gt;<br />&lt;/webflow:flow-registry&gt;</p>
+<p>&lt;webflow:flow-builder-services id="flowBuilderServices" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>설정 가능한 서비스는 conversion-service, expression-parser, view-factory-creator다. 이 서비스들은 여러분이 정의한 커스텀 빈을 첨조하도록 설정되었다. 예를 들어..</p>
+<p>&lt;webflow:flow-builder-services id="flowBuilderServices"<br />&nbsp; &nbsp; conversion-service="conversionService"<br />&nbsp; &nbsp; expression-parser="expressionParser"<br />&nbsp; &nbsp; view-factory-creator="viewFactoryCreator" /&gt;</p>
+<p>&lt;bean id="conversionService" class="..." /&gt;<br />&lt;bean id="expressionParser" class="..." /&gt;<br />&lt;bean id="viewFactoryCreator" class="..." /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>9.4.7.1. conversion-service</p>
+<p>conversion-service 속성을 사용하여 웹 플로우 시스템이 사용할 ConversionService를 커스터마이징할 수 있다. Converter는 플로우 실행도중 어떤 타입을 다른 타입으로 변경할 필요가 있을 때 사용한다. 기본 ConversionService는 숫자, 클래스, Enum같은 기본 객체 타입에 대한 컨버터를 등록한다.</p>
+<p>9.4.7.2. expression-parser</p>
+<p>expression-parser 속성을 사용하여 웹 플로우 시스템이 사용할 ExpressionParser를 커스터마이징할 수 있다. 기본 ExpressionParser는 클래스패스에서 사용할 수 있다면 Unified EL을 사용하고 그렇지 않다면 OGNL을 사용한다.</p>
+<p>9.4.7.3. view-factory-creator</p>
+<p>view-factory-creator 속성을 사용하여 웹 플로우 시스템이 사용할 ViewFactoryCreator를 커스터미이징 할 수 있다. 기본 ViewFactoryCreator는 JSP, Velocity, Freemarker를 랜더링 할 수 있는 스프링 MVC ViewFactory를 생성한다.</p>
+<p>설정 가능한 설정은 development다. 이 설정은 플로우 생성 과정 중에 적용할 전역 설정 속성이다.</p>
+<p>9.4.7.4. development</p>
+<p>플로우를 개발 모드로 변경하려면 이것을 true로 설정하라. 개발 모드는 메시지 번들 같은 독립적인 플로우 리소스 변경을 포함하여 플로우 정의 변경 핫-릴로딩을 변경한다. </p>
+<p>9.5. flow-executor 옵션</p>
+<p>이번 장에서는 flow-executor 설정 옵션을 살펴본다.</p>
+<p>9.5.1. 플로우 실행 리스너 부착하기</p>
+<p>flow-execution-listeners 엘리먼틀르 사용하여 플로우 실행 생명주기 리스너를 등록한다.</p>
+<p>&lt;flow-execution-listeners&gt;<br />&nbsp; &nbsp; &lt;listener ref="securityListener"/&gt;<br />&nbsp; &nbsp; &lt;listener ref="persistenceListener"/&gt;<br />&lt;/flow-execution-listeners&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />특정 플로우만 관찰할 리스너를 설정할 수도 있다.</p>
+<p>&lt;listener ref="securityListener" criteria="securedFlow1,securedFlow2"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </p>
+<p>9.5.2. FlowExecution 영속성 튜닝하기</p>
+<p>flow-execution-repository 엘리먼트를 사용하여 플로우 실행 영속성 설정을 튜닝한다.</p>
+<p>&lt;flow-execution-repository max-executions="5" max-execution-snapshots="30" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />9.5.2.1. max-executions</p>
+<p>max-executions 속성을 설정하여 사용자 세션당 생성할 수 있는 플로우 실행 수 상한선을 설정한다.</p>
+<p>9.5.2.2. max-execution-snapshots</p>
+<p>max-execution-snapshots 속성을 설정하여 플로우 실행당 가질 수 있는 히스토리 스냅샷 수 상한선을 정할 수 있다. 스냅샷을 못찍게 하려면 이 값을 0으로 설정하라. 무한대로 스냅샷을 찍으려면 이 값을 -1로 설정하라.</p>

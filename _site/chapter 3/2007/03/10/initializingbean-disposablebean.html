@@ -1,0 +1,15 @@
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void initializingBean(){<br />&nbsp; &nbsp; &nbsp; &nbsp; Member keesun10 = getMember("keesun10");<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("initializing", keesun10.getLogMessage());<br />&nbsp; &nbsp; }</div>
+<p>이렇게 해놓고 다음과 같이 구현했습니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class Member implements <span style="color: rgb(255, 0, 0);">InitializingBean</span>{<br />...<br />&nbsp; &nbsp; public void afterPropertiesSet() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; logMessage = "initializing";<br />&nbsp; &nbsp; }<br />}</div>
+<p>테스트는 통과 합니다.</p>
+<p>테스트 하기가 애매한건.. DisposableBean.. <br />웹 어플리케이션이 아닌 경우에는 destroy() 콜백을 사용하려면 AbstractApplicationContext 의 registerShutdownHook() 를 호출 해주어야 합니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class Member implements InitializingBean, DisposableBean{<br />...<br />&nbsp; &nbsp; public void destroy() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; logMessage += " -&gt; disposing now";<br />&nbsp; &nbsp; }<br />}</div>
+<p>이렇게 구현해 놓고.. test 하려면 안됩니다. 로그를 Member 객체 안에 있는 문자열로 다루면 안됩니다. 하나의 test 메소드가 끝날 때 destroy() 메소를 호출하게 되기 때문에 test메소드 안에서 Member객체의 문자열을 통해서 로그 메시지를 테스트 하는건... 글쎄요.. 방법이 없어 보입니다.</p>
+<p>로그 메시지를 텍스트 파일이나 다른 객체에 기록을 하게 하고 테스트 메소드에서는 그 텍스트 파일이나 메시지를 읽어서 이전에 사용한 bean들의 로그 메시지를 확인하는 방법으로 테스트할 수 있겠습니다.</p>
+<p>제일 위에 있는 테스트 메소드를 수정합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void initializingBean(){<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; Member keesun10 = getMember("keesun10");<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; assertTrue(Log.contains("initializing"));<br />&nbsp;&nbsp; &nbsp;}</div>
+<p>테스트를 통과하게 만든 후 detroy 메소드가 호출 되는지 테스트 하는 메소드를 만듭니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&nbsp; &nbsp; @Test public void initializingAndDisposingLog(){<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(Log.contains("disposing"));<br />&nbsp; &nbsp; }</div>
+<p>통과 하지 못합니다. 하지만 txt 파일을 열어 보면 disposing이 적혀 있습니다. <span style="text-decoration: line-through;">같은 테스트 클래스에 위치 하면 안될 것 같습니다. LogTest 클래스로 메소드를 옮겼습니다. 그랬더니 테스트가 통과 합니다.</span><br />미쳐 disposing 하기 전에 테스트를 실행해서 그렇습니다. 다른 테스트 클래스로 옮겨도 Test Suite을 만들고 두개의 테스트 클래스를 빠르게 실행하면 통과 하지 못합니다. disposing하도록 살짝 delay를 만든 다음에 테스트 하면 통과합니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">public class LogTest {<br />&nbsp; &nbsp; @Test public void disposingTest(){<br />&nbsp; &nbsp; &nbsp; &nbsp; assertTrue(Log.contains("disposing"));<br />&nbsp; &nbsp; }<br />}</div>
+<p></p>

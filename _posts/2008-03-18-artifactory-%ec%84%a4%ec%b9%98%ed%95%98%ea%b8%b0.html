@@ -1,0 +1,58 @@
+---
+layout: post
+title: Artifactory 설치하기
+date: 2008-03-18 09:42:58.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Wiki
+tags:
+- Artifactroy
+- maven
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323116951'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.jfrog.org/confluence/display/RTF/Installing" target="_blank">http://www.jfrog.org/confluence/display/RTF/Installing</a></p>
+<p><span style="font-weight: bold;">필요조건</span><br />- JDK 1.5 이상<br />- FF 2.0, IE 7 이상<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">설치방법</span><br />- Jetty 사용해서 Standalone 형태로 설치<br />- Servlet Container에 배포(ex. Tomcat)<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">Jetty 사용해서 설치하기</span><br />- JAVA_HOME 환경변수가 세팅되어 있어야 함.<br />- Window에서 설치할 때는 bin 폴더의 artifactory.bat 실행.<br />- Linux에서 설치.<br />&nbsp; &nbsp; - artifactoryctl check 로 환경 변수 세팅 제대로 되어 있는지 확인.<br />&nbsp; &nbsp; - fore ground에서 실행: artifactory.sh<br />&nbsp; &nbsp; - demon으로 실행: artifactoryctl check|start|stop<br />- Linux 서비스로 등록하기: install.sh<br />&nbsp; &nbsp; - 서비스 등록됐는지 확인하기: service artifactory check 또는 /etc/init.d/artifactory check<br />&nbsp; &nbsp; - 서비스 시작: service artifactory start 또는 /etc/init.d/artifactory start<br />&nbsp; &nbsp; - 로그보기: tail -f $ARTIFACTORY_HOME/logs/artifactory.log</p>
+<p><span style="font-weight: bold;">Tomcat에 설치하기</span><br />- ARTIFACTORY_HOME 환경변수를 추가하여 압축을 풀어제낀 폴더 경로를 설정.
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">vi /etc/profile<br />export ARTIFACTORY_HOME=풀어제낀 폴더<br />source /etc/profile</div>
+<p>- 압축 풀어제낀 폴더/webapps/artifact.war을 컨테이너에 배포.</p>
+<p><span style="font-weight: bold;">첫 번째 로그인 하기</span><br />- http://localhost:8081/artifactory (Standalone으로 설치했을 때)<br />- admin/password </p>

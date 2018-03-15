@@ -1,0 +1,50 @@
+<p>보통 깃헙으로 포크 따서 작업하다보면 내가 포크 따온 원본의 진도가 더 나가있는 경우가 있다. 부지런한 프로젝트일 경우엔 자주 그러는데... 그럴땐 원본에 push하려는 branch의 HEAD 위에 내가 지금까지 작업한 코드를 올려서 보내는게 좋다. 그래야 내가 보낸 풀리퀘를 머지하려는 쪽에서 별다른 문제없이 머지할 수 있지.. 안그러면 지금 원본이랑 내가 보낸거랑 충돌난걸.. 받는 쪽에서 처리해야 되는데.. 그런짓은 코드 기여가 아니라 괴롭히기 수준이 되는거다.</p>
+<p>그러나.. 그렇게 해야하는지 누가 알겠나.. 모르지.. 그러니까 코드 기여하는 방법같은 가이드를 잘 제공해서 최소한 풀리퀘 하기전에 이러 저러한걸 해달라고 문서화 해두는게 오픈 소스 프로젝트 입장에서는 최선이고, 기여하려는 사람 입장에서는 그 문서를 잘 읽고 따라주는게 서로간에 할 일인거 같다.</p>
+<p>스프링만해도 그런 문서가 있다.</p>
+<p><a href="https://github.com/SpringSource/spring-framework/blob/master/CONTRIBUTING.md">https://github.com/SpringSource/spring-framework/blob/master/CONTRIBUTING.md</a></p>
+<p>스프링에 코드 기여하기 가이드는 나중에 자세히 살펴보기로하고.. 깃+깃헙이나 공부하자.</p>
+<p>먼저 깃헙에는 nforge/hive 프로젝트가 있고 그걸 포크딴 keesun/hive 프로젝트가 있다.</p>
+<p>내가 작업할 기능은 프로젝트 첫화면에서 프로젝트와 관련있는 히스토리, 소스 URL, 해결/미해결 이슈 개수 등을 보여주는거고, 이슈는 JIRA로 관리하고 있다.</p>
+<p>먼저 깃헙/keesun/hive에 있는걸 로컬로 clone을 받아서 JIRA 이슈 번호로 브랜치를 딴다.</p>
+<p>git branch HIVE-48</p>
+<p>git checkout HIVE-48</p>
+<p>그럼 HIVE-48이라는 브랜치가 생기고 그 브랜치로 이동해서 작업을 시작한다.</p>
+<p>git commit -m "1"</p>
+<p>git commit -m "2"</p>
+<p>편의상 두번 저렇게 커밋했다고 치자. 물론 커밋 메시지는 잘 적는게 좋다. 난 지금 편의상 1번 커밋 2번 커밋으로 부를라고 일부러 저렇게 적은거다. 그런데 사실 지금은 대강 적어도 된다. 어차피 지금까지는 나만 보는거니깐... 나만 알아볼 수 있음 머라고 적던지 상관없다.</p>
+<p>이 두개의 커밋으로 작업이 끝났다고 생각해보자. 이제 이걸 깃헙/nforge/hive의 master 브랜치로 풀리퀘를 보내고 싶으면 어찌해야 할까...</p>
+<p>먼저 깃헙/keeun/hive로 올려야한다. 본인의 깃헙으로 먼저 올리는거다. 그런데 여기서도  깃헙/keesun/hive의 어떤 브랜치로 올리느냐가 중요한데, master로 올리지 말고 지금 쓰고 있는 브랜치를 그대로 올리는게 경험상 좋다. master 브랜치는 nforge/hive master 브랜치를 트래킹하는 브랜치로 쓰는게 어떨까싶어서인데... 뭐 맘대로. 난 HIVE-48 브랜치로 올리기로 결정했다.</p>
+<p>git push origin HIVE-48</p>
+<p>이렇게하면 깃헙/keeun/hive에 HIVE-48이라는 브랜치가 생기면서 내가 작업했던 두개의 커밋이 올라간다.</p>
+<p>자 이제부터 복잡해진다.</p>
+<p>풀리퀘를 누를라고 봤더니... 깃헙/nforge/hive에 그새 커밋이 생겼다. 내껄 보낼수가 없다. 물론 깃헙에서 풀리퀘 버튼은 눌리니까 그냥 보내도 되지만 그게 예의가 아니라고 글 처음에 적었다. 그러니까 싱크를 맞춰서 다시 보내야 하는거다. 다행히도 아직 풀리퀘를 보내기 전이다.</p>
+<p>싱크부터 맞춰보자. 싱크를 맞추는 방법은 merge도 있고 rebase도 있지만 난 rebase가 좋다.</p>
+<p><a href="http://dogfeet.github.io/articles/2012/git-merge-rebase.html">http://dogfeet.github.io/articles/2012/git-merge-rebase.html</a></p>
+<p>왜 좋은지는 위에 글에 잘 dogfeet님께서 잘 설명해주셨으니 살펴보시길... 패스.</p>
+<p>git fetch nforge</p>
+<p>참.. 여기서 nforge는 내가 로컬에 등록한 값이다.</p>
+<p>git remote add nforge 깃헙/hive/nforge.git</p>
+<p>뭐 이런식으로 등록해둔 값이다.</p>
+<p>암튼, 패치를 받아오면 트래킹 브랜치라는 곳에 nforge 최신 내용이 들어온다.</p>
+<p><a href="http://dogfeet.github.io/articles/2012/git-tracking-vs-remote-tracking.html">http://dogfeet.github.io/articles/2012/git-tracking-vs-remote-tracking.html</a></p>
+<p>트래킹 패치도 dogfeet님글이 이해하기 좋다.</p>
+<p>이제는 rebase를 한다.</p>
+<p>git rebase nforge/master</p>
+<p>nforge/master 위로 내 HEAD를 올리겠다는거다. 올리면서 충돌날꺼 있으면 충돌날꺼고 운좋게 충돌날꺼 없으면 아무일없이 끝날꺼다.</p>
+<p>이제 다시 깃헙/keesun/hive로 Push를 해야 하는데 방금 작업한거 때문에 HEAD 밑에 있는 커밋 히스토리가 바껴서 push가 안될꺼다. 그럴때는 강제 push.</p>
+<p>git push -f origin HIVE-47</p>
+<p>이렇게 해버리면 깃헙/keesun/hive로 지금 로컬에 있느 HIVE-47 커밋 히스토리 그대로 푸쉬된다.</p>
+<p>자 이제 어려운거 하나는 지나갔고... 문제는 커밋 두개가 하나의 작업이고 이걸 그냥 풀리퀘해도 되긴하는데... 깔끔한걸 좋아하는 분들은 커밋 여러개를 하나로 합쳐서 하나의 커밋으로 보내달라고 하길 원할꺼다. 스프링도 그렇다. 그런 작업을 squash라고 부르나 본데 어원은 모르겠고 스쿼시를 하려면 이번에도 rebase를 써야된다.</p>
+<p>가장 최신 커밋 두개를 하나로 합치면 되니까..</p>
+<p>git rebase -i HEAD~2</p>
+<p>이렇게 하면 vim 편집창 같은게 뜨면서 위에 커밋 로그 두개가 보인다. 그중에서 한쪽으로 합쳐버리고 싶은걸 pick 대신 s나 squash로 바꿔주면 된다. 사실 그 화면에서 특정 커밋을 빼버릴 수도 있고 커밋 순서를 바꿀 수도 있고.. 여러가지 작업을 할 수 있다.</p>
+<p><a href="http://ko.gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">http://ko.gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html</a></p>
+<p>단순히 합치는거라면 이글이 도움이 되고...다른 여러 기능에 대해서는</p>
+<p><a href="http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages">http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages</a></p>
+<p>이 글이 좋다.</p>
+<p>커밋 하나를 s로 바꾸고 wq! 하면 또 다시 편집창이 뜨는데 이번에는 커밋 메시지를 고치는 과정이다 잘 바꾸고.. wq! 하면 rebase 끝.</p>
+<p>이제 다시 강제 push를 해야하니까..</p>
+<p>git push -f origin HIVE-48</p>
+<p>오.. 이제야 풀리퀘 준비가 끝났다. 싱크도 맞췄고 커밋도 스쿼시 했으니... 이제 깃헙으로 풀리퀘 보내면 된다.</p>
+<p>끝</p>
+<p>ps: 단순히 어떤 툴에 포크/풀리퀘 기능이 있다고 협업이 쉽게 될꺼라 생각하는건 큰 착각이었다.</p>

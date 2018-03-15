@@ -1,0 +1,97 @@
+---
+layout: post
+title: RMI + Spring
+date: 2007-11-30 07:10:01.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '08. Remoting'
+tags:
+- rmi
+- Spring
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322886042'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Remoting 기능을 지원해줍니다. 스프링을 사용하면 매우 간단하게 RMI를 사용할 수 있습니다.</p>
+<p><span style="font-weight: bold;">서비스를 제공하는 쪽</span></p>
+<p>1. POJO로 서비스 인터페이스 구현체 개발<br />2. RmiServiceExporter 등록하기</p>
+<p>인터페이스는 더이상 Remote 인터페이스를 확장하지 않아도 됩니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">package chapter8.client;</p>
+<p>public interface EchoService {</p>
+<p>&nbsp; &nbsp; // word를 세 번 반복한 문자열을 반환합니다.<br />&nbsp; &nbsp; String say(String word);<br />}</div>
+<p>구현체의 메소드들은 더이상 RemoteException을 던지지 않아도 됩니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package chapter8.server;</p>
+<p>import chapter8.client.EchoService;</p>
+<p>public class EchoServiceImpl implements EchoService {</p>
+<p>&nbsp; &nbsp; public String say(String word) {<br />&nbsp; &nbsp; &nbsp; &nbsp; StringBuilder builder = new StringBuilder(word);<br />&nbsp; &nbsp; &nbsp; &nbsp; for (int i = 0; i &lt; 2; i++) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; builder.append(word);<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; return builder.toString();<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>스프링 설정 파일에 서비스 구현체와 Exporter를 설정해줍니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; &lt;bean id="echoService" class="chapter8.server.EchoServiceImpl" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean class="org.springframework.remoting.rmi.RmiServiceExporter"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="service" ref="echoService" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="serviceName" value="EchoService" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="serviceInterface"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="chapter8.client.EchoService" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p>RmiServiceExporter가 기본으로 로컬에 1099 포트에 RMI 레지스트리가 있는지 확인하고 있으면 서비스를 등록하고, 없으면 RMI 레지스트리를 새로 만들어 실행한 다음 서비스를 추가합니다. 이 모든일을 알아서 해주기 때문에 개발자는 할 일이 없습니다.(하고 싶다면, 레지스트리 위치 설정과 포트 설정을 할 수 있겠죠. 그 때는 registryHost 속성과 registryPort 속성에 원하는 값을 설정해 주면 됩니다.)</p>
+<p><span style="font-weight: bold;">서비스를 사용하는 쪽</span></p>
+<p>1. 마치 서비스가 로컬에 존재하는 듯이 코딩합니다.<br />2. 스프링 설정 파일에서 RmiProxyFactoryBean을 사용하여 원하는 서비스를 bean으로 설정합니다.</p>
+<p>테스트 코드입니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package chapter8;</p>
+<p>import org.springframework.test.AbstractDependencyInjectionSpringContextTests;<br />import chapter8.client.Keesun;</p>
+<p>public class KeesunTest extends AbstractDependencyInjectionSpringContextTests {</p>
+<p>&nbsp; &nbsp; @Override<br />&nbsp; &nbsp; protected String[] getConfigLocations() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return new String[] { "chapter8/client/springContext.xml" };<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; private Keesun keesun;</p>
+<p>&nbsp; &nbsp; public void setKeesun(Keesun keesun) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.keesun = keesun;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testDI() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(keesun);<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public void testEcho() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; String echoResult = keesun.yaahoo("Spring");<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("SpringSpringSpring", echoResult);<br />&nbsp; &nbsp; }<br />}</div>
+<p>Keesun 이란 클래스가 EchoService를 사용하고 있습니다.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package chapter8.client;</p>
+<p>public class Keesun {</p>
+<p>&nbsp; &nbsp; private EchoService echoService;</p>
+<p>&nbsp; &nbsp; public void setEchoService(EchoService echoService) {<br />&nbsp; &nbsp; &nbsp; &nbsp; this.echoService = echoService;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String yaahoo(String word){<br />&nbsp; &nbsp; &nbsp; &nbsp; return echoService.say(word);<br />&nbsp; &nbsp; }<br />}</div>
+<p>마지막으로 스프링 설정 파일에 Keesun과 EchoService를 bean으로 등록해 줍니다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; &lt;bean id="keesun" class="chapter8.client.Keesun" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="echoService"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.remoting.rmi.RmiProxyFactoryBean"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="serviceUrl"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="rmi://localhost/EchoService" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="serviceInterface"<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="chapter8.client.EchoService" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</div>
+<p><span style="font-weight: bold;">확인하기</span></p>
+<p>1. Server 실행하기<br />2. Test 코드(Client) 실행하기.</p>
+<p>레지스트리 서버를 동작시키려면 서비스를 제공하는 측 스프링 설정 파일을 읽어들이면서 Exporter bean을 생성하면되겠죠.</p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">package chapter8;</p>
+<p>import org.springframework.context.ApplicationContext;<br />import org.springframework.context.support.ClassPathXmlApplicationContext;</p>
+<p>public class EchoServiceServer {<br />&nbsp; &nbsp; public static void main(String[] args) {<br />&nbsp; &nbsp; &nbsp; &nbsp; ApplicationContext applicationContext = new ClassPathXmlApplicationContext("chapter8/server/springContext.xml");<br />&nbsp; &nbsp; }<br />}</div>
+<p>다음은 위에서 작성했던 KeesunTest를 실행해 줍니다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk9.png" class="aligncenter" width="384" height="213" alt="사용자 삽입 이미지" /></p>

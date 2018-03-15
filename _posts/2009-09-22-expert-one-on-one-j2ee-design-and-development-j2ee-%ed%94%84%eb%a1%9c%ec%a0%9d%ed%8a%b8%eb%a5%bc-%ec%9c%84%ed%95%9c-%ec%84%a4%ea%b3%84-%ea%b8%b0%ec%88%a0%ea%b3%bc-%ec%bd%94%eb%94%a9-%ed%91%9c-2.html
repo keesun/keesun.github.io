@@ -1,0 +1,94 @@
+---
+layout: post
+title: "[Expert One-on-One J2EE Design and Development] J2EE 프로젝트를 위한 설계 기술과 코딩 표준
+  2"
+date: 2009-09-22 02:04:20.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- J2EE D&amp;D
+tags:
+- 객체지향 설계 권장 사항
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879598'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: Expert One-on-One J2EE Design and Development 4장</p>
+<p><span style="font-weight: bold;"><span style="font-size: 12pt;">Template Method 디자인 패턴</span></span><br style="font-weight: bold;" /><br style="font-weight: bold;" />알고리즘 단계와 그 순서를 알고 있지만, 그 각각의 단계가 구체적으로 어떻게 수행될지는 예측할 수 없을 때 사용할 수 있는 디자인 패턴이다. 템플릿 메서드 패턴은 어떻게 수행될지 모르는 부분을 추상 메서드로 캡슐화 하고, 알고리즘을 순서대로 지니고 있는 추상 클래스를 제공한다. 중요한 개념은 그 추상 클래스가 워크 플로우를 관리한다는 것이다. public 상위 클래스의 메서드는 보통 final이고, 추상 메서드는 protected다. </p>
+<p>이렇게 워크 플로우 로직을 추상 상위 클래스로 모아둔 것은 IoC의 예에 해당한다. 할리우드 원칙("Don't call me I'll call you")이라고도 하는 이 원칙은 일반적인 클래스 라이브러리처럼, 사용자 코드가 라이브러리를 사용하는 것이 아니라, 프레임워크 코드가 사용자 코드를 호출한다. 바로 이런 IoC가 프레임워크의 기본이며, 프레임워크는 보통 템플릿 메서드 패턴을 아주 많이 활용한다.</p>
+<p>...</p>
+<p>템플리세 메서드 패턴은 훌륭한 SoC(Separation of concern)를 제공한다. 상위 클래스는 비즈니스 로직에 집중하고 하위 클래스는 세부 기능 구현에 집중한다. </p>
+<p>추상 상위 클래스가 인터페이스를 구현하도록 하는 것이 좋다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 12pt;">Stratege 디자인 패턴</span></span><br style="font-weight: bold;" /><br style="font-weight: bold;" />전략 패턴은 행위를 인터페이스로 빼낸다. 따라서 알고리즘을 알고 있는 클래스는 더이상 추상 클래스가 아니며 구체 클래스가 해당 인터페이스를 구현한 헬퍼를 사용한다. 전략 패턴은 템플릿 메서드 패턴 보다 작업할 것이 많지만, 더 유연하다.</p>
+<p>저자(로드 존슨)는 다음과 같은 경우 템플릿 메서드 패턴보다 전략 패턴을 선호한다.</p>
+<p>- 모든 스탭이 변하는 경우<br />
+- 스탭을 구현하는 클래스가 독립적인 인터페이스 계층 구조를 필요로 할 때.<br />
+- 스탭 구현이 다른 클래스와 연관이 있을 경우.<br />
+- 스탭 구현체가 실행시에 바뀌어야 하는 경우<br />
+- 스탭 구현체가 매우 다양하며 계속 늘어날 여지가 있는 경우.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 12pt;">확장성을 위해 콜백 사용하기</span></span></p>
+<p>또다른 "IoC"를 사용하여 단일 작업을 매개변수화 해보자. 엄밀히 말하자면, 이것은 일종의 Strategy 디자인 패턴이다.</p>
+<p>이 패턴은 메서드에서 호출할 여러 콜백 메서드로 구성된다.</p>
+<p>이 패턴은 특히 JDBC같은 저수준 API를 사용할 때 유용하다.</p>
+<p>*예제코드는 JdbcTemplate.query() 에서 사용하는&nbsp; RowCallbackHandler*</p>
+<p>다음과 같은 장점과 단점이 있다.</p>
+<p>장점<br />
+- 프레임워크 클래스가 에러 처리, 자원 가져오기/반납하기를 할 수 있다. 즉 JDBC를 사용할 때 필요한 복잡한 에러 처리를 한 번만 작성하고 그것을 호출하여 사용할 수 있다. 에러 처리와 자원 반납이 복잡할수록 이 방법이 돋보인다.<br />
+- 이것을 사용하는(호출하는) 코드는 저수준 API를 신경 쓸 필요가 없다.<br />
+- JDBC 같은 저수준 API를 사용할 때 코드 재사용성을 높여준다.</p>
+<p>단점<br />
+- 실행 플로우 자체를 다루는 코드를 실행하는 것 보다 덜 직관적이다. 코드를 이해하기 어려울 수 있고 관리가 어려워질 수 있다.<br />
+- 콜백 핸들러 객체를 만들어야 한다.<br />
+- 드문 경우, 인터페이스를 통해 콜백을 호출하니까 성능이.. 문제가..&nbsp; (이건  좀.. )</p>
+<p>이 패턴은 콜백 인터페이스가 매우 가단한 경우에 최대의 가치를 지닌다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 12pt;">Observer 디자이니 패턴</span></span><br style="font-weight: bold;" /><br style="font-weight: bold;" />인터페이스를 사용하는 것 처럼, 옵져서 디자인 패턴도 변경 없이 확장을 가능케하며(Open Closed Principal) 컴포넌트 간의 의존성을 낮춘다. 또한 관심사 분리(Separation of concerns)에도 기여한다.</p>
+<p>주의할 것. 리스너는 작업을 빨리 마쳐야한다. 악당같은 리스너는 애플리케이션을 대기시킬 수 있다. 최대한 빨리 리턴하도록 하고 오래 걸리는 작업은 별도의 쓰레드로 분리한다. 리스너는 또한 동기화와 공유 객체 문제도 피해야하고 반드시 멀티 쓰레드에 안전해야 한다.<br style="font-weight: bold;" /><br />
+옵저버 디자인 패턴은 단일 서버보다 클러스터 배포시에 덜 유용하다. 오직 단일 서버에서만 이벤트를 발생시켜주기 떄문이다. 예를 들어 데이터 캐시를 갱신하는데 옵저버 패턴을 썼다면 그런 갱신은 오직 단일 서버에서만 발생할 것이다. 하지만, JMS를 사용한다면 클러스터 환경에서도 그러한 것이 가능하다. 하지만 API 복잡도와 성능 부담은 증가할 것이다.<br style="font-weight: bold;" /><br />
+저자의 경험상 옵저버 패턴은 EJB 단 보다는 웹 단에서 유용하다.</p>
+<p>11장에서 옵저버 디자인 패턴을 애플리케이션 프레임워크에서 구현하는 방법을 살펴보겠다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 12pt;">메서드 매개변수 뭉치기</span></span><br style="font-weight: bold;" /><br style="font-weight: bold;" />public void setOptions(Font f, int lineSpacing, int linesPerPage,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int tabSize);</p>
+<p>이런 것을</p>
+<p>public void setOptions(Options options);</p>
+<p>이렇게. (이건 리팩토링 기술에 있던것 같은데. 흠..)</p>
+<p>주요 장점은 유연성이다. 더 많은 매개변수를 추가해도 메서드 시그너쳐를 변경하지 않아도 된다. </p>
+<p>Command 디자인 패턴이 이런 접근 방법을 사용한다.</p>
+<p>단점은 객체 생성이 많아질 수 있다는 것이다. 사용하는 메모리가 늘어나고 가비지 컬렉션을 필요로 하게 될 것이다. 객체는 힙 사이즈를 소비하지만, 기초타입은 그렇지 않는다. 이게 문제가 될지는 메서드가 얼마나 자주 호출되느냐에 달려있다.</p>
+<p>&nbsp;</p>

@@ -1,0 +1,63 @@
+---
+layout: post
+title: Archetype 만들기
+date: 2007-12-21 02:49:32.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- Archetype
+- maven
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323142642'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://sonatype.com/book/archetypes.html#creating_your_own_archetypes" target="_blank">http://sonatype.com/book/archetypes.html#creating_your_own_archetypes</a></p>
+<p>새로운 프로젝트 구조를 만들고 싶을 때 사용합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">1. 프로젝트 생성</span></p>
+<p>mvn archetype:create -DarchetypeGroupId=<span style="font-weight: bold;">org.apache.maven.archetypes</span> <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DarchetypeArtifactId=<span style="font-weight: bold;">maven-archetype-archetype</span> <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DarchetypeVersion=<span style="font-style: italic;">1.0</span> <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DgroupId=<span style="font-style: italic;">com.mycompany</span> <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DartifactId=<span style="font-style: italic;">my-archetype</span><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">2. pom.xml 파일 수정하기</span></p>
+<p>이곳에서 기본 소스 디렉터리 설정, 기본으로 사용할 의존성들을 설정합니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">3. src/main/resources/META-INF/maven/archetype.xml 파일 작성하기</span></p>
+<p>특정 파일을 리소스로 등록하는 xml 파일 인듯 합니다.<br />&lt;archetype&gt;<br />&nbsp; &lt;id&gt;my-archetype&lt;/id&gt;<br />&nbsp; &lt;allowPartial&gt;true&lt;/allowPartial&gt;<br />&nbsp; &lt;resources&gt;<br />&nbsp; &nbsp; &lt;resource&gt;src/main/resources/META-INF/MANIFEST.MF&lt;/resource&gt;<br />&nbsp; &lt;/resources&gt;<br />&lt;/archetype&gt;</p>
+<p>토비님께서 이 파일을 자동으로 만들어주는 애플리케이션을 만들어 두셨습니다.<br /><a href="http://toby.epril.com/?p=294" target="_blank">Maven archetype 설정파일 자동생성기 - ArchetypeXmlWriter</a></p>
+<p><span style="font-weight: bold;">4. 설치</span></p>
+<p>mvn install</p>
+<p><span style="font-weight: bold;">5. 새로운 아치타입으로 프로젝트 생성하기</span></p>
+<p>mvn archetype:create -<span style="font-weight: bold;">DarchetypeGroupId=com.mycompany</span> \<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -<span style="font-weight: bold;">DarchetypeArtifactId=my-archetype</span> \<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DarchetypeVersion=1.0-SNAPSHOT<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DgroupId=<span style="font-style: italic;">com.mycompany</span> \<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; -DartifactId=<span style="font-style: italic;">my-project</span> \</p>
+<p></p>

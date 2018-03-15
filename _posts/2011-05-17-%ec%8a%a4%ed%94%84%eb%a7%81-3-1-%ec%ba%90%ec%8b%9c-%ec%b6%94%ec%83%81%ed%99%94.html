@@ -1,0 +1,93 @@
+---
+layout: post
+title: "[스프링 3.1] 캐시 추상화"
+date: 2011-05-17 14:59:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- '3.1'
+tags: []
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+  arkayne-time-post: '1323191144'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://www.javacodegeeks.com/2011/02/spring-31-cache-abstraction-tutorial.html">http://www.javacodegeeks.com/2011/02/spring-31-cache-abstraction-tutorial.html</a></p>
+<p><a href="http://static.springsource.org/spring/docs/3.1.0.M1/spring-framework-reference/html/cache.html">http://static.springsource.org/spring/docs/3.1.0.M1/spring-framework-reference/html/cache.html</a></p>
+<p>1. 캐시 선언</p>
+<p>2. 캐시 설정</p>
+<p>캐시 선언</p>
+<p>1. <a href="http://static.springsource.org/spring/docs/3.1.0.M1/javadoc-api/org/springframework/cache/annotation/Cacheable.html">@Cacheable</a></p>
+<p>캐시할 메서드 위에 선언하면 된다. 그런데 key값을 무조건 메서드의 모든 매개변수의 해시 코드 값을 사용하기는 뭐하다. 내가 사용하고 싶은 속성만 사용해서 key값을 정하고 싶다. 그럴 수 있다. key라는 속성에 SpEL을 사용하면 된다.</p>
+<p>[java]<br />
+@Cacheable(value=&quot;book&quot;, key=&quot;isbn&quot;<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)</p>
+<p>@Cacheable(value=&quot;book&quot;, key=&quot;isbn.rawNumber&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)</p>
+<p>@Cacheable(value=&quot;book&quot;, key=&quot;T(someType).hash(isbn)&quot;)<br />
+public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)<br />
+[/java]</p>
+<p>@Cacheable의 key에서 사용할 수 있는 SpEL에서 참조할 수 있는 객체</p>
+<p>- methodName | @Cacheable을 호출한 메서드 이름 | #root.methodName</p>
+<p>- caches | 현재 메서드 실행 했을 때의 캐시 컬렉션 | #root.caches[0].name</p>
+<p>- 매개변수 이름 | 메서드 매개변수에 선언되어 있는 변수명 | 암거나..</p>
+<p>그리고 메서드 호출될 때마다 캐시로 저장하지 말고, 특정 조건을 만족할 때만 캐시하고 싶다. 그럴 수 있다. condition이라는 속성을 사용하면 된다.</p>
+<p>[java]<br />
+@Cacheable(value=&quot;book&quot;, condition=&quot;name.length &lt; 32&quot;)<br />
+public Book findBook(String name)<br />
+[/java]<br />
+2. <a href="http://static.springsource.org/spring/docs/3.1.0.M1/javadoc-api/org/springframework/cache/annotation/CacheEvict.html">@CacheEvict</a></p>
+<p>캐시에서 빼고 싶을 때 사용하고, 속성은 @cacheable과 비슷하다. allEntries가 하나 더 있는데, 특정 캐시 영역을 전부 날리고 싶을 때 사용하면 된다.</p>
+<p>@CacheEvict(value=”books”, allEntires=true)</p>
+<p>캐시 설정</p>
+<p>애노테이션은 선언일 뿐, 선언해둔다고 다 되진 않는다. 선언을 읽어서 실제 처리를 할 빈을 등록해야 함. cache라는 네임스페이스 추가해뒀기 때문에 편하게 설정할 수 있다.</p>
+<p>[xml]<br />
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />
+  xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;<br />
+   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsdhttp://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd&quot;&gt;<br />
+  &lt;cache:annotation-driven /&gt;<br />
+[/xml]<br />
+현재 기본 구현체로는 ConcurrentHashMap 기반의 구현체를 사용하며, Ehcache 기반 구현체를 스프링에서 따로 제공한다. Ehcache 기반의 구현체를 사용하고 싶다면 다음과 같이 설정하면 된다.</p>
+<p>[xml]<br />
+&lt;bean id=&quot;cacheManager&quot; class=&quot;org.springframework.cache.ehcache.EhcacheCacheManager&quot; p:cache-manager=&quot;ehcache&quot;/&gt;</p>
+<p>&lt;!-- Ehcache library setup --&gt;<br />
+&lt;bean id=&quot;ehcache&quot; class=&quot;org.springframework.cache.ehcache.EhCacheManagerFactoryBean&quot; p:config-location=&quot;ehcache.xml&quot;/&gt;<br />
+[/xml]</p>

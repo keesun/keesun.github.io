@@ -1,0 +1,59 @@
+---
+layout: post
+title: DB 바꾸기(Hibernate 사용할 때)
+date: 2007-06-27 05:31:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- DB 변경하기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322989899'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Hibernate를 사용하지 않으면 모든 SQL을 전부 손봐야 할지도 모르겠지만...<br />Hibernate와 같은 ORM을 사용하면 얘기가 달라집니다. 필요한 것은 딱 두 개</p>
+<p>1. 설정 내용 변경<br />2. 필요한 jdbc jar파일 추가</p>
+<p>MySQL -&gt; PostgreSQL로 변경합니다.<br />1. 설정 내용 변경
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">#<br /># data source jdbc connection<br />#</p>
+<p>db.driver=org.postgresql.Driver<br />db.url=jdbc:postgresql://localhost/seminar<br />db.username=jedi<br />db.password=</p>
+<p>#<br /># hibernate<br />#</p>
+<p>hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect</p></div>
+<p>2. 필요한 jar 파일 추가<br />필요한 jdbc가 바꼈기 때문에 각 DB밴더 에서 제공해 주는 jar파일을 프로젝트의 클래스패스에 추가해줘야 합니다.<br /><img src="{{ site.baseurl }}/assets/cm274.png" class="aligncenter" width="600" height="174" alt="사용자 삽입 이미지" /></p>

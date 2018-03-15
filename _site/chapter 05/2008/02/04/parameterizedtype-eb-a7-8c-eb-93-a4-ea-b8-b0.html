@@ -1,0 +1,54 @@
+<h1>클래스 구현하기</h1>
+<ul>
+<li>DB에 값을 저장할 때 특정 조건에 따라 다른 값으로 변환하여 저장할 필요가 있다면, 파라미터가 필요하다. 이럴 때 유요하다. </li>
+</ul>
+<ul>
+<li>ParameterizedType 인터페이스를 구현한다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">private</span> Currency convertTo;
+
+	@Override
+	<span class="code-keyword">public</span> void setParameterValues(Properties parameters) {
+		<span class="code-keyword">this</span>.convertTo = Currency.getInstance(
+                parameters.getProperty(<span class="code-quote">"convertTo"</span>));
+	}</pre>
+</div>
+</div>
+<h1>맵핑하기</h1>
+<ul>
+<li>같은 Value Type 클래스 타입의 객체들 여럿을 맵핑 할 때는 TypeDef 애노테이션을 사용해서, 전역에서 사용할 설정을 정의해 둘 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">@org.hibernate.annotations.TypeDefs({
+    @org.hibernate.annotations.TypeDef(
+        name=<span class="code-quote">"monetary_amount_usd"</span>,
+        typeClass = persistence.MonetaryAmountConversionType.class,
+        parameters = { @Parameter(name=<span class="code-quote">"convertTo"</span>, value=<span class="code-quote">"USD"</span>) }
+    ),
+    @org.hibernate.annotations.TypeDef(
+        name=<span class="code-quote">"monetary_amount_eur"</span>,
+        typeClass = persistence.MonetaryAmountConversionType.class,
+        parameters = { @Parameter(name=<span class="code-quote">"convertTo"</span>, value=<span class="code-quote">"EUR"</span>) }
+    )
+})</pre>
+</div>
+</div>
+<ul>
+<li>위의 설정은 import문 바로 아래 또는 class정의 부분 위나, 별도의 자바 파일, package-info.java 같은 클래스에 둔다.(2.2.1 참조) </li>
+</ul>
+<ul>
+<li>다음과 같이 참조해서 사용할 수 있다. </li>
+</ul>
+<div class="code panel" style="BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 1px; BORDER-RIGHT-WIDTH: 1px">
+<div class="codeContent panelContent">
+<pre class="code-java">@org.hibernate.annotations.Type(type = <span class="code-quote">"monetary_amount_eur"</span>)
+@org.hibernate.annotations.Columns({
+  @Column(name = <span class="code-quote">"BID_AMOUNT"</span>),
+  @Column(name = <span class="code-quote">"BID_AMOUNT_CUR"</span>)
+})
+<span class="code-keyword">private</span> MonetaryAmount bidAmount;</pre>
+</div>
+</div>

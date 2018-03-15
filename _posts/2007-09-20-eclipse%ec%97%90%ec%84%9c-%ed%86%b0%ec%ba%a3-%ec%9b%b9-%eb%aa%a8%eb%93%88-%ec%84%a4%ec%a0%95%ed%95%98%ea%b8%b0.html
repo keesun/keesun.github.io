@@ -1,0 +1,57 @@
+---
+layout: post
+title: Eclipse에서 톰캣 웹 모듈 설정하기
+date: 2007-09-20 05:12:25.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- Eclipse
+- 톰캣
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323082209'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Server 뷰에 있는 서버 중에 하나 선택<br /><img src="{{ site.baseurl }}/assets/cn392.jpg" class="aligncenter" width="600" height="392" alt="사용자 삽입 이미지" /><br />Overview 탭이 기본으로 보이는데 여기서 Module을 선택합니다.<br /><img src="{{ site.baseurl }}/assets/dn379.jpg" class="aligncenter" width="600" height="327" alt="사용자 삽입 이미지" /><br />docBase에 뭔가 있다면 전부 선택해서 제거(remove)합니다. 그리고 오른쪽에 Add External web module을 선택합니다.<br /><img src="{{ site.baseurl }}/assets/cn393.jpg" class="aligncenter" width="405" height="369" alt="사용자 삽입 이미지" /><br />그리고 Document base에서 서버에 구동한 프로젝트의 웹 기본 폴더(보통은 web 또는 이클립스는 기본으로 WebContent) 를 선택합니다.<br /><img src="{{ site.baseurl }}/assets/cn394.jpg" class="aligncenter" width="337" height="187" alt="사용자 삽입 이미지" /><br />Auto reloading enabled는 선택해도 되고 안해도 되지만 하지 않겠습니다. 그다음 서버를 구동합니다.<br /><img src="{{ site.baseurl }}/assets/cn395.jpg" class="aligncenter" width="600" height="394" alt="사용자 삽입 이미지" /><br />웹 브라우저에서 localhost:8080 으로 접속하면 해당 웹 프로젝트의 index 페이지를 볼 수 있습니다.<br />만약에 콘솔에 다음과 같은 에러가 보인다면 Docbase가 잘못 설정된 것입니다.
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">심각: Error starting static Resources<br />
+java.lang.IllegalArgumentException: Document base<br />
+D:\eclipse\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps\studywith<br />
+does not exist or is not a readable directory</div>

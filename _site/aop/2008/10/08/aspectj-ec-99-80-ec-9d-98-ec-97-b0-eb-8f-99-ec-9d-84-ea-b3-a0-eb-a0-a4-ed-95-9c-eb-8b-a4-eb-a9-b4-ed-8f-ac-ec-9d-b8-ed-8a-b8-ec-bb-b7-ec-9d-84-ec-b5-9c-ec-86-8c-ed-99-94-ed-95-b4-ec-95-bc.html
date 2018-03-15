@@ -1,0 +1,23 @@
+<p>무슨 이야기냐면, <a href="http://en.wikipedia.org/wiki/Principle_of_least_privilege" target="_blank">최소 권한 원칙</a>인가... 그런거랑 비슷한겁니다.</p>
+<p>바로 예제를 보면서 살펴보죠.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">
+@Aspect<br />
+public class HibernateExceptionToDataAccessException {</p>
+<p>&nbsp; &nbsp; @Pointcut("@within(org.springframework.stereotype.Repository)")<br />
+&nbsp; &nbsp; public void accountHibernateExceptionInDao(){}</p>
+<p>&nbsp; &nbsp; @AfterThrowing(pointcut="accountHibernateExceptionInDao()", throwing="e")<br />
+&nbsp; &nbsp; public void translateHibernateException(HibernateException e){<br />
+&nbsp; &nbsp; &nbsp; &nbsp; throw SessionFactoryUtils.convertHibernateAccessException(e);<br />
+&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>
+이 애스팩트는 하이버네이트 예외를 스프링의 DataAccessException으로 변환해주는 애스팩트입니다. 이 녀석은 하이버네이트로 DAO 만드는 여러 방법 중에 가장 깔끔한 방법을 사용할 때 쓰면 좋고 안 써도 별로 상관없는(하이버네이트 버전이 올라가면서 하이버네이트 예외도 uncatched exception으로 바꼈으며 계층 구조도 세밀하게 나눠뒀기 때문입니다.) 그런 애스팩트입니다. 그래도, 버전 올리기 힘든 하이버 예전 버전을 사용하는 라이브러리를 사용해야 한다면 유용하겠죠.</p>
+<p>어쨋든, 본론으로 돌아가서..</p>
+<p>저렇게 만들어둔 애스팩트에 문제점이 보이나요? 저도 방금전까진 몰랐습니다. 일단, 저 애스팩트의 포인트컷은 이해가 가시죠? @Repository 애노테이션을 가지고 있는 클래스의 모든 조인포인트를 나타낸 겁니다.</p>
+<p>문제는 바로 이 조인포인트.. 이게 핵심입니다. 스프링에서는 메소드 실행 조인포인트만 사용하기 때문에, 저 애스팩트를 스프링 AOP에서 사용할 땐, 원하던 메소드에만 적용이 될 겁니다. 하지만, 만약 저 애스팩트를 AspectJ와 연동해서 사용한다면? 어떤 일이 벌어질까요?</p>
+<p><img src="/assets/hk320000000000.jpg" class="aligncenter" width="600" height="232" alt="사용자 삽입 이미지" /><br />
+캬오.. 43개??? 말도 안돼. 내가 테스트 할려고 만든 DAO가 몇개나 된다고.. 그 안에 메소드도 거의 한 두 개밖엔 안만들었는데.. 왠 43개.... 바로 크로스 레퍼런스 뷰를 열고 확인해봤습니다.</p>
+<p><img src="/assets/dk070000000000.jpg" class="aligncenter" width="600" height="439" alt="사용자 삽입 이미지" /><br />
+캬오~~~~ 마이 미스테이크... 처방이 필요합니다. 처방은 간단하기 때문에 비밀! 캬캬캬.(이번주 KSUG 세미나에서 공개하도록 하죠.) 처방후에는..</p>
+<p><img src="/assets/dk070000000001.jpg" class="aligncenter" width="531" height="184" alt="사용자 삽입 이미지" /><br />
+이렇게 AspectJ에서도 메소드 실행 조인포인트에만 걸 수 있습니다. 음하하하..</p>

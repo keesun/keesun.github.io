@@ -1,0 +1,39 @@
+---
+layout: post
+title: "[Oh-My-Zsh] + agnoster 테마 설치하기"
+date: 2013-06-21 17:11:08.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags: []
+meta:
+  _edit_last: '1'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.me/?attachment_id=13817" rel="attachment wp-att-13817"><img class="aligncenter size-full wp-image-13817" title="스크린샷 2013-06-21 오후 9.39.10" src="{{ site.baseurl }}/assets/&#49828;&#53356;&#47536;&#49399;-2013-06-21-&#50724;&#54980;-9.39.10.png" alt="" width="1000" height="565" /></a></p>
+<p>콘솔창을 이렇게 만들고 싶다면 한번쯤 해볼만 하다. Git을 자주 사용하는 개발자라면 설치하는걸 권장하고 싶다. 일단 이쁘고 그다음 Git 사용하는게 매우 편하다.</p>
+<p><a href="https://github.com/robbyrussell/oh-my-zsh">https://github.com/robbyrussell/oh-my-zsh</a></p>
+<p>이쪽으로 가서 OMZ를 설치한다.</p>
+<p>그담에 ~/.zshrc를 vi나 vim으로 열고 ZSH_THEME 값을 agnoster로 바꿔준다.</p>
+<p>#ZSH_THEME="robbyrussell"<br />
+ZSH_THEME="agnoster"</p>
+<p>당연히 요런식으로 기본값을 주석처리하고 새 값을 추가하는게 좋겠다.</p>
+<p><a href="https://gist.github.com/agnoster/3712874">https://gist.github.com/agnoster/3712874</a></p>
+<p>그담에 여기로 이동하면 폰트 설치할 수 있는 링크가 나오는데 그 링크 타고가서 폰트 3개를 다운받고 하나 하나 클릭해서 폰트를 설치한다. (폰트 파일을 클릭하면 그냥 설치되니까 편하다.)</p>
+<p>그런담에 ~/.zshrc를 다시 한번 vi나 vim으로 열고</p>
+<p>DEFAULT_USER=whiteship</p>
+<p>이런식으로 자기 닉넴이나 자주 사용하는 아이디를 적어준다.</p>
+<p><a href="http://ethanschoonover.com/solarized">http://ethanschoonover.com/solarized</a></p>
+<p>마지막으로 테마인데.. 여기로 가서 아래로 쭉 스크롤 한담에 다운로드 받으면 여러 종류의 테마가 있는데 그 중에서 iterm2 테마 폴더에 들어가서 테마 파일 클릭해주면 설치된다.</p>
+<p>두개 설치하고나서  iterm2 환경 설정(커맨드 + 쉼표) 들어가서 Profile -&gt; Colors -&gt; Load Presets 가서 방금 설치한 테마(중에서도 다크로)로 바꿔준다.</p>
+<p>이렇게 하면 git 명령어 자동완성과 현재 브랜치 정보 등을 이쁘게 볼 수 있다.</p>
+<p>끝!</p>

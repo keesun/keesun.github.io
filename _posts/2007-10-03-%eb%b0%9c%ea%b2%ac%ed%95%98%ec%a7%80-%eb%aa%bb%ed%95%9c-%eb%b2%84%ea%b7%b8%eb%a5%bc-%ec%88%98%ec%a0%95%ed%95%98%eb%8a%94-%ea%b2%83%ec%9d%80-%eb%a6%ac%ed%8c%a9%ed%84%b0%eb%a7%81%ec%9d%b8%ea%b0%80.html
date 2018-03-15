@@ -1,0 +1,61 @@
+---
+layout: post
+title: 발견하지 못한 버그를 수정하는 것은 리팩터링인가?
+date: 2007-10-03 04:09:14.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Koreanization
+tags:
+- Martin Fowler
+- 리팩터링
+- 번역
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322757833'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>원문 : <a href="http://martinfowler.com/bliki/IsFixingAnUnknownBugRefactoring.html" target="_blank">IsFixingAnUnknownBugRefactoring</a> &nbsp;&nbsp; &nbsp;<a href="http://martinfowler.com/bliki/refactoring.html" target="_blank">refactoring</a> &nbsp;&nbsp; &nbsp;<span style="font-weight: bold;">3 September 2004</span></p>
+<p><a href="http://martinfowler.com/bliki/RefactoringBoundary.html" target="_blank">RefactoringBoundary</a>.</p>
+<p>Przemyslaw Pokrywka가 매우 난해한 질문을 했다. <a href="http://martinfowler.com/books.html#refactoring" target="_blank">책</a>에서 소개한 리팩터링 중에 하나로 <a href="http://www.refactoring.com/catalog/introduceNullObject.html" target="_blank">Introduce Null Object</a>라는 것이 있는데, (이것은 매우 유용한 리팩터링으로 <a href="http://martinfowler.com/books.html#r2p" target="_blank">Josh의 새 책</a>에서도 다루고 있다) Przemyslaw의 요지는 이 리팩터링이 행동을 바꿀 수 있다는 것이었다. 만약 여러분이 null을 반환하는 메소드를 가지고 있고, 그 반환 값인 null에게 메소드 호출을 하면 null pointer exception을 받게 될 것이다. 이럴 때 Null Object를 사용해서 (예외를 발생시키는 것이 아니라) 기본 행동을 수행하도록 정의할 수 있다.</p>
+<p>요즘 다수의 리팩터링들이 행동을 바꾸고 있는데, 이들은 근본적으로 그렇게 하도록 의도된 것 들이다. 예를 들어 <a href="http://www.refactoring.com/catalog/formTemplateMethod.html" target="_blank">Form Template Method</a>를 적용하면, 프로그램이 다르게 동작한다. 핵심적으로 질문해야 할 것은 <a href="http://whiteship.tistory.com/1187" target="_blank">리팩터링 정의</a>에서 언급한 “주목할 만한” 행동에 해당하는가 이다. “주목할 만한” 행동이란 프로그램이 원래 의도했던 것을 변경했는지 여부를 뜻한다. Introduce Null Object를 사용하면 프로그램에서 반환된 레퍼런스 변수를 조작하는 부분 (특히 null인지 확인하는 부분)을 살펴보아야 한다. 그렇기 때문에 이 리팩터링이 다소 복잡한 것이다.</p>
+<p>질문 중에서 가장 흥미로운 부분은 만약에 버그가 있는 부분을 놓치면 어떤 일이 발생하는가 이다. 프로그램 내부의 어디에선가 null 레퍼런스에게 메소드를 호출하는 부분이 있다고 하자. 이 부분을 간과하여 놓쳤고 최종 사용자에게까지 전달되었다면, 리팩터링 전에는 예외를 발생시켰을 것이다. 리팩터링 후에는 기본 행동을 가지게 되고 이것은 사실상 버그를 고친 것에 해당한다. 미처 발견하지 못했던 버그를 고치는 것은 리팩터링일까?</p>
+<p>그렇다. 왜냐면 스스로가 지각하지 못했거나 충분히 살펴보지 못한 (버그를 발생시키는) 행동은 “눈에 띄는” 행동이라고 할 수 없기 때문이다. 비록 버그를 알고 있었다 하더라도, 행동을 변함없이 유지하려고 인식했던 버그가 아니라면, 여전히 그것을 리팩터링이라고 불러도 좋다.</p>
+<p>이것은 흥미로운 경우이기 때문에, 내 생각을 쉽게 바꿀 수도 있고 이와 비슷한 경계 사례들을 더 조사해 봐야겠다.</p>
+<p>여기서 생각해 볼 것 한 가지는 수작업으로 하는 리팩터링과 툴 기반의 리택퍼링의 차이점이다. 손수 하는 리팩터링은 이런 식의 스스로 판단을 할 수 있는 반면에, 툴을 사용할 때는 좀 더 주의해야 한다. 아직은 툴들이 행동을 유지하는 것을 항상 보장하지는 못한다. 심지어, 파일로부터 읽어 들인 이름으로 리플렉션을 사용하여 메소드를 호출하는 경우 rename method는 리팩터링 도중 깨질 수 도 있다.</p>

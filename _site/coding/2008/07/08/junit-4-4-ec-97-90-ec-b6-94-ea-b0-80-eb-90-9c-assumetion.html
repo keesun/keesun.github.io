@@ -1,0 +1,12 @@
+<p>테스트 코드를 실행하는 환경이 달라짐에 따라서 테스트가 동작하지 않는 경우가 있는데, 그럴 때는 그런 환경 값들을 테스트를<br />
+돌리기 전에 설정해주면 테스트가 다시 잘 돌아갑니다. 예를 들어, 위도우에서는 폴더 구분할 때 \를 쓰지만 리눅스에서는 / 를<br />
+쓰고, 라인브레이크나 뭐 기타 표시들이 다를 수 있죠. 그런 경우 파일을 읽어오는 테스트가 있다면 운이 안 좋을 땐 테스트가<br />
+실패할 수도 있습니다.</p>
+<p>그래서 그러한 "가정"을 실제로 코드로 미리 해두면, 그 테스트가 여러 환경에서 테스트를 하더라도 실패하는 일이 발생하진 않겠죠.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">import static org.junit.Assume.*</p>
+<p>@Test public void filenameIncludesUsername() {<br />&nbsp;&nbsp; <span style="color: rgb(0, 153, 102); font-weight: bold;">assumeThat</span>(File.separatorChar, is('/'));<br />&nbsp;&nbsp; assertThat(new User("optimus").configFileName(), is("configfiles/optimus.cfg"));<br />}</p>
+<p>@Test public void correctBehaviorWhenFilenameIsNull() {<br />&nbsp;&nbsp; <span style="color: rgb(0, 153, 102); font-weight: bold;">assumeTrue</span>(bugFixed("13356"));&nbsp; // bugFixed is not included in JUnit<br />&nbsp;&nbsp; assertThat(parse(null), is(new NullDocument()));<br />}</div>
+<p>
+이런 식으로 사용할 수 있군요. 흠.. Stub을 만들고 그걸 Injection 해주는 걸까요. </p>
+<p>참조 : <a href="http://junit.sourceforge.net/doc/ReleaseNotes4.4.html" target="_blank">http://junit.sourceforge.net/doc/ReleaseNotes4.4.html</a></p>
+<p>ps : assumetion을 @Theory와 @Datapoint라는 것도 있는데 이건 좀 복잡해 보이네요. 패스~!</p>

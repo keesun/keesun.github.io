@@ -1,0 +1,67 @@
+---
+layout: post
+title: "[Node.js] socket.io로 채널 기능 구현하기"
+date: 2011-06-02 12:06:12.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- node.js
+- Socket.IO
+meta:
+  _edit_last: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323168920'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both">시리즈가 되어야 할 것 같다. 우선 지금까지 구현한 상황을 공유하자면...</p>
+<p style="clear: both"><a href="http://whiteship.me/wp-content/uploads/2011/06/2011-06-02_______11.56.06.png" class="image-link"><img class="linked-to-original" src="{{ site.baseurl }}/assets/2011-06-02_______11-thumb.56.06.png" height="237" width="380" style=" text-align: center; display: block; margin: 0 auto 10px;" /></a>이렇다. 처음에는 파폭에서 메시지를 보낸뒤에, 서버에서 해당 메시지를 다시 보내주는지 확인했고, 다음에는 왼쪽에 있는 크롬 브라우저에서 입력한 값을 오른쪽에 있는 파폭으로 전달 됐는지 확인했다.</p>
+<p style="clear: both">사실, 초간단 실시간 웹 앱 개발은 매우 간단하다. 그러나... 내가 개발하고자 하는 앱은 채널 개념이 필요하다. 그런데.. Socket.IO에는 채널 개념이 없어서 직접 구현해 줘야 한다.</p>
+<p style="clear: both">우선 내가 세운 전략은 이렇다.</p>
+<p style="clear: both">1. 브라우저에서 특정 채널이 관리하는 페이지가 뜨면, 메시지에 {'type':'subscribe', 'channel':'1'} 이런 식으로 구독할 채널 이름과 구독하겠다는 행위를 알려준다.</p>
+<p style="clear: both">- 해당 페이지를 클릭한 순간 구독자가 되는 것이고, 실시간으로 데이터를 전달 받게 된다.</p>
+<p style="clear: both">- 그럼 서버가 해당 Map<Channel, List<client>> 형태의 콜렉션에다 client를 집어 넣는다.</client></p>
+<p style="clear: both">2. 해당 페이지에서 메시지를 입력하면 {'type':'publish', 'channel':'1', 'msg':'할말'} 이런식으로 메시지를 보낸다. </p>
+<p style="clear: both">- 그럼 서버가 Map.get(Channel)을 호출해서 가져온 List<client>를 순회하면서 메시지를 쫙.. send() 해준다.</client></p>
+<p style="clear: both">- 그러면 각 클라이언트로 메시지가 전달 되고..</p>
+<p style="clear: both">3. 각 클라이언트의 브라우저에서 소켓으로부터 메시지를 전달 받았을 때 console.log를 찍도록 해봤다.</p>
+<p style="clear: both">오예!!! 됐~~~다!!</p>
+<p style="clear: both">ps: 아침에 머리감고, 면도하고, 이빨닦는데.. 회사 가기가 무척이나 싫었다.. 그래서 급하게 연차를 내고 집에서 오전에 코딩좀 하고 오후에는 펑펑 놀려고 한다. 이제 '구독 해지'만 구현하면 땡이다. 놀자!!!!</p>
+<p><br class="final-break" style="clear: both" /></p>

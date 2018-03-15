@@ -1,0 +1,70 @@
+---
+layout: post
+title: "@Configurable + @Entity"
+date: 2008-01-16 01:23:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- "@Configurable"
+- JPA
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322800388'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://steelheart.kr/tc/166" target="_blank">Spring: Component Scan + Load Time Weaver (LTW)</a></p>
+<p>아침에 올라온 댓글을 보고 확인해봤습니다.</p>
+<p>질문은 @Configurable과 JPA 그리고 Jetty를 사용했을 때, @Configurable이 동작하지 않아서 도메인 객체가 가지고 있는 레퍼런스 타입의 객체들이 세팅되지 않고 null 인 상태라는 제보였습니다.</p>
+<p>예상으로는 웹 서버를 동작 시키실 때, -javaagent 옵션을 주지 않으신 게 아닌가 싶습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek25.png" class="aligncenter" width="600" height="303" alt="사용자 삽입 이미지" />이클립스에서 톰캣을 사용하는 이런 화면에서 가운데 보이는 Open lunch configuration에서 옵션을 줄 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/ek26.png" class="aligncenter" width="600" height="480" alt="사용자 삽입 이미지" />일단 서버에서 테스트 하려면 Sevlet 에서 코드를 작성해서 확인해봐야겠지만, 그 전에 @Entity랑 @Configurable이 같이 묶여도 이상이 없다는 것은 확인하고 넘어가야겠기에 테스트를 해봤습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">@RunWith(SpringJUnit4ClassRunner.class)<br />@ContextConfiguration(locations={"file:web/WEB-INF/applicationContext.xml"})<br />public class MemberTest {</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void injectionTest() throws Exception {<br />&nbsp; &nbsp; &nbsp; &nbsp; Member member = new Member();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(member);<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(member.getMemberRepository());<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(member.getMemberRepository().getSessionFactory());<br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>물론 이 테스트를 돌릴 때에도 -javaagent 옵션을 주셔야 합니다. 이 경우에는 junit에 주어야겠죠.</p>
+<p><img src="{{ site.baseurl }}/assets/ek27.png" class="aligncenter" width="366" height="164" alt="사용자 삽입 이미지" /><br />테스트는 통관합니다. 설정은 다음과 같습니다.
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);">&nbsp; &nbsp; &lt;tx:annotation-driven /&gt;</p>
+<p>&nbsp; &nbsp; &lt;context:load-time-weaver /&gt;</p>
+<p>&nbsp; &nbsp; &lt;context:spring-configured /&gt;</p>
+<p>&nbsp; &nbsp; &lt;context:component-scan base-package="domain" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="member" class="domain.Member" abstract="true"<br />&nbsp; &nbsp; &nbsp; &nbsp; scope="prototype" p:member-dao-ref="memberDao" /&gt;</div>
+<p>이밖에도 sessionFactory, datasource, transactionManager 가 빈으로 등록되어 있지만 생략하겠습니다.</p>
+<p>어쨋든 조금 쉬었다가 Servlet에서 위의 코드를 실행해보겠습니다.</p>

@@ -1,0 +1,95 @@
+---
+layout: post
+title: Using placeholders
+date: 2008-01-13 02:57:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 03
+tags:
+- PlaceHolder
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322751372'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>you can call any native SQL function or keyword your database system supports.</li>
+</ul>
+<ul>
+<li>The disadvantage of putting native SQL in your mapping metadata is lost database portability.</li>
+</ul>
+<ul>
+<li>One way to deal with this issue is to use a placeholder in<br />
+your XML file that is replaced during build when the mapping files are<br />
+copied to the target directory.</li>
+</ul>
+<h1>Placeholder</h1>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;id name=<span class="code-quote">"id"</span> column=<span class="code-quote">"CATEGORY_ID"</span> type=<span class="code-quote">"<span class="code-object">long</span>"</span>&gt;<br />    &lt;generator class=<span class="code-quote">"&amp;idgenerator;"</span>/&gt;<br />&lt;/id&gt;</pre>
+</div>
+</div>
+<ul>
+<li>&amp;idgenerator; 값을 Entity placeholder라고 부른다. 이 값을 XML 파일의 상단에 문서 타입 정의의 일부분으로 선언할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;?xml version=<span class="code-quote">"1.0"</span>?&gt;<br />&lt;!DOCTYPE hibernate-mapping SYSTEM<br />    <span class="code-quote">"http:<span class="code-comment">//hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"</span><br /></span>[<br />&lt;!ENTITY idgenerator <span class="code-quote">"auction.custom.MyOracleGenerator"</span>&gt;<br />]&gt;</pre>
+</div>
+</div>
+<ul>
+<li>맵핑 파일을 읽어들일 때, XML 파서는 placeholder를 위에 선언한 값으로 대체한다.</li>
+</ul>
+<ul>
+<li>선언 부분을 별도의 DTD 파일로 한 단계 더 빼낼 수 있고, 원래 자리에는 dtd 파일을 참조하도록 global 옵션을 사용할 수 있다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">&lt;?xml version=<span class="code-quote">"1.0"</span>?&gt;<br />&lt;!DOCTYPE hibernate-mapping SYSTEM<br />    <span class="code-quote">"http:<span class="code-comment">//hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"</span><br /></span>[<br />&lt;!ENTITY % globals SYSTEM <span class="code-quote">"classpath:<span class="code-comment">//persistence/globals.dtd"</span>&gt;<br /></span>%globals;<br />]&gt;</pre>
+</div>
+</div>
+<ul>
+<li>모든 전역적인 옵션을 DTD 파일로 빼낼 수 있다.</li>
+</ul>
+<ul>
+<li>다수의 속성이 여러 클래스에 중복되서 나타나지만, 상속을 사용할 수 없을 때는 XML 덩어리를 별도의 파일로 빼내서 다른 XMl 파일들에 포함 시킬 수도 있다.</li>
+</ul>

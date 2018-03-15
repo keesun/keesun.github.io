@@ -1,0 +1,58 @@
+---
+layout: post
+title: Spring AOP 어디다 쓰면 좋을까?
+date: 2008-09-16 05:58:13.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- Spring AOP
+- 유즈케이스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323202731'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>어드바이스 종류 별로 생각해 보는게 좋을 듯 합니다. 어드바이스 특징이나 기타 자세한 설명은 생략하겠습니다. 제 블로그 어딘가에 다 있을 겁니다.ㅋ</p>
+<p><span style="font-weight: bold;">1. Before 어드바이스</span><br />- 보안에 쓰면 좋겠다. 해당 메소드 실행 전에 인증과 권한을 체크해서, 없으면 예외를 던지도록 할 수 있겠다.<br />- 로깅은 어떨까.. 어떤 메소드를 실행하기 전에 해당 메소드 실행하겠다고 로그 메시지를 남기는거..</p>
+<p><span style="font-weight: bold;">2. After returning 어드바이스</span><br />- 결과값을 확인해야 할 경우. 결과값이 특정 값이면 예외를 던지도록...<br />- 흠.. 매우 사용처가 난감하네. 이미 메소드 호출 한 다음이라.. 뭘 해야 한담.<br />- 메소드 호출 한 뒤에 로그 메시지를 남기도록 할까?</p>
+<p><span style="font-weight: bold;">3. Throws 어드바이스</span><br />- 예외 로그 처리. 특정 예외가 발생했을 때 로그를 남길 수 있겠다.<br />- 예외 계층 구조를 바꿀 수 있겠다. Hibernate 예외를 스프링 예외로 변환하는 작업을 해본적이 있었지..</p>
+<p><span style="font-weight: bold;">4. Around 어드바이스</span><br />- 트랜잭션 처리는 아마 이 녀석이 할 것 같다. 특정 메소드 실행 전에 트랜잭션 열고, 메소드 호출하고 트랜잭션을 커밋하거나 롤백해야 하니까.<br />- 로깅을 이걸로 할까. 그러면 Before, After, Throws에서 하려던 로깅을 이걸로 다 할 수 있으니..<br />- 성능측정. 스프링 레퍼런스에 StopWatch 예제가 있었던 것 같다. 개발 할 때만 만들어서 돌려보고 병목지점 발견하는데 요긴하게 쓸 수 있을 것 같기도 하다.</p>
+<p>전반적으로 AOP는 기존 코드를 건드리지 않고 애플리케이션에 특정 행위를 추가할 수 있다는 것이 매력적인 것 같다.</p>

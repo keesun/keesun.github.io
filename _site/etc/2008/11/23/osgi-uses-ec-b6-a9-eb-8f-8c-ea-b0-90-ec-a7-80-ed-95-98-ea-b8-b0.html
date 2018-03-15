@@ -1,0 +1,179 @@
+<p>참조 및 번역: <a title="[http://blog.springsource.com/2008/11/22/diagnosing-osgi-uses-conflicts/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2008/11/22/diagnosing-osgi-uses-conflicts/">Diagnosing OSGi uses conflicts</a></p>
+<p>Glyn은 최근에 <a title="[http://whiteship.me/2055]로 이동합니다." target="_blank" href="http://whiteship.me/2055">"OSGi "uses" 지시어 이해하기"</a>를 제공했다. 나(Rob Harrop)는 uses 제약 위반 원인을 좀 더 자세히 살펴보고 여러분 애플리케이션에서 발생하는 uses 문제 해결에 유용한 몇 가지 팁을 제공하고자 한다.</p>
+<p>나는 대부분의 예제에서 dm Server 보다는 이퀴녹스를 사용하려고 한다. 그 이유는 uses 제약사항이 dm Server에 한정적인 것이 아니고 모든 OSGi 사용자와 관련된 것이기 때문이다. 이 블로그 마지막에는, dm Server에 구축된 매우 똑똑한 제약 사항 실패 진단 몇 가지를 보여줄 것이다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">의존적인 제약 불일치(Dependent Constraint Mismatch)</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>가장 흔한 uses 위반은 한 개 이상의 의존적인 제약 사항끼리의 불일치 때문이다. 예제로 다음 세 개의 manifest를 살펴보자.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Manifest-Version: 1.0<br />
+Bundle-Name: Spring Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: spring<br />
+Bundle-Version: 2.5.5<br />
+Export-Package: spring.orm.hibernate;version="2.5.5";uses:="eclipselink"<br />
+Import-Package: eclipselink;version="[1.0, 2.0)"</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-Name: EclipseLink 1 Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: eclipselink<br />
+Bundle-Version: 1<br />
+Export-Package: eclipselink;version="1.0.0"</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-Name: EclipseLink 2 Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: eclipselink<br />
+Bundle-Version: 2<br />
+Export-Package: eclipselink;version="2.0.0"</div>
+<p>스프링 번들 한 개와 두개의 eclipselink 번들이 있다. 물론 실제 번들은 아니다. spring 번들은 [1.0, 2.0) 버전 번위의 eclipselink 패키지를 사용한다. 분명히 오직 eclipselink_1 번들만이 이 제약 사항을 만족한다. 이제 다른 두 개의 애플리케이션 manifest를 살펴보자.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Manifest-Version: 1.0<br />
+Bundle-Name: App1 Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: app1<br />
+Bundle-Version: 1.0.0<br />
+Import-Package: spring.orm.hibernate,eclipselink;version="[1.0, 1.0]"</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-Name: App2 Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: app2<br />
+Bundle-Version: 1.0.0<br />
+Import-Package: spring.orm.hibernate,eclipselink;version="[2.0, 2.0]"</div>
+<p>app1은 exlicpselink [1.0, 1.0] 범위를 참조하고, app2는 eclispelink [2.0, 2.0] 범위를 참조한다. 만약 이 두 개의 번들을 이퀴녹스에 설치하고 app 번들들을 start 시도하면, 콘솔에서 다음과 같은 결과를 확인할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bundle<br />
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.eclipse.osgi_3.4.0.v20080605-1900<br />
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; spring_2.5.5<br />
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_1.0.0<br />
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_2.0.0<br />
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app1_1.0.0<br />
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSTALLED&nbsp;&nbsp; app2_1.0.0</div>
+<p>sprig과 eclipselink 번들들은 모두 잘 리졸브 된 걸 볼 수 있다. app1 번들은 시작(start)했지만, app2 번들은 시작하지 못했다. 이유를 알아보기 위해 diag 커맨드를 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; diag app2<br />
+file:/Users/robharrop/dev/resdiag/uses/app2/bin [6]<br />
+&nbsp; Package uses conflict: Import-Package: spring.orm.hibernate; version="0.0.0"</div>
+<p>여기서 우리는 spring.orm.hibernate 패키지를 임포트하는 부분에서 uses 충돌로 인해 해당 번들을 리졸브 할 수 없다는 것을 알 수 있다. 이것은 app2에서 spring.orm.hibernate를 임포트하는 것을 안 된다는 것이다. 그 이유는 다른 import로 인해 spring.orm.hibernate를 제공하는 번들의 uses 제약 사항이 깨질 수 있기 때문이다.</p>
+<p>이를 진단하는 과정 처음으로 할 일은 spring.orm.hibernate 번들의 가용한 공급자를 찾아내는 것이다. 우리는 이미 해당 공급자가 spring 번들이라는 걸 알고 있지만, 만약 공급자를 모른다면 packages 커맨드를 사용할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; packages spring.orm.hibernate<br />
+spring.orm.hibernate; version="2.5.5"&lt;file:/Users/robharrop/dev/resdiag/uses/spring/bin [2]&gt;<br />
+&nbsp; file:/Users/robharrop/dev/resdiag/uses/app1/bin [5] imports</div>
+<p>여기서 spring.orm.hibernate 패키지를 번들 2에서 공급(export)했다는 것을 알 수 있다. 이 정보를 가지고 번들 2의 spring.orm.hibernate에서 uses 지시어에 어떤 패키지가 등록되어 있는지 확인할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; headers 2<br />
+Bundle headers:<br />
+&nbsp;Bundle-ManifestVersion = 2<br />
+&nbsp;Bundle-Name = Spring Bundle<br />
+&nbsp;Bundle-SymbolicName = spring<br />
+&nbsp;Bundle-Version = 2.5.5<br />
+&nbsp;Export-Package = spring.orm.hibernate;version="2.5.5";uses:="eclipselink"<br />
+&nbsp;Import-Package = eclipselink;version="[1.0, 2.0)"<br />
+&nbsp;Manifest-Version = 1.0</div>
+<p>여기서 우리는 uses에 있는 유일한 패키지 eclipselink 패키지가 범인이라는 걸 알 수 있다. 사실, 스프링 번들은 eclipselink [1.0, 2.0) 범위를 참조하는 반면 app2는 eclipselink [2.0, 2.0] 범위를 참조하는 걸 확인할 수 있다. 이 두 범위는 상충한다. app2는 스프링 번들이 사용하는 eclipselink와 동일한 버전을 연결할 수 없다.</p>
+<p>uses 목록이 긴 경우는, 어떤 패키지의 제공자가 둘 이상인지를 확인하여 위반을 한 패키지 범위를 좁혀볼 수 있다. uses 제약을 위반 패키지를 제공하는 공급자는 반드시 둘 이상이다.</p>
+<p>버전 불일치는 의존 제약 불일치의 유일한 원인이 아니다. 속성도 버전처럼 제약 문제를 발생 시킬 수 있다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">설치 순서 문제</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>앞선 예제를 다시 살펴보자. spring 번들의 manifest를 변경하여 eclipselink 2.0 패키지를 참조하도록 변경하고 app1은 1.0 이상의 모든 버전을 허용하도록 수정하여 문제를 수정해보자.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Manifest-Version: 1.0<br />
+Bundle-Name: Spring Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: spring<br />
+Bundle-Version: 2.5.5<br />
+Export-Package: spring.orm.hibernate;version="2.5.5";uses:="eclipselink"<br />
+Import-Package: eclipselink;version="[1.0, 2.0]"</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-Name: App1 Bundle<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: app1<br />
+Bundle-Version: 1.0.0<br />
+Import-Package: spring.orm.hibernate,eclipselink;version="1.0"</div>
+<p>번들들을 설치하고 app 번들을 시작하면 큰 변화가 생긴걸 볼 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bundle<br />
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.eclipse.osgi_3.4.0.v20080605-1900<br />
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; spring_2.5.5<br />
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_1.0.0<br />
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_2.0.0<br />
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app1_1.0.0<br />
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app2_1.0.0</div>
+<p>이제 두 개의 app 번들 모두 시작 할 수 있다. 불행히도 좀 더 교묘한 이슈가 우리를 기다리고 있다. 설치 순서에 따라, 이 번들 집합체는 같이 실행되지 않을 수도 있다. 이를 실험해보기 위해서, spring, eclipselink_1과 app1을 한 묶음으로 설치하고 app1을 실행한다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bundle<br />
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.eclipse.osgi_3.4.0.v20080605-1900<br />
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; spring_2.5.5<br />
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_1.0.0<br />
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app1_1.0.0
+</div>
+<p>
+자 이제 eclipselink_2와 app2를 설치한다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bundle<br />
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.eclipse.osgi_3.4.0.v20080605-1900<br />
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; spring_2.5.5<br />
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_1.0.0<br />
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app1_1.0.0<br />
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_2.0.0<br />
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INSTALLED&nbsp;&nbsp; app2_1.0.0</div>
+<p>app2 번들은 시작되지 않는다. diag 통해 왜 그런지 살펴보자.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; diag app2<br />
+file:/Users/robharrop/dev/resdiag/uses/app2/bin [5]<br />
+&nbsp; Package uses conflict: Import-Package: spring.orm.hibernate; version="0.0.0"</div>
+<p>uses 충돌이 다시 발생했다. 이번에는 앞선 진단 과정이 아무런 도움이 되지 않느다. 의존성 제약 불일치가 없기 때문이다. 첫 번째에 모두 잘 리졸브 됐기 때문에 이건 이미 알고 있다.</p>
+<p>이슈는 리졸루션 순서에 있다. 번들들은 두 덩어리로 나눠서 설치하고 리졸브 했다. 첫 번째 덩어리는 spring, eclipselink_1, app1 이고 두 번째 덩어리는 eclipselink_@와 app2다. (app1 번들을 시작(start)한 결과로..)첫 번째 덩어리가 리졸브 될 때, spring 번들은 esclipselink 패키지를 가져올 때 eclipselink_1 번들에 묶이게 된다. 이것을 콘솔에서 확인해보자.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; bundle app1<br />
+file:/Users/robharrop/dev/resdiag/uses/app1/bin [3]<br />
+&nbsp; Id=3, Status=ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Data Root=/opt/springsource-dm-server-1.0.0.RELEASE/lib/configuration/org.eclipse.osgi/bundles/3/data<br />
+&nbsp; No registered services.<br />
+&nbsp; No services in use.<br />
+&nbsp; No exported packages<br />
+&nbsp; Imported packages<br />
+&nbsp;&nbsp;&nbsp; spring.orm.hibernate; version="2.5.5"&lt;file:/Users/robharrop/dev/resdiag/uses/spring/bin [1]&gt;<br />
+&nbsp;&nbsp;&nbsp; eclipselink; version="1.0.0"&lt;file:/Users/robharrop/dev/resdiag/uses/eclipselink1/bin [2]&gt;<br />
+&nbsp; No fragment bundles<br />
+&nbsp; Named class space<br />
+&nbsp;&nbsp;&nbsp; app1; bundle-version="1.0.0"[provided]<br />
+&nbsp; No required bundles</div>
+<p>import packages 섹션에서 eclipselink 버전 1.0.0이 eclipselink_1 번들에서 가져온 걸 확인할 수 있다. 두 번째 덩어리를 설치하면 app2 번들은 eclipselink 버전 2를 필요로 하는데, spring이 이미 eclipselink 1.0.0 버전에 묶여 있어서 리졸브되지 못한다. 한 덩어리로 모든 번들을 설치하고 리졸브 할 때는, OSGi 리졸버가 spring.orm.hibernate의 uses 제약도 만족하면서도 다른 모든 제약사항을 만족하도록 시도할 것이다.</p>
+<p>이 문제를 고치기 위해 우리 번들을 수정할 필요는 없다. 대신, 모든 번들을 한 덩어리로 설치하거나 spring 번들을 리프래쉬 하면 된다. 그렇게 해서 OSGi가 다시 리졸루션 과정을 거치도록 한다. 이제 eclipselink_2 번들이 설치되고 이번에는 다른 결과를 예상할 수 있다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+osgi&gt; refresh spring</p>
+<p>osgi&gt; ss</p>
+<p>Framework is launched.</p>
+<p>id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bundle<br />
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.eclipse.osgi_3.4.0.v20080605-1900<br />
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; spring_2.5.5<br />
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_1.0.0<br />
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app1_1.0.0<br />
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLVED&nbsp;&nbsp;&nbsp; eclipselink_2.0.0<br />
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; app2_1.0.0</p>
+<p>osgi&gt; bundle spring<br />
+file:/Users/robharrop/dev/resdiag/uses/spring/bin [1]<br />
+&nbsp; Id=1, Status=RESOLVED&nbsp;&nbsp;&nbsp; Data Root=/opt/springsource-dm-server-1.0.0.RELEASE/lib/configuration/org.eclipse.osgi/bundles/1/data<br />
+&nbsp; No registered services.<br />
+&nbsp; No services in use.<br />
+&nbsp; Exported packages<br />
+&nbsp;&nbsp;&nbsp; spring.orm.hibernate; version="2.5.5"[exported]<br />
+&nbsp; Imported packages<br />
+&nbsp;&nbsp;&nbsp; eclipselink; version="2.0.0"&lt;file:/Users/robharrop/dev/resdiag/uses/eclipselink2/bin [4]&gt;<br />
+&nbsp; No fragment bundles<br />
+&nbsp; Named class space<br />
+&nbsp;&nbsp;&nbsp; spring; bundle-version="2.5.5"[provided]<br />
+&nbsp; No required bundles</div>
+<p>spring 번들을 리프래시해서 app2 번들도 리졸브 된 걸 볼 수 있다. spring 번들에서 연결할 eclipselink 패키지가 eclipselink_2 번들의 2.0 버전으로 바꼈다.</p>
+<p>dm 서버에서 uses 제약 사항</p>
+<p>uses 제약 위반이 dm 서버에서 발생하면, 여러분이 해야할 분석 절차를 알아서 제공해준다. 특히 불일치하는 패키지를 담고 있을 가능성이 있는 의존성 제약을 식별할 때 도움이 된다.</p>
+<div style="border: 1px solid rgb(193, 193, 193); padding: 10px; background-color: rgb(238, 238, 238);" class="txc-textbox">
+Could not satisfy constraints for bundle 'app2' at version '1.0.0'.<br />
+&nbsp;Cannot resolve: app2<br />
+&nbsp; Resolver report:<br />
+&nbsp;&nbsp;&nbsp; Bundle: app2_1.0.0 - Uses Conflict: Import-Package: spring.orm.hibernate; version="0.0.0"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Possible Supplier: spring_2.5.5 - Export-Package: spring.orm.hibernate; version="2.5.5"<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Possible Conflicts: eclipselink</div>
+<p>uses 제약사항은 엔터프라이즈 라이브러리에서 매우 흔히 사용하며 손수 실패 원인을 분석하는 것은 악몽같은 일이다. 특히, uses를 사용하는 패키지가 10 개 이상 있을 때는, 가용한 충돌을 판별하는 작업은 상당한 시간-낭비를 초래한다. 따라서 자동화 검진은 필수이며, 나는 dm 서버에서 진당 코드가 향상되어 흔히 발생하는 문제가 아무것도 아닌 것처럼 다룰 수 있게 되길 바란다.</p>
+<p>다음 배포판에서는, 진단 도구를 dm 서버 이클립스 툴에 바로 포함시켜서 dm 서버에서 이런 문제들을 대부분 자동으로 분석하도록 할 수 있게 할 계획이다.</p>

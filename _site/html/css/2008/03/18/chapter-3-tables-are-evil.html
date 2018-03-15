@@ -1,0 +1,57 @@
+<h1>Tabular Data </h1>
+<ul>
+<li>Calendar</li>
+</ul>
+<ul>
+<li>Spreadsheet</li>
+</ul>
+<ul>
+<li>Chart</li>
+</ul>
+<ul>
+<li>Schedule</li>
+</ul>
+<h1>&lt;table&gt; 사용하기</h1>
+<ul>
+<li>&lt;caption&gt;은 &lt;table&gt; 태그 안에 위치 시킨다.</li>
+</ul>
+<ul>
+<li>&lt;table&gt;의 summary 속성에 설명을 달 수 있다.</li>
+</ul>
+<ul>
+<li>헤더는 &lt;th&gt;로 의미를 부여한다.</li>
+</ul>
+<ul>
+<li>&lt;th&gt;의 id 속성과 &lt;td&gt;의 headers 속성에 동일한 값을 사용하여 둘의 관계를 표현할 수 있다.</li>
+</ul>
+<ul>
+<li>abbr 속성을 사용하여 너무 길어서 짤리는 경우에 사용하도록 할 수 있다.</li>
+</ul>
+<ul>
+<li>&lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;을 사용하여 테이블 몸체만 따로 스크롤 할 수 있도록 할 수 있다.</li>
+</ul>
+<ul>
+<li>브라우저들이 &lt;thead&gt;와 &lt;tfoot&gt;을 먼저 읽도록 &lt;tbody&gt; 위에 놓는다.</li>
+</ul>
+<h1>CSS</h1>
+<h2>Grid 만들기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">table {<br /><br />  border-top: 1px solid #999;<br /><br />  border-left: 1px solid #999;<br /><br />  }<br /><br />th, td {<br /><br />  border-right: 1px solid #999;<br /><br />  border-bottom: 1px solid #999;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>th와 td의 오른쪽과 아래에 굵기가 1인 검은색 테두리 설정.</li>
+</ul>
+<h2>틈새 없애기</h2>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">table {<br /><br />  border-top: 1px solid #999;<br /><br />  border-left: 1px solid #999;<br /><br />  border-collapse: collapse;<br /><br />  }<br /><br />th, td {<br /><br />  padding: 10px;<br /><br />  border-right: 1px solid #999;<br /><br />  border-bottom: 1px solid #999;<br /><br />  }</pre>
+</div>
+</div>
+<ul>
+<li>th, td에 padding을 줘야 Mac용 IE에서도 잘 보인다.</li>
+</ul>
+<ul>
+<li>padding: 10px 5px 2px 10px -&gt; 위 10px, 오른쪽 5px, 아래 2px, 왼쪽 10px 순으로 padding 적용.</li>
+</ul>

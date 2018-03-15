@@ -1,0 +1,55 @@
+---
+layout: post
+title: komoinmoin 대문 바꾸기 해결책 찾음
+date: 2006-11-24 09:04:00.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Wiki
+tags:
+- komoinmoin
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323002667'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://wiki.python.or.kr/pykug/ko_b8_f0_c0_ce_b8_f0_c0_ce">http://wiki.python.or.kr/pykug/ko_b8_f0_c0_ce_b8_f0_c0_ce</a> &lt;- 이곳을 참조했습니다.</p>
+<p><a href="http://whiteship.tistory.com/187">komoinmoin 대문을 바꿀 수 없었던 문제 </a>해결책은 찾았지만 학교에서 ssh 포트를 막아놔서 서버에 접속 할 수가 없다는거... ㅠ.ㅠ</p>
+<p>원인은 komoinmoin에 사용자가 '비회원', '회원', '관리자'가 있는데 그 중에 제가 만든 계정은 그냥 '회원'이였던 것 같습니다. 그리고 웹 페이지 중에 '관리자'만 수정, 삭제 할 수 있도록 설정하는 부분이 있는듯 합니다. moin_config.py 파일에 보면 '관리자'를 지정해두는 부분이 있는데 아무래도 그곳에 제 아이디를 등록해두면 될 것 같습니다.</p>
+<p>헤헷 역시 구글신님 감사합니다.</p>

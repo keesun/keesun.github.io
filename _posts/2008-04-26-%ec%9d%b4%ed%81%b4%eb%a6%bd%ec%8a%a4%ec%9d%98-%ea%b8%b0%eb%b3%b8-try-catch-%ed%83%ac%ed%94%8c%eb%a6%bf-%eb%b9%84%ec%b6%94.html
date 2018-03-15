@@ -1,0 +1,64 @@
+---
+layout: post
+title: 이클립스의 기본 try-catch 탬플릿 비추
+date: 2008-04-26 00:59:02.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- RuntimeException 랩핑
+- try-catch
+- 예외 먹기
+- 예외처리
+- 이클립스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323007862'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Catched Exception이 하두 지저분해서 호출한 쪽에서 계속해서 던지거나 try-catch로 감싸는게 싫어서 던지는 쪽에서 그냥 퀵 픽스를 누르고 try-catch 블럭으로 감싸버리는 실수를 했습니다.</p>
+<p><span style="font-weight: bold; color: rgb(255, 0, 0);">이클립스가 기본으로 제공하는 try-catch 블럭은 예외를 먹어버리는 악성코드입니다.</span> 기능 구현에 집중하고 이런 세세한 부분을 신경 안 쓰다가는 디버깅하기 어려운 코드를 만들게 됩니다. 따라서 왠만하면 사용하지 맙시다. 아니면 template을 수정해서 throw new RuntimeExcepion(e)를 추가해줘도 되겠죠.</p>
+<p>이미 알고 있는 내용이었는데도 이런 실수를 하다니...ㅠ.ㅠ</p>
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">try {<br />// 위험한 코드<br />} catch(어떤 예외 e) {<br />&nbsp; &nbsp; e.printStackTrace()<br />}</div>
+<p>위의 코드가 이클립스가 제공해주는 코드인데 저러면 안 됩니다. 에러를 찍고 그냥 프로그램이 계속 돌아갑니다. 이게 뭐가 잘 못 된건데?? 라고 하신다면.. ㄷㄷㄷ.. 중요한 코드가 제대로 동작해야 하는데 그렇치 못한 상태에서 프로그램이 계속 돌면 분명 에러 찾기도 어렵고 문제가 있는지 조차 알 수가 없습니다.</p>
+<p>그래서..</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">try {<br />// 위험한 코드<br />} catch(어떤 예외 e) {<br />throw new RuntimeException(e)<br />}</div>
+<p>이렇게 하면 원래 에러를 가진 채 런타임 에러를 던지게 되고 만약 위험한 코드에서 정말 위험한 일이 발생하면 프로그램은 바로 에러를 뱉고 쓰러집니다. 에러를 바로 발견할 수 있고 위처럼 원래 예외 객체를 같이 넘겨줘야 nested excepton으로 원래 예외도 알 수 있습니다.</p>
+<p></p>

@@ -1,0 +1,34 @@
+<p style="clear: both;"><a href="http://toby.epril.com/?p=1107">http://toby.epril.com/?p=1107</a> 여기서 봤던 내용을 이제서야 해본다.</p>
+<p style="clear: both;">web.xml을 보자.</p>
+<p>[xml]<br />
+&lt;servlet&gt;<br />
+	&lt;servlet-name&gt;mygroups&lt;/servlet-name&gt;<br />
+	&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;<br />
+&lt;/servlet&gt;<br />
+&lt;servlet-mapping&gt;<br />
+	&lt;servlet-name&gt;mygroups&lt;/servlet-name&gt;<br />
+	&lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;<br />
+&lt;/servlet-mapping&gt;<br />
+[/xml]</p>
+<p style="clear: both;">자 여기에 바로 문제가 있다. /app/*를 /이렇게 바꾸는거다. 그럼 문제가 예상된다. 바로 index.jsp나 .html, .css, .js등 스프링 DispatcherServlet이 처리하지 않았으면 하는 요청들도 다 스프링한테 가게 된다.</p>
+<p>스프링한테 가는 것까지는 문제가 되지 않는다. 다만 스프링이 해당 요청을 처리해주지 못한다는게 문제다. 그래서 스프링한테 가지 안도록.. 스프링이 처리할 수 있는 요청만 스프리안테 가도록 /app/*로 구분한거였다.</p>
+<p style="clear: both;">그런데 그냥 스프링한테 넘기면 스프링이 알아서 디폴트 서블릿 한테 요청을 위임해주는 엄청난 설정이 등장했다. 그건 바로 제목에 있는 mvc:default-servlet-handler</p>
+<p style="clear: both;">이 설정 하나면 모든게 해결 될 것 같다.</p>
+<p>[xml]<br />
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;<br />
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />
+	xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd<br />
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd<br />
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd&quot;<br />
+	xmlns:context=&quot;http://www.springframework.org/schema/context&quot;<br />
+	xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;&gt;</p>
+<p>	&lt;context:component-scan base-package=&quot;whiteship&quot;/&gt;</p>
+<p>	&lt;mvc:default-servlet-handler/&gt;</p>
+<p>&lt;/beans&gt;<br />
+[/xml]</p>
+<p style="clear: both;">mygroups-servlet.xml에 mvc네임스페이스를 추가하고 를 추가했다.</p>
+<p style="clear: both;">오.. 잘 되는 것 같은데... 이게 왠일 스프링 @MVC가 동작하지 않는다. 애노테이션으로 만들어둔 컨트롤러가 동작하지 않는다.</p>
+<p style="clear: both;">무슨 문제일까? 다음주 KSUG 세미나떄 소개하겠다.</p>
+<p style="clear: both;">ps: 내 강의를 들어셨던 분들이라면 어떤 일인지 짐작이 가야할텐데.. 맞출 수 있을런지 모르겠다. 부디 맞춰 주세요.</p>
+<p><br class="final-break" style="clear: both;" /></p>

@@ -1,0 +1,78 @@
+---
+layout: post
+title: 'Chapter 12: Working with Database Objects'
+date: 2008-01-07 08:26:09.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- SQL
+tags:
+- SQL
+- 오라클
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322680449'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://www.amazon.com/Programmers-Guide-SQL-Cristian-Darie/dp/1590592182/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1199353783&amp;sr=8-1" target="_blank">The Programmer's Guide to SQL</a></p>
+<p>데이터베이스 만들기<br />&nbsp; &nbsp; - CREATE DATABASE db이름<br />&nbsp; &nbsp; - 오라클은 보통 DB를 한 개만 사용하고 스키마를 이용해서 관련있는 테이블들과 다른 객체를 그룹핑한다.<br />데이터베이스 제거<br />&nbsp; &nbsp; - 오라클에서는DROP DATABASE가 아니라 CREATE DATABASE 로 제거</p>
+<p>테이블 만들기<br />&nbsp; &nbsp; - CREATE TABLE &lt;table name&gt;<br />&nbsp;&nbsp; (&lt;column name&gt; &lt;column data type&gt; [&lt;column constraints&gt;]);<br />테이블 제거<br />&nbsp; &nbsp; - DROP TABLE &lt;table name&gt;<br />&nbsp; &nbsp; - FOREIGN KEY 제약으로 인해 참조 되고 있는 테이블이면 제거가 되지 않는다. 제거하기 전에 이 제약부터 제거해야 한다.</p>
+<p>컬럼에 기본값 주기<br />&nbsp; &nbsp; - DEFAULT &lt;기본값&gt;<br />&nbsp; &nbsp; - 컬럼 기본값을 함수나 키워드를 사용할 수 있다.<br />&nbsp; &nbsp; GETDATE() = SYSDATE = CURRENT_DATE<br />주키 설정하기<br />&nbsp; &nbsp; - 주키 이름 설정하고 싶을 때
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; CREATE TABLE Friend (<br />&nbsp;&nbsp; Name &nbsp;&nbsp; VARCHAR(50) NOT NULL,<br />&nbsp;&nbsp; PhoneNo VARCHAR(15) DEFAULT 'Unknown Phone' NOT NULL,<br />&nbsp;&nbsp; <span style="font-weight: bold;">CONSTRAINT MyPrimaryKey PRIMARY KEY (Name));</span></div>
+<p>&nbsp; &nbsp; - 주키 이름에 관심없을 때
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp;&nbsp; CREATE TABLE Friend (<br />&nbsp;&nbsp; Name &nbsp;&nbsp; VARCHAR(50) NOT NULL,<br />&nbsp;&nbsp; PhoneNo VARCHAR(15) DEFAULT 'Unknown Phone' NOT NULL,<br />&nbsp;&nbsp; <span style="font-weight: bold;">PRIMARY KEY (Name));</span></div>
+<p>&nbsp; &nbsp; - 이것을 좀 더 간단하게
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; CREATE TABLE Friend (<br />&nbsp;&nbsp; Name &nbsp;&nbsp; VARCHAR(50) <span style="font-weight: bold;">PRIMARY KEY</span> NOT NULL,<br />&nbsp;&nbsp; PhoneNo VARCHAR(15) DEFAULT 'Unknown Phone' NOT NULL);</div>
+<p>&nbsp; &nbsp; - 주키 제약을 설정하면 자동으로 고유한 인덱스가 생성된다.<br />UNIQUE 설정<br />&nbsp; &nbsp; - 오라클에서는 기본으로 UNIQUE 속성의 컬럼에 다수의 NULL 넣을 수 있슴.<br />컬럼 제약 설정<br />&nbsp; &nbsp; - CHECK 사용하기
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; CREATE TABLE Friend (<br />&nbsp;&nbsp; Name &nbsp;&nbsp; VARCHAR(50) PRIMARY KEY NOT NULL,<br />&nbsp;&nbsp; PhoneNo VARCHAR(15) DEFAULT 'Unknown Phone',<br />&nbsp;&nbsp; Age &nbsp; &nbsp; INT,<br />&nbsp;&nbsp; <span style="font-weight: bold;">CONSTRAINT CheckAge CHECK (Age BETWEEN 10 and 100));</span></div>
+<p>&nbsp; &nbsp; - 제약 사항의 이름이 필요 없다면
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; CREATE TABLE Friend (<br />&nbsp;&nbsp; Name &nbsp;&nbsp; VARCHAR(50) PRIMARY KEY NOT NULL,<br />&nbsp;&nbsp; PhoneNo VARCHAR(15) DEFAULT 'Unknown Phone',<br />&nbsp;&nbsp; Age &nbsp; &nbsp; INT <span style="font-weight: bold;">CHECK (Age BETWEEN 10 and 100));</span></div>
+<p>테이블 복사 하기<br />&nbsp; &nbsp; - CREATE TABLE My_Friends AS SELECT * FROM Friend;<br />&nbsp; &nbsp; - 단 제약 사항들(주키나 유니크 같은 것들)은 복사 되지 않는다. 그렇기 때문에 테이블을 만들 때는 기본 구조만 정의하고 Alter Table로 실행할 스크립트를 만들어 두는 것이 유용하다.<br />&nbsp; &nbsp; - 데이터는 빼고 구조만 복사하고 싶다면 WHERE 절에 false가 되도록 설정해준다.<br />&nbsp; &nbsp; CREATE TABLE My_Friends AS SELECT * FROM Friend<br />&nbsp; &nbsp; WHERE 1=0;</p>
+<p>테이블 변경하기<br />&nbsp; &nbsp; - 컬럼 추가하기 : ALTER TABLE Friend ADD (EMail VARCHAR(25), ICQ VARCHAR(15));<br />
+<br />&nbsp; &nbsp; &nbsp; &nbsp; - NOT NULL 인 컬럼을 추가하려면, 테이블에 데이터가 들어있지 않아야 한다.<br />&nbsp; &nbsp; - 컬럼 없애기 : ALTER TABLE Friend DROP COLUMN PhoneNo;<br />
+<br />&nbsp; &nbsp; - 제약 사항 삭제 : ALTER TABLE Friend DROP CONSTRAINT unq_name;<br />&nbsp; &nbsp; - 제약 사항 추가 : ALTER TABLE Friend ADD CONSTRAINT PK_FriendName PRIMARY KEY (Name);</p>
+<p>시퀀스 사용하기<br />&nbsp; &nbsp; - CREATE SEQUENCE FriendIDSeq INCREMENT BY 1 START WITH 1000;<br />&nbsp; &nbsp; - 테이블에서 사용하기<br />&nbsp; &nbsp; INSERT INTO Friend (FriendID, Name, PhoneNo)<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; VALUES (FriendIDSeq.NextVal, 'Mike', '123');<br />&nbsp; &nbsp; - 시퀀즈 제거하기 : DROP SEQUENCE FriendIDSeq;<br />&nbsp; &nbsp; - 현재 시퀀스 값 가져오기 : SELECT FriendIDSeq.CurrVal FROM DUAL;</p>
+<p>자동 증가 사용하기<br />&nbsp; &nbsp; - 오라클에서는 트리거를 이용해야 함.
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; CREATE OR REPLACE TRIGGER AUTONUMBER<br />&nbsp; &nbsp; BEFORE INSERT ON Friend<br />&nbsp; &nbsp; FOR EACH ROW<br />&nbsp; &nbsp; BEGIN<br />&nbsp; &nbsp; &nbsp;&nbsp; SELECT FriendIDSeq .NEXTVAL<br />&nbsp; &nbsp; &nbsp;&nbsp; INTO :NEW.FriendID FROM DUAL;<br />&nbsp; &nbsp; END;<br />&nbsp; &nbsp; /</div>
+<p>&nbsp; &nbsp; - 시퀀스에서 값을 가져온 다음 새로운 row 생성 될 때 주키에 값을 집어넣는 트리거인듯.</p>
+<p>인덱스 사용하기<br />&nbsp; &nbsp; - 인덱스를 사용하면 SELECT 문의 속도는 증가하지만, INSERT, DELELTE, UPDATE의 속도는 느려진다.<br />&nbsp; &nbsp; - 조회가 자주 발생하는 테이블의 경우 인덱스를 사용하는 것이 단점에 비해 눈에띄게 좋다.<br />&nbsp; &nbsp; - 따라서 WHERE 나 ORDER BY 절에서 자주 사용하는 컬럼의 인덱스를 만들어 두는 것이 좋다.<br />&nbsp; &nbsp; - 제약사항(주키나 유니크) 때문에 자동으로 생성된 인덱스는 제약사항이 제거 되면 같이 제거 된다.<br />&nbsp; &nbsp; - 인덱스에는 유니크 인덱스와 논 유니크 인덱스 두 종류가 있다.<br />&nbsp; &nbsp; - 인덱스 만들기 : CREATE UNIQUE INDEX NameIndex ON Friend (Name);<br />&nbsp; &nbsp; - 유니크 인덱스를 사용하는 컬럼에 중복되는 값을 넣을 수 없다.<br />&nbsp; &nbsp; - 텍스트에 인덱스는 단어의 왼쪽 글자부터 오른쪽 글자순으로 찾는다. 따라서 '%기선' 과 같은 검색어는 데이블의 모든 데이터를 찾아보게 한다.<br />&nbsp; &nbsp; - 인덱스 삭제하기 : DROP INDEX NameIndex;</p>
+<p>참조 무결성<br />&nbsp; &nbsp; - 외례키 제약 설정하기
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&nbsp; &nbsp; CREATE TABLE Friend (FriendID INT PRIMARY KEY NOT NULL,<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Name VARCHAR(50));</p>
+<p>&nbsp; &nbsp; CREATE TABLE Phone (<br />&nbsp; &nbsp; &nbsp;&nbsp; PhoneID INT PRIMARY KEY NOT NULL,<br />&nbsp; &nbsp; &nbsp;&nbsp; FriendID INT,<br />&nbsp; &nbsp; &nbsp;&nbsp; PhoneNo VARCHAR(20),<br />&nbsp; &nbsp; &nbsp;&nbsp; <span style="font-weight: bold;">CONSTRAINT FID_FK FOREIGN KEY(FriendID)</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; REFERENCES Friend(FriendID));</span></div>
+<p></p>

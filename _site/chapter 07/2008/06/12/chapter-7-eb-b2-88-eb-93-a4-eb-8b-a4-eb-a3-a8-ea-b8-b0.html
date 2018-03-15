@@ -1,0 +1,10 @@
+<p>스프링 DM은 기존에 존재하는 번들 또는 새로운 것을 설치하기 위한 스키마 엘리먼트를 제공한다. 적절한 OSGi 서비스를 대체하기 위해 사용하는 용도가 아니고, bundle은 해당 번들에 application context 라이프사이클에 따라 특정 행위를 할 수 있는 방법을 제동한다.</p>
+<p>bundle 엘리먼트는 org.osgi.framework.Bundle 타입의 빈을 정의할 때 사용한다. 그들의 라이프사이클을 주도하는 등의 직접 번들을 다룰 수 있는 간편한 방법이다. 가장 간단하게는 symbolic-name 속성만 기술하면 된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;bundle id="aBundle" symbolic-name="org.xyz.abundle"/&gt;</div>
+<p>aBundle이라는 빈은 Bundle 타입의 어떤 속성이든지 주입될 수 있다.</p>
+<p>만약 필요한 번들이 설치되어 있지 않다면, location 속성을 사용하여 설치할 위치를 나타낼 수 있으며 또한 action/destroy-action 속성을 사용하여 번들 라이프사이클을 제어할 수 있다. location 속성은 번들 jar 파일이 존재하는 위치를 명시할때 사용한다. action 속성은 번들 객체에 호출되어야 할 라이프사이클 액션을 설정한다. action의 값으로는 insatll, start, update, stop, uninstall이 있다. 이런 액션들은 <a href="http://www.osgi.org/javadoc/r4/org/osgi/framework/Bundle.html" target="_blank">Bundle 인터페이스</a>에 있는 메소드들 이름과 일치한다. </p>
+<p>각각의 action 값들이 현재 번들 상태에 따라 어떻게 해석될지는 다음 표와 같다.</p>
+<p>표생략</p>
+<p>예제:</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;!-- 아래의 번들은 설치한 다음 시작할 것이다.--&gt;<br />&lt;bundle id="aBundle" symbolic-name="org.xyz.abundle"<br />&nbsp;&nbsp; location="http://www.xyz.com/bundles/org.xyz.abundle.jar"<br />&nbsp;&nbsp; action="start"/&gt;</div>
+<p>스프링 DM 예제에 들어있는 virtual-bundle 엘리먼트를 사용하여 OSGi 번들을 실제 존재하는 파일과 별개로 생성하여 사용할 수 있다.</p>

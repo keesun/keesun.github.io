@@ -1,0 +1,61 @@
+---
+layout: post
+title: Introduction
+date: 2007-03-02 07:08:45.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 01
+tags:
+- Spring Reference
+- Spring 구성요소
+- 활용법
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323176289'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://static.springframework.org/spring/docs/2.0.x/reference/introduction.html" target="_blank">http://static.springframework.org/spring/docs/2.0.x/reference/introduction.html</a></p>
+<p><span style="font-weight: bold;">1.1. Overview</span></p>
+<p>아래 그림에 보이는 7개의 모듈로 구성되어 있습니다. <br /><img src="{{ site.baseurl }}/assets/ck32.jpg" class="aligncenter" width="500" height="395" alt="사용자 삽입 이미지" /><br />Core : Spring 프레임워크의 가장 기본이 되는 부분이며 IOC와 DI 기능을 제공합니다.<br />DAO : 지겨운 JDBC 코딩과 DB 벤터 마다의 에러를 파싱하는 JDBC 추상 계층을 제공합니다.<br />ORM : JPA, JDO, Hibernate, iBatis와 같은 유명한 ORM API들과의 통합할 수 있는 계층을 제공합니다.<br />AOP : AOP 진영을 따르는 Spring에서 제공하는 AOP 패키지도 있으며 AspectJ와 통합해서 사용이 가능합니다.<br />Web : 기본적인 웹 기반의 통합 기능을 제공하며 Webwork나 Structs와 통합할 때 사용합니다.<br />MVC : 웹 어플리케이션 구현을 위해 제공되며 기존의 것들과는 다르게 도메인 모델 코드와 웹 폼사이를 깨끗하게 구분지을 수 있으며 Spring 프레임워크의 다른 기능들을 사용할 수 있습니다.</p>
+<p><span style="font-weight: bold;">1.2. Usage scenarios</span></p>
+<p>다양한 형태로 사용될 수 있습니다. Spring의 모듈 전부를 사용해서 구현할 수도 있고 일부는 다른 프레임워크를 사용할 수 있습니다.<br />[caption id="" align="align"  caption="dk38.gif"]<img src="{{ site.baseurl }}/assets/dk37.gif" />[/caption]
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">All your custom business logic<br />
+		can be implemented using simple POJOs, managed by Spring's IoC container.</div>
+<p></p>

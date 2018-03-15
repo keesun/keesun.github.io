@@ -1,0 +1,64 @@
+---
+layout: post
+title: Confluence 마이그레이션하기
+date: 2008-08-13 10:31:05.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Good Tools
+tags:
+- Confluence
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323147111'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>버전 갈아타기 위해 마이그레이션을 진행했습니다.</p>
+<p><span style="font-weight: bold;">1. 백업하기</span></p>
+<p><img src="{{ site.baseurl }}/assets/jk140000000003.jpg" class="aligncenter" width="600" height="397" alt="사용자 삽입 이미지" /><br /><span style="font-weight: bold;">2. Database 만들기</span></p>
+<p>이전 버전이 사용하고 있던 DB와 동일한 밴더에서 만들어줘야겠죠. MySQL을 사용하고 있어서 오랜만에 MySQL에 접속했습니다.</p>
+<p>mysql -u root -p<br />show databases;<br />create database db이름 DEFAULT CHARACTER SET utf8 collate utf8_general_ci</p>
+<p>여기서 인코딩 설정이 중요한데, 이전에 사용하던 DB 인코딩과 동일하게 설정해야 합니다. 안 그럼 복구했을 때 한글이 전부 깨져보이는 현상이 발생할 수 있습니다.</p>
+<p>이전에 사용하던 DB 및 자세한 정보들은 System Information에서 확인할 수 있습니다.</p>
+<p><span style="font-weight: bold;">3. 새 버전 Confluence 설치하기</span></p>
+<p>설치는 간단합니다. 다운 받고, 압축 풀고, /confluence/WEB-INF/classes 에 들어가신 다음<br />vi co TAB<br />설정파일이 위치할 곳을 설정해줍니다. 해당 폴더가 없을테니 설정을 마치고 나서 새로 만들어 줍니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">4. 톰캣 설정 변경하기</span></p>
+<p>기본의 confluence홈을 가리키던 톰켓/conf/Catalina 이하에 위치한 설정파일. ~~.xml을 열어서 새로 설치한 Confluence홈으로 설정을 바꿔줍니다.</p>
+<p><span style="font-weight: bold;">5. 복구하기</span></p>
+<p>첫번째에 다운받은 백업 파일을 사용해서 복구작업을 하면 됩니다.</p>
+<p>몇일 사용하면서 지켜본 뒤 다음 작업을 합니다.<br />- 기존 컨플루언스 홈 디렉터리와 설정 파일 디렉터리 삭제<br />- 기존 DB 삭제</p>

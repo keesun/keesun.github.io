@@ -1,0 +1,11 @@
+<p>Spring 2.0에 추가된 기능으로 네이밍으로 규약을 정하고 그것을 지키기만 하면 설정을 대폭 줄일 수 있는 방법이 마련되었습니다.<br />
+<blockquote>Request -&gt; 컨트롤러 규약 :: ControllerClassNameHandlerMapping</p></blockquote>
+<p>즉 핸들러 맵핑을 통해 매번 각각의 요청을 처리할 컨트롤러들을 등록했었습니다. 보통 다음과 같은 소스코드를 확인하실 수 있습니다.<br /><img src="/assets/cm262.png" class="aligncenter" width="500" height="146" alt="사용자 삽입 이미지" /><br />ControllerClassNameHandlerMapping 핸들러를 등록하면 다음과 같은 규약을 사용할 수 있습니다.
+<div style="border: 1px solid rgb(227, 143, 188); padding: 10px; background-color: rgb(255, 228, 244);">if(WelcomeController == MultiActionController){<br />&nbsp; &nbsp; WelcomeController 는 /welcome/* 요청을 처리하게 됩니다.<br />} else {<br />&nbsp; &nbsp; WelcomeController 는 /welcome* 요청을 처리하게 됩니다.<br />}</div>
+<p>사용하는 방법은 간단합니다. ControllerClassNameHandlerMapping 을 등록해주기만 하면 됩니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/&gt;</div>
+<p>BeanNameUrlHandlerMapping은 CoC를 사용하지 않고 직접 url과 매핑 시켜줄 컨트롤러들을 위해 등록해 줍니다.</p>
+<p>이제부터는 <span style="font-weight: bold; color: rgb(0, 153, 102);">요청을 처리하는 컨트롤러를 찾으려고 XXX-sevlet.xml에서 검색하지 않아도 됩니다.</span> 그냥 요청의 이름만 보면 해당 요청을 어디서 처리할 지 알 수 있습니다.</p>
+<p>&nbsp; &nbsp; &lt;bean class="net.agilejava.nayoung.controller.IssueController" /&gt;</p>
+<p>컨트롤러를 등록할 때 name이나 id를 주지 않아도 되기 때문에 <span style="font-weight: bold; color: rgb(0, 153, 102);">컨트롤러를 등록할 때 '이 컨트롤러가 처리하는 url이 어떤거였더라..' 라는 고민을 하지 않아도 됩니다.</span></p>

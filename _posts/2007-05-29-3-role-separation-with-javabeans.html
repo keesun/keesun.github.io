@@ -1,0 +1,55 @@
+---
+layout: post
+title: 3. Role Separation with JavaBeans
+date: 2007-05-29 08:32:50.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JSP Foundation
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322965328'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">어떻게 하면 잘 돌아가는 것(function well) 뿐만 아니라 인터페이스 까지 볼 수 있는(appealing interface) 애플리케이션을 만들 수 있을까?</span><br />- 컨텐츠 생성 과 컨텐츠 표현 계층을 분리하라.<br />- 이렇게 하면 화면 디자이너가 애플리케이션의 코드와 상관없이 인터페이스만 보고 화면을 개발할 수 있다.<br />- 애플리케이션 코드를 화면에서 숨길수록 더 깔끔한 표현 계층을 만들 수 있다.</p>
+<p><span style="font-weight: bold;">JavaBeans</span><br />- Serializable 인터페이스 구현<br />- default 생성자<br />- private 속성들<br />- public getter, setter들</p>
+<p><span style="font-weight: bold;">Using JavaBeans</span><br />- &lt;jsp:useBean id="objectName" scope="page" calss="class.path" /&gt;<br />- &lt;jsp:getProperty name="objectName" property="propertyName" /&gt;<br />- &lt;jsp:setProperty name="simpleBean" property="propertyName" value="propertyValue" /&gt;</p>
+<p><span style="font-weight: bold;">Dealing with Large Sets of Data</span><br />- 조금씩 그때그때 가져오기<br />- 왕창 가져와 놓고 조금씩 보여주기 =&gt; 캐쉬 사용<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">Standardizing Form Handling</span><br />- validation 과 error reporting<br />- 검증과정<br />&nbsp; &nbsp; - 1. 입력되는 데이터를 임의로 저장한다.<br />&nbsp; &nbsp; - 2. 입력된 데이터를 검증하여 에러가 나면 에러를 객체에 저장한다.<br />&nbsp; &nbsp; - 3. 2번 과정을 무사히 마치면 데이터베이스에 커밋할 것으로 체크한다.<br />- 표현과정<br />&nbsp; &nbsp; - 1. request의 파라미터로 커밋 될 것인지 확인(submit이라는 파라미터가 있는지 확인)한다.<br />&nbsp; &nbsp; - 2. 없으면 에러가 있거나 아직 데이터를 입력하지 않은 상태(폼을 처음 로딩했을 때)니까 폼을 보여준다.(에러가 있으면 에러도 표시)</p>

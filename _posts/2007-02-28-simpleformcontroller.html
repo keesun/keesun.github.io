@@ -1,0 +1,56 @@
+---
+layout: post
+title: SimpleFormController
+date: 2007-02-28 08:47:59.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 06장 Controller
+tags:
+- SimpleFormController
+- Spring MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323157141'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/portlet/mvc/SimpleFormController.html" target="_blank">org.springframework.web.portlet.mvc.SimpleFormController</a></p>
+<p>주로 새로운 정보를 입력 또는 수정할 때 사용하는 컨트롤러라고 합니다. 그런데 저는 <a href="http://whiteship.tistory.com/433" target="_blank">간단한 검색을 할 때 사용해 봤던 적</a>이 있지요. ㅎㅎㅎ;; 사용하면 안되는건 아니지만 권총으로 맞출 과녁을 대포로 쏴서 맞춘격에 비유할 수 있는 것 같습니다.</p>
+<p>이녀석을 사용할 때 설정 해 줄 것이 몇 개 있는데요. form에서 정보 받아올 command 객체(이름과 class)랑 form이 있는 view, 그리고 에러 없이 command 객체를 받아서 전해 줄 successView 이름을 줄 수 있습니다. form이 있는 view는 생략이 가능합니다. 그리고 부가적으로 command 객체에 정보를 검증할 수 있는 validation을 만들어서 사용할 수 있습니다.</p>
+<p><img src="{{ site.baseurl }}/assets/dk29.jpg" class="aligncenter" width="500" height="364" alt="사용자 삽입 이미지" />이런식으로 동작하게 됩니다. sequence diagram보다 이게 더 보기 좋군요.<br />Controller와의 관계를 보기 위해 클래스 다이어그램을 보겠습니다.<br /><img src="{{ site.baseurl }}/assets/ck25.jpg" class="aligncenter" width="275" height="361" alt="사용자 삽입 이미지" />와.. 기네요~ 이렇게 계층화가 잘 되어 있기 때문에 확장성이 좋다고 하는 것 같습니다. 계층화가 잘 되어 있으면 원하는 지점에서 상속 받아서 사용하면 되기 때문이겠죠?</p>

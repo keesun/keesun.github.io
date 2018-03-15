@@ -1,0 +1,58 @@
+---
+layout: post
+title: spring 코딩 할 때
+date: 2006-11-06 03:38:17.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- commons-logging.jar
+- spring.jar
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323189299'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>spring을 설치한 폴더/dist/<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">spring.jar</span> 파일을 프로젝트에 추가 해주어야 함.<br />
+-&gt; 그래야 BeanFactory 등 spring에서 제공해주는 API를 사용할 수 있슴.</p>
+<p>코드에는 에러가 없어 보이는 데 실행을 하면 <span style="font-size: 10pt; font-family: 바탕; color: red" lang="EN-US">Exception in thread"main" java.lang.NoClassDefFoundError:org/apache/commons/logging/LogFactory</span> 이런 메시지와 함께 실행이 안될 때 가 있슴.<br />
+-&gt; 이때는 spring 설치 폴더/lib/jakarta-commons/<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">commons-logging.jar</span> 파일을 프로젝트에 추가 해주면 됨.</p>
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1087552012.bmp" class="aligncenter" width="400" height="75" alt="">1087552012.bmp</a><br />
+이 jar파일이 어딨는지 찾질 못해서 엄청난 삽질을 했었다는거... OTL</p>

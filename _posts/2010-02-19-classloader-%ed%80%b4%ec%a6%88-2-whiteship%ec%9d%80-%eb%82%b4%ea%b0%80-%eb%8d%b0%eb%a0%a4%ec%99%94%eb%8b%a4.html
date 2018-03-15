@@ -1,0 +1,90 @@
+---
+layout: post
+title: "[ClassLoader 퀴즈 2] Whiteship은 내가 데려왔다!!"
+date: 2010-02-19 07:34:59.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Java
+tags:
+- ClassLoader
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323136400'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>첫번째 문제를 맞추셨다면 클래스로더 계층 구조를 이해하고 있다고 볼 수 있겠습니다. 제가 작성한 코드를<br />
+보면 제가 어떤걸 원했는지 짐작하실 수 있을 겁니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void loadLocal() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URL url = new URL("file:C:/intellij9-workspace/springsprout2/test/sandbox/classloader");<br />
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL1 = new URLClassLoader(new URL[]{url});</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass1 = uCL1.loadClass("sandbox.classloader.Whiteship");</span><br />
+<br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL2 = new URLClassLoader(new URL[]{url});</span><br style="font-weight: bold;" /><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass2 = uCL2.loadClass("sandbox.classloader.Whiteship");</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader1: " + uCL1);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader2: " + uCL2);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader1's parent : " + uCL1.getParent());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader2's parent : " + uCL2.getParent());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("whiteshipClass1 loaded by: " + whiteshipClass1.getClassLoader());<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("whiteshipClass2 loaded by: " + whiteshipClass2.getClassLoader());<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>whiteshipClass1과 whiteshipClass2를 각기 다른 ClassLoader(URLClassLoader)를 사용해서 가져오고 싶었던 겁니다. 하지만 결과는? 두 클래스 모두 uCL1과 uCL2의 상위 클래스로더가 가져왔기 때문에 정답은 5번이며 제가 원하던 대로 동작하지 않았습니다. 좀 더 정확하게 보고 싶으시다면 위와 같이 uCL1과 uCL2의 parent까지 찍어보시면 C3, C4와 같다는 걸 확인할 수 있을 겁니다.</p>
+<p>&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void load() throws Exception {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URL url = new URL("file:C:/intellij9-workspace/springsprout2/temp/");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL1 = new URLClassLoader(new URL[]{url});<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass1 = uCL1.loadClass("Whiteship");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URLClassLoader uCL2 = new URLClassLoader(new URL[]{url});<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Class whiteshipClass2 = uCL2.loadClass("Whiteship");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader1: " + uCL1); // C1<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader2: " + uCL2); // C2<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader1's parent : " + uCL1.getParent()); // C3<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("URLClassLoader2's parent : " + uCL2.getParent()); // C4<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("whiteshipClass1 loaded by: " + whiteshipClass1.getClassLoader()); // C5<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println("whiteshipClass2 loaded by: " + whiteshipClass2.getClassLoader()); // C6<br />
+&nbsp;&nbsp;&nbsp; }</p>
+<p>자 이번에는 조금 다릅니다. temp라는 폴더는 클래스패스로 잡혀있지 않습니다. 그 안에 Whtieship.java를 넣어뒀고 콘솔에서 컴파일해서 .class 파일을 만들어뒀습니다.</p>
+<p>다음 중 참인 것은?<br />
+1. C1과 C5가 같다.<br />
+2. C2과 C6이 같다.<br />
+3. C3과 C5가 같다.<br />
+4. C4와 C6이 같다.<br />
+5. C3과 C4가 같다.<br />
+6. C5와 C6이 같다.</p>
+<p>과연 이번에는 내가 원했던 결과를 얻을려나...<br />
+정답은 역시 다음 글에서 공개. to be continued~!</p>

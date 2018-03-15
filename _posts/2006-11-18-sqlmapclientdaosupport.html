@@ -1,0 +1,176 @@
+---
+layout: post
+title: SqlMapClientDaoSupport
+date: 2006-11-18 03:39:44.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- ConfigLocation
+- dao
+- DataSource
+- Spring
+- SqlMapClient
+- SqlMapClientDaoSupport
+- SqlMapClientFactoryBean
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322789889'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="http://whiteship.epril.com/wp-content/uploads/1/1181804571.bmp" class="aligncenter" width="600" height="302" alt="">1181804571.bmp</a><br />
+MySQL에 만들어둔 Member 테이블에 iBatis를 사용해서 SQL을 날리는 Member.xml에 있는 sql의 ID를 호출하는 SqlmapMemberDao가 상속받고 있는 SqlMapClientDaoSupport에 대해서 조사해 봅니다.<br />
+<a href="http://static.springframework.org/spring/docs/2.0.x/reference/orm.html#orm-ibatis"><br />
+스프링 레퍼런스 12.5</a> 를 참고하면 다음과 같은 표를 볼 수 있습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1363766640.bmp" class="aligncenter" width="600" height="134" alt="">1363766640.bmp</a><br />
+저는 iBATIS 2,0을 사용하기에 DAO 클래인 SqlmapMemberDao가 SqlMapClientDaoSupport 클래스를 상위 클래스로 상속받도록 했습니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1072221328.bmp" class="aligncenter" width="567" height="110" alt="">1072221328.bmp</a><br />
+그리고 SqlMapClientDaoSupport에서 사용되는 SqlMapClient 객체를 DI(dependency injection)하기 위해 daocontext-member.xml에 다음과 같이 코딩합니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1361370266.bmp" class="aligncenter" width="553" height="54" alt="">1361370266.bmp</a>sqlMapClient 객체는 사용할 SqlMap을 다음과 같이 sql-map-config.xml 에 코딩해 둡니다.<br />
+<a href="http://whiteship.epril.com/wp-content/uploads/1/1122443480.bmp" class="aligncenter" width="475" height="122" alt="">1122443480.bmp</a>여기서 사용하기로 한 Member.xml 파일을 보면 다음과 같습니다.<br />
+[#M_ more.. | less.. | <br />
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;!DOCTYPE sqlMap<br />
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd"&gt;</p>
+<p>&lt;sqlMap namespace="Member"&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- alias --&gt;<br />
+ &nbsp;&nbsp; &lt;typeAlias alias="member" type="net.webapp2.member.domain.Member" /&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- result map --&gt;<br />
+ &nbsp;&nbsp; &lt;resultMap id="memberMap" class="member"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="id" column="id" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="name" column="name" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="messengerId" column="messengerId" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="email" column="email" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="blugAddress" column="blugAddress" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;result property="phone" column="phone" /&gt;<br />
+ &nbsp;&nbsp; &lt;/resultMap&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- insert --&gt;<br />
+ &nbsp;&nbsp; &lt;insert id="insert" parameterClass="member"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; INSERT INTO Member(name, email<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="messengerId"&gt;, messengerId&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="phone"&gt;, phone&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="blugAddress"&gt;, blugAddress &lt;/isNotNull&gt;)<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; VALUES(#name#, #email#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="messengerId"&gt;, #messengerId#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="phone"&gt;, #phone#&lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;isNotNull property="blugAddress"&gt;, #blugAddress#&lt;/isNotNull&gt;);<br />
+ &nbsp;&nbsp; &lt;/insert&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- select --&gt;<br />
+ &nbsp;&nbsp; &lt;select id="count" resultClass="int"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT COUNT(id)<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="getMember" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE id = #id#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="getByName" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE name = #name#;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;select id="getAllMember" resultMap="memberMap"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; SELECT id, name, messengerId, email, blugAddress, phone<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; FROM Member;<br />
+ &nbsp;&nbsp; &lt;/select&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- update --&gt;<br />
+ &nbsp;&nbsp; &lt;update id="update" parameterClass="member"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; UPDATE Member<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;dynamic prepend="SET"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;isNotNull property="name" prepend=","&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name = #name#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;isNotNull property="messengerId" prepend=","&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; messengerId = #messengerId#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;isNotNull property="email" prepend=","&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; email = #email#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;isNotNull property="blugAddress" prepend=","&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; blugAddress = #blugAddress#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;isNotNull property="phone" prepend=","&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; blugAddress = #blugAddress#<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/isNotNull&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;/dynamic&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; WHERE id = #id#;<br />
+ &nbsp;&nbsp; &lt;/update&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- delete --&gt;<br />
+ &nbsp;&nbsp; &lt;delete id="deleteById" parameterClass="int"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; DELETE from Member WHERE id = #id#<br />
+ &nbsp;&nbsp; &lt;/delete&gt;</p>
+<p>&lt;/sqlMap&gt;<br />
+_M#]<br />
+이렇게 설정파일에 해당하는 iBatis Sql Map 2.0 과 JDBC인 datasource를 SqlMapClientFactoryBean 타입의 객체인 sqlMapClient의 속성으로 DI 시킵니다.<br />
+[#M_ more.. | less.. | <br />
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
+&lt;beans xmlns="http://www.springframework.org/schema/beans"<br />
+ &nbsp;&nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br />
+ &nbsp;&nbsp; xsi:schemaLocation="<br />
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- DataSource --&gt;<br />
+ &nbsp;&nbsp; &lt;!-- MySQL --&gt;<br />
+ &nbsp;&nbsp; &lt;bean id="dataSource"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; class="org.apache.commons.dbcp.BasicDataSource"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; destroy-method="close"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="driverClassName" value="com.mysql.jdbc.Driver" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="url" value="jdbc:mysql://localhost:3306/adressbook?autoReconnect=true" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="username" value="keesun" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="password" value="keesun" /&gt;<br />
+ &nbsp;&nbsp; &lt;/bean&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- SqlMap setup for iBATIS Database Layer --&gt;<br />
+ &nbsp;&nbsp; &lt;bean id="sqlMapClient"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; class="org.springframework.orm.ibatis.SqlMapClientFactoryBean"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="configLocation"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value="file:conf/sql-map-config.xml" /&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />
+ &nbsp;&nbsp; &lt;/bean&gt;</p>
+<p> &nbsp;&nbsp; &lt;!-- Transaction Manager --&gt;<br />
+ &nbsp;&nbsp; &lt;bean id="transactionManager"<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;<br />
+ &nbsp;&nbsp; &nbsp; &nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />
+ &nbsp;&nbsp; &lt;/bean&gt;</p>
+<p>&lt;/beans&gt;<br />
+_M#]<br />
+글로 정리하다 보니까 이제 눈에 조금 보이네요.</p>
+<p>SqlMapClientDaoSupport라는 클래스에서 SqlMapClient 객체를 사용하기 때문에 이것을 와이어링 해주는데.. SqlMapClieint는 org.springframework.orm.ibatis.SqlMapClientFactoryBean 이 타입이며 SqlMapClientFactoryBean을 정의 할때는 configLocation 이것과 dataSource 를 와이어링 해줘야 한다.</p>
+<p>configLocation은 이곳에서 사용할 iBATIS sql map에 대한 정보를 가지고 있는 sql-map-config.xml 파일로 지정해주고 sql-map-config.xml에는 member.xml파일이 지정되어 있고 member.xml은 iBATIS를 사용하고 있다.</p>
+<p>datasource는 db connection객체를 생성하기 위한 네 가지 정보에 값을 setting한다.</p>

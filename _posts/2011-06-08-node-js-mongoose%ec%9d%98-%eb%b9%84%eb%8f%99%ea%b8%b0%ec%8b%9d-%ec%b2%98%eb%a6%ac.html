@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[Node.js] mongoose의 비동기식 처리"
+date: 2011-06-08 09:12:43.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags: []
+meta:
+  _edit_last: '1'
+  _syntaxhighlighter_encoded: '1'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323171001'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p style="clear: both;">때문에...</p>
+<p>[javascript]<br />
+app.get('/p/:id/:title', function(req, res){<br />
+	var to = req.params.id;<br />
+	var disCount, diffCount, likeCount, sameCount, queCount, allCount;<br />
+	Comments.find({'to':to, 'emotion':'불만이 있습니다.'}).count(function(err, count){<br />
+		disCount = count;<br />
+		Comments.find({'to':to, 'emotion':'다르게 생각합니다.'}).count(function(err, count){<br />
+			diffCount = count;<br />
+			Comments.find({'to':to, 'emotion':'좋아합니다.'}).count(function(err, count){<br />
+				likeCount = count;<br />
+				Comments.find({'to':to, 'emotion':'공감하고 있습니다.'}).count(function(err, count){<br />
+					sameCount = count;<br />
+					Comments.find({'to':to, 'emotion':'궁금해 합니다.'}).count(function(err, count){<br />
+						queCount = count;<br />
+						Comments.find({'to':to}).count(function(err, count){<br />
+							allCount = count;<br />
+							res.render('presentation', {'port':port, 'username':req.session.username, 'p_id':req.params.id, 'title':req.params.title,'disCount':disCount, 'diffCount':diffCount, 'likeCount':likeCount, 'sameCount':sameCount, 'queCount':queCount, 'allCount':allCount});<br />
+						});<br />
+					});<br />
+				});<br />
+			});<br />
+		});<br />
+	});<br />
+});<br />
+[/javascript]</p>
+<p style="clear: both;">이게 뭔짓인가 싶네요.. 뭔가 깔끔한 방법 없을까요? ㅠㅠ</p>
+<p><br class="final-break" style="clear: both;" /></p>

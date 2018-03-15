@@ -1,0 +1,66 @@
+---
+layout: post
+title: OSIV 사용시 주의 할 것
+date: 2008-05-11 14:32:21.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- OSIV
+- Persistent Context
+- validator
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322879540'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">OSIV 기본 지식 - 참조 <a href="http://www.hibernate.org/43.html" target="_blank">http://www.hibernate.org/43.html</a></p>
+<p>먼저 OSIV는 Open Session In View 패턴의 약자로 보통 OSIV 필터나 인터셉터 중 하나를 사용합니다. 사용하는 이유는? 뷰 랜더링을 완료 할 때까지 세션을 유지하기 위함이다. 세션이 닫힌 상태에서 프록시로 읽어온 콜렉션이나 레퍼런스의 속성에 접근하면 LazyInitializationException이 발생하고, 이 해결책으로 뷰를 랜더링 하기 위한 세션을 새로 열수도 있겠지만, 이 방법은 그리 좋치 않다. 일단 이 작업이 이전 세션에 포함되어야 적당하지 개별적인 작업 단위로 보기는 뭐시기하기 때문이다. 요청이 오면 새로운 Session과 Transaction을 생성하고 응답을 클라이언트에 보내기 직전에 Transaction을 커밋하고 Session을 닫는게 가장 단순한 OSIV의 기능이 되겠다.</p>
+<p>여기에 Conversation을 고려하고 서브 트랜잭션(서브 트랜잭션을 지원한다면, 두 개의 트랜잭션으로 나워서 읽고/쓰기 작업을 하는 트랜잭션과 뷰에 랜더링 하는 읽기 전용 트랜잭션으로 쪼개는 것이 좋다. 쓰기롹을 빨리 반환할 수 있으니까.)그리고 예외 처리까지 고려해서 인터셉터나 필터를 만들어야 한다.</p></div>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">하이버네이트의 update() 기본 지식 - 참조 <a href="http://whiteship.tistory.com/1616" target="_blank">http://whiteship.tistory.com/1616</a></p>
+<p>Persistent Context에 이미 Persistent 상태로 로딩되어 있는 객체가 있을 때, 그와 같은 id를 가진 객체를 또 다시 Persistent Context에 붙이려는 시도가 있을 때 NonUnique뭐시기 에러가 발생합니다. 흔히 Detached 상태의 객체를 update() 메소드를 사용하여 Persistent Context에 Reattch를 시도할 때 이런 예외가 발생할 수 있는데, 그럴 때는 merge를 하여 기존의 Persistent Context에 있는 객체의 값을 새로운 객체 값으로 덮어쓸 수도 있지만 이 때 merge() 메소드로 넘겨준 객체의 상태가 Persistent 상태로 변하지 않고 그대로 유지 되되며, merge()가 반환하는 레퍼런스와 기존에 Persistent Context에 존재하는 레퍼런스 두 개가 동일한 데이터를 가리키게 됨으로 프로그래밍에 혼란을 줄 수 있다. 따라서 해당 객체를 evict()를 사용하여 Persistent Context에서 빼내고 update()의 인자로 넘겨준 객체를 Persistent 상태로 만드는 것이 적절한 해결책일 것이다.</p></div>
+<p>자... 이제 OSIV 필터를 사용하고 있을 때 Validator에 다음과 같은 코드가 있습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">public class MemberValidator implements Validator {<br />...<br />&nbsp; @Autowired<br />&nbsp; MemberService memberService;</p>
+<p>&nbsp; ...<br />&nbsp; Member memberCommand = (Member)command;<br />&nbsp; Member existingMember = memberService.get(memberCommand.getEmail());<br />&nbsp; if(existingMember != null)<br />&nbsp; &nbsp; errors.reject("email", "duplicated", "해당 이메일은 이미 가입되어 있습니다.");<br />&nbsp; ...<br />&nbsp; <br />...<br />}</div>
+<p>위의 코드는 일단 상당히 별로 입니다. memberSerivce.isExistingEmail(memberComman); 라는 메소드를 만들어서 그 반환값을 가지고 조건을 거는게 더 좋은 API로 생각됩니다. MemberService의 isExistingEmail() 에서 데이터베이스에 접근하는 코드는 memberDao를 사용해서 Member 객체를 가져오고 지지고 볶는게 훨씬 좋습니다. 그리고 사실 저런 경우 멤버 객체를 가져올 필요도 없고 레코드 갯수만 가져오면 되겠죠. 그런데 그냥.. 여기서는 그냥. 저렇게 코딩을 했다고 가정하겠습니다.</p>
+<p>이런 상황에서 방금 말씀드린 코드의 책임 문제를 떠나 정말 중대한 문제가 있습니다.</p>
+<p>그 문제가 뭔지는 알 갈쳐드립니다. 비밀이에요. (ㅋㅋ이미 문제의 원인과 해결책은 위의 기본 이론에 다 설명이 되어 있습니다.) 토비 사부님께 듣기로는 물개 선생님께서도 이와 같은 문제를 겪은 적이 있다는 얘기를 들었습니다. 이런 해프닝을 겪으면서 느낀 건 아무리 공부를 해도 역시.. 코딩을 해봐야... 알 수 있고.. 문제의 원인과 그 원인 해결책은 다시 공부를 해야 이해할 수 있다는 것입니다.</p>
+<p>공부와 코딩을 떨어질래야 떨어질 수 없는 친구인거죠.</p>

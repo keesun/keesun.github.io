@@ -1,0 +1,100 @@
+<p><span class="pagetitle" style="margin: 0px; padding: 0px; text-decoration: none;">참조: </span><a href="http://www.hibernate.org/250.html" rel="nofollow">Hibernate Migration Reference</a></p>
+<h1>API 변경사항</h1>
+<h2>패키지 이름</h2>
+<ul>
+<li>net.sf.hibernate에서 org.hibernate로 변경.</li>
+<li>net.sf.hibernate.expression에서 org.hibernate.criterion으로 변경.</li>
+<li>하이버네이트를 참조하는 외부 라이브러러(EHCache 같은 경우) net.sf.ehcache.hibernate.Provider에서 org.hibernate.cache.EhCacheProvider로 변경.</li>
+</ul>
+<h2>Deprected Interfaces</h2>
+<ul>
+<li>org.hibernate.classic 패키지로 이동됐다.</li>
+<li>Session 인터페이스의 find(), iterate(), filter(), delete() 대신에 createQuery() 사용해야 된다.</li>
+<li>Session 인터페이스의 saveOrUpdateCopy()대신에 delete, merge() 해야된다.</li>
+<li>배열을 인자로 받는 createSQLQuery()는 deperecated됐다.</li>
+<li>Lifecycle과 Validatable 인터페이스는 deprecated됐다. 그 대신 Interceptor나 Hibernate 3 이벤트 프레임워크를 사용하라.</li>
+</ul>
+<h2>종속성</h2>
+<ul>
+<li>lib/README.txt 참조할 것.</li>
+</ul>
+<h2>예외 모델</h2>
+<ul>
+<li>HibernateExcpetion을 비롯해 모든 예외는 Uncheched Exception으로 바꼈다.</li>
+</ul>
+<h2>Interceptor 인터페이스</h2>
+<ul>
+<li>두 개의 새로운 메소드 추가 됐다. 따라서 이 인터페이스 구현체들은 비어있는 메소드 두 개를 구현해야 한다.</li>
+<li>instantiate()의 인자로 Class 객체 대신에 Entity 이름을 받는 String 값을 받도록 바꼈다.</li>
+<li>isUnsaved())에서 isTransient()로 메소드 이름이 바꼈다.</li>
+</ul>
+<h2>UserType, CompositeUserType</h2>
+<ul>
+<li>org.hibernate.usertype 패키지로 이동됐고, 새로운 메소드 몇 개가 추가 됐다.</li>
+<li>ParameterizedType 인터페이스 추가됐다.</li>
+</ul>
+<h2>FetchMode</h2>
+<ul>
+<li>FetchMode.Lazy와 FetchMode.EAGER는 deprecated됐다. 좀 더 정확한 이름으로 FetchMode.SELECT와 FetchMode.JOIN으로 바꼈다.</li>
+</ul>
+<h2>PersistentEnum</h2>
+<ul>
+<li>PersustentEnum 클래스는 Hibernate3에서 제거됐다. UserType을 사용하라.</li>
+</ul>
+<h2>Blob과 Clob 지원</h2>
+<ul>
+<li>Blob이나 Clob 타입을 detached, serialized, merge() 메소드에 넘길 수 있고,<br />
+특정 밴더의 타입으로 다음과 같이 변환할 수도 있다. getWrappedClob(), getWrappedBlob() 사용한다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">clob = (oracle.sql.CLOB) ( (org.hibernate.lob.SerializableClob) foo.getText() ).getWrappedClob();</pre>
+</div>
+</div>
+<h2>확장 API</h2>
+<ul>
+<li>org.hibernate.criterion, org.hibernate.mapping, org.hibernate.persister 그리고 org.hibernate.collection 패키지는 상당히 많이 리팩터링 했다.</li>
+</ul>
+<h1>Metadata 변경사항</h1>
+<h2>Association Fetching 전략</h2>
+<ul>
+<li>lazy="true"를 기본값으로 바꿨다. 따라서 이 설정을 하지 않은 클래스와 컬렉션에 모두 lazy="false"를 붙여야 한다.</li>
+<li>outer-join 속성이 deprecated됐다. outer-join="true" 대신에 fetch="join", outer-join="false" 대신에 fetch="select"를 사용하라.</li>
+</ul>
+<h2>식별자 맵핑</h2>
+<ul>
+<li>unsaved-value="0"을 기본값으로 사용한다.</li>
+<li>하이버네이트 3에서 natural<br />
+key(assigned identifier 또는 복합키)를 사용하거나 detached 객체를 쓸 때, 더이상<br />
+Interceptor.isUnsaved() 메소드를 구현할 필요가 없다. 힌트 없으면 DB에 쿼리 날려서 객체가 새로 만든<br />
+것인지 detached 인지 알아낸다. 따라서 그냥 isUnsaved() 사용하는게 성능에 좋겠다.</li>
+</ul>
+<h2>콜렉션 맵핑</h2>
+<ul>
+<li>&lt;index&gt;는 준-deprecated 됐다. &lt;list-index&gt;와<br />
+&lt;map-key&gt;를 권장한다. &lt;key-many-to-many&gt; 대신에<br />
+&lt;map-key-many-to-many&gt;, &lt;composite-index&gt; 대신에<br />
+&lt;composite-map-key&gt;를 사용하라.</li>
+</ul>
+<h2>DTD</h2>
+<ul>
+<li>DOCTYPE의 <a href="http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" rel="nofollow">http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd</a> 에서 <a href="http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" rel="nofollow">http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd</a> 로 바꿔라.</li>
+</ul>
+<h1>Query Language Changes</h1>
+<ul>
+<li>하이버네이트 3은 ANTLR-based HQL/SQL query translator를 사용한다. 2.1의 쿼리 파서도 사용할 수 있다.</li>
+<li>예전 쿼리 파서를 사용하려면 hibernate.query.factory_class 속성에 org.hibernate.hql.classic.ClassicQueryTranslatorFactory</li>
+<li>새로운 파서를 사용하려면, org.hibernate.hql.ast.ASTQueryTranslatorFactory를 설정한다.</li>
+<li>Note:<br />
+there is a known bug affecting dialects with theta-style outer joins<br />
+(eg. OracleDialect for Oracle 8i, TimesTen dialect, Sybase11Dialect).<br />
+Try to use a dialect which supports ANSI-style joins (eg.<br />
+Oracle9Dialect), or fall back to the old query parser if you experience<br />
+problems.</li>
+<li>elements() 대신에 명시적인 join을 사용하라.</li>
+</ul>
+<h1>설정 변경</h1>
+<ul>
+<li>BEA Weblogic issues 패스.</li>
+</ul>
+<p></p>

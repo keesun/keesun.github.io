@@ -1,0 +1,33 @@
+<p><a href="http://dna.daum.net/">DAUM DNA 개발자네트워크 beta</a>의 <a href="http://dna.daum.net/technote">기술자료</a> 게시판에 Java와 관련된 글 세개가 올라왔습니다.</p>
+<ul>
+<li><img class="url" alt="[http]" src="/assets/http.png" /><a class="externalLink" href="http://dna.daum.net/technote/java/WebServicesUsingSpringXFire">쾌속 웹서비스 개발 Spring &amp; XFire</a> - 김영희(CDO본부 검색서비스 개발팀)</li>
+<li><img class="url" alt="[http]" src="/assets/http.png" /><a class="externalLink" href="http://dna.daum.net/technote/java/PrincipleOfJavaInternalForDeveloperEasyToLost">개발자가 놓치기 쉬운 자바의 기본원리</a> - 전성호(커뮤니티본부 커뮤니티개발1팀)</li>
+<li><img class="url" alt="[http]" src="/assets/http.png" /><a class="externalLink" href="http://dna.daum.net/technote/java/JavaReferenceObjects">Java Reference Object의 이해와 활용</a> - 박병권(커뮤니티본부 커뮤니티개발1팀) 
+</li>
+</ul>
+<p>이 세개의 글 중에 두번째 글을 보며 몰랐던 부분을 정리하려고 합니다. 그 중에 가장 처음으로 static에 관한 부분입니다.</p>
+<p>안그래도 몇일 전 static scope의 멤버는 되도록이면 사용하지 않는 것이 좋다는 문구를 Agile Java 4장에서 발견하고 그 이유를 찾아봤더니 객체지향 적이지 않아서라고 적혀 있었습니다. 어떤 점에서 객체 지향 적이지 않다고 하는 것인지 궁금하여 <a href="http://webapp2.net/tt/">커뮤니티</a>에 글을 올렸고 <a href="http://webapp2.net/tt/127">만족스런 답변</a>을 들을 수 있었습니다. 그러던 중 이 글을 만나게 되어 더욱 반갑게 느껴졌습니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">static method는 this가 없다. instance method에는 숨겨진 파라미터로 this가 건네진다. (아래"객체지향에 흔희 있는 오해" 참고) 하지만 static method는 절차지향의 함수와 동일하므로 숨겨진 파라미터 this는없다. 그래서 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">static method에서는 전달한 this가 없으므로 instance method를 호출하거나 instancefield를 참조할 수 없는 것이다.</span></div>
+<p>
+몰랐던 사실입니다. 그래서 class안에 있는 어떤 메소드에서도 this라는 키워드를 사용할 수 있었던 것이군요. 그렇다면 supre라는 키워드 또한 건네지지 않을런지... 궁금해 지는 군요.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157)">우리는 흔히 "글로벌 변수는 될수있는한 사용하지 않는 것이 좋다"라고 한다. 그 이유는 글로벌 변수는 어디서든 참조할 수 있고 값을 변경할 수 있기 때문이다.</p>
+<p>따라서 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(255, 218, 237)">static에서 public은 final을 붙여 상수로 사용해야지 그 외의 용도는 자제하는 것이 좋을 것</span>이다.
+</div>
+<p>
+그렇군요. agile java 4장에서 말하고 있는 내용과 거의 일치하고 있습니다. 그리고 여기서는 그에 대한 해결책으로 final을 붙여 상수로 사용할 때만으로 용도를 제한하고 있군요.</p>
+<p>final 키워드가 나오면서 final을 사용할 때 주의할 것이 나옵니다. final Date endDate = new Date(); 여기서 endDate가 가리키는 객체가 바뀔 수 없다는 것이지 객체의 내용은 바뀔 수 가 있다는 것입니다. (이 부분은 <a href="http://whiteship.tistory.com/100">레퍼런스의 위험성</a>에서도 잠깐 언급이 됐었습니다.)그럼에도 불구하고 종종 객체의 내용이 바뀌지 않을 것으로 예상하게 되는 착각을 하게 될 때가 있지요. 그것을 지적하는 내용이였습니다.</p>
+<div style="padding: 10px; background-color: rgb(255, 218, 237)">static을 사용할 때 기억해야 할 두 가지</p>
+<ol type="1">
+<li> static field는 final의 경우와 달리 정말 "하나여도 되는지" 여부를 잘 생각해야 한다.</li>
+<li> static method는 주저하지 말고 쓰되 다음 두가지의 경우 매우 활용적이다.
+<ol type="1">
+<li> 다른 많은 클래스에서 사용하는<span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)"> Utility Method 군을 만드는 경우</span>. (주로 Utility Class의 method)</li>
+<li> 클래스 안에서만 사용하는 <span style="padding: 3px 1px 0px; color: rgb(32, 32, 32); background-color: rgb(208, 255, 157)">"하청 메소드(private method)"</span>. 이유를 예를 들어 설명하면, 아래와 같은 조금은 과장된 클래스가 있다고 하자.</li>
+</ol>
+</li>
+</ol>
+</div>
+<p>
+그리고 마지막으로 하청 메소드의 예를 보여 주고 있는데 인상 적입니다.</p>
+<p>private static 으로 선언된 메소드를 사용하면 scope이 이 메소드를 가지고 있는 class로 제한이 되고 다른 인스턴스 변수들을 안전하게 사용할 수 있는 장점이 생기네요.</p>
+<p></p>

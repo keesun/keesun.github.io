@@ -1,0 +1,61 @@
+---
+layout: post
+title: Aggregates
+date: 2007-12-18 05:33:34.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- DDD
+tags:
+- Agrregate
+- DDD
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323099161'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><span style="font-weight: bold;">Aggregate는 객체의 소속Ownership과 경계Boundary를 정의하기 위해 사용하는 도메인 패턴이다.</span></p>
+<p>모델은 많은 도메인 객체들을 포함하고 있을 것이며, 이 도메인 객체들은 서로 거미줄처럼 연결되어 있을 것이다. 실제 도메인에서의 연관 관계는 코드와 DB에도 그대로 반영되어야 한다. 마치 한 사람의 고객이 계좌 하나를 가지고 있을 때 Customer와 Account 테이블처럼 말이다.</p>
+<p>모델이 복잡해지는 것을 막기 위해서 최대한 간단하고 이해 가능한 수준으로 작성하려 할 것이다. 그러기 위해서 <span style="font-weight: bold;">많은 시간을 모델들 사이의 관계를 제거하거나 단순화 하는데 소비한다.</span> 하지만 1:1, 1:다, 다:다 등의 관계를 단순화하는 작업이 그리 간단하지 않은 것 같다.</p>
+<p>Invariant도 마찬가지로 신경써야한다. Invariant는 데이터가 변경되더라도 유지되어야 할 규칙을 이야기한다. 하지만 <span style="font-weight: bold;">복잡한 관계에서 변경은 도메인 객체에 해를 끼칠 수도 있다.</span> 그래서 신중한 롹킹으로 여러 사용자들이 데이터를 동시에 사용할 수 있도록 한다.</p>
+<p>그래서 Aggregate가 필요하다.</p>
+<p><img src="{{ site.baseurl }}/assets/gk17.png" class="aligncenter" width="472" height="343" alt="사용자 삽입 이미지" /><br />Aggregate는 데이터 변경에 영향을 받는 객체들을 하나의 유닛으로 묶어놓은 그룹이다. Root에 해당하는 Entity 객체를 통해서 외부와 내부의 객체들 사이를 경계짓고 있다. 경계 내부에 또 다른 Entity가 있을 때 해당 Entity의 identity는 aggregate 내부에서만 통용되는 지역적인 identity이다.</p>
+<p>이렇게 되어있을 때 무경성을 지키는것이 훨씬 편하다. 외부에서 내부에 있는 객체들에 바로 접근할 수 없으며, 최상위 Entity 객체를 통해서 조작되기 때문이다.</p>
+<p>또한 내부의 객체에 대한 복사본을 외부로 전달하는 것이 가능하다. 이렇게 되면, 외부에서 해당 객체를 지지고 볶아서 구워 삶아 먹든 별 문제가 없을 것이다.</p>
+<p>내부의 객체들은 외부에 있는 다른 Aggregate의 Entity를 참조할 수 있다.<br />최상위 Entity는 Gloval Identity를 가지고 있다.</p>

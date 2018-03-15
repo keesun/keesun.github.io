@@ -1,0 +1,76 @@
+---
+layout: post
+title: BeanClassLoaderAware 테스트
+date: 2007-05-08 23:32:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- Bean Life Cycle
+- BeanClassLoaderAware
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322767819'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>이전 글에서 사용한 Bean 클레스에 BeanClassLoaderAware 인터페이스를 추가로 구현합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class BeanLifeCycleTestBean implements BeanNameAware, <span style="color: rgb(255, 0, 0);">BeanClassLoaderAware</span>{</p>
+<p>&nbsp; &nbsp; String beanName;</p>
+<p>&nbsp; &nbsp; ClassLoader classLoader;</p>
+<p>&nbsp; &nbsp; public void setBeanName(String beanName) {<br />&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("setBeanName() 실행합니다.");<br />&nbsp; &nbsp; &nbsp; &nbsp; this.beanName = beanName;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; public String getBeanName(){<br />&nbsp; &nbsp; &nbsp; &nbsp; return beanName;<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> public void setBeanClassLoader(ClassLoader classLoader) {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; System.out.println("setBeanClassLoader() 실행합니다.");</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; this.classLoader = classLoader;</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; }</span></p>
+<p>&nbsp; &nbsp; public ClassLoader getClassLoader() {<br />&nbsp; &nbsp; &nbsp; &nbsp; return classLoader;<br />&nbsp; &nbsp; }</div>
+<p>간단한 로깅을 위해서 문자열을 출력해 줍니다. 빈 설정은 바뀔 것이 없으며 테스트 코드만 약간 변경합니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class BeanLifeCycleTest {</p>
+<p>&nbsp; &nbsp; private ApplicationContext context;<br />&nbsp; &nbsp; private BeanLifeCycleTestBean bean;</p>
+<p>&nbsp; &nbsp; @Before<br />&nbsp; &nbsp; public void setUp(){<br />&nbsp; &nbsp; &nbsp; &nbsp; context = new ClassPathXmlApplicationContext("net/agilejava/jedi/spring/beanLifeCycle/applicationContext.xml");<br />&nbsp; &nbsp; &nbsp; &nbsp; bean = (BeanLifeCycleTestBean) context.getBean("test");<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void testBeanNameAware() {<br />&nbsp; &nbsp; &nbsp; &nbsp; assertEquals("test", bean.getBeanName());<br />&nbsp; &nbsp; }</p>
+<p>&nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> @Test</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; public void testClassLoaderAware() {</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; ClassLoader classLoader = bean.getClassLoader();</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(classLoader);</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; }</span></p>
+<p>}</p></div>
+<p>Spring 소스코드에서 BeanClassLoader 인터페이스를 구현한 클레스들입니다.<br />- AbstractBeanFactory :: configurableBeanFactory 인터페이스 구현체<br />- AbstractBeanDefinitionReader :: Set the ClassLoader to use for bean classes. Default is null, which suggests to not load bean classes eagerly but rather to just register bean definitions with class names, with the corresponding Classes to be resolved later (or never).<br />- ConfigurableBeanFactory 인터페이스 :: Set the class loader<span style="color: rgb(255, 0, 0);"> to use for loading bean classes.</span> Default is the thread context class loader. Note that this class loader will only apply to bean definitions that do not carry a resolved bean class yet. This is the case as of Spring 2.0 by default: Bean definitions only carry bean class names, to be resolved once the factory processes the bean definition.<br />- AbstractHttpInvokerRequestExecutor<br />- HttpInvokerTests<br />
+<blockquote>This is mainly intended to be implemented by framework classes which<br />
+ have<span style="color: rgb(255, 0, 0);"> to pick up application classes by name </span>despite themselves potentially<br />
+ being loaded from a shared class loader.</p></blockquote>
+<p><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/ClassLoader.html" target="_blank">ClassLoader</a> 에 대한 학습이 필요하겠군요. 얼추 보니까 loadClass("풀 패키지 이름 붙은 클레스명") 을 사용하여 Class 객체를 받아 올 수 있습니다. 그 이후에는 리플렉션으로 이어지겠군요.</p>
+<p>ClassLoader를 테스트 하기 위해 테스트 코드를 약간 수정했습니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void testClassLoaderAware() throws ClassNotFoundException {<br />&nbsp; &nbsp; &nbsp; &nbsp; ClassLoader classLoader = bean.getClassLoader();<br />&nbsp; &nbsp; &nbsp; &nbsp; assertNotNull(classLoader);<br /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; Class clazz = classLoader.loadClass("net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean");</span><br style="color: rgb(255, 0, 0);" /><span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &nbsp; &nbsp; assertEquals(BeanLifeCycleTestBean.class, clazz);</span><br />&nbsp; &nbsp; }</div>
+<p></p>

@@ -1,0 +1,74 @@
+---
+layout: post
+title: Managed Depedency 네 녀석의 정체를 드디어 알았다.
+date: 2008-04-17 05:59:39.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Maven
+tags:
+- dependencyManagement
+- Import Managed dependency
+- maven
+- Maven 2.0.9
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323130672'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <br /><a href="http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism" target="_blank">http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism</a><br /><a href="http://maven.apache.org/ref/current/maven-model/maven.html#class_dependencyManagement" target="_blank">http://maven.apache.org/ref/current/maven-model/maven.html#class_dependencyManagement</a></p>
+<p>이 녀석의 정체는... <font size="3"><span style="font-weight: bold; color: rgb(0, 153, 102);">depedency 정보(버전, Scope, 추이성)을 한 곳에 정리해둔=MANAGED 의존성=Denpendency</span></font>을 사용하겠다는 것입니다. Maven 2.0.9에 추가된 import managed dependency는 바로 이 managed dependency에 관한 내용입니다.</p>
+<p>이전에는 상속을 통해서 managed dependency를 이용할 수 있었습니다.</p>
+<p>그런데 단일 상속만 되기 때문에 managed dependency를 사용하고 싶은 프로젝트가 여러 개일 때는 import scope을 이용해서 상속이 아닌 위임delegation을 사용해서 여러 개의 프로젝트를 import scope으로 dependencyManagement에 추가해두면, 해당 프로젝트들이 가지고 있는 managed dependency를 사용할 수 있습니다.</p>
+<p>이 개념을 이해하기 위해.. 거의 삼일간 고생했네요. </p>
+<p>처음에는 </p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">&lt;dependencies&gt;<br />&nbsp; &lt;dep..cy&gt;<br />&nbsp; &nbsp;&nbsp; ..<br />&nbsp; &lt;/dep..cy&gt;<br />&nbsp; &lt;dep..cy&gt;<br />&nbsp; &nbsp; ..<br />&nbsp; &lt;/dep..cy<br />&nbsp; ..<br />&lt;/dependencies&gt;</div>
+<p>이거랑 </p>
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);"><span style="font-weight: bold;">&lt;dependencyManagement&gt;</span><br />&lt;dependencies&gt;<br />
+&nbsp; &lt;dep..cy&gt;<br />
+ &nbsp; &nbsp; ..<br />
+&nbsp; &lt;/dep..cy&gt;<br />
+&nbsp; &lt;dep..cy&gt;<br />
+ &nbsp;&nbsp; ..<br />
+&nbsp; &lt;/dep..cy<br />
+&nbsp; ..<br />
+&lt;/dependencies&gt;<br /><span style="font-weight: bold;"><br />
+&lt;/dependencyManagement&gt;</span></div>
+<p>이거랑 별 차이가 없는 건 줄 알았는데... </p>
+<p>엄청나게 많은 차이가 있었습니다.</p>

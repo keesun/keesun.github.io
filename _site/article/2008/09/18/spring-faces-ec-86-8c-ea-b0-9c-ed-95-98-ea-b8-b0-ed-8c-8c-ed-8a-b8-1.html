@@ -1,0 +1,60 @@
+<p>참조, 요약, 번역: <a target="_blank" href="http://www.jsfcentral.com/articles/intro_spring_faces_1.html">http://www.jsfcentral.com/articles/intro_spring_faces_1.html</a></p>
+<p>JavaServer Faces와 스프링의 연동을 돕는 Spring Faces라는 모듈이 있는데, 이 모듈을 Spring Web Flow 2에 도입했다. 본 기사는 Spring Faces에 대한 첫 번째 기사로, JSF 기준과 Spring 기준으로 각각 두 프레임워크를 통합하는 방법을 살펴볼것이다.</p>
+<p>스프링은 예전부터 기본적인 JSF 연동을 자체 웹 모듈에서 지원해왔다. 기존 JSF 웹 계층과 스프링이 관리하는 비즈니스 계층 사이를 연결해주는 형태였다. 이 방법을 'JSF-기준 연동'이라고 한다. 이 방법으로도 잘 사용해왔지만, 스프링 웹 팀은 그 둘 사이에 뭔가 잘 안 맞는 것.. 너무 많은 구성물과 너무 많은 개념적인 오버헤드가 생겨서 관리하기 쉽지 않다는 것을 느꼈다.</p>
+<p>스프링 Faces는 시야를 바꿔서 통합에 대한 접근 방법을 전환했다. 즉 스프링 기반 웹 애플리케이션에 JSF의 장점을 끌어오는 것을 목표로 했다. 이것은 '스프링-기준 연동'이라는 접근 방법으로 JSF UI 컴포넌트 모델을 사용하여 웹 애플리케이션 개발을 하는 것이다. 본 기사에서는 이 접근 방법의 장점과 왜 이것을 JSF과 스프링 개발자에게 권하는지 살펴보자.</p>
+<p><font size="3"><span style="font-weight: bold;">JSF와 스프링 - 완벽한 조화인가?</span></font></p>
+<p>JSF는 그 자체로 rich 웹 애플리케이션을 개발할 때 매우 많은 장점을 제공한다. 특히 복잡한 UI를 가지고 상태를 유지하는(stateful) 프로그래밍 모델을 필요한 곳에서 말이다. 이 UI 컴포넌트 모델들은 견고하며 강력하다. 제대로 적용하면, 웹 브라우져서에서 복잡한 컨트롤을 만들어야 하는 복잡도를 낮출 수 있다. 풍족한 UI를 선언적으로 만들 수 있고, 통합 EL을 사용하여 개별 컨트롤을 직접 도메인 모델에 유연하게 바인딩할 수 있기 때문에, 보다 빠르게 복잡한 웹 UI를 개발할 수 있다. 이 모든 것을 간단한 POJO 프로그래밍 모델로 달성할 수 있다.</p>
+<p>스프링을 JSF를 앞단에 둔 애플리케이션의 도메인 계층에 적용하는 것이 자연스럽고 이상적이다. POJO 프로그래밍 모델을 이용할 수 있기 때문이다. JSF의 풍부하고 잘 정의된 확장 포인트를 사용하면, 스프링이 관리하는 비즈니스 계층을 JSF 앞단에 간단하게 연결할 수 있다.</p>
+<p><font size="3"><span style="font-weight: bold;">EL을 사용한 JSF-기준 연동</span></font></p>
+<p>JSF-기준 연동은, JSF 컨트롤러 모델이 애플리케이션을 주고하고 JSF가 관리하는 빈을 스프링 비즈니스 계층과 연결한다. 스프링은 몇몇 연동 클래스를 제공하여 faces-config.xml에서 스프링 빈을 참조할 수 있게 하는 것이다. 가장 흔한 방법으로는 DelegatingVariableResolver 를 사용하면, EL을 사용하여 스프링 빈을 참조할 수 있다. EL을 사용해서 스프링 빈을 JSF가 관리하는 빈에 주입하는 것이다. 예를 들어, WebApplicationContext에 다음과 같은 빈이 있다고 치자.</p>
+<p>&lt;bean id="mySpringService" class="com.foo.MySpringServiceImpl"&gt;</p>
+<p>EL을 사용해서 faces-config.xml에 정의한 &lt;managed-bean&gt;에서 이 빈을 JSF가 관리하는 빈에 주입할 수 있다. </p>
+<p>&lt;managed-bean&gt;<br />&nbsp; &lt;managed-bean-name&gt;myJsfManagedBean&lt;/managed-bean-name&gt;<br />&nbsp; &lt;managed-bean-class&gt;com.foo.MyJsfManagedBean&lt;/managed-bean-class&gt;<br />&nbsp; &lt;managed-bean-scope&gt;request&lt;/managed-bean-scope&gt;<br />&nbsp; &lt;managed-property&gt;<br />&nbsp; &nbsp; &lt;property-name&gt;mySpringService&lt;/property-name&gt;<br />&nbsp; &nbsp; &lt;value&gt;#{mySpringService}&lt;/value&gt;<br />&nbsp; &lt;/managed-property&gt;<br />&lt;/managed-bean&gt;</p>
+<p>즉 이렇게 하면, 스프링이 관리하는 싱글톤 서비스를 JSF가 매번 생성하는 객체에 주입할 수 있다. 스프링 2.0부터, request와 session 스콥을 사용할 수 있기 때문에, JSF 관리하는 빈을 모두 없애고, EL로 스프링 컨트롤러를 사용할 수도 있다.<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">JSF-기준 접근방법으로 충분한가?</span></font></p>
+<p>스프링의 간단한 JSF 연동 클래스로, 부드럽게 스프링이 관리하는 서비스를 JSF 기반 앞 단과 통합할 수 있었다. 하지만, 이것으로 충분한가? 나는 그렇지 않다고 확신한다. 이 방법은 JSF 컨트롤러 모델을 사용하고 있는데, 여기에 몇 가지 단점들이 존재한다.
+<ul>
+<li>순수-MVC 접근방법에 따라, 모든 것이 뷰를 렌더링하는것으로 주도된다. 랜더링 전에 모델을 초기화 하는 편리한 포인트가 없다.</li>
+<li>성가신 네비게이션 모델은 여러분이 실수를 해도 거의 피드백이 없다.(오타가 있어도 말이다.) 그리고 규칙이 추가되거나 변경될 때마다 애플리케이션을 다시 시작해야 한다.</li>
+<li>검증 모델이 충분하지 않다. 서버쪽에서의 필드 수준 검증을 중심으로 하고 있다. 컴포넌트 트리를 순회하지 않고도 클라이언트쪽 필드 검증과 서버쪽 모델 검증을 수행할 수 있는 편리한 방법이 필요하다.</li>
+<li>URL 맵핑이 좀 유연하지 않고, 리다이렉트 지원이 충분치 않다.</li>
+<li>request와 session 사이의 보다 세밀한 스콥프가 필요하다. 특히 페이지 내에서 여러번 이벤트를 발생시키는 Ajax 기반 뷰의 경우에 그렇다.</li>
+<li>예외 처리 기능이 매우 제한적이다. 특히 뷰 랜더링할 때 그렇다.</li>
+<li>컨트롤러 로직이 JSF 빈으로 분산되어 있다. 단위 테스트하기가 힘들고 변경할 때마다 애플리케이션을 다시 시작해야 한다.</li>
+</ul>
+<p>JSF의 UI 컴포넌트 모델은 견고하다. 그 행위 들은 잘 정의되어 있는 JSF 컴포넌트 라이프사이클 경계 내에서 실행되고 캡슐화되어 있다. 하지만 컨트롤러 모델은 다소 제한적이다. 특히 스프링, 스프링 MVC, 스프링 Web Flow의 유연함과 막강함을 사용하고자 하는 사람들에게 더 제한적으로 느껴진다. 또한 이 접근 방법은 개념적인 오버헤드를 발생시킨다. faces-config.xml, JSF가 관리하는 빈, JSF 뷰 템플릿 그리고 스프링 기반 비즈니스 계층의 모든 컴포넌트를 계속해서 관리해야 한다.</p>
+<p>처음에는, 스프링 Web Flow 1.x도 JSF-기준 방법으로 연동을 시도했었다. 하지만, 이 방법이 너무 제한적었다. 여전히 많은 JSF 구성요소를 사용했고 제대로 동작하려면 faces-config.xml에 뭔가를 추가해야 했다. agile이라고 할 수 없었다.</p>
+<p>만약에 JSF의 UI 컴포넌트 모델을 스프링 환경에 연동할 수 있으면 어떨까 고민을 했다. 스프링 프로그래밍 모델을 사용하고 보다 스프링을 기준으로 한 접근 방법으로 말이다. 만약 스프링이 전체 요청을 관리하면, 여러분은 보다 편리하게 전체 애프리케이션 설정을 관리할 수 있고 편하게 프로그래밍을 할 수 있을 것이다. 또한 스프링 MVC의 유연한 라우팅 기반 시설과 스프링 Web Flow 2.x의 agile statefule 컨트롤러 모델을 사용할 수 있겠다. 이는 stateful JSF 뷰와 잘 어울린다. 바로 이러한 동기로 인해 스프링 Faces가 생겼고 스프링 포트폴리오에 추가됐다.<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">스프링 Faces의 스프링-기준 JSF</span></font></p>
+<p>스프링 Faces는 JSF와 스프링 연동에 있어서 훨씬 규범적인(prescriptive)-미리 무언가를 예상하고 마련해 두는- 접근방법을 채택했다. JSF의 막강함은 그가 제공하는 여러 확장 포인트인데, 스프링 Faces는 이 모든 장점을 수용하여 JSF를 보다 자연스럽게 스프링에 녹아들게 했다. 환경에 대해 몇가지 가정을 세웠다. 일단 스프링 MVC DispatcherServlet을 사용하여 요청 처리를 라우팅하고, 스프링 Web Flow 2.x의 기초 컨트롤러 모델을 사용한다. 또, 스프링 JavaScript 모듈을 사용하여 경량 JSF Ajax 컴포넌트를 제공한다고 가정했다. (스프링 Faces는 어떠한 JSF 컴포넌트 라이브러리도 사용할 수 있도록 설계했기 대문에, 이들 컴포넌트는 전부 옵션이기 필수가 아니다.)</p>
+<p><img src="/assets/jk360000000000.jpg" class="aligncenter" width="460" height="318" alt="사용자 삽입 이미지" />그림 1. 스프링 Faces 아키텍처에 대한 하이 레벨 뷰</p>
+<p>본 기사 남은 부분에서, 스프링 Web Flow 2 배포에 포함되어 있는 Spring Travel에 스프링 Faces를 적용해볼 것이다.</p>
+<p>전체 스프링 Faces 예제 소스는 /project/spring-webflow-samples/booking-faces/에 있다.</p>
+<p>이미 동작하고 있는 예제가 필요하다면, <a href="http://richweb.springframework.org/swf-booking-faces/spring/intro" target="_blank">여기</a>를 클릭하라.</p>
+<p><font size="3"><span style="font-weight: bold;">스프링 Faces 예제의 구조</span></font></p>
+<p>먼저 살펴볼 것은&nbsp; /src/main/webapp/WEB-INF/faces-config.xml 다. 이 안에 설정한 것은 오직 <span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">FaceletViewHandler 뿐이고, 스프링 Faces가 보다 미리 마련해두는 방식을 채택했기 때문에, 모든 JSF 연동에 필요한 구성물들은 자동으로 클래스패스에 있는 spring-faces.jar에 포함되어 있다.</p>
+<p>또한 다음 파일들을 살펴보고 라우팅에 대한 기본 설정에 익숙해져야 할 것이다.</p>
+<p></span>
+<ul>
+<li><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">/src/main/webapp/WEB-INF/web.xml</span></li>
+<li><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">/src/main/webapp/WEB-INF/config/webmvc-config.xml</span></li>
+<li><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">/src/main/webapp/WEB-INF/config/webflow-config.xml</span></li>
+</ul>
+<p>이 설정에 대해선느 <a href="http://static.springframework.org/spring-webflow/docs/2.0.x/reference/html/" target="_blank">스프링 Web Flow 2 레퍼런스 가이드</a>에 나와있으니 자세히 설명하진 않겠다. 다만 이 설정의 결과만 설명하겠다.<br /><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><br />/spring 이하의 모든 요청은 스프링 DispatcherServlet이 처리하도록 되어 있다. DispatcherServlet은 나머지 URL을 보고 stateless JSF 뷰를 보여줘야 하는지, SWF를 사용해서 stateful JSF 뷰를 보여줘야 하는지 판단하다.</p>
+<p>예를 들어,</p>
+<p>/spring/intro -&gt; renders the stateless Facelets template at /WEB-INF/intro.xhtml</p>
+<p>/spring/main -&gt; hands control over to the flow defined at /WEB-INF/flows/main/main.xml</p>
+<p>/spring/booking?hotelId=5 -&gt; hands control over to the flow defined at /WEB-INF/flows/booking/booking.xml, passing the hotelId parameter as input to the flow</p>
+<p>그림 2에 있는 /flows 디렉토리 구조를 보면, 스프링 Faces 컨틀롤러와 뷰 구성물을 논리적으로 재사용 가능한 모듈로 조직화 하도록 한 것을 볼 수 있다.</p>
+<p><img src="/assets/hk360000000000.jpg" class="aligncenter" width="301" height="200" alt="사용자 삽입 이미지" />그림 2. 모듈들의 논리적인 조직화</p>
+<p><font size="3"><span style="font-weight: bold;">스프링 Web Flow와 Agile JSF 컨트롤러</span></font></p>
+<p>스프링 Faces의 핵심은 스프링 Web Flow 연동에서 온다. 그리고 고수준의 flow DSL을 사용할 수 있으며, 이것으로 정확하고 엘레강트한 구조로 이벤트 처리, 모델 조화, 뷰 네비게이션을 제공할 수 있다. 플로우 정의는 동적이며 애플리케이션 재실행 없이 핫-릴로딩이 가능하다. 웹 컨테이너에 배포할 필요가 없기 때문에 완전한 단위 테스트도 가능하다. 보다 기민한 JSF 개발이 가능하다. 세밀한 스콥(flash, view, flow 스콥)을 사용하여 여러 요청을 넘나들며 도메인 모델을 직접 사용할 수 있다. 따라서 여러분은 도메인 모델에 보다 많은 가치를 부여하는데 힘을 쓸 수 있고, 모델을 매 요청에 저장해두고 가져오는 등의 기반 시설에 대해 걱정하는 시간을 줄일 수 있다. 이런 stateful 특징은 풍부한 JSF 뷰와 잘 어울리며 여러 이벤트로 뷰가 자주 변경되는 상황에 적당하다.</p>
+<p>스프링 Faces를 사용하면, JSF postback 라이프사이클은 SWF 제어 하에 실행된다. </span><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">PhaseListener를 통해 </span><span class="Apple-style-span" style="border-collapse: separate; color: rgb(0, 0, 0); font-family: Tahoma; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">JSF 라이프사이클에 플로우를 실행하는 SWF 1.x의 제한적인 연동에 비하면, 스프링 Faces JSF 확장 포인트는 SWF 구조를 기반으로 만들었다. 이로인한 아키텍처 적인 장점은 다음과 같다.</p>
+<p></span>
+<ul>
+<li>JSF 뷰는 SWF의 자동 POST + Redirect + GET 행위와 자연스럽게 동작하며, step-behind-URL을 없앴고, 일반적인 JSF 애플리케이션에 있던 브라우저 리프래시 경고 문제를 제거했다.</li>
+<li>FacesMessage는 스프링의 MessageContext로 바인딩되어 스프링의 강력한 i18n 기능을 사용할 수 있다. 메시지들은 flash 스콥으로 저장되며 따라서 리다이렉트를 해도 보존된다.</li>
+<li>컴포넌트 트리 상태는 자동적으로 플로우 실행 상태와 동기화한다. pluggable storage 매키니즘을 적용하여 다양한 클러스터링 시나리오를 다룰 수 있다.</li>
+</ul>
+<p>끝. 다음 기사에는 예제를 좀 더 자세히 살펴보겠다.</p>
+<p><font style="font-weight: bold;" size="3">저자에 대하여</font></p>
+<p>Jeremy Grelle는 SpringSource의 수석 소프트웨어 엔지니어이며 스프링 Faces 프로젝트 기술 리더다.</p>
+<p></p>

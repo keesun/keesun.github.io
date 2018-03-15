@@ -1,0 +1,87 @@
+---
+layout: post
+title: "[Spring Security] sec:authentication"
+date: 2010-05-10 22:36:15.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- etc
+tags:
+- 스프링 시큐리티
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323097833'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조:&nbsp;<a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/taglibs.html" target="_blank" title="[http://static.springsource.org/spring-security/site/docs/3.0.x/reference/taglibs.html]로 이동합니다.">http://static.springsource.org/spring-security/site/docs/3.0.x/reference/taglibs.html</a>
+<div>
+</div>
+<div>스터디의 각 모임에는 댓글을 달 수 있습니다. 삭제 기능이 필요해져서 댓글 삭제 기능을 만들었는데 이것을 일반적인 User-Role 기반 Voter를 사용해서 권한 처리하는것이 그렇게 단순하지는 않습니다.&nbsp;</div>
+<div>
+</div>
+<div>
+관리자 권한이 있는 사람만 삭제할 수 있게 할까요? 아님 회원 권한을 가진 사람은 누구나 삭제하게 할까요? 비즈니스 룰이야 정하기 나름이지만 그렇게 무식하게 정하고 싶지는 않았습니다. 작성자만 자신이 작성한 댓글을 삭제하는 것이 가장 정당해 보입니다.</div>
+<div>
+</div>
+<div>
+먼저 문제가 되는 부분은 뷰. 삭제 버튼을 감춰야 합니다.</div>
+<div>
+</div>
+<div>
+<div><b>&lt;sec:authentication property="principal.username" var="currentUserName"/&gt;</b></div>
+<div>&lt;c:if test="${currentUserName == comment.writer.email}"&gt;</div>
+<div>//감출 버튼</div>
+<div>&lt;/c:if&gt;</div>
+<div>
+</div>
+<div>
+이렇게 authenrication 태그를 사용해서 principal 객체와 그 속성값에 접근할 수 있습니다. 현재 로그인 되어있는 사용자의 username을 가져와서 현재 댓글 작성자의 email과 비교합니다. 봄싹에서는 email을 아이디로 사용하고 있기 때문에 이렇게 비교합니다. 그 둘이 일치하는 경우에만 버튼을 보여줍니다.&nbsp;</div>
+<div>
+</div>
+<div>
+참 쉽죠;</div>
+<div>
+</div>
+<div>
+하지만... 버튼을 감춘다고 다가 아니죠. URL 보내면 보내집니다. 웹 보안으로는 위에서 언급했듯이 힘듭니다. 이럴 때는 서비스 쪽에서 객체 정보와 pricipal 정보를 기반으로 권한 처리를 해주면 되겠습니다. 그건 다음에.</div>
+<div>
+</div>
+<div>
+</div>
+</div>

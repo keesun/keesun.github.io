@@ -1,0 +1,100 @@
+---
+layout: post
+title: Table per connrete class with implicit polymorphism
+date: 2008-02-01 12:37:20.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- hibernate
+- 상속 구조 맵핑
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323000359'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>모든 구현 클래스 하나 당 하나의 테이블로 표현한다.</li>
+</ul>
+<ul>
+<li>상속 받은 속성들도 테이블의 컬럼으로 맵핑한다.</li>
+</ul>
+<h1>문제점</h1>
+<ul>
+<li>다형적인 관계를 잘 지원하지 못해. 왜? 상위 클래스와 관계를 맺고 있는 클래스가 하위 클래스를 참조해야<br />
+한다면, 이 클래스가 가져야 할 하위 클래스의 외례키는 두 개의 하위 클래스 모두의 주키를 대변해야 할 텐데, 이런게<br />
+테이블에서는 불가능하다.</li>
+</ul>
+<ul>
+<li>다형적인 쿼리(특정 상위 클래스 타입에 해당하는 모든 객체를 요구하는 쿼리)도 역시 문제가 된다. 왜? 각각의 하위 클래스마다 쿼리를 수행해서 데이터를 가져와야 한다.</li>
+</ul>
+<ul>
+<li>약간 다른 여러 테이블이 같은 정보를 공유하고 있다. 이게 왜 문제가 될까? 스키마를 점점 복잡하게 만든다.<br />
+예를들어, 상위 타입의 속성 하나를 변경하면 그것을 상속하나 모든 테이블을 수정해야 한다. 모든 하위 클래스에 무결성 제약을<br />
+적용하기도 힘들다.</li>
+</ul>
+<ul>
+<li>변경될 가능성이 거의 없고, 다형성이 별로 필요 없는, 최상위 레벨의 상속구조에서 사용하기를 권장한다.</li>
+</ul>
+<ul>
+<li>JPA는 다형적인 쿼리를 지원하지 않는다. 하지만 Hibernate의 쿼리 인터페이스는 지원한다.</li>
+</ul>
+<h1>해결책</h1>
+<ul>
+<li>SQL의 UNION 함수를 사용해서 위에서 발생한 다형적인 쿼리와 관계에 대한 이슈 대부분을 제거할 수 있다.</li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>하위 클래스는 @Entity로 맵핑하기</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@AttributeOverride(name = <span class="code-quote">"owner"</span>, column = @Column(name = <span class="code-quote">"CC_OWNER"</span>, nullable = <span class="code-keyword">false</span>))<br /><span class="code-keyword">public</span> class CreditCard <span class="code-keyword">extends</span> BillingDetails {<br /><br />	@Id<br />	@GeneratedValue<br />	@Column(name = <span class="code-quote">"CREDIT_CARD_ID"</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">Long</span> id = <span class="code-keyword">null</span>;<br /><br />	@Column(name = <span class="code-quote">"NUMBER"</span>, nullable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">String</span> number;</pre>
+</div>
+</div>
+<ul>
+<li>상위 클래스는 @MappedSuperclass로 맵핑하기</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@MappedSuperclass<br /><span class="code-keyword">public</span> class BillingDetails {<br /><br />	@Column(name = <span class="code-quote">"OWNER"</span>, nullable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">String</span> owner;</pre>
+</div>
+</div>

@@ -1,0 +1,149 @@
+<div id="">
+현재 톰캣 위에 돌리고 있는 애플리케이션에서 보여주는 시간이 이상해서&nbsp;</div>
+<div id="">1. 서버에 들어가서 date를 쳐봤다. 그랬더니 현재 시간이 아니었다.&nbsp;</div>
+<div id="">2. 그래서 서버의 시간을 맞추고..</div>
+<div id="">3. 다시 톰캣을 돌렸다.</div>
+<div id="">
+</div>
+<div id="">
+그러나... 시간은 맞지 않았다. 어디가 잘못된 것일까? 톰캣 시간과 서버 시간은 애초에 별개였던 것이다. @_@;; 서버 시간 맞춘다고 자바 시간까지 서버 시간 따라서 맞춰지는게 아니엇다.</div>
+<div id="">
+</div>
+<div id="">
+<b><span style="font-size: 12pt; ">1. 서버 시간대 맞추기</span></b></div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+export env TZ=KST-09:00:00&nbsp;</div>
+<div id="">rdate -s time.bora.net&nbsp;</div>
+<div id="">hwclock --systohc</div>
+<div id="">date</div>
+<div id="">hwclock --show</div>
+</div>
+<div id="">
+</div>
+<div id="">
+</div>
+<div id="">어디선가 보고 배껴만든 스크립트인데;; 잘 동작한다.</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime</div>
+<div id="">rdate -s time.bora.net</div>
+<div id=""></div>
+</div>
+<div id="">
+</div>
+<div id="">저걸 만들고 보니 이미 예전에 이렇게 만들어둔 스크립트도 있었다. 하지만 잘 되는지 어떤지는 모르겠다. 이미 서버 시간은 맞은 상태였으니까;</div>
+<div id="">
+</div>
+<div id="">
+<b id=""><span style="font-size: 12pt; ">2</span><span style="font-size: 12pt; " id=""><span style="font-size: 12pt; ">. </span>자바 시간대 확인하기</span></b></div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+public class DateConfirm {</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public static void main(String[] args) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(new Date().toGMTString());</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(new Date().getTimezoneOffset());</div>
+<div id="">
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;java.util.TimeZone tz = java.util.TimeZone.getDefault();</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println("Timezone offset from UTC reported as " +</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(tz.getRawOffset() / 1000 / 60) + " minutes");</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;if (tz.getRawOffset() % (15 * 60 * 1000) != 0) {</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println("Warning: not a multiple of quarter-hours");</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(new java.util.Date());</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.println(tz);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;TimeZone tz2;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Date date = new Date();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss (z Z)");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;tz2 = TimeZone.getTimeZone("Asia/Seoul");</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;df.setTimeZone(tz2);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.out.format("%s%n%s%n%n", tz2.getDisplayName(), df.format(date));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이것도 어디선가 보고 배껴 만든 코드인데 이걸로 기본 TimeZone을 확인한뒤, TimeZone을 서울로 설정한 다음에 다시 날짜/시간을 찍어본다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b></b></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(159, 211, 49); border-right-color: rgb(159, 211, 49); border-bottom-color: rgb(159, 211, 49); border-left-color: rgb(159, 211, 49); background-color: rgb(231, 253, 181); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b>4 Aug 2010 02:13:46 GMT</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">300</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">Timezone offset from UTC reported as -360 minutes</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>Tue Aug 03 21:13:46 CDT 2010</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">sun.util.calendar.ZoneInfo[id="America/Chicago",offset=-21600000,dstSavings=3600000,useDaylight=true,transitions=235,lastRule=java.util.SimpleTimeZone[id=America/Chicago,offset=-21600000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=3,startMonth=2,startDay=8,startDayOfWeek=1,startTime=7200000,startTimeMode=0,endMode=3,endMonth=10,endDay=1,endDayOfWeek=1,endTime=7200000,endTimeMode=0]]</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">한국 표준시</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"><b>2010-08-04 11:13:46 (KST +0900</b>)</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">조금전(8월 4일 오전 11시경..)에 확인한 결과였는데.. 이렇게 결과가 엉망이다. 대신 마지막 값이 제대로 나왔다면 희망이 있다. 즉 TImeZone만 제대로 설정해주면 되는거니깐...</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><span style="font-size: 12pt; ">3. 자바 시간 설정하기</span></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+톰캣/bin 폴더에 환경 설정용 파일은 setenv.sh가 있으면 그걸 편집하고 없으면 그 안에 자바 옵션을 설정해준다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+export JAVA_OPTS="-server -XX:+UseParallelGC -Xmx768m -XX:MaxPermSize=160m -Djava.awt.headless=true -Dfile.encoding=utf-8 <b>-Duser.timezone=GMT+09:00</b>"</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true"</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">다른 설정은 뭐 때문에 추가했는지 모르겠고. 아마도 아틀라샨 지라를 설치하면서 해놨을 법한데.. 기억나진 않는다;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+저렇게 해두면 톰캣/bin의 startup.sh 파일을 실행할때 저 환경변수가 적용되고 저 톰캣에서 돌고 있는 애플리케이션의 날짜가 제대로 먹히게 된다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,84 @@
+---
+layout: post
+title: Spring 사용하는 초간단 예제
+date: 2007-01-09 10:33:39.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- AOP
+tags:
+- Spring 예제
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322736328'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>Spring Reference 6장을 보면서 거기 나오는 소스들을 연습하려는데...<br />어라? BeanFactory랑 ApplicationContext어떻게 썼지?<br />그래서 Spring을 사용하는 초간단 예제를 만들고 공부를 하기로 했습니다.</p>
+<p>// Greeting.java</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">interface</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Greeting {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> sayHi();</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</p>
+<p></font></span><span style="font-family: 'Courier New';" lang="EN-US"><o:p><font face="돋움">// KoreanGreeting.java</font><br /></o:p></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> KoreanGreeting </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">implements</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> Greeting{</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> sayHi() {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>System.</span><i><span style="color: rgb(0, 0, 192); font-family: 'Courier New';" lang="EN-US">out</span></i><span style="color: black; font-family: 'Courier New';" lang="EN-US">.println(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"</span><span style="color: rgb(42, 0, 255);"><font face="맑은 고딕">안녕하세요</font></span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">."</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</p>
+<p></font></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left">//applicationContext.xml</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&lt;?</span><span style="color: rgb(63, 127, 127); font-family: 'Courier New';" lang="EN-US">xml </span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">version</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"1.0" </span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">encoding</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"UTF-8"</span><span style="color: teal; font-family: 'Courier New';" lang="EN-US">?&gt;</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&lt;</span><span style="color: rgb(63, 127, 127); font-family: 'Courier New';" lang="EN-US">beans </span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">xmlns</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"http://www.springframework.org/schema/beans"</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">xmlns:xsi</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"http://www.w3.org/2001/XMLSchema-instance"</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">xsi:schemaLocation</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"</span><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&gt;</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&lt;</span><span style="color: rgb(63, 127, 127); font-family: 'Courier New';" lang="EN-US">bean </span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">id</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"korean" </span><span style="color: rgb(127, 0, 127); font-family: 'Courier New';" lang="EN-US">class</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">=</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"firstSpringApp.KoreanGreeting"</span><span style="color: teal; font-family: 'Courier New';" lang="EN-US">/&gt;</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><font size="2"><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&lt;/</span><span style="color: rgb(63, 127, 127); font-family: 'Courier New';" lang="EN-US">beans</span><span style="color: teal; font-family: 'Courier New';" lang="EN-US">&gt;<br /></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left">//TestFirstSpringAPp.java</p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">class</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> TestFirstSpringApp {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">public</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">static</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">void</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> main(String[] args) {</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>ApplicationContext ac = </span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">new</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> ClassPathXmlApplicationContext(</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span style="color: rgb(127, 0, 85); font-family: 'Courier New';" lang="EN-US">new</span></b><span style="color: black; font-family: 'Courier New';" lang="EN-US"> String[] { </span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"firstSpringApp/applicationContext.xml"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US"> });</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>Greeting </span><u><span style="color: blue; font-family: 'Courier New';" lang="EN-US">greeting</span></u><span style="color: black; font-family: 'Courier New';" lang="EN-US"> = (Greeting) ac.getBean(</span><span style="color: rgb(42, 0, 255); font-family: 'Courier New';" lang="EN-US">"korean"</span><span style="color: black; font-family: 'Courier New';" lang="EN-US">);</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>greeting.sayHi();</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><font size="2"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><span style="">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</span><span style="font-family: 'Courier New';" lang="EN-US"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt;"><span style="color: black; font-family: 'Courier New';" lang="EN-US"><font size="2">}</font></span></p>
+<p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left">예제가 돌아가려면 <font color="#ff0000">프로젝트의 classpath에 spring.jar와 commons-logging.jar파일이 추가 되야합니다.</font> <br />spring.jar파일은 '스프링 설치 폴더'/dist 안에 있고<br />commons-logging.jar파일은 '스프링 설치 폴더'/lib/jakarta-commons/ 에 있습니다.</p>
+<p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-align: left;" align="left"><a href="http://whiteship.epril.com/wp-content/uploads/1/bl164.zip" class="aligncenter">bl164.zip</a></p>

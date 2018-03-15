@@ -1,0 +1,11 @@
+<p><img src="/assets/co412.png" class="aligncenter" width="522" height="163" alt="사용자 삽입 이미지" />Spring Security를 구성하는 다섯 가지 컴포넌트 중에 하나인 Authentication Manager는 인증을 담당하고 있습니다.</p>
+<p>Authentication Manager는 인증을 시도(authenticate 메소드 호출)해서 성공하면, Authentication 객체를 반환하고, 실패하면, AuthenticationException 예외를 던지는 메소드를 가지고 있습니다.</p>
+<p>이 인터페이스의 구현체로 Provider Manager를 제공하고 있으며, 이 클래스를 여러 인증 방식을 사용할 수 있는 관리자 역할을 하고 있습니다. Spring Security에서 제공하고 있는 인증 방식은 총 14가지 입니다. 그 중에서 가장 자주 사용할 것 같은 Provider는 DAO를 사용하여 인증 정보를 가져오는 DaoAuthenticationProvider입니다.</p>
+<p><img src="/assets/do403.jpg" class="aligncenter" width="575" height="449" alt="사용자 삽입 이미지" />하늘색 선은 implements, 파란색 선은 extends, 빨간 선은 composition 입니다.<br />하늘색 네모는 인터페이스, 파란색 네모는 클래스입니다.</p>
+<p>DaoAuthenticationProvider는 UserDetailsService 인터페이스를 통해서 사용자 정보(UserDetail)를 가져옵니다.</p>
+<p>UserDetailsService 인터페이스를 직접 구현하여 설정해도 되지만, Spring Sercurity에서 제공하는 InMemoryDaoImpl 또는 JdbcDaoImpl을 사용할 수도 있습니다. DB에서 사용자 정보를 가져오려면, JdbcDaoImpl을 사용하는 것이 좋겠습니다.</p>
+<p>JdbcDaoImpl에는 dataSource, usersByUsernameQuery, authoritiesByUsernameQuery 속성을 설정하여 DB로 부터 사용자 정보를 가져옵니다. usersByUsernameQuery에는 username, password, enabled를 SELECT하고, authoritiesByUsernameQuery에는 username과 authority를 SELECT 하는 쿼리를 설정해 줍니다.</p>
+<p><img src="/assets/do404.jpg" class="aligncenter" width="514" height="407" alt="사용자 삽입 이미지" /><br />좀 복잡해 보이지만, 철저하게 인터페이스 기반으로 작성되어 있으며, 역할을 분담해 놓은 모습이 매우 깔끔합니다.</p>
+<p>bean 설정을 다음과 같이 할 수 있습니다.<br /><img src="/assets/co413.jpg" class="aligncenter" width="577" height="557" alt="사용자 삽입 이미지" />설정 내용은 상당하지만, 자세히 살펴보시면 클레스 상속 구조와 일치하기 때문에, 쉽게 이해하실 수 있습니다.<br /><img src="/assets/do405.jpg" class="aligncenter" width="204" height="249" alt="사용자 삽입 이미지" />특히 DaoAuthenticationProvider에는 passwordEncoder(비번 암호화)와 saltSource, userCache(사용자 정보 캐쉬 사용) 들을 설정할 수도 있습니다.</p>
+<p>마지막으로 정리하자면, AuthenticationManager의 구현체로 ProviderManager가 있으며, 이 녀석은 여러 AuthenticationProvider를 사용할 수 있습니다. <br />그 중에서도 DaoAuthenticationProvider는 UserDetails를 사용하여 사용자 정보를 가져옵니다.<br />이 때 JdbcDaoImp 이라는 구현체를 사용하여 datasource를 사용하여 사용자 정보와 권한을 가져오는 SQL 쿼리를 설정해주면 끝.</p>
+<p>참조 : Spring In Action 2nd</p>

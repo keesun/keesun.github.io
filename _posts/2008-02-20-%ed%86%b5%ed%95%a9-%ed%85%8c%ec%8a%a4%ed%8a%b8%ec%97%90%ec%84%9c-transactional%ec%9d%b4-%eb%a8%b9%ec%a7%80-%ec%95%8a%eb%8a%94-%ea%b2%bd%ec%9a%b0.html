@@ -1,0 +1,72 @@
+---
+layout: post
+title: 통합 테스트에서 @Transactional이 먹지 않는 경우
+date: 2008-02-20 04:49:03.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 08
+tags:
+- "@Transactional"
+- 스프링 테스트
+meta:
+  arkayne-time-post: '1323122330'
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<div style="border: 1px solid rgb(128, 184, 136); padding: 10px; background-color: rgb(202, 238, 206);">@RunWith(SpringJUnit4ClassRunner.class)<br />@ContextConfiguration<br /><span style="font-weight: bold;">@TransactionConfiguration(defaultRollback=true)</span><br style="font-weight: bold;" /><span style="font-weight: bold;">@Transactional</span><br />public class DomainTest {<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;@Autowired<br />&nbsp;&nbsp; &nbsp;private SessionFactory sessionFactory;</p>
+<p>&nbsp;&nbsp; &nbsp;@Test<br />&nbsp;&nbsp; &nbsp;public void tadd() throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertNotNull(sessionFactory);<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Session session = sessionFactory.openSession();</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;BankAccount bankAccount = new BankAccount();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;bankAccount.setOwner("keesun");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;bankAccount.setAccount("123123");<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;session.save(bankAccount);</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;session.flush();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;session.close();</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;assertNotNull(bankAccount.getId());<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;@Test<br />&nbsp;&nbsp; &nbsp;public void atransacctional() throws Exception {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;Session session = sessionFactory.openSession();</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;List&lt;BankAccount&gt; bankAccounts = session.createQuery("from BankAccount").list();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<span style="font-weight: bold; color: rgb(255, 0, 0);">assertEquals(0, bankAccounts.size());</span></p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;session.flush();<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;session.close();<br />&nbsp;&nbsp; &nbsp;}<br />}</div>
+<p>테스트 이름을 보면 뭔가 이상하다는 것을 느끼실 겁니다. add 앞에 t를 붙여놨고, transactional앞에 a를 붙여놨습니다. 그냥 테스트 하면 transactional 테스트 코드를 먼저 실행하고 그 뒤에 add를 실행하기 때문에 저 테스트 코드가 정말 트랜잭션 처리가 됐는지 안 됐는지 확인 할 수가 없습니다. 더군다나 메모리 모드로 HSQL을 사용하고 있기 때문에 테스트를 한 번 실행하고 나면 데이터는 어차피 날아갑니다. 그래서 add가 먼저 실행되게 이름을 좀 이상하게 바꿔놨습니다.</p>
+<p>그랬더니... <span style="background-color: rgb(201, 237, 255);">트랜잭션 처리가 되지 않는 것이 확인 되었습니다.</span> 테이블에서 데이터 전부 가져오면 갯수가 0이어야 하는데, 1인 것입니다. add에서 하나 집어 넣은게 롤백되지 않았다는 것입니다.</p>
+<p>대체 왜...</p>
+<p>내가 뭘 잘못했길래...</p>
+<p>애노테이션이 이상한가.. 싶어서<span style="background-color: rgb(255, 218, 237);"> AbstractTransactional어쩌구저쩌구 클래스를 가지고도 테스트 해봤습니다. 여전히..&nbsp; 트랜잭션이 먹히지 않습니다.</span></p>
+<p>bean 설정은 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&nbsp; &nbsp; &lt;bean class="chapter7.polymorphic.tpccWithImplicitPolymorphism.DomainTest" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="dataSource"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.apache.commons.dbcp.BasicDataSource"<br />&nbsp; &nbsp; &nbsp; &nbsp; destroy-method="close"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="driverClassName" value="org.hsqldb.jdbcDriver" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="url" value="jdbc:hsqldb:mem:test" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="username" value="sa" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="password" value="" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;bean id="sessionFactory"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="dataSource" ref="dataSource" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="hibernateProperties"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.dialect"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; org.hibernate.dialect.HSQLDialect<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.show_sql"&gt;true&lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.format_sql"&gt;true&lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.hbm2ddl.auto"&gt;update&lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;prop key="hibernate.connection.autocommit"&gt;false&lt;/prop&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/props&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/property&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;property name="annotatedClasses" ref="annotatedClasses" /&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;</p>
+<p>&nbsp; &nbsp; &lt;util:list id="annotatedClasses"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;chapter7.polymorphic.tpccWithImplicitPolymorphism.BankAccount&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;chapter7.polymorphic.tpccWithImplicitPolymorphism.BillingDetails&lt;/value&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;value&gt;chapter7.polymorphic.tpccWithImplicitPolymorphism.CreditCard&lt;/value&gt;<br />&nbsp; &nbsp; &lt;/util:list&gt;<br />&nbsp; &nbsp; <br />&nbsp; &nbsp; &lt;bean id="transactionManager"<br />&nbsp; &nbsp; &nbsp; &nbsp; class="org.springframework.orm.hibernate3.HibernateTransactionManager"<br />&nbsp; &nbsp; &nbsp; &nbsp; p:dataSource-ref="dataSource" p:sessionFactory-ref="sessionFactory" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&lt;/beans&gt;</div>
+<p>정답은 안 갈쳐줍니다. 캬캬캬캬캬</p>
+<p>힌트. <br />자바 소스 코드는 문제가 없으며, <br />경로 설정이라든가, <br />오타로 인한 문제도 아닙니다.<br /><span style="color: rgb(255, 255, 255);">http://forum.springframework.org/showthread.php?t=16884</span></p>

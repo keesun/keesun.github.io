@@ -1,0 +1,66 @@
+---
+layout: post
+title: JavaServer Pages Standard Tag Library
+date: 2008-02-18 08:10:08.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- JSP
+tags:
+- JSP 기초
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323159002'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조: <a href="http://java.sun.com/j2ee/1.4/docs/tutorial/doc/" target="_blank">http://java.sun.com/j2ee/1.4/docs/tutorial/doc/</a></p>
+<p>총 다섯 종류의 표준 태그 라이브러리 제공.</p>
+<p># Core: http://java.sun.com/jsp/jstl/core<br /># XML: http://java.sun.com/jsp/jstl/xml<br /># Internationalization: http://java.sun.com/jsp/jstl/fmt<br /># SQL: http://java.sun.com/jsp/jstl/sql<br /># Functions: http://java.sun.com/jsp/jstl/functions</p>
+<p>Core 태그는 다시 네 가지로 나뉨.</p>
+<p>Variable support (remove,set)<br />Flow control (choose, when, otherwise, forEach, forTokens, if)<br />URL management&nbsp; (import, param, redirect, param, url, param)<br />Miscellaneous (catch, out )</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);"><span style="font-weight: bold;">변수 관련 태그</span></p>
+<p>변수 만들기<br />&lt;c:set var="변수명" value="값" scopr="application|session|request|page" /&gt;</p>
+<p>변수 지우기<br />&lt;c:remove var="변수명" /&gt;</div>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(231, 231, 231);"><span style="font-weight: bold;">흐름 제어 태그</span></p>
+<p>조건문 </p>
+<p>if문<br />&lt;c:if test="${!empty param.Add}"&gt;<br />&nbsp; &lt;c:set var="bid" value="${param.Add}"/&gt;<br />&nbsp; &lt;jsp:useBean id="bid"&nbsp; type="java.lang.String" /&gt;<br />&nbsp;&nbsp; &lt;sql:query var="books" <br />&nbsp; &nbsp; dataSource="${applicationScope.bookDS}"&gt;<br />&nbsp; &nbsp; select * from PUBLIC.books where id = ?<br />&nbsp; &nbsp; &lt;sql:param value="${bid}" /&gt;<br />&nbsp; &lt;/sql:query&gt;<br />&nbsp; &lt;c:forEach var="bookRow" begin="0" items="${books.rows}"&gt; <br />&nbsp; &nbsp; &lt;jsp:useBean id="bookRow" type="java.util.Map" /&gt;<br />&nbsp; &nbsp; &lt;jsp:useBean id="addedBook"<br />&nbsp; &nbsp; &nbsp; class="database.BookDetails" scope="page" /&gt;<br />&nbsp; ...<br />&nbsp; &lt;% cart.add(bid, addedBook); %&gt;<br />...<br />&lt;/c:if&gt;</p>
+<p>switch-case와 비스무리한 것<br />&lt;c:choose&gt; <br />&nbsp; &lt;c:when test="${customer.category == 'trial'}" &gt; <br />&nbsp; &nbsp; ... <br />&nbsp; &lt;/c:when&gt; <br />&nbsp; &lt;c:when test="${customer.category == 'member'}" &gt; <br />&nbsp; &nbsp; ... <br />&nbsp; &lt;/c:when&gt; <br />&nbsp; &nbsp; &lt;c:when test="${customer.category == 'preferred'}" &gt; <br />&nbsp; &nbsp; ... <br />&nbsp; &lt;/c:when&gt; <br />&nbsp; &lt;c:otherwise&gt; <br />&nbsp; &nbsp; ... <br />&nbsp; &lt;/c:otherwise&gt; <br />&lt;/c:choose&gt;&nbsp; </p>
+<p>반복문<br />&lt;c:forEach var="item" items="${sessionScope.cart.items}"&gt;<br />&nbsp; ...<br />&nbsp; &lt;tr&gt; <br />&nbsp; &nbsp; &lt;td align="right" bgcolor="#ffffff"&gt; <br />&nbsp; &nbsp; ${item.quantity}<br />&nbsp; &lt;/td&gt;<br />&nbsp; ...<br />&lt;/c:forEach&gt; </div>
+<p>URL 태그, Miscellaneous 태그는 PASS</p>
+<p></p>

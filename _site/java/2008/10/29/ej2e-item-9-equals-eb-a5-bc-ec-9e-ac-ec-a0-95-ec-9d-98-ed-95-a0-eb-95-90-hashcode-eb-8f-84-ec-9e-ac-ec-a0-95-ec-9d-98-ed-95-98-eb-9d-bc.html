@@ -1,0 +1,46 @@
+<p>참조: Effective Java 2nd Edition Item 9. Always override hashCode when you override equals</p>
+<p>equals를 재정의한 클래스는 반드시 hashCode를 재정의 해야 한다. 그렇지 않으면 Object.hashCode 일반적인 계약을 위반하게 된다. 이를 위반하면 hash 기반의 컬렉션(HashMap, HashSet, Hashtable)에서 제대로 동작하지 않을 것이다.</p>
+<p>JavaSE6 Object 표준</p>
+<ul>
+<li>hashCode를 여러번 호출 할 때마다 같은 integer를 반환해야 한다.</li>
+<li>두 객체가 equals(Object) 메소드로 동일할 때, hashCode도 같은 integer를 반환해야 한다.</li>
+<li>필수는 아니지만, equals(Object)로 가지 않은 두 객체는 hashCode를 호출했을 때 반드시 반드시 다른 integer를 반환해야 한다. </li>
+</ul>
+<p>이 중에서 핵심은 두 번째 것.</p>
+<p>HashMap에서 key로 사용하는 객체의 hashCode 값이 다르면 equals로 같은 객체여도 같은 key로 인식하지 않는다.</p>
+<p>좋은 hashCode 만드는 방법</p>
+<ul>
+<li>result 라는 int 변수에 0이 아닌 수를 넣는다.</li>
+<li>각각의 필드에 다음과 같은 계산식을 적용한다.</li>
+<ul>
+<li>필드가 boolean이면, (f ? 1 : 0)</li>
+</ul>
+<ul>
+<li>필드가 byte, char, short, int면, (int) f</li>
+</ul>
+<ul>
+<li>필드가 long이면, (int)(f ^ (f &gt;&gt;&gt; 32))</li>
+</ul>
+<ul>
+<li>필드가 float면, Float.floatToIntBits(f)</li>
+</ul>
+<ul>
+<li>double이면, Double.doubleToLongBits(f)를 한 다음에 long 타입 다루듯이 한 번 더 계산</li>
+</ul>
+<ul>
+<li>레퍼런스 타입이면 hashCode 호출하여 그 결과값 반환. null이면 0 반환</li>
+</ul>
+<li>result = 31 * result + 위에서 계산한 값</li>
+<li>result를 반환한다.</li>
+<li>작성후 equals로 같은 객체가 같은 hashCode를 반환하는지 단위 테스트로 검증.</li>
+</ul>
+<p>equals에서 사용하지 않는 필드는 hashCode에서도 사용하면 안 된다.</p>
+<p>example</p>
+<div style="border: 3px double rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">@Override public int hashCode() {<br />
+&nbsp; int result = 17;<br />
+&nbsp; result = 31 * result + areaCode;<br />
+&nbsp; result = 31 * result + prefix;<br />
+&nbsp; result = 31 * result + lineNumber;<br />
+&nbsp; return result;<br />
+}</div>
+<p></p>

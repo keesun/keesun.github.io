@@ -1,0 +1,113 @@
+---
+layout: post
+title: Table per subclass
+date: 2008-02-01 12:39:37.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- 상속 구조 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322757801'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>영속화 할 필드를 가진 모든 클래스의 테이블을 만든다.</li>
+</ul>
+<ul>
+<li>상위 클래스의 주키를 하위 클래스의 주키이자 외례키로 사용한다.</li>
+</ul>
+<ul>
+<li>Join을 사용해서 상위 타입으로 하위 타입의 객체를 가져올 수 있다.</li>
+</ul>
+<h1>장점</h1>
+<ul>
+<li>정규화를 할 수 있다.</li>
+</ul>
+<ul>
+<li>스키마 개선과 무결성 제약 정의가 간단하다.</li>
+</ul>
+<ul>
+<li>다형성은 특정 하위 클래스로의 외례키 참조로 가능하다.</li>
+</ul>
+<ul>
+<li>구분자 컬럼 필요없다.</li>
+</ul>
+<h1>단점</h1>
+<ul>
+<li>복잡한 클래스 구조에서는 성능이 안 좋을 수 있다.</li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>상위 클래스</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@Table(name=<span class="code-quote">"BILLING_DETAIL"</span>)<br />@Inheritance(strategy = InheritanceType.JOINED)<br /><span class="code-keyword">public</span> <span class="code-keyword">abstract</span> class BillingDetails {</pre>
+</div>
+</div>
+<ul>
+<li>하위 클래스</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br /><span class="code-keyword">public</span> class CreditCard <span class="code-keyword">extends</span> BillingDetails {<br /><br />or<br /><br />@Entity<br />@PrimaryKeyJoinColumn(name=<span class="code-quote">"CREDIIT_CARD_ID"</span>)<br /><span class="code-keyword">public</span> class CreditCard <span class="code-keyword">extends</span> BillingDetails {</pre>
+</div>
+</div>
+<h1>쿼리 분석</h1>
+<ul>
+<li>상위 타입으로 요청할 때는 left outter join</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">select billingdet0_.BILLING_DETAILS_ID as BILLING1_0_, billingdet0_.OWNER as OWNER0_, <br />	billingdet0_1_.ACCOUNT as ACCOUNT1_, billingdet0_2_.CC_NUMBER as CC2_2_, <br /><span class="code-keyword">case</span> <br />    when billingdet0_1_.BILLING_DETAILS_ID is not <span class="code-keyword">null</span> then 1 <br />    when billingdet0_2_.BILLING_DETAILS_ID is not <span class="code-keyword">null</span> then 2 <br />    when billingdet0_.BILLING_DETAILS_ID is not <span class="code-keyword">null</span> then 0 end as clazz_ <br />from BILLING_DETAIL billingdet0_ <br />left <span class="code-keyword">outer</span> join BankAccount billingdet0_1_ on <br />	billingdet0_.BILLING_DETAILS_ID=billingdet0_1_.BILLING_DETAILS_ID <br />left <span class="code-keyword">outer</span> join CreditCard billingdet0_2_ on <br />	billingdet0_.BILLING_DETAILS_ID=billingdet0_2_.BILLING_DETAILS_ID</pre>
+</div>
+</div>
+<ul>
+<li>하위 타입으로 요청할 때는 inner join.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">select bankaccoun0_.BILLING_DETAILS_ID as BILLING1_0_, bankaccoun0_1_.OWNER as OWNER0_, <br />	bankaccoun0_.ACCOUNT as ACCOUNT1_ <br />from BankAccount bankaccoun0_ <br /><span class="code-keyword">inner</span> join BILLING_DETAIL bankaccoun0_1_ on <br />	bankaccoun0_.BILLING_DETAILS_ID=bankaccoun0_1_.BILLING_DETAILS_ID</pre>
+</div>
+</div>

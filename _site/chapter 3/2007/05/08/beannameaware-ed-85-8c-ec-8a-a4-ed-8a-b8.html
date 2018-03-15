@@ -1,0 +1,22 @@
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class BeanLifeCycleTestBean implements BeanNameAware{</p>
+<p>&nbsp;&nbsp; &nbsp;String beanName;</p>
+<p>&nbsp;&nbsp; &nbsp;public void setBeanName(String beanName) {<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;this.beanName = beanName;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>&nbsp;&nbsp; &nbsp;public String getBeanName(){<br />&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return beanName;<br />&nbsp;&nbsp; &nbsp;}</p>
+<p>}</p></div>
+<p>위와 같이 BeanNameAware 클레스를 구현해 놓고 다음과 같이 간단히 Bean으로 등록합니다.</p>
+<div style="padding: 10px; background-color: rgb(208, 255, 157);">&lt;bean id="<span style="color: rgb(255, 0, 0);">test</span>" class="net.agilejava.jedi.spring.beanLifeCycle.BeanLifeCycleTestBean" /&gt;</div>
+<p>테스트 코드를 다음과 같이 작성하고 돌려보면...</p>
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">public class BeanLifeCycleTest {</p>
+<p>&nbsp; &nbsp; private ApplicationContext context;</p>
+<p>&nbsp; &nbsp; @Test<br />&nbsp; &nbsp; public void testBeanNameAware() {<br />&nbsp; &nbsp; &nbsp; &nbsp; context = new ClassPathXmlApplicationContext("net/agilejava/jedi/spring/beanLifeCycle/applicationContext.xml");<br />&nbsp; &nbsp; &nbsp; &nbsp; BeanLifeCycleTestBean bean = (BeanLifeCycleTestBean) context.getBean("test");<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">assertEquals("test", bean.getBeanName());</span><br />&nbsp; &nbsp; }</p>
+<p>}</p></div>
+<p>녹색 막대를 확인할 수 있습니다.</p>
+<p>이 인터페이스를 구현한 Spring의 소스 코드로는 다음과 같은 것들이 있습니다.<br />- ServletForwardingController<br />- AbstractView :: Set the view's name. <span style="color: rgb(255, 0, 0);">Helpful for traceability.</span><br />- PortletWrappingController<br />- GenericFilterBean :: Stores the bean name as defined in the Spring bean factory. Only relevant in case of initialization as bean,<span style="color: rgb(255, 0, 0);"> to have a name as fallback to the filter name</span> usually provided by a FilterConfig instance.<br />- JobDetailBean<br />- OsgiServiceProxyFactoryBean :: <span style="color: rgb(255, 0, 0);">To find a bean</span> published as a service by the OsgiServiceExporter, simply set this property. You may specify additional filtering criteria if needed (using the filter property) but this is not required.<br />- AbstractTest<br />- EhCacheFactoryBean<br />- FieldRetrievingFactoryBean :: The bean name of this FieldRetrievingFactoryBean will be interpreted as "staticField" pattern, if neither "targetClass" nor "targetObject" nor "targetField" have been specified. <span style="color: rgb(255, 0, 0);">This allows for concise bean definitions with just an id/name.</span></p>
+<p>각각의 소스코드 위에 붙어있던 JavaDoc을 보면 설정 파일에서 사용하는 bean 이름을 알면 유용한 경우가 있는 듯 합니다.<br />- Bean을 추적하거나 찾을 때 사용<br />- 특정 Bean 이름으로 필터링 할 때 사용합니다.<br />
+<blockquote>
+Interface to be implemented by beans that want to be aware of their<br />
+ bean name in a bean factory. <span style="background-color: rgb(255, 218, 237);">Note that it is not usually recommended</span><br />
+ that an object depend on its bean name, as this represents a potentially<br />
+ brittle dependence on external configuration, as well as a possibly<br />
+ unnecessary dependence on a Spring API.</p></blockquote>
+<p>Spring API에서 인용한 부분을 보면<span style="background-color: rgb(255, 218, 237);"> 빈 설정의 빈 이름에 빈이 종속 되도록 하는 것을 권장하지 않습니다.</span> 이유는 빈이 외부의 설정 파일에 종속되게 되며 이것은 Spring API에 종속되는 거나 마찬가지기 때문이라고 합니다.</p>

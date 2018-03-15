@@ -1,0 +1,77 @@
+---
+layout: post
+title: POJO기반 Spring AOP
+date: 2007-09-04 05:44:48.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 04. Advising beans
+tags:
+- POJO기반 Spring AOP
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323143331'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://en.wikipedia.org/wiki/Plain_Old_Java_Object" target="_blank">http://en.wikipedia.org/wiki/Plain_Old_Java_Object</a></p>
+<p>문득 POJO가 궁금해 졌습니다. 대체 어떤 객체를 Plain Old Java Object라고 하는 것인지...말이죠. 어떤 클래스에 종속성을 가지면 안되는 것인지? 그런건 너무 규약이 심하니까(혼자서 하면 뭘 얼마나 혼자서 하겠습니까.) 그건 아닌거 같고, 특정한 인터페이스를 구현하면 안 되는 건가? 흠.. 이건 왠지 그럴듯하네.. 라고 생각만하다가 그냥 검색을 해봤습니다.</p>
+<p>[#M_원문 열기...|닫기...| <span class="mw-headline">Contextual variations</span></p>
+<p>As of November 2005, the term "POJO" is mainly used to denote a Java<br />
+object which does not follow any of the (major) Java object models,<br />
+conventions, or frameworks such as EJB.</p>
+<p>All Java objects are POJOs, therefore ideally speaking a POJO is a<br />
+Java object not bound by any restriction other than those forced by the<br />
+Java Language Specification. I.e., a POJO should not have to</p>
+<ol>
+<li>Extend prespecified classes, as in</p>
+<pre>public class Foo extends javax.servlet.http.HttpServlet{ …<br /></pre>
+</li>
+<li>Implement prespecified interfaces, as in
+<pre>public class Bar implements javax.ejb.EntityBean{ …<br /></pre>
+</li>
+<li>Contain prespecified annotations, as in
+<pre>@javax.ejb.Entity<br />public class Baz{ …<br /></pre>
+</li>
+</ol>
+<p>However, due to technical difficulties and other reasons, many<br />
+software products or frameworks described as POJO-compliant actually<br />
+still require the use of prespecified annotations for features such as<br />
+persistence to work properly.</p>
+<p>_M#]<br />원문을 보시면 아시겠지만, 특정한 클래스를 상속 받거나, (스펙같은 역할을 하는)특정 인터페이스를 구현 해야만 하거나, 특정 애노테이션을 붙여야만 하는 클래스는 POJO가 아닙니다.</p>
+<p>따라서 <a href="http://whiteship.tistory.com/1090" target="_blank">Spring AOP</a> 중에서 <span style="background-color: rgb(201, 237, 255);">aop 네임 스페이스를 사용하는 방법만이 POJO를 사용하는 Spring AOP</span>라고 할 수 있겠습니다. Classic Spring AOP는 특정 인터페이스를 구현해야만 하고, @AspectJ는 특정 애노테이션을 붙여줘야 하기 때문이죠.</p>

@@ -1,0 +1,77 @@
+---
+layout: post
+title: Hibernate VS JPA
+date: 2008-02-20 09:33:27.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 07
+tags:
+- Hibernate VS JPA
+- 연관 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323114016'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<table class="confluenceTable">
+<tbody>
+<tr>
+<th class="confluenceTh"> Hibernate </th>
+<th class="confluenceTh"> JPA </th>
+</tr>
+<tr>
+<td class="confluenceTd"> One-To-One 연관 맵핑에서 공유하는 주키의 자동 생성을 지원한다. </td>
+<td class="confluenceTd"> 표준화 된 One-To-One 맵핑을 지원한다. 하이버네이트 확장을 이용하면 공유하는 주키를자동 생성할 수 있다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 하이버네이트는 모든 엔티티 연관 맵핑을 Join Table로 할 수 있다. </td>
+<td class="confluenceTd"> 표준화된 연관 맵핑은 2차 테이블을 사용해서 가능하다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 하이버네이트는 인덱스를 가진 엔티티 리스트를 맵핑할 수 있다. </td>
+<td class="confluenceTd"> 하이버네이트 확장 애노테이션이 있어야 가능하다. </td>
+</tr>
+<tr>
+<td class="confluenceTd"> 하이버네이트는 모든 경우에 다형적인 연관을 지원한다. </td>
+<td class="confluenceTd"> Table Per Concrete Class With Implicit Polymorphism은 빼고는 전부 지원한다.</td>
+</tr>
+</tbody>
+</table>

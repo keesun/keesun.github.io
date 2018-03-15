@@ -1,0 +1,22 @@
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;aop:config&gt;</p>
+<p>&nbsp;&nbsp; &nbsp; <span style="color: rgb(0, 153, 102);">&nbsp; &nbsp;&lt;aop:pointcut id="sellTicket"</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;expression="execution(* sell*(..))" /&gt;</span></p>
+<p>&nbsp;&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; &nbsp;&lt;aop:aspect id="cinema" ref="aspect"&gt;</span></p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">&nbsp;&lt;aop:pointcut id="sellTicket2"</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;expression="execution(* sell*(..))" /&gt;</span><br style="color: rgb(23, 127, 205);" /><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:pointcut id="sellTicket3"</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;expression="execution(* sell*(..))" /&gt;</span></p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&lt;aop:before method="welcome" pointcut-ref="sellTicket2" /&gt;</p>
+<p>&nbsp;&nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> &nbsp;&lt;/aop:aspect&gt;</span></p>
+<p>&nbsp;&nbsp; &nbsp;&lt;/aop:config&gt;</p></div>
+<p>&lt;aop:aspect&gt; 태그 안에 pointcut 정의는 하나밖에 올 수가 없습니다. 안그럼 어제 아침에 적었던 'Schema 기반 Spring AOP 희한한 것'에서 보았던 에러가 발생합니다.</p>
+<p>대신 &lt;aop:config&gt; 태그 아래 &lt;aop:aspect&gt; 태그 밖에 정의를 하면 여러개를 정의할 수 있습니다.</p>
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;aop:config&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(0, 153, 102);"> &lt;aop:pointcut id="sellTicket"</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; expression="execution(* sell*(..))" /&gt;</span><br style="color: rgb(0, 153, 102);" /><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:pointcut id="sellTicket2"</span><br style="color: rgb(0, 153, 102);" /><span style="color: rgb(0, 153, 102);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; expression="execution(* sell*(..))" /&gt;</span></p>
+<p>&nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">&nbsp; &nbsp; &lt;aop:aspect id="cinema" ref="aspect"&gt;</span><br style="color: rgb(255, 0, 0);" /><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(23, 127, 205);">&nbsp; &lt;aop:pointcut id="sellTicket3"</span><br style="color: rgb(23, 127, 205);" /><span style="color: rgb(23, 127, 205);">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; expression="execution(* sell*(..))" /&gt;</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket" /&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;aop:before method="welcome" pointcut-ref="sellTicket2" /&gt;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: rgb(255, 0, 0);"> &lt;/aop:aspect&gt;</span></p>
+<p>&nbsp; &nbsp; &lt;/aop:config&gt;</p></div>
+<p>즉 이렇게 만들면 에러 없이 잘 돌아갑니다. <span style="color: rgb(0, 0, 0);">aspect 안에는 최대 하나밖에 허용하지 않고 (물론 in-line 포인트컷을 만들면 여러 개의 포인트컷을 사용할 순 있습니다.) config 안에는 여러개가 있어도 되는 걸 알 수 있습니다.</p>
+<p>아무래도 config에서 만드는 포인트컷들은 다른 애스팩트의 어드바이스들에서 사용할 것이기 때문에 독립적으로 여러개 존재 하도록 한 것 같습니다. </p>
+<p>여기서 드러나는 스키마 기반 Spring AOP의 불편한 점
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">1. @AspectJ 에서는 하나의 애스팩트 내부에 여러 포인트컷이 존재할 수 있는 것과 매칭이 되지 않아 혼란스럽습니다.<br />2. @AspectJ에는 없는 config 라는 영역이 존재해서 혼란스럽습니다. <br />3. 더군다나 @AspectJ에서 포인트컷끼리 연산을 할 때 사용한 &amp;&amp;, ||, ! 을 사용할 수 없다는 것도 불편합니다.</div>
+<p></span></p>

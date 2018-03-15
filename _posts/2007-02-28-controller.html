@@ -1,0 +1,57 @@
+---
+layout: post
+title: Controller
+date: 2007-02-28 05:52:54.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 06장 Controller
+tags:
+- Controller
+- Spring MVC
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323116731'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>참조 : <a href="http://static.springframework.org/spring/docs/2.0.x/api/org/springframework/web/servlet/mvc/Controller.html" target="_blank">org.springframework.web.servlet.mvc.Controller</a></p>
+<p>MVC 모델에서 C에 해당하는 녀석으로 주로 Servlet이 이 역할을 담당하고 있었고 Struts에서는 Action이라는 것이 역할을 하고 있었는데 Spring MVC를 사용하면 Servlet = Controller or Action = Controller 라고 외우지 않아도 "Controller는 Controller다." 라고 그냥 받아 들이면 되서 편하네요.</p>
+<p>Controller API를 보면 책임이 딱 한 개 있는 것이 보입니다.
+<div style="padding: 10px; background-color: rgb(250, 255, 169);">ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception</div>
+<p>HttpServletRequest와 HttpServletResponse 객체를 받아서 ModelAndView 객체를 반환합니다.<br /><img src="{{ site.baseurl }}/assets/ck24.jpg" class="aligncenter" width="460" height="271" alt="사용자 삽입 이미지" />이렇게 그리면 되는건지.. 흠..시퀀스 다이어그램은 익숙치가 않아서 많이 보고 그려봐야겠네요.</p>

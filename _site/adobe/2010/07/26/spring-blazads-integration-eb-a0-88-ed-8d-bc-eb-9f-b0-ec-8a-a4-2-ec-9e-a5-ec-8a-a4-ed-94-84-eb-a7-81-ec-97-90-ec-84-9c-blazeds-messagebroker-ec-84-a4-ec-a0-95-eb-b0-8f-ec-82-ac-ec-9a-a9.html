@@ -1,0 +1,181 @@
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>참조:&nbsp;<a href="http://static.springsource.org/spring-flex/docs/1.5.x/reference/html/index.html#introduction" target="_blank" title="[http://static.springsource.org/spring-flex/docs/1.5.x/reference/html/index.html#introduction]로 이동합니다.">http://static.springsource.org/spring-flex/docs/1.5.x/reference/html/index.html#introduction</a></b></p>
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b><br />
+</b></p>
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>2.1. 도입</b></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">스프링 BlazeDS Integration을 사용할 때 반드시 설정해야 하는 핵심 요소는 <span style="font: 12.0px Courier">MessageBroker다</span>. 플렉스 클라이언트에서 발생한 HTTP 메세지는 스프링&nbsp;<span style="font: 12.0px Courier">DispatcherServlet</span>&nbsp;을 통해 스프링이 관리하는&nbsp;<span style="font: 12.0px Courier">MessageBroker</span>로 전달된다. 스프링이 관리하는&nbsp;&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">MessageBroker</span>를 사용할 때는 BlazeDS <span style="font: 12.0px Courier">MessageBrokerServlet</span>&nbsp;을 설정할 필요 없다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>2.2. 스프링 DispatcherServlet 설정</b></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">스프링 WebApplicationContext의 시작점(bootstrap)으로 보통 web.xml에&nbsp;<span style="font: 12.0px Courier">DispatcherServlet</span>&nbsp;을 다음과 같이 설정한다.</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;!-- The front controller of this Spring Web application, responsible for handling all application requests --&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;init-param&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &nbsp; &nbsp; &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &nbsp; &nbsp; &lt;param-value&gt;/WEB-INF/config/web-application-config.xml&lt;/param-value&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;/init-param&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>2.3. 스프링에 MessageBroker 설정하기</b></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">WebApplicationContext에 MessageBroker를 설정할 때 편리한 스프링 XML 설정 네임스페이스가 제공된다. 그 네임스페이스를 사용하려면 스프링 XML 설정 파일에 스키마 위치를 추가해야 한다. 보통 다음 설정과 같을 것이다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;beans xmlns="http://www.springframework.org/schema/beans"</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea"><span class="Apple-tab-span" style="white-space:pre">	</span> &nbsp; xmlns:flex="http://www.springframework.org/schema/flex"</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; xsi:schemaLocation="</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/beans</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/flex&nbsp;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; http://www.springframework.org/schema/flex/spring-flex-1.0.xsd"&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">...</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/beans&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px">&nbsp;&nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px">&nbsp;&nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">이렇게 하면 설정 파일에서&nbsp;<span style="font: 12.0px Courier">flex</span>&nbsp;네임스페이스로 스프링 BlazeDS Integration 설정 태그를 사용할 수 있다. 다음 예제부터는 위와같이 설정했다고 가정을 하겠다. 이 네임스페이스에서 사용할 수 있는 모든 태그과 애트리뷰트는 spring-flex-1.0.xsd를 참조하기 바란다. 이클립스 같은 XSD를 인식하는 XML 편집기에서는 우리가 타이핑하는 것에 따라 문서를 자동으로 읽어줄 것이다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">스프링 WebApplicationContext에 최소한&nbsp;<span style="font: 12.0px Courier">MessageBrokerFactoryBean</span>&nbsp;을 설정하여 MessageBroker를 가동시켜야 하며 <span style="font: 12.0px Courier">MessageBrokerHandlerAdapter</span>&nbsp;와 적절한 &nbsp;<span style="font: 12.0px Courier">HandlerMapping</span> (보통&nbsp;<span style="font: 12.0px Courier">SimpleUrlHandlerMapping</span>) 을 사용하여 요청을 스프링이 관리하는 &nbsp;<span style="font: 12.0px Courier">MessageBroker</span>에 전달되게 해야한다.&nbsp;</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">빈 설정 파일에&nbsp;<span style="font: 12.0px Courier">message-broker</span>&nbsp;태그를 등록하면 그러한 빈들을 자동으로 등록해 준다. 다음 예제가 가장 간단한 형태다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;flex:message-broker/&gt; &nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px">&nbsp;&nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">이렇게 하면 <span style="font: 12.0px Courier">MessageBroker</span>&nbsp;를 설정하고 필요한 기반 요소를 감각적인 기본값(sensible defaults)으로 설정해 준다. 그렇게 사용하는 기본값들은 <span style="font: 12.0px Courier">message-broker</span>&nbsp;태그의 애트리뷰트 또는 하위 엘리먼트를 사용해서 재정의 할 수 있다. 예를 들어 BlazeDS XML 설정 파일의 기본 위치(/WEB-INF/flex/services-config.xml)를&nbsp;<span style="font: 12.0px Courier">services-config-path</span>&nbsp;애트리뷰트로 재정의할 수 있다. <span style="font: 12.0px Courier">MessageBrokerFactoryBean</span>&nbsp;은 스프링의 <span style="font: 12.0px Courier">ResourceLoader</span>&nbsp;추상화를 사용하기 때문에 스프링 리소스 패스를 사용할 수 있다. 그 예로, 애플리케이션 클래스패스에서 설정을 읽어오도록 다음과 같이 설정할 수 있다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;flex:message-broker services-config-path="classpath*:services-config.xml" &nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px">&nbsp;&nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">이와 동일한 순수 스프링 설정을 사용한 <span style="font: 12.0px Courier">MessageBrokerFactoryBean</span>&nbsp;정의는 다음과 같다.&nbsp;</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;!-- Bootstraps and exposes the BlazeDS MessageBroker --&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;bean id="_messageBroker" class="org.springframework.flex.core.MessageBrokerFactoryBean" &gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea"><span class="Apple-tab-span" style="white-space:pre">	</span>&lt;property name="servicesConfigPath" value="classpath*:services-config.xml" /&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/bean&gt; &nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px">&nbsp;&nbsp; &nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"><span style="font: 12.0px Courier">message-broker</span>&nbsp;태그에서 특히 주목할 점은 MessageBroker에 커스텀 id를 설정할 필요가 없다는 것이다. 나중에 참조할 일도 없기 때문에 사실 그렇게 하는 것을 권장하지 않는다. 커스텀 id를 설정해야 하는 상황은 오직 WebApplicationContext에 <span style="font: 12.0px Courier">MessageBroker</span>를 두개 이상 가동할 경우이다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"><font class="Apple-style-span" size="5"><span class="Apple-style-span" style="font-size: 18px;"><b><font class="Apple-style-span" size="4"><span class="Apple-style-span" style="font-size: 14px; font-weight: normal;"><br />
+</span></font></b></span></font></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>2.4. 요청을 MessageBroker쪽으로 매핑하기</b></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">들어오는 요청을 스프링이 관리하는&nbsp;<span class="Apple-style-span" style="font-family: Courier; font-size: 12px; ">MessageBroker</span>로 전달하려면 세곳에 요청 매핑을 설정해야한다.&nbsp;</p>
+<ul style="list-style-type: disc">
+<li style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">web.xml에&nbsp;<span class="Apple-style-span" style="font-family: Courier; font-size: 12px; ">DispatcherServlet </span>매핑</li>
+<li style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">스프링 WebApplicationContext에&nbsp;<span class="Apple-style-span" style="font-family: Courier; font-size: 12px; ">HandlerMapping</span></li>
+<li style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"><span class="Apple-style-span" style="font-family: Courier; font-size: 12px; "><span class="Apple-style-span" style="font-family: Verdana; font-size: 14px; ">BlazeDS services-config.xml에 채널 정의</span></span></li>
+</ul>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">가장 간단한 요청 매핑 시나리오는 앞단에 위치한 플렉스가 애플리케이션의 유일한 클라이언트인 경우이다. 이런 경우 /messagebroker를 요청 최상위 패스로 매핑할 수 있다. 그런 경우 web.xml에 다음과 매핑할 것이다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;!-- Map all /messagbroker requests to the DispatcherServlet for handling --&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet-mapping&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;url-pattern&gt;/messagebroker/*&lt;/url-pattern&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet-mapping&gt; &nbsp; &nbsp;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"><span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"><span style="font: 12.0px Courier">message-broker</span>&nbsp;설정 태그를 사용하면 &nbsp;<span style="font: 12.0px Courier">SimpleUrlHandlerMapping</span>&nbsp;이 설정되어&nbsp;<span style="font: 12.0px Courier">DispatcherServlet</span>&nbsp;으로 전달되는 모든 요청을 /* 경로 패턴을 따라 스프링이 관리하는&nbsp;<span style="font: 12.0px Courier">MessageBroker</span>&nbsp;에 매핑한다. 자신이 직접 작성한&nbsp;<span style="font: 12.0px Courier">HandlerMapping</span>&nbsp;빈을 설정할 때는 &nbsp;&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">message-broker</span>&nbsp;태그의&nbsp;<span style="font: 12.0px Courier">disable-default-mapping</span>&nbsp;애트리뷰트를 사용해서 기본 매핑 사용을 제어할 수 있다. 기본으로 설정되는 <span style="font: 12.0px Courier">SimpleUrlHandlerMapping</span>&nbsp;의 순서는&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">mapping-order</span>&nbsp;애트리뷰트로 설정할 수 있다. (동일한 컨텍스트에 여러 핸들러 매핑 타입이 존재하는 복잡한 경우에 사용할 수 있겠다.)</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"><span class="Apple-style-span" style="color: rgb(0, 0, 0); font-family: Times; font-size: medium; ">
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; ">스프링 WebApplicationContext의 <code class="code">SimpleUrlHandlerMapping</code>&nbsp;은 모든 요청을&nbsp;<span class="Apple-style-span" style="font-family: monospace; ">MessageBrokerHandlerAdapter를 통해&nbsp;</span>스프링이 관리하는&nbsp;<span class="Apple-style-span" style="font-family: monospace; ">MessageBroker로 전달한다. 기본으로 설정되는&nbsp;</span><code class="code">message-broker</code>&nbsp;태그는 다음과 같은 빈 정의와 동일하다.</p>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; "></p>
+<pre class="programlisting" style="font-size: 14px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); background-color: rgb(243, 245, 233); ">&lt;!-- Maps request paths at /* to the BlazeDS MessageBroker --&gt;
+&lt;bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"&gt;
+    &lt;property name="mappings"&gt;
+        &lt;value&gt;
+            /*=_messageBroker
+        &lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- Dispatches requests mapped to a MessageBroker --&gt;
+&lt;bean class="org.springframework.flex.servlet.MessageBrokerHandlerAdapter"/&gt;    
+		</pre>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; "></p>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; ">BlazeDS services-config.xml의 채널 정의가 반드시 선택한 매핑에 대응해야 한다. 예를 들어, 위 매핑 전략에 대응하는 AMF 채널을 BlazeDS에 다음과 같이 설정할 수 있다.&nbsp;</p>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; ">&nbsp;</p>
+<pre class="programlisting" style="font-size: 14px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); background-color: rgb(243, 245, 233); ">&lt;channel-definition id="my-amf" class="mx.messaging.channels.AMFChannel"&gt;
+    &lt;endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/amf" 
+    	class="flex.messaging.endpoints.AMFEndpoint"/&gt;
+    &lt;properties&gt;
+        &lt;polling-enabled&gt;false&lt;/polling-enabled&gt;
+    &lt;/properties&gt;
+&lt;/channel-definition&gt; 		
+		</pre>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; ">services-config.xml에 커뮤니테이션 채널을 설정하는 더 자세한 방법은 &nbsp;<a xmlns:xlink="http://www.w3.org/1999/xlink" href="http://livedocs.adobe.com/blazeds/1/blazeds_devguide/" target="_top">BlazeDS documentation</a>&nbsp;에서 참조하기 바란다.</p>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; "><font class="Apple-style-span" face="Verdana" size="5"><span class="Apple-style-span" style="font-size: 18px;"><b><font class="Apple-style-span" face="Verdana, Arial, sans-serif" size="4"><span class="Apple-style-span" style="font-size: 14px; font-weight: normal;"><br />
+</span></font></b></span></font></p>
+<p style="font-family: Verdana, Arial, sans-serif; color: rgb(0, 0, 0); margin-bottom: 6px; margin-top: 6px; padding-top: 0px; font-size: 14px; ">
+<p style="margin: 0.0px 0.0px 8.0px 0.0px; text-align: justify; font: 18.0px Verdana"><b>2.5. 스프링 MVC 컨트롤러와 플렉스 클라이언트 같이 사용하기</b></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">플렉스 기반 클라이언트 뿐 아니라 더 다양한 클라이언트를 지원하는 애플리케이션이 더 흔할 것이다. 예를 들어 RESTful 아키텍처를 구성하여 여러 종류의 클라이언트를 지원할 수 있다. 잠재적으로 플렉스 HTTPService 컴포넌트를 사용하여 RESTful 종점(endpoint)를 구독할 수도 있다. 스프링 MVC의 컨트롤러 모델은 RESTful 종점 같은 것을 만들기 단순하며, 유연한 방법들을 제공한다. 이러한 하이브리드 웹 애플리케이션 시나리오에서는 다른 방식의 매핑 전략이 필요하다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">가장 간단한 방법은 여러&nbsp;<span class="Apple-style-span" style="font-family: Courier; font-size: 12px; ">DispatcherServlet</span>과 계층형 애플리케이션 컨텍스트를 사용하는 것이다. 이 방법에서는 주요 애플리케이션 계층(서비스, 보안, 기반시설 지원, 등)을&nbsp;<span class="Apple-style-span" style="font-family: Courier; font-size: 12px; ">ContextLoaderListener</span>가 로딩하는 상위 컨텍스트에 두고, 스프링 MVC 컨트롤러들을 그 하위&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">DispatcherServlet</span>&nbsp;컨텍스트에 두고, 플렉스 클라이언트와 관련된 모든 것들을 별도의&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">DispatcherServlet</span>&nbsp;컨텍스트에 두는 것이다. 이 방법을 적용한 web.xml은 다음과 같다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;context-param&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;param-value&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &nbsp; &nbsp; /WEB-INF/spring/*-context.xml</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;/param-value&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/context-param&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;listener&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/listener&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;flex&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet-mapping&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;flex&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;url-pattern&gt;/messagebroker/*&lt;/url-pattern&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet-mapping&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;spring-mvc&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;servlet-mapping&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;servlet-name&gt;spring-mvc&lt;/servlet-name&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;url-pattern&gt;/spring/*&lt;/url-pattern&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/servlet-mapping&gt;&nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"><span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">/WEB-INF/spring/</span>&nbsp;디렉토리에 &nbsp;<span style="font: normal normal normal 12px/normal Courier; ">-context.xml</span>&nbsp;로 끝나는 파일 그룹을 묶어서 부모 애플리케이션 컨텍스트를 만든다. 플렉스 관련 하위 컨텍스트는&nbsp;&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">/WEB-INF/flex-servlet.xml</span>을 사용하고 스프링 MVC 컨트롤러는&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">WEB-INF/spring-mvc-servlet.xml</span>안에 설정할 것이다. 이 방법은 깔끔하게 관심사를 분리해주며 스프링 2.5+ 애노테이션 컨트롤러가 기본으로 동작하게 해준다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">이 대안이 될 수 있는 방법으로는 단일&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">DispatcherServlet</span>&nbsp;컨텍스트를 사용하는 것이다. 이 방법의 단점은 몇 가지 부가적인 설정을 필요로 한다. /spring/* 요처을 DispatcherSerlvet이 처리하고 mapping XML 네임스페이스 설정 태그를 사용해서 /messagebroker/*를 스프링이 관리하는 MessageBroker로 전달하는 것이다. 그런다음 BlazeDS 채널 정의를 적절하게 수정해야 한다. message-broker 태그로 기본 매핑 전략을 다음과 같이 수정할 수 있다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;flex:message-broker&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;flex:mapping pattern="/messagebroker/*" /&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/flex:message-broker&gt;&nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"><span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">그런다음 BlazeDS의 채널 정의에서 /spring/*을 고려해서 다음과 같이 수정해야 한다.&nbsp;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea"></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;channel-definition id="my-amf" class="mx.messaging.channels.AMFChannel"&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;endpoint url="http://{server.name}:{server.port}/{context.root}/spring/messagebroker/amf"&nbsp;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; <span class="Apple-tab-span" style="white-space:pre">	</span>class="flex.messaging.endpoints.AMFEndpoint"/&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;properties&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &nbsp; &nbsp; &lt;polling-enabled&gt;false&lt;/polling-enabled&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&nbsp; &nbsp; &lt;/properties&gt;</p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea">&lt;/channel-definition&gt;&nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: justify; font: 14.0px Courier; background-color: #f4f5ea; min-height: 17.0px"><span class="Apple-tab-span" style="white-space:pre">		</span></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana">단일 매핑 전략에서는&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">message-broker</span>&nbsp;태그가 자동으로 등록해주는&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">HandlerMapping</span>과&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">HandlerAdapter</span>가 있기 때문에 <a href="http://static.springframework.org/spring/docs/2.5.x/reference/mvc.html#mvc-ann-setup" target="_blank" title="[http://static.springframework.org/spring/docs/2.5.x/reference/mvc.html#mvc-ann-setup]로 이동합니다.">스프링 MVC 문서에 따라</a> 스프링 MVC 컨트롤러를 위한&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">HandlerMapping</span>와&nbsp;<span style="font: normal normal normal 12px/normal Courier; ">HandlerAdapter</span>을 직접 등록해 줘야 한다.</p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p>
+<p style="margin: 0.0px 0.0px 6.0px 0.0px; text-align: justify; font: 14.0px Verdana"></p></p>
+<p></span></p></p></p></p>

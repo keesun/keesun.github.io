@@ -1,0 +1,118 @@
+---
+layout: post
+title: Table per class hierarchy
+date: 2008-02-01 12:38:21.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 05
+tags:
+- 상속 구조 맵핑
+- 하이버네이트
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322982223'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<h1>특징</h1>
+<ul>
+<li>전체 상속 구조 하나를 단일 클래스로 맵핑한다.</li>
+</ul>
+<ul>
+<li>하위 클래스의 객체들은 타입 구분자 Type Discriminator 컬럼의 값으로 구분한다.</li>
+</ul>
+<ul>
+<li>구분자를 추가할 수 없는 상황에서는 formula를 사용한다. SQL의 CASE/WHERN</li>
+</ul>
+<h1>장점</h1>
+<ul>
+<li>다형적이거나 그렇지 않은 쿼리를 수행하는 성능이 좋다. &lt;- 조인이나 Union을 하지 않으니까.</li>
+</ul>
+<ul>
+<li>구현하기도 간편하다. &lt;- 스키마가 간단하니까.</li>
+</ul>
+<h1>단점</h1>
+<ul>
+<li>하위 클래스의 속성들은 반드시 nullable이어야 한다.</li>
+</ul>
+<ul>
+<li>정규화가 되지 않는다. 키가 아닌 값에 종속성에 생기므로, 3차 정규화를 깨트렸다. DBA가 싫어할 것이다.</li>
+</ul>
+<h1>맵핑하기</h1>
+<ul>
+<li>상위 클래스(discriminator 사용)</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@Table(name=<span class="code-quote">"BILLING_DETAIL"</span>)<br />@Inheritance(strategy = InheritanceType.SINGLE_TABLE)<br />@DiscriminatorColumn(name=<span class="code-quote">"BILLING_DETAILS_TYPE"</span>, discriminatorType = DiscriminatorType.STRING)<br /><span class="code-keyword">public</span> <span class="code-keyword">abstract</span> class BillingDetails {<br /><br />	@Id<br />	@GeneratedValue(strategy=GenerationType.SEQUENCE)<br />	@Column(name = <span class="code-quote">"BILLING_DETAILS_ID"</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">Long</span> id = <span class="code-keyword">null</span>;<br /><br />	@Column(name = <span class="code-quote">"OWNER"</span>, nullable = <span class="code-keyword">false</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">String</span> owner;</pre>
+</div>
+</div>
+<ul>
+<li>상위 클래스(formula 사용)</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@Table(name=<span class="code-quote">"BILLING_DETAIL"</span>)<br />@Inheritance(strategy = InheritanceType.SINGLE_TABLE)<br />@DiscriminatorFormula(<span class="code-quote">"<span class="code-keyword">case</span> when CC_NUMBER is not <span class="code-keyword">null</span> then 'CC' <span class="code-keyword">else</span> 'BA' end"</span>)<br /><span class="code-keyword">public</span> <span class="code-keyword">abstract</span> class BillingDetails {</pre>
+</div>
+</div>
+<ul>
+<li>하위 클래스</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">@Entity<br />@DiscriminatorValue(<span class="code-quote">"CC"</span>)<br /><span class="code-keyword">public</span> class CreditCard <span class="code-keyword">extends</span> BillingDetails {<br /><br />	@Column(name = <span class="code-quote">"CC_NUMBER"</span>)<br />	<span class="code-keyword">private</span> <span class="code-object">String</span> number;</pre>
+</div>
+</div>
+<h1>쿼리 분석</h1>
+<ul>
+<li>상위 타입으로 가져올 때는 조건 없이 모든 컬럼 가져온다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">List&lt;BillingDetails&gt; bdList = session.createQuery(<span class="code-quote">"from BillingDetails"</span>).list();<br /><br />select billingdet0_.BILLING_DETAILS_ID as BILLING2_0_, billingdet0_.OWNER as OWNER0_, billingdet0_.ACCOUNT as ACCOUNT0_, billingdet0_.CC_NUMBER as CC5_0_, billingdet0_.BILLING_DETAILS_TYPE as BILLING1_0_ <br />from BILLING_DETAIL billingdet0_</pre>
+</div>
+</div>
+<ul>
+<li>하위 타입으로 가져올 때는 Discriminator 사용해서 조건을 준다.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeContent panelContent">
+<pre class="code-java">List&lt;CreditCard&gt; bdList = session.createQuery(<span class="code-quote">"from CreditCard"</span>).list();<br /><br />select creditcard0_.BILLING_DETAILS_ID as BILLING2_0_, creditcard0_.OWNER as OWNER0_, creditcard0_.CC_NUMBER as CC5_0_ <br />from BILLING_DETAIL creditcard0_ <br />where creditcard0_.BILLING_DETAILS_TYPE='CC'</pre>
+</div>
+</div>

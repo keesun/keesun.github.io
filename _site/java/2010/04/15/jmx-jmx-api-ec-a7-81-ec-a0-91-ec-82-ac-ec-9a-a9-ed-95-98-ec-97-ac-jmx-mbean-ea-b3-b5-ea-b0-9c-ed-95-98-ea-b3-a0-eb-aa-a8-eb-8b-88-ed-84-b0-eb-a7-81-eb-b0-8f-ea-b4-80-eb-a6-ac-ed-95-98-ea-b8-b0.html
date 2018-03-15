@@ -1,0 +1,209 @@
+<p>참조: <a href="http://apress.com/book/view/1430224975" target="_blank" title="[http://apress.com/book/view/1430224975]로 이동합니다.">Spring Enterprise Recipe</a>
+<div>
+
+</div>
+<div>
+<img src="/assets/cfile2.uf.1372621C4BC6DBA6450F3E.jpg" class="aligncenter" width="558" height="465" alt="" filename="1.jpg" filemime="image/jpeg" />
+</div>
+<div id="">
+오호.. JDK 1.5부터 그냥 들어있는 JMX 클라이언트 jconsole을 실행해봤습니다. 모니터링 정보가 나오는 군요. 머.. 이건 나중에 살펴보기로 하고;; 일단은 저렇게 모니터링 할 MBean을 공개하는 방법을 보겠습니다.</div>
+<div id="">
+
+</div>
+<div id="">
+<div id="">
+public class Main {</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp;public static void main(String[] args) throws IOException {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;ApplicationContext context =</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new ClassPathXmlApplicationContext("sandbox/jmx/beans-jmx.xml");</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;FileReplicator documentReplicator =</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(FileReplicator) context.getBean("documentReplicator");</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;try {</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();</b></div>
+<div id="">
+<b><br />
+</b></div>
+<div id="">
+<b id=""><font class="Apple-style-span" id="" color="#193da9">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ObjectName objectName = new ObjectName("bean:name=documentReplicator");</font></b></div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b><font class="Apple-style-span" color="#e31600">RequiredModelMBean mbean = new RequiredModelMBean();</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" id="" color="#e31600">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mbean.setManagedResource(documentReplicator, "objectReference");</font></b></div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b><font class="Apple-style-span" id="" color="#2b8400">Descriptor srcDirDescriptor = new DescriptorSupport(new String[]{</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" color="#2b8400">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name=SrcDir", "descriptorType=attribute",</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" color="#2b8400">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"getMethod=getSrcDir", "setMethod=setSrcDir"});</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" id="" color="#2b8400">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanAttributeInfo srcDirInfo = new ModelMBeanAttributeInfo(</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" id="" color="#2b8400">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"SrcDir", "java.lang.String", "Source directory",</font></b></div>
+<div id="">
+<b><font class="Apple-style-span" color="#2b8400">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;true, true, false, srcDirDescriptor);</font></b></div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Descriptor destDirDescriptor = new DescriptorSupport(new String[]{</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name=DestDir", "descriptorType=attribute",</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"getMethod=getDestDir", "setMethod=setDestDir"});</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanAttributeInfo destDirInfo = new ModelMBeanAttributeInfo(</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"DestDir", "java.lang.String", "Destination directory",</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;true, true, false, destDirDescriptor);</div>
+<div id="">
+
+</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanOperationInfo getSrcDirInfo = new ModelMBeanOperationInfo(</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"Get source directory",</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FileReplicator.class.getMethod("getSrcDir"));</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanOperationInfo setSrcDirInfo = new ModelMBeanOperationInfo(</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"Set source directory",</div>
+<div id="">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FileReplicator.class.getMethod("setSrcDir", String.class));</div>
+<div id="">
+
+</div>
+<div id="">
+<b><font class="Apple-style-span" id="" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanOperationInfo getDestDirInfo = new ModelMBeanOperationInfo(</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><font class="Apple-style-span" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"Get destination directory",</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><font class="Apple-style-span" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FileReplicator.class.getMethod("getDestDir"));</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><font class="Apple-style-span" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanOperationInfo setDestDirInfo = new ModelMBeanOperationInfo(</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><font class="Apple-style-span" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"Set destination directory",</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<b><font class="Apple-style-span" id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown" color="#3058d2">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FileReplicator.class.getMethod("setDestDir", String.class));</font></b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanOperationInfo replicateInfo = new ModelMBeanOperationInfo(</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"Replicate files",</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;FileReplicator.class.getMethod("replicate"));</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ModelMBeanInfo mbeanInfo = new ModelMBeanInfoSupport(</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"FileReplicator", "File replicator",</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new ModelMBeanAttributeInfo[]{srcDirInfo, destDirInfo},</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;null,</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;new ModelMBeanOperationInfo[]{getSrcDirInfo, setSrcDirInfo,</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;getDestDirInfo, setDestDirInfo, replicateInfo},</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;null);</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<font class="Apple-style-span" color="#801fbf"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mbean.setModelMBeanInfo(mbeanInfo);</b></font></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>mbeanServer.registerMBean(mbean, objectName);</b></div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (JMException e) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;e.printStackTrace();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (InvalidTargetObjectTypeException e) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;e.printStackTrace();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;} catch (NoSuchMethodException e) {</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;e.printStackTrace();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;System.in.read();</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+꺄오...&nbsp;</div>
+</div>
+<div id="">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+1. MBeanServer 인스턴스 가져오기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+2.&nbsp;ObjectName 인스턴스 만들기 &lt;- MBean의 이름(도메인:name=MBean이름)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+2. MBean 인스턴스 만들기&lt;- MBean으로 등록할 객체 설정.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+3. ModelMBeanAttributeInfo&nbsp;인스턴스 만들기 &lt;- 객체의 속성에 해당함.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+4.&nbsp;ModelMBeanOperationInfo 인스턴스 만들기 &lt;- 객체의 메서드에 해당함.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+5. ModelMBeanInfo 객체 만든 다음 2번에서 만든 MBean에 설정하기. &lt;- 2, 3, 4번 조합</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+6. 1번에서 가져온 MBeanServer에 2번에서 만든 MBean 등록하기</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+이렇게 엄청난 과정과 Chekced Exception 들을 처리해주고..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+실행할 때는 또&nbsp;-Dcom.sun.management.jmxremote 이런 VM 인자까지 넘겨줘야지 모니터링이 됨.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+그리고 마지막에 애플리케이션 꺼지지 않도록 System.in.read()로 대기 상태 만들어 둠.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+콘솔로가서 jconsole 입력하고 MBeans 탭에서 bean 폴더 밑에 documentReplicator 찾으면 속성과 메서드를 바로 바로 실행해볼 수 있음.</p>
+<p><img src="/assets/cfile4.uf.151A3A284BC6DF3E23DEC9.jpg" class="aligncenter" width="400" /><img src="/assets/cfile21.uf.145FBC284BC6DF3F5F0D75.jpg" class="aligncenter" width="400" /></p>
+<p>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+
+</div>

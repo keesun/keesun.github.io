@@ -1,0 +1,116 @@
+<p>http://www.youtube.com/watch?v=GSsWMLiKF-M</p>
+<p>작년 스프링 원 발표 동영상이다. 여기서 설명하는 Async Servlet 관련 내용만 정리한다. 모르지 보다가 내키면 다른것도 하고.. 아님 안하고 내맘.</p>
+<p>우선 이녀석이 등장하게 된 배경부터 설명한다. (나말고 발표자가. 아마도 로센?)</p>
+<p>Request-Response 모델은 누구나 다 알고 지금도 많이 사용하듯이 웹브라우저에서 사용자가 뭔가 요청을 보내면 서버가 응답해주는 방식이다.</p>
+<p>그러다 Ajax가 등장한다. 전체 페이지를 로딩해오는게 아니라 페이지 일부만 변경하는 방법이다. 기술적으로는 자바스크립트로 Request-Response를 처리하는 거고, 자바스크립트로 setTimeout인가 뭔가를 사용해서 주기적으로 요청을 보내서 응답을 받은걸로 화면 일부를 갱신하는 기술이 가능해졌었다.</p>
+<p>그런게 바로 'live'-ness 인데, 굳이 옮기자면 "생동감"이라고나 할까. 애플리케이션마다 각기 다른 수준의 생동감이 필요하다.</p>
+<p>트위터나 페북에 올라오는 스트림을 주기적으로 가져오거나, 최신 뉴스를 주기적으로 가져오는 것 정도야 괜찮겠지만, 채팅이나 온라인 협업 같은 경우라면 10초, 5초 주기로 갱신해가며 대화하기는 불편할꺼다. 거의 실시간적인 생동감이 필요하다.</p>
+<p>그래서 등장한게 Long Polling. 이것도 사실 Request-Response 모델이다. 단 하나 다른게 있다면 Response를 바로 하는게 아니라 클라이언트로 줄 만한 데이터가 있을때까지 서버가 요청을 붙잡고 안놔준다는거... 그러다 필요한 데이터가 오면 그때 클라이언트로 응답을 보내고, 응답을 받은 클라이언트는 곧바로 다음번 요청을 보내서 또 서버한테 데이터 있을 때까지 가지고 있다가 응답 달라고 하는거다. 이걸 이제 얼핏 비껴보면 서버가 클라이언트로 Push하는거처럼 보이기도 하는거지.</p>
+<p>그런데 이게 문제가 뭐냐면, 데이터가 바로바로 올라오면 상관없는데, 클라이언트한테 줄 데이터가 안오면 서버 리소스가 계속해서 붙잡힌 상태로 대기 중이기 때문에 서버쪽에 부하가 상당해진다.</p>
+<p>일반적으로 서블릿 컨테이너는 "Thread-Per-Request" 모델을 사용하는데, 롱폴링이 많아지면 요청을 잡고있는 Thread가 많아져서 새로운 요청을 받아줄 쓰레드가 금방 모자르게 되는거지.. 두둥. 그래서!! 서블릿 3 어싱크 기능이 등장!</p>
+<p>어떻게 할려는거냐면... 단순하게 말해서 쓰레드를 바꿔치기 하려는거지..</p>
+<p>대기해야 하는 작업을 Request 처리하는 쓰레드 말고 다른 쓰레드(흔히 워커쓰레드라고 부름)한테 위임시키고 Request 쓰레드는 빨리 반납해서 그 자원으로 새로운 Request를 처리하려는거지.</p>
+<p>그래야 똑같은 방식(롱폴링)으로 동작하면서도 더 많은 요청을 처리할 수 있을테니까.</p>
+<p>서블릿 쓰레드 모델을 표현하면 다음과 같다.</p>
+<p>[Servlet Thread]</p>
+<p>- Start processing</p>
+<p>- Do some work</p>
+<p>- Send response</p>
+<p>완전 단순하지.. 근데 이걸 이제 중간에 끊어서 다른 놈한테 주려는거야... 요렇게.</p>
+<p>[Servlet Thread]</p>
+<p>- Start processing</p>
+<p>- Switch to async mode</p>
+<p>- Exit thread leaving response open</p>
+<p>[Application Thread]</p>
+<p>- Produce or receive result</p>
+<p>- Dispatch to container to resume processing</p>
+<p>[Servlet Thread]</p>
+<p>- Start processing</p>
+<p>- Process result from application thread</p>
+<p>- Send response</p>
+<p>복잡해보이지만, 사실 단순하지. 서블릿 쓰레드가 요청 처리 시작하면 어싱크 모드로 바꾸고 쓰레드는 응답하지 않고 끝내버리지, 그럼 서블릿 쓰레드는 반나되고 다른 요청 처리하겠지뭐. 그런 어싱크 처리는 애플리케이션 쓰레드가 처리하고 그 결과를 다시 컨테이너한테 주는거야. 그럼 컨테이너가 다시 서블릿 쓰레드 띄워서 애플리케이션 쓰레드가 보내준 결과 받아서 응답 만들어서 보내는거지.</p>
+<p>여기서 질문... 왜 애플리케이션 쓰레드가 바로 응답을 보내지 않고 다시 서블릿 쓰레드를 거쳐서 보내느냐...</p>
+<p>이건 마일스톤1에서 시도해봤었는데 안돼. HttpServeltRequest를 컨테이너 쓰레드가 아닌곳에서는 사용할 수가 없어서 포워딩(JSP 렌더링할때 하는 포워딩 알지?)을 할 수가 없어. 암튼 그래서안되고. 스프링 3.2 어싱크나 보자고.</p>
+<p>@RequestMapping 메서드의 리턴값으로 Callable랑 DefferedResult, AyncTask를 던질 수 있게됐어.</p>
+<p>이 중에서 Callable부터 볼까나</p>
+<p>java.util.concurrent.Callable</p>
+<p>이 객체 담긴 작업은 스프링 MVC가 관리하는 쓰레드에서 돌게 돼. 주로 오래 걸리는 DB 작업, 써드파티 REST API 콜 등에 적당하다네..</p>
+<p>DefferedResult</p>
+<p>이 객체 담긴 작업은 스프링 MVC 밖에 있는 쓰레드에서 돌게 돼지. 주로 JSM, AMQP 리스너, 또 다른 HTTP 요청을 보내거나. 등등</p>
+<p>AsyncTask</p>
+<p>Callable하고 같은데 비동기 처리에 타임아웃 값을 추가할 수 있다는군. AsuncTaskExecutor를 선택할 수도 있고. 용도에 따라 여러 쓰레드풀을 두고 선택해서 사용할 수 있다네.. 페이스북용 쓰레드풀, 트위터용 쓰레드풀.. 하는식으로.</p>
+<p>질문: 응답을 찔끔 찔끔 보내고 싶은데.. 그때는 어떻게 해?</p>
+<p>답: OutputStream에 접근할 수 있으니까 그거 가지고 찔끔 찔끔 보내면 되긴 하는데 JSON은 어쩌고 저쩌고.. HTTP 스트리밍을 하려면 그건 좀 다른건데.. 어쩌구 저쩌구.. 나중에 볼께.</p>
+<p>DEMO는 스프링 MVC Showcase에 있음</p>
+<p>async  패키지에 CallableController를 보면 됨.</p>
+<p><a href="https://github.com/SpringSource/spring-mvc-showcase/blob/master/src/main/java/org/springframework/samples/mvc/async/CallableController.java">https://github.com/SpringSource/spring-mvc-showcase/blob/master/src/main/java/org/springframework/samples/mvc/async/CallableController.java</a></p>
+<div id="LC18">@RequestMapping("/response-body")</div>
+<div id="LC19">public @ResponseBody Callable&lt;String&gt; callable() {</div>
+<div id="LC20"></div>
+<div id="LC21"><strong>return new Callable&lt;String&gt;() {</strong></div>
+<div id="LC22"><strong>@Override</strong></div>
+<div id="LC23"><strong>public String call() throws Exception {</strong></div>
+<div id="LC24"><strong>Thread.sleep(2000);</strong></div>
+<div id="LC25"><strong>return "Callable result";</strong></div>
+<div id="LC26"><strong>}</strong></div>
+<div id="LC27">};</div>
+<div id="LC28">}</div>
+<div></div>
+<div>
+<div id="LC30">@RequestMapping("/view")</div>
+<div id="LC31">public Callable&lt;String&gt; callableWithView(final Model model) {</div>
+<div id="LC32"></div>
+<div id="LC33"><strong>return new Callable&lt;String&gt;() {</strong></div>
+<div id="LC34"><strong>@Override</strong></div>
+<div id="LC35"><strong>public String call() throws Exception {</strong></div>
+<div id="LC36"><strong>Thread.sleep(2000);</strong></div>
+<div id="LC37"><strong>model.addAttribute("foo", "bar");</strong></div>
+<div id="LC38"><strong>model.addAttribute("fruit", "apple");</strong></div>
+<div id="LC39"><strong>return "views/html";</strong></div>
+<div id="LC40"><strong>}</strong></div>
+<div id="LC41">};</div>
+<div id="LC42">}</div>
+</div>
+<div></div>
+<div>이런 메서드인데 저렇게 Callable 객체로 만든 부분이 서블릿 쓰레드가 아니라 스프링 MVC에서 관리하는 쓰레드에서 실행되는거지. 그리고 리턴되면 다시 서블릿 쓰레드가 받아서 처리하는거고.. 그런 일련의 과정은 로그를 보면 알 수 있고.</div>
+<p><a href="http://whiteship.me/?attachment_id=13731" rel="attachment wp-att-13731"><img class="aligncenter size-full wp-image-13731" title="스크린샷 2013-04-15 오후 3.27.19" src="/assets/&#49828;&#53356;&#47536;&#49399;-2013-04-15-&#50724;&#54980;-3.27.19.png" alt="" width="859" height="517" /></a></p>
+<p>자.. 이게 문제의 화면인데. 사부님이 여기서 아주 심각한 문제를 발견하셨지!!! 캬캬캬. 역시 내가 아는 가장 성실하고 인간적이면서 실력까지 최고인 엔지니어야... 왜 단점이 없을까.. 뚱뚱한거?... 암튼, 이 부분에 대해서는 다음주 세미나 때 설명하실테니까 나는 패스.</p>
+<p>질문: 쓰레드 스위칭이 일어나는데 성능에 좀 영향이 없냐..</p>
+<p>답: 쓰레드 풀에 다양한 옵션이 있으니까 풀 옵션으로 조정하고, 약간의 burden이 있긴 하지만 서블릿 쓰레드를 쉬게하는게 중요하다.</p>
+<p>질문: 브라우저는 그거다 끝날때까지 계속 대기중이지?</p>
+<p>답: 그렇다.</p>
+<p>이 시점에서 질문이 쏟아진다... 다는 못알아 듣겠다..</p>
+<p>Callable에서 예외를 던지면 어떻게 되냐..</p>
+<div id="LC44">@RequestMapping("/exception")</div>
+<div id="LC45">public @ResponseBody Callable&lt;String&gt; callableWithException(</div>
+<div id="LC46">final @RequestParam(required=false, defaultValue="true") boolean handled) {</div>
+<div id="LC47"></div>
+<div id="LC48"><strong>return new Callable&lt;String&gt;() {</strong></div>
+<div id="LC49"><strong>@Override</strong></div>
+<div id="LC50"><strong>public String call() throws Exception {</strong></div>
+<div id="LC51"><strong>Thread.sleep(2000);</strong></div>
+<div id="LC52"><strong>if (handled) {</strong></div>
+<div id="LC53"><strong>// see handleException method further below</strong></div>
+<div id="LC54"><strong>throw new IllegalStateException("Callable error");</strong></div>
+<div id="LC55"><strong>}</strong></div>
+<div id="LC56"><strong>else {</strong></div>
+<div id="LC57"><strong>throw new IllegalArgumentException("Callable error");</strong></div>
+<div id="LC58"><strong>}</strong></div>
+<div id="LC59"><strong>}</strong></div>
+<div id="LC60"><strong>};</strong></div>
+<div id="LC61">}</div>
+<p>HandlerExceptionResolver로 해결하지요.. 다른 MVC에서 발생하는 예외랑 마찬가지로.</p>
+<p>그럼 스프링 MVC 밖에서 동작하는 DefferedResult에서 발생하는 예외는?</p>
+<p><a href="https://github.com/SpringSource/spring-mvc-showcase/blob/master/src/main/java/org/springframework/samples/mvc/async/DeferredResultController.java">https://github.com/SpringSource/spring-mvc-showcase/blob/master/src/main/java/org/springframework/samples/mvc/async/DeferredResultController.java</a></p>
+<p>여기 코드 잘 보면 나오는데, setErrorResult(object)로 예외를 세팅하게 되있고, 그걸 나중에 dispatch 하고나서 역시 HandleExceptionResolver로 해결한다네..</p>
+<p>이런거 쓰려면 web.xml에 async-supported 플래그 설정해줘야돼.</p>
+<p>OncePerRequestFilter 등 모든 스프링 MVC 필터들이 업데이트 됐다는군. 이건 어싱크 서블릿 스팩이랑 관련있는 내용이로군.</p>
+<p>AsyncHandlerInterceptor라는게 추가됐구나;; 자세한건 나중에 자바독을 보기로하고 패스</p>
+<p>Async Support 설정하려면 자바 설정이랑 MVC 네임스페이스가 있으니까 알아서..</p>
+<p>뭘 설정할 수 있냐면.</p>
+<p>- Async timeout value (밀리세컨드)</p>
+<p>- Callable 처리할 AysncTaskExecutor</p>
+<p>모든 필터에 async-supported 플래그가 있으니까 설정하고 dispatcher-type도.</p>
+<p>WebApplicationInitializer로 설정하는 방법 소개하는데..  난 자바 설정을 잘 안써서... 흠;; 패스</p>
+<p>이 뒤부터는 REST 관련 내용이로군... REST 할때의 예외처리에 관한 내용인데 이것도 관심이 가네!! 오.. 호... 그래 REST API는 예외처리가 참 난감했는데 어찌한담... 이건 설렁설렁 봐야지.</p>
+<p>&nbsp;</p>

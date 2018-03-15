@@ -1,0 +1,92 @@
+---
+layout: post
+title: komoinmoin 설치하기
+date: 2006-11-18 09:22:31.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Wiki
+tags:
+- komoinmoin 설치
+- wiki 설치
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322947443'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>현재상황: 나의 노트북으로 외부에 있는 리눅스 서버(페도라)에 접속하여 komoinmon wiki를 설치해야함.</p>
+<p>필요사항 : Python이 설치되어 있어야 합니다. ssh로 접속하기 때문에 학교에서는 안됨.(포트를 막아 놓은 듯).<br />
+[#M_ more.. | less.. | 윈도우 유저들은 따로 설치를 하셔야 하고 리눅스 유저들은 아마 기본으로 설치되어 있을 것입니다. 전 Python이 설치되어 있는 리눅스 서버에서 작업하였기 때문에 따로 Python 설치는 해보지 않았습니다._M#]<br />
+설치파일 다운 받기: <a href="http://www.python.or.kr/moinmoin/komoin/moin.cgi/DownLoad">다운로드 페이지</a>에서 <a href="http://www.python.or.kr/moinmoin/komoin/moin.cgi/DownLoad?action=AttachFile&amp;do=get&amp;target=komoin-1.0.a4.tar.gz">komoin-1.0.a4.tar.gz</a>을 선택하여 다운로드 합니다.<br />
+[#M_ more.. | less.. | 다운받기 삽질 이야기</p>
+<p>웹브라우져에서 다운 받는데 익숙한 저로써는 까만 커맨드 창에서 어떻게 다운을 받아야 할지 막막했습니다. 브라우져를 설치할까...하다가 쓰고있던 ftp를 사용하여 다운받기로 결정했습니다. 자주 사용하는 ftp에 다운 받은 파일을 올려두고. ftp www.webapp2.net 으로 접속하여 ls, cd, mget 명령어를 사용하여 다운로드 했습니다.<br />
+_M#]<br />
+압축풀기 : tar xvzf komoin-1.0.a4.tar.gz <br />
+[#M_ more.. | less.. | 위 명령을 사용하여 압축을 풉니다. 그럼 komoin-1.0.a4 폴더가 생기고 이안에 들어가보면 여러개의 파일들이 생긴 것을 확인할 수 있습니다.<br />
+_M#]<br />
+설치하기: python ./setup.py install <br />
+[#M_ more.. | less.. | 위 명령을 사용하면 무언가 실행되는 것을 확인 할 수 있습니다. 실행 된 화면의 맨 아래 두줄을 보면 새로운 폴더가 만들어 진 것을 볼 수 있습니다.<br />
+_M#]<br />
+아파치 사용자/그룹 확인하기: 왜 하는 것인지는 모르겠지만 제가 참고한 문서에서 하라길래 따라 해보았는데 결과도 똑같이 나오더군요.<br />
+[#M_ more.. | less.. |아파치의 사용자/그룹 확인</p>
+<p># egrep "^User|^Group" /etc/httpd/conf/httpd.conf<br />
+User apache<br />
+Group apache <br />
+_M#]<br />
+위키 데이터를 저장할 데이터로 이동: 제가 참고한 문서에는 /usr/local/share/moin으로 되어 있는데 설치하기 과정의 끝 부분을 보니 저는 /usr/share/moin 으로 되어있었습니다.<br />
+[#M_ more.. | less.. | 위키 데이터를 저장할 디렉토리로 이동하고 다음 명령 수행</p>
+<p># cd /usr/share/moin<br />
+# mkdir mywiki    # 위키 인스턴스 디렉토리 생성 (이름 임의 설정)<br />
+# cp -r data mywiki<br />
+# cp cgi-bin/* mywiki<br />
+# chown -R apache.apache mywiki/<br />
+# chmod a+rx mywiki/*.cgi <br />
+_M#]<br />
+아파치 웹서버에 등록: httpd.conf 파일에 다음 줄을 추가합니다.<br />
+[#M_ more.. | less.. |Alias /wiki/ "/usr/local/share/moin/htdocs/"<br />
+ScriptAlias /mywiki "/usr/local/share/moin/mywiki/moin.cgi" _M#]<br />
+아파치 서버 재가동 or 실행:&nbsp; /etc/init.d/httpd restart<br />
+[#M_ more.. | less.. | 제가 설치한 서버는 현재 아파치 웹서버가 돌아가고 있지 않았기 때문에 restart 대신에 start를 사용했습니다.<br />
+_M#]<br />
+확인하기: http://사이트주소/mywiki<br />
+[#M_ more.. | less.. | 제가 설치한 서버의 ip를 사이트 주소 대신에 넣고 실행해 보았습니다.<br />
+<a href="http://211.238.15.25/mywiki">http://211.238.15.25/mywiki</a><br />
+_M#]<br />
+참고자료 : <a href="http://www.python.or.kr/moinmoin/komoin/moin.cgi/_bc_b3_c4_a1_b9_e6_b9_fd">http://www.python.or.kr/moinmoin/komoin/moin.cgi/_bc_b3_c4_a1_b9_e6_b9_fd</a></p>
+<p>앗 어서 스타보러 가야겠습니다. 지금 오영종이랑 이윤열 결승합니다.</p>

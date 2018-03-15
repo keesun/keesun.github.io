@@ -1,0 +1,14 @@
+<p>테스트</p>
+<div style="border: 1px solid rgb(121, 165, 228); padding: 10px; background-color: rgb(219, 232, 251);" class="txc-textbox">&nbsp;&nbsp;&nbsp; @Test<br />
+&nbsp;&nbsp;&nbsp; public void exportXls() throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dbUnitSupport.exportXlsFrom("code", "item", "users", "role", "users_role");<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; assertTrue(new File(DBUnitSupport.EXPORTED_XLS_FILE).exists());<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>구현</p>
+<div style="border: 1px solid rgb(159, 211, 49); padding: 10px; background-color: rgb(231, 253, 181);" class="txc-textbox">&nbsp;&nbsp;&nbsp; protected void exportXlsFrom(String... tableNames) throws Exception {<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IDataSet dataSet = getConnection().createDataSet(tableNames);<br />
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; XlsDataSet.write(dataSet, new FileOutputStream(new File(EXPORTED_XLS_FILE)));<br />
+&nbsp;&nbsp;&nbsp; }</div>
+<p>흠.. 간단하네요. 간단 간단..</p>
+<p>그런데. 테스트 할 때 생기는 파일들은 수동으로 지우기도 귀찮고.. 버전관리에 들어가면 더더욱 안 될 듯하고..<br />
+JUnit을 4.7로 올리고, @Rule 이라는 걸 써봐야겠습니다.</p>

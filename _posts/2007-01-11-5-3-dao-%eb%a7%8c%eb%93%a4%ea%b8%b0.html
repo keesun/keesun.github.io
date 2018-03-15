@@ -1,0 +1,64 @@
+---
+layout: post
+title: 5-3. DAO 만들기
+date: 2007-01-11 05:17:23.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- 주소록 만들기
+tags:
+- 주소록 만들기
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322978851'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>1. MessengerDao 인터페이스를 src 소스폴더에 keesun.member.dao 패키지 안에 만듭니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl173.bmp" class="aligncenter" width="292" height="189" alt="사용자 삽입 이미지">bl173.bmp</a><br />2. MessengerDao 인터페이스는 GenericDao 인터페이스를 상속받습니다. GenericDao는 generic을 사용하고 있는데요 첫번째 인자는 클래스 타입이고 두번째 인자는 클래스의 주키값의 타입을 넣습니다.</p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">public</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">interface</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> MessengerDao </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">extends</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> GenericDao&lt;Messenger, Integer&gt;{</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p><font size="2">&nbsp;</font></o:p></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><font size="2">}</font></span></p>
+<p>3. MessengerDao를 구현할 MessengerDaoHibernate 클래스를 만듭니다. 이 클래스는 MessengerDao를 implements하고 GenericDao를 구현해 둔 AbstractHibernateGenericDao 클래스를 상속 받습니다.</p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">public</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">class</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> MessengerDaoHibernate </span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">extends</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> AbstractHibernateGenericDao&lt;Messenger, Integer&gt;</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><font size="2"><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">implements</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> MessengerDao{</p>
+<p>}</span></font></p>
+<p>4. 그러면 에러가 발생하는데 이 때 다음과 생성자를 만들면 에러가 사라집니다. 이것으로 Dao 구현이 끝났습니다.</p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">protected</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"> MessengerDaoHibernate() {</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; WORD-BREAK: keep-all; TEXT-ALIGN: left; mso-layout-grid-align: none" align="left"><font size="2"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><span style="mso-tab-count: 2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span></span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">super</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">(Messenger.</span><b><span lang="EN-US" style="COLOR: #7f0055; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">class</span></b><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt">);</span><span lang="EN-US" style="FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><o:p></o:p></span></font></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt"><span lang="EN-US" style="COLOR: black; FONT-FAMILY: 'Courier New'; mso-bidi-font-size: 10.0pt; mso-font-kerning: 0pt"><font size="2"><span style="mso-tab-count: 1">&nbsp; &nbsp; &nbsp;&nbsp; </span>}</font></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt">5. 방금 만든 dao를 bean으로 등록합니다.<br /><a href="http://whiteship.epril.com/wp-content/uploads/1/bl174.bmp" class="aligncenter" width="500" height="157" alt="사용자 삽입 이미지">bl174.bmp</a></p>

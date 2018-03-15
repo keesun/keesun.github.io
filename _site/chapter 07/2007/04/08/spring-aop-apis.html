@@ -1,0 +1,25 @@
+<p><span style="font-weight: bold;">7.1. Introduction</span></p>
+<p>이전 장에서 배운 것은 Spring 2.0에서의 AOP이고 이번에는 좀 더 하위 레벨의 1.2 방식을 알아보겠습니다.</p>
+<p><a href="../../627">Spring AOP(old) 특징</a></p>
+<p><span style="font-weight: bold;">7.2. Pointcut API in Spring</span></p>
+<p>Pointcut 인터페이스를 구현한 클래스들을 제공하며 이 클래스들을 사용하여 포인트컷을 만들고 재사용할 수 있습니다.</p>
+<p><a href="../../629">Spring AOP(old) Pointcut</a><br /><a href="../../632">Spring AOP(old) Pointcut Implementation</a><br /><a href="../../643">기선 씨네마 :: Pointcut</a></p>
+<p><span style="font-weight: bold;">7.3. Advice API in Spring</span></p>
+<p>모든 advice는 bean으로 등록하며 per-class와 per-instance 라이프 사이클이 존재합니다.</p>
+<p><a href="../../628">Spring AOP(old) Advice</a><br /><a href="../../642">기선 씨네마 :: Advice</a><br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7.4. Advisor API in Spring</span></p>
+<p>advice와 pointcut을 하나씩 묶어 놓은 것입니다. DefaultPointcutAdvisor&nbsp; 를 사용하여 기본적으로 묶을 수 있습니다.</p>
+<p><a href="../../631">Spring AOP(old) Advisor</a></p>
+<p><span style="font-weight: bold;">7.5. Using the ProxyFactoryBean to create AOP proxies</span></p>
+<p>ProxyFactoryBean을 사용하여 AOP proxy를 만드는 방법을 설명합니다.</p>
+<p><span style="font-weight: bold;">7.6. Concise proxy definitions</span></p>
+<p>중복되는 설정이 많을 때는 parent 속성을 사용하면 좋습니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7.7. Creating AOP proxies programmatically with the ProxyFactory</span></p>
+<p>설정이 아닌 코딩을 통해 ProxyFactory를 사용하는 방법입니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7.8. Manipulating advised objects</span></p>
+<p>...</p>
+<p><span style="font-weight: bold;">7.9. Using the "autoproxy" facility</span></p>
+<p>매번 ProxyFactoryBean으로 등록하는 것이 아니라 Autoproxy를 사용하면 BeanPostProcessor가 알아서 만들어 줍니다.</p>
+<p><a href="../../644">Spring AOP(old) ProxyFactoryBean 불편한 점</a><br /><a href="../../649">Autoproxy</a><br /><a href="../../651">BeanNameAutoProxyCreator 사용 예</a></p>
+<p><span style="font-weight: bold;">7.10 Using TargetSources</span></p>
+<p>...<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">7.11. Defining new Advice types</span></p>
+<p>...</p>
+<p><span style="font-weight: bold;">7.12. Further resources</span></p>
+<p>JPetStore를 보라고 하는군요.</p>

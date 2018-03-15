@@ -1,0 +1,167 @@
+---
+layout: post
+title: 6.2. Defining references to OSGi services
+date: 2008-06-10 13:00:00.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 06
+tags:
+- list
+- listener
+- reference
+- Set
+- 스프링 DM
+- 스프링 DM 레퍼런스
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322680716'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>스프링 DM은 OSGi 서비스 레지스트리를 통해 사용할 수 있는 서비스를 나타내는 빈을 선언하는 기능을 제공한다. 이런 방법으로 통해 OSGi 서비스는 애플리케이션 컴포넌트로 주입될 수 있다. 서비스를 룩업할때는 해당 서비스가 지원하는 서비스 인터페이스 타입과 레지스트리에 등록된 서비스 속성에 부합하는 부가적인 필터 표현식을 사용한다.</p>
+<p>몇몇 경우에, 간단하게 애플리케이션에서 하나의 서비스만을 필요로 할 때가 있다. 이 때는 reference 엘리먼트를 정의해서 단일 서비스를 참조하도록 정의할 수 있다. 다른 경우, 특히 OSGi 화이트보드 패턴을 사용할 때, 모든 가용한 서비들을 필요로 할 때가 있는데, 스프링 DM은 이거슬 List나 Set 콜렉션으로 이들 집합을 관리할 수 있는 기능을 제공한다.<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">6.2.1. 단일 서비스 참조하기</span></font></p>
+<p>reference 엘리먼트는 서비스 레지스트리에 등록된 서비스를 참조할 때 사용한다.</p>
+<p>선언한 것에 부합하는 서비스가 여러 개일 수 있기 때문에, BundleContext.getServiceReference에 의해 반환되는 서비스를 참조하게 된다. 이게 무슨 뜻이냐면 가장 높은 랭킹의 서비스가 반환된다는 것이다. 또는 만약 랭킹이 같을 때는 서비스 id가 가장 낮은 순서(프레임워크에 먼저 등록될 수록 id가 낮다.)로 반환된다.(OSGi 스펙에 보면 보다 자세하게 서비스 선택 알고리즘이 설명되어 있다.)</p>
+<p><span style="font-weight: bold;">6.2.1.1. 가져온 서비스의 인터페이스 제어하기</span></p>
+<p>interface 속성은 해당 서비스가 반드시 구현한 인터페이스를 나타낸다. 예를 들어, 다음의 선언은 messageService 빈 하나를 등록한건데, 이것은 MessageService 인터페이스를 제공하는 서비스를 서비스 레지스트리로부터 질의하여 반환받은 서비스가 된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;reference id="messageService" interface="com.xyz.MessageService"/&gt;</div>
+<p>service 선언과 마찬가지로, 여러개의 인터페이스를 기술할 떄는 interface 속성 대신에 내부 엘리먼트로 interfaces를 사용하면 된다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;osgi:reference id="importedOsgiService"&gt;<br />&nbsp; &lt;osgi:interfaces&gt;<br />&nbsp; &nbsp;&nbsp; &lt;value&gt;com.xyz.MessageService&lt;/value&gt;<br />&nbsp; &nbsp;&nbsp; &lt;value&gt;com.xyz.MarkerInterface&lt;/value&gt;<br />&nbsp; &lt;/osgi:interfaces&gt;<br />&lt;/osgi:reference&gt;</div>
+<p>interface 속성과 interfaces 엘리먼트를 둘 다 사용하는 것은 문법에 어긋나며, 항상 둘 중 하나만 사용하도록 한다.</p>
+<p>reference 엘리먼트로 정의한 빈은 번들이 참조할 수 있는 서비스의 인터페이스들을 구현하고 있다.(greedy proxing 이라고 한다.) 만약 등록된 서비스 인터페이스가 자바 클래스 타입을 포함하고 있다면(인터페이스가 아니라), 해당 타입들은 스프링 AOP를 따르게 되ㅇㄴ다. 간략하게 말하자면, 명시된 인터페이스들이 인터페이스가 아니라 클래스라면, cglib이 반드시 가용한 상태여야 하며, final 메소드가 없어야 한다.</p>
+<p><span style="font-weight: bold;">6.2.1.2. filter 속성</span></p>
+<p>부가적인 속성 filter는 OSGi 필터 표현식을 명시하고 서비스 레지스트리 룩업을 할 때 오직 주어진 필터에 해당하는 것들에서만 찾도록 제약을 가할 수 있다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;reference id="asyncMessageService" interface="com.xyz.MessageService"<br />&nbsp; filter="(asynchronous-delivery=true)"/&gt;</div>
+<p>이것은 asynchronous-delivery 속성이 true이고 MessageService 인터페이스로 등록해둔 OSGi 서비스만 참조할 것이다.</p>
+<p><span style="font-weight: bold;">6.2.1.3. bean-name 속성</span></p>
+<p>bean-name 속성은 service 엘리먼트를 사용하여 공개한 빈의 이름에 해당하는 서비스를 찾아주는 필터 표현식의 단축키 정도에 해당한다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;bean id="(1)messageServiceBean" scope="bundle" class="com.xyz.MessageServiceImpl"/&gt;<br />&lt;!-- service exporter --&gt;<br />&lt;osgi:service id="messageServiceExporter" ref="(1)beanToBeExported" interface="com.xyz.MessageService"/&gt;</p>
+<p>&lt;osgi:reference id="messageService" interface="com.xyz.MessageService"<br />&nbsp;&nbsp; bean-name="(1)messageServiceBean"/&gt;</p>
+<p>1 &nbsp;&nbsp; the name used with bean-name attribute</p></div>
+<p>위에 선언한 reference 빈은 MessageService 인터페이스로 등록된 서비스 중에서 org.springframework.osgi.bean.name 속성에 이름이 messageServiceBean 인 OSGi 서비스를 찾는다. 다시 간략하게 말하자면, 모든 공개된 빈 중에서 MessageService 인터페이스를 구현했고, 빈의 이름이 messageService인 빈을 참조하게 된다.</p>
+<p><span style="font-weight: bold;">6.2.1.4. cardinality 속성</span></p>
+<p>cardinality 속성은 항상 해당하는 서비스가 존재해야 하는지 아닌지를 기술할 때 사용한다. cardinality 값이 1..1(이게 기본값) 이면 해당하는 서비스가 반드시 가용해야 한다는 것을 뜻한다. cardinality 값이 0..1이면, 해당하는 서비스가 항상 필요한 것은 아니라는 것을 뜻한다.(4.2.1.6에 자세히 나와있다.) reference에 cardinality 1..1로 설정되어 있는 것은 필수mandatory 서비스 레퍼런스라고도 하며, 기본적으로 해당 레퍼런스가 참조 가능할 때까지 애플리케이션 컨텍스트 생성이 지연된다.</p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">노트</p>
+<p>해당 번들 자신이 공개한 서비스를 필수 서비스 레퍼런스로 참조하는 것은 에러다. 이런 행위로 인해 애플리케이션 컨텍스트 생성이 데드락이나 타임아웃으로 실패하게 될 것이다.</p></div>
+<p><span style="font-weight: bold;">6.2.1.5. depends-on 속성</span></p>
+<p>dependes-on 속성은 서비스 레지스트리에서 해당 서비스 레퍼런스를 룩업하기 전에 이 속성에 명시한 빈을 먼저 생성하라는 것이다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">6.2.1.6. context-class-loader 속성</span></p>
+<p>OSGi 서비스 플랫폼 코어 스펙(현재 4.1 작성중)에는 서비스 레지스트리에서 얻어온 서비스를 통하여 컨텍스트 클래스 로더에서 가용한 타입이나 리소스들을 명시하고 있지 않다. 따라서 어떤 서비스들은 컨텍스트 클래스 로더로부터 특정 라이브러리가 가용하리라고 예상하고 작성하기도 한다. 스프링 DM은 서비스 호출 시점에 컨텍스트 클래스 로더 제어대해 명시적으로 제어한다. reference 엘리먼트의 context-class-loader 속성으로 이를 달성할 수 있다.</p>
+<p>context-class-loader에 가용한 값은 다음과 같다.
+<ul>
+<li>client - 서비스 호출 기간중에, 컨텍스트 클래스 로더는 서비스를 호출하고 있는 번들의 클래스패스에 있는 타입들을 볼 수 있다. 기본값이다.</li>
+<li>service-provider - 서비스 호출 기간중에, 컨텍스트 클래스 로더는 서비스를 공개한 쪽 번들의 클래스패스에 있는 타입들을 볼 수 있다.</li>
+<li>unmanaged - 서비스 호출 기간중에 컨텍스트 클래스 로더 관리를 하지 않음</li>
+</ul>
+<p><span style="font-weight: bold;">6.2.1.7. reference 엘리먼트 속성</span></p>
+<p>지금까지 살펴본 속성들 표 생략.</p>
+<p><span style="font-weight: bold;">6.2.1.8. reference와 OSGi 서비스 동적특성Dynamics</span></p>
+<p>reference 엘리먼트로 정의한 빈은 애플리케이션 컨텍스트의 생명주기 동안 바뀌지 않는다. 하지만, 해당 빈이 참조하는 OSGi 서비스는 언제든지 서비스 레지스트리에서 나가고 등록될 수 있다. 필수 서비스 레퍼런스(cardinality 1..1)인 경우에는, 해당 서비스가 가용할 떄 까지 애플리케이션 컨텍스트 생성을 일정 시간 지연시킨다. 부가 서비스 레퍼런스(cardinality 0..1)인 경우에는 현재 해당 서비스가 가용한지 여부와 관계없이 해당 빈이 바로 생성된다. </p>
+<p>만약 참조해야 하는 서비스가 없어지면, 스프링 DM은 해당 reference에 정의한 것에 해당하는 다른 서비스로 기존 서비스를 교체 시도를 한다. 애플리케이션은 리스너를 등록하여 자신이 참조하는 서비스의 변경을 알아차려야 한다. 만약 해당하는 서비스가 없다면, reference는 unsatisfied가 되고, 이 reference에 의존하는 다른 공개된 서비스들을 해당 reference의 의존성이 해결될때까지 서비스 레지스트리에서 해지한다. 자세한건 6.5에서..</p>
+<p>만약 unsatistied 상태인 reference 빈에 어떤 요청이 발생했다면, 해당 요청은 레퍼런스가 다시 satisfied 상태가 될때까지 잠시 대기시킨다. timeout 속성에 이 때 대기할 시간(millisesecond)을 설정할 수 있다. 몇시한 타임아웃 값이 지나고 나서도 해당 빈이 가용하지 않다면 ServiceUnavailableException을 던진다.</p>
+<p><span style="font-weight: bold;">6.2.1.9. 관리하고 있는 서비스 레퍼런스 참조하기</span></p>
+<p>스프링 DM은 자신이 관리하고 있는 서비스 레퍼런스를 ServiceReference 타입으로 자동변환해준다. 따라서, ServiceReference 타입의 속성을 가지고 있는 빈에 해당 서비스를 (명시된 인터페이스 타입이 아니라 ServiceReference 타입으로)injection 할 수 있다. </p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">public class BeanWithServiceReference {<br />&nbsp; &nbsp; private ServiceReference serviceReference;<br />&nbsp; &nbsp; private SomeService service;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br />&nbsp; &nbsp; // getters/setters ommitted<br />}</p>
+<p>&lt;reference id="service" interface="com.xyz.SomeService"/&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; <br />&lt;bean id="someBean" class="BeanWithServiceReference"&gt;<br />&nbsp; &lt;property name="serviceReference" ref="service"/&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; (1)<br />&nbsp; &lt;property name="service" ref="service"/&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (2)<br />&lt;/bean&gt;</p>
+<p>1 &nbsp;&nbsp; Automatic managed service to ServiceReference conversion.<br />2 &nbsp;&nbsp; Managed service is injected without any conversion</div>
+<p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">노트</p>
+<p>주입된 ServiceReference 타입의 빈은 참조하고 있는 OSGi 서비스 객체가 바뀔 때마다 같이 바뀐다.</p></div>
+<p><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">6.2.2. 서비스 콜렉션 참조하기</span></font></p>
+<p>때때로 애플리케이션은 간단하게 특정 범위 중에서 하나의 서비스를 참조할 뿐만 아니라, 범위 해당하는 모든 서비스를 참조해야 할 때도 있다. 스프링 DM은 이를 List 또는 Set(정렬은 부가적으로) 엘리먼트로 지원한다.</p>
+<p>List와 Set의 차이는 오직 동일성뿐이다. 레지스트리에 등록되어 있는 두 개 이상의 서비스들(각자 다른 서비스 id를 가지고 있을 것이다.)이 해당 서비스의 equals 메소드 구현에 따라 같을 수도 있는데. Set에는 그들 중에 하나만 가지고 있을 것이고, List는 전부다 반환해 준다.</p>
+<p>set과 list 스키마 엘리먼트는 서비스 집합체를 나타낼 때 사용한다.</p>
+<p>이 엘리먼트들도 interface, filter, bean-name, cardinality 그리고 context-class-loader를 지원한다. 단 cardinality의 값으로는 0..n 과 1..n 만 사용할 수 있다.</p>
+<p>0..n은 해당 콜렉션에 대응하는 서비스가 하나도 없어도 상관없다는 것이고 1..n은 필수 레퍼런스를 나타낸다.</p>
+<p>list는 java.util.List 타입으로 정의되고, set 엘리먼트는 java.util.Set 타입의 빈으로 정의된다.</p>
+<p>다음의 예제는 EventListener 인터페이스를 구현한 모든 등록된 서비스들을 List 타입으로 반환할 것이다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;list id="myEventListeners" interface="com.xyz.EventListener"/&gt;</div>
+<p>리스트의 요소들은 스프링에의해 동적으로 관리될 것이다. 대응하는 서비스가 레지스트리에 등록되고 해지됨에 따라 콜렉션의 구성요소도 갱신될 것이다.</p>
+<p>스프링 DM은 정렬된 콜렉션도 지원한다. set과 list 둘다.</p>
+<p>정렬하는 방법은 두 가지인데, 하나는 Comparator를 사용하는 방법(custom ordering)이고 다른 하나는 Comparable 인터페이스를 구현한 것 끼리 비교하는 것(natural ordering)이다.</p>
+<p><span style="font-weight: bold;">6.2.2.1. Greedy Proxing</span></p>
+<p>스프링 DM 서비스 콜렉션으로 가져온 모든 OSGi 서비스는 interface 속성에 설정한 클래스에 타입 호환가능하다. 하지만, 때때로 서비스가 부가적으로 설정한 클래스들을 사용하고 시을 수 있다.</p>
+<p>그런 경우, 스프링 DM 콜렉션은 greedy-groxing 속성을 지원하는데, 이 속성을 사용하여 참조하는 서비스에 부가적으로 설정한 모든 클래스들을 사용할 수 있도록 프록시들을 생성하게 할 수 있다. 따라서, 가져온 프록시를 interface에 설정한 클래스가 아닌 다른 타입으로 캐스팅을 할 수 있다. 다음의 예제를 보자.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">&lt;list id="services" interface="com.xyz.SomeService" greedy-proxying="true"/&gt;</div>
+<p>다음과 같이 할 수 있다.</p>
+<div style="border: 1px solid rgb(204, 204, 204); padding: 10px; background-color: rgb(247, 247, 247);">for (Iterator iterator = services.iterator(); iterator.hasNext();) {<br />&nbsp; &nbsp; SomeService service = (SomeService) iterator.next();<br />&nbsp; &nbsp; service.executeOperation();<br />&nbsp; &nbsp; // if the service implements an additional type<br />&nbsp; &nbsp; // do something extra<br />&nbsp; &nbsp; if (service instanceof MessageDispatcher) {<br />&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(255, 0, 0);">((MessageDispatcher)service).sendAckMessage();</span><br />&nbsp; &nbsp; }<br />}</div>
+<p>
+<div style="border: 1px solid rgb(255, 242, 0); padding: 10px; background-color: rgb(255, 255, 204);">노트</p>
+<p>greedy proxy와 instanceof를 사용하기 전에 다른 인터페이스나 클래스 사용을 고려해 보아라. 보다 나은 다형성과 객체 지향 스러운 서비스를 구성할 수 있을 것이다.</p></div>
+<p><span style="font-weight: bold;">6.2.2.2. 콜렉션(list와 set) 엘리먼트 속성</span></p>
+<p>timeout 이 없는거만 뺴면 reference 랑 똑같다.</p>
+<p><span style="font-weight: bold;">6.2.2.3. list/set 그리고 OSGi 서비스 동적특성</span></p>
+<p>OSGi 서비스들의 집합은 OSGi 공간의 상태를 반영해야 하기 때문에 애플리케이션 컨텍스트의 라이프사이클 동안 계속해서 변한다. 서비스가 등록되고 해지되는 동안 콜렉션에 해당 서비스들이 추가 또는 삭제 된다.</p>
+<p>reference 선언은 자신이 참조하는 서비스가 해지 되면 대체제를 찾는 반면, 콜렉션은 그냥 서비스를 콜렉션에서 제거한다. reference와 마찬가지로, 1..n 인 cardinality는 필수 레퍼런스라고 하며, 0..n은 부가적인 레퍼런스라고 한다. 만약에 대응하는 서비스가 없다면 필수 콜렉션만 unsatisfied 상태가 되고 ServiceUnavailableException을 던진다.</p>
+<p><span style="font-weight: bold;">6.2.2.4. Iterator 제약사항과 서비스 콜렉션</span></p>
+<p>콜렉션을 순회하는 방법중에 권장하는 방법은 Iterator를 사용하는 것이다. 하지만, OSGi 서비스는 언제든지 등록되고 해지될 수 있으므로, 콜렉션 또한 그에 따라 변경되어야 한다. 스프링 DM은 깔끔하게Transparenlty 사용자가 참조하는 모든 Iterator들을 수정해 준다. 따라서 사용자는 콜렉션이 변경되는 와중에도 안전하게 순회할 수 있다. 게다가, 그 Iterator들은 콜렉션의 모든 변경 사항을 반영한다. 변경이 Iterator 객체를 만든 후에 발생했더라도 반영된다. 만약 순회를 시작하자 마자 서비스들이 왕창 내려갔다고 했을때, 이 상태에서 순회를 계속하면 "죽은" 서비스들을 호출하게 될 것이다. 스프링 DM은 그래서 이 Iterator들이 스냅샷이 아니라 가장 최신 콜렉션 상태를 반영한 것이 된다. 순회가 얼마나 빠르고 느리냐는 상관없다.</p>
+<p>서비스 수정은 Iteraor에서 순회하기 전에 있는 것들에만 반영이 된다는 것에 주의하자. 이미 순회를 마친 서비스에는 어쩔 도리가 없다. 만약 이미 해지된 서비스에 어떤 동작을 요구한다면 ServiceUnavailableException이 발생한다.</p>
+<p>정리하자면, reference 선언은 자신이 참조하는 서비스가 해지되면 대체제를 찾지만 콜렉션은 대체제를 찾지 않는다. 그냥 자신의 콜렉션에서 해당 서비스를 제거할 뿐이다. 다음 순회할 때 그들을 사용하지 않도록.</p>
+<p>Iterator 제약사항은 next() 메소드가 항상 hasNext() 호출 결과를 따른다는 것을 알아두자.</p>
+<p>hasNext()가 true일 때 next()를 하면 항상 null이 아닌 값을 반환한다.<br />hasNext()가 false일 때 next()를 하면 NoSuchElementException을 던진다.</p>
+<p>간단하게 Iterator를 리프레쉬하려면 hasNext()를 다시 호출하면 된다. 그럼 Iterator가 현재 콜렉션 에서 다음 순회 엔트리를 확인할 것이다.</p>
+<p>6.2.3. 가져온import OSGi 서비스의 동적특성 다루기</p>
+<p>reference나 set, list를 사용할 때 스프링 DM이 뒷단의 서비스를 관리할 것이다. 하지만, 하지만 때론 애플리케이션이 뒷단의 서비스 변경을 알고 싶을 수도 있다.</p>
+<p>언제 reference 빈이 묶이고 풀리는지 알고 싶은 그런 애플리케이션들은 내부 엘리먼트로 하나 이상의 listener 엘리먼트를 등록할 수 있다. 이 엘리먼트는 reference, set, list에서 사용할 수 있다. 서비스 공개 리스너 설정과 비슷하다. listener 엘리먼트에 org.springframework.osgi.service.importer.OsgiServiceLifecycleListener 인터페이스를 구현한 빈을 참조하도록 설정하면, 해당 인터페이스의 bind와 unbind 메소드를 호출하게 된다. 커스텀 바인드 언바인드 메소드를 사용하려면 메소드 이름을 사용하면 된다.</p>
+<p>&lt;reference id="someService" interface="com.xyz.MessageService"&gt;<br />&nbsp; &lt;listener ref="aListenerBean"/&gt;<br />&lt;/reference&gt;</p>
+<p>&lt;reference id="someService" interface="com.xyz.MessageService"&gt;<br />&nbsp; &lt;listener bind-method="onBind" unbind-method="onUnbind"&gt;<br />&nbsp; &nbsp;&nbsp; &lt;beans:bean class="MyCustomListener"/&gt;<br />&nbsp; &lt;/listener&gt;<br />&lt;/reference&gt;</p>
+<p>만약 OsgiServiceLifecycleListener와 커스텀 메소드 둘다 등록되어 있다면 인터페이스 구현체 먼저 호출하고 그 다음 커스텀 메소드를 호출한다.</p>
+<p>커스텀 메소드의 시그너쳐는 다음과 같다.</p>
+<p>public void anyMethodName(ServiceType service, Dictionary properties);</p>
+<p>public void anyMethodName(ServiceType service, Map properties);</p>
+<p>public void anyMethodName(ServiceReference ref);</p>
+<p>ServiceType 자리에는 어떤 타입이든 선언할 수 있다. 해당 타입에 해당하는 서비스가 묶이거나 풀릴때 호출된다. 만약 모든 타입에 대해 콜백을 호출하고 싶으면 java.lang.Object 타입으로 선언하면 된다.</p>
+<p>properties 파라미터는 등록된 서비스가 가지고 있는 속성들의 집합을 나타낸다.</p>
+<p>리스너가 reference에 등록되어 있다면:
+<ul>
+<li>레퍼런스가 초기에 서비스와 묶일 때와 서비스가 새로운 서비스로 교체될 때마다 bind 메소드가 실행된다.</li>
+<li>현재 서비스가 해지되거나, 그 즉시 교체가능한 대체 서비스가 없을 때 unbind 콜백이 호출된다.(물론 해당 reference는 unsatisfied 상태가 된다.)</li>
+</ul>
+<p>리스너가 콜렉션에 등록되어 있다면:
+<ul>
+<li>새로운 서비스가 콜렉션에 추가되면 bind 메소드를 호출한다.</li>
+<li>서비스가 해지되고 콜렉션에서 제거될 때 unbind 메소드를 호출한다.</li>
+</ul>
+<p>콜렉션에는 서비스 교체가 없다는 것을 주목하라. 콜렉션은 그냥 서비스를 추가하고 제거할 뿐이다.</p>
+<p>뒷단의 OSGi 서비스에 대한 OSGi serviceChanged 이벤트 처리의 일부로 바인드와 언바인드 콜백은 동기적으로 처리된다.</p>
+<p>아래의 테이블은 reference listener 서브 엘리먼트로 가용한 속성들이다.</p>
+<p>생략<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">6.2.4. 리스너와 서비스 프록시들</span></font></p>
+<p>임폴트 리스너들은 특정 시점에 묶이는 OSGi 서비스에 접근할 수 있는 방법을 제공하지만, 여기서 중요한 것은 해당 메소드로 넘어온 아규먼트가 실제 서비스 객체가 아닌 프록시라는 것이다. 프록시를 사용하는 이유는 언제 어떻게 바뀔지 모른느 객체에 대하여 강력한 레퍼런스를 가지는 것을 방지하기 위함이다. 서비스들을 추적하는 것이 주목적인 리스너들은 instance equality나 object equlity에 연연해서는 안된다. 이 들 메소드가 해당 인터페이스나 클래스의 public 메소드로 구현한 것이 아니라면, 프록시의 메소드가 호출될 것이다. </p>
+<p>따라서 추적은 그냥 서비스 인터페이스나, 서비스 속성(org.osgi.framework.Constants#SERVICE_ID 참조) 또는 서비스 노티(바인드/언바인드)로만 하는 것을 추천한다.<br /><font size="3"><br style="font-weight: bold;" /><span style="font-weight: bold;">6.2.5. 호출하는 BundleContext에 접근하기</span></font></p>
+<p>가져온 서비스가 특정 시점에 어떤 번들을 사용하고 있는지 알고 싶을 수 있다. 이런 시나리오를 돕기 위해, 스플이 DM이 가져온 서비스는 가져온 번들 BundleContext를 LocalBundleContext 클래스로 공개한다. 가져온 것에 대한 메소드가 호출될 때마다, ThreadLocal을 사용하여 호출하는 BundleContext를 사용할 수 있다. getInvokerBundleContext()를 통해서..</p>
+<p>단 이걸 사용할 때 해당 클래스가 스프링 DM 코드에 의존하게 된다는 것을 주의해야 한다.</p>

@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[스프링 웹플럭스] 1.1.3. 리액티브 API"
+date: 2017-10-12 15:50:37.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  _oembed_3e490535477df25f531ea027c0764a12: "{{unknown}}"
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-reactive-api">https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-reactive-api</a></p>
+<div class="paragraph">
+<p>리액티브 스트림은 상호 호환성에 있어서 중요한 역할을 한다. 라이브러리나 기반 컴포넌트로써 중요한 역할을 하지만 애플리케이션 API로써는 유용하지 않다 왜냐면 상당히 로우 레벨이기 때문이다. 애플리케이션이 필요로 하는것은 보다 상위 레벨의 풍부하며 비동기 로직을 조합하는데 사용할 함수 API 같은 것이다. 자바 8의<code>Stream </code>API와 비슷하지만 컬렉션에 국한되진 않은 것이 필요하다. 바로 그러한 역할을 리액티브 라이브러리가 할 것이다.</p>
+</div>
+<div class="paragraph"></div>
+<div class="paragraph">
+<p>스프링 웹플럭스에서 선택 리액티브 라이브러리는 <a href="https://github.com/reactor/reactor">리액터</a>다. 리액터는 리액티브엑스의 <a href="http://reactivex.io/documentation/operators.html">다양한 오퍼레이터</a>에 해당하는 풍부한 기능 셋을 통해 0..1과 0..N 개의 데이터 시퀀스를 다룰 수 있는 <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html">Mono</a>와 <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html">Flux</a> API 타입을 제공한다. 리액터는 리액티브 스트림 라이브러리의 일종이며 따라서 그 모든 오퍼레이터는 논-블럭킹 백 프레셔를 지원한다. 리액터는 서버 사이드 자바에 집중하고 있다. 스프링과 긴밀하게 협업하며 개발되었다.</p>
+<p>웹플럭스는 리액터를 핵심 의존성으로 필요로 하지만 다른 리액티브 스트림 라이브러리로 교체할 수 있다. 일반적으로 웹플럭스 API는 평범한  <code>Publisher</code>를 입력값으로 받고 내부적으로 리액터 타입으로 변환하여 사용하고 <code>Flux</code> 나 <code>Mono</code> 를 결과값으로 반환한다. 따라서 여러분은 어떠한 <code>Publisher</code>라도 입력값으로 전달할 수 있으며 결과값에 오퍼레이션을 적용할 수 있다. 하지만 다른 라이브러리를 사용한다면 결과값을 다른 리액티브 라이브러로 변환해야 할 것이다. 가능한한 애노테이션을 사용한 컨테이너처럼, 웹플럭스는 투명하게 RxJava나 다른 리액티브 라이브러리를 사용할 수 있다. 자게한 내용은 <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-reactive-libraries">리액티브 라이브러리</a>를 참고하라.</p>
+</div>

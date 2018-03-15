@@ -1,0 +1,55 @@
+---
+layout: post
+title: Inner beans
+date: 2007-03-08 13:09:48.000000000 -08:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Chapter 3
+tags:
+- inner bean
+- Spring Reference 3장
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1323148749'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p>&lt;propery /&gt; 또는 &lt;constructor-arg /&gt; 의 하위 엘리먼트로 &lt;bean /&gt; 을 사용하면 됩니다.
+<div style="padding: 10px; background-color: rgb(228, 228, 228);">&lt;bean id="outer" class="..."&gt;<br />&nbsp; &lt;!-- instead of using a reference to a target bean, simply define the target bean inline --&gt;<br />&nbsp; &lt;property name="target"&gt;<br />&nbsp; &nbsp; &lt;bean class="com.mycompany.Person"&gt; &lt;!-- this is the inner bean --&gt;<br />&nbsp; &nbsp; &nbsp; &lt;property name="name" value="Fiona Apple"/&gt;<br />&nbsp; &nbsp; &nbsp; &lt;property name="age" value="25"/&gt;<br />&nbsp; &nbsp; &lt;/bean&gt;<br />&nbsp; &lt;/property&gt;<br />&lt;/bean&gt;</div>
+<p><span style="font-weight: bold;">inner bean의 id나 name 속성은 사용하지 않아도 됩니다. </span><br />=&gt; 어차피 inner bean을 둘러싸고 있는 bean에서만 사용 될 것이기 때문에 굳이 식별자가 필요하지 않으며 id나 name을 적어도 container가 무시하게 됩니다.<br /><br style="font-weight: bold;" /><span style="font-weight: bold;">inner bean의 scope는 항상 protorype 입니다.</span><br />=&gt; 흠.. local 변수 처럼 생각하면 되겠죠?</p>

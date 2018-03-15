@@ -1,0 +1,39 @@
+<p style="clear: both;"><a href="http://www.sonatype.com/books/nexus-book/reference/install.html">http://www.sonatype.com/books/nexus-book/reference/install.html</a></p>
+<p style="clear: both;">1. 다운받기</p>
+<p style="clear: both;"><a href="http://nexus.sonatype.org/downloads/">http://nexus.sonatype.org/downloads/</a></p>
+<p style="clear: both;">이곳에서 번들 형태를 받을 수도 있고 war 파일을 받을 수도 있습니다. 번들형태는 서블릿 컨테이너가 내장된 형태로 제공되고 있고 war는 기존의 서블릿 컨테이너나 애플리케이션 서버에 배포해서 설치할 수 있는 형태로 제공됩니다.</p>
+<p style="clear: both;">war 버전을 설치할테니 최신버전 war 파일을 다운 받습니다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Index_of__downloads.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Index_of__downloads-thumb.jpg" alt="" width="380" height="377" /></a>2. 톰캣에 배포</p>
+<p style="clear: both;">톰캣 홈 디렉토리/webapp 폴더에 복사해 넣습니다. 이때 war 파일 이름을 nexus.war로 바꿔주면 URL이 좀 간단해 집니다.</p>
+<p style="clear: both;">mv ./nexus-webapp-1.8.0.1.war ./nexus.war</p>
+<p style="clear: both;">이제 톰캣 홈 디렉토리/bin 폴더로 가서 톰캣을 실행합니다.</p>
+<p style="clear: both;">./catalina.sh start</p>
+<p style="clear: both;">3. Nexus로 접속하기</p>
+<p style="clear: both;"><a href="http://localhost:8080/nexus/">http://localhost:8080/nexus/</a></p>
+<p style="clear: both;">war 파일 이름을 nexus.war로 변경했기 때문에 톰캣을 실행하고 나면 위와 같은 URL로 Nexus에 접근할 수 있습니다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-thumb.jpg" alt="" width="380" height="339" /></a>4. Admin 로그인 하기</p>
+<p style="clear: both;">Nexus를 설치하고나면 우선 로그인을 해서 관리자 계정 비밀번호를 변경해야 합니다. 그럴려면 로그인을 해야 하는데 기본 계정은 다음과 같습니다.</p>
+<p style="clear: both;">admin/admin123</p>
+<p>화면 우측 상단의 Log In 링크를 클릭해 로그인합니다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager-1.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-1-thumb.jpg" alt="" width="379" height="339" /></a>그럼 이렇게 왼쪽에 몇가지 관리용 탭이 생기는데 그중에 Security 탭에서 비번을 변경하면 됩니다.</p>
+<p style="clear: both;">그밖에도 배포용 계정도 기본으로 설정되는데 그것도 역시 비번을 바꿔주는게 좋습니다.</p>
+<p style="clear: both;"><a href="http://www.sonatype.com/books/nexus-book/reference/install-sect-repoman-post-install.html">http://www.sonatype.com/books/nexus-book/reference/install-sect-repoman-post-install.html</a></p>
+<p style="clear: both;">여기를 참조하세요.</p>
+<p style="clear: both;">5. 저장소 추가하기</p>
+<p style="clear: both;">기본으로 여러 저장소가 설정되어 있는데 group, proxy, hosted 이 세종류만 잘 알면 됩니다.</p>
+<p style="clear: both;">group은 nexus에 설정되어 있는 다른 저장소들을 하나로 묶은 저장소로 생각하면 되는데 그렇게 해야 메이븐의 저장소 설정을 간추릴 수 있습니다.</p>
+<p style="clear: both;">proxy는 다른곳에 있는 기존의 메이븐 저장소를 등록하는 겁니다. jboss와 spring 저장소를 proxy 형태로 등록해두면 이 Nexus에서 필요한 의존성을 jboss와 spring 저장소에서 받아올 수 있습니다.</p>
+<p style="clear: both;">hosted는 다른 저장소에 없는 파일 또는 proxy를 통해 제공받을 수 없는 파일인 경우에 직접 메이븐 저장소에 올려줘야 하는데 그럴 때 사용하는 저장소 형태가 바로 hosted 입니다. 그런데 이미 hosted 타입의 저장소는 기본으로 등록되기 때문에 별일 없다면 그걸 그냥 사용하면 됩니다.</p>
+<p style="clear: both;">그래서 보통 proxy를 추가하고 hosted에 필요한 라이브러리를 넣어주고 이 둘을 잘 조합해서 group으로 묶어주는 작업을 해야 합니다.</p>
+<p style="clear: both;">지금은 jboss 저장소를 proxy 저장소로 등록해 보겠습니다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager-2.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-2-thumb.jpg" alt="" width="379" height="339" /></a></p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager-3.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-3-thumb.jpg" alt="" width="379" height="339" /></a>이런식으로 JBoss 저장소를 추가했습니다.</p>
+<p style="clear: both;">6. group 저장소 설정</p>
+<p style="clear: both;">이제 nexus에 기본으로 설정되어 있는 group 저장소인 Public Respositories라는 것을 설정합니다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager-4.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-4-thumb.jpg" alt="" width="379" height="339" /></a>이런식으로 방금 추가한 JBoss 저장소를 Public Repositories에 추가해주면 됩니다.</p>
+<p>7. 메이븐 설정</p>
+<p style="clear: both;">이제껏 설정한 Nexus를 통해 필요한 의존성을 가져오도록 하려면 메이븐의 settings.xml이나 각 프로젝트의 pom.xml에 저장소를 설정해줘야 합니다.</p>
+<p style="clear: both;">그럴려면 저장소 URL을 알아야하는데 Nexus의 Repository Path에 있다.</p>
+<p style="clear: both;"><a class="image-link" href="http://whiteship.me/wp-content/uploads/2010/12/Sonatype_Nexus_Maven_Repository_Manager-6.jpg"><img class="linked-to-original" style="text-align: center; display: block; margin: 0 auto 10px;" src="/assets/Sonatype_Nexus_Maven_Repository_Manager-6-thumb.jpg" alt="" width="380" height="338" /></a><a href="http://www.sonatype.com/books/nexus-book/reference/maven-sect-single-group.html">http://www.sonatype.com/books/nexus-book/reference/maven-sect-single-group.html</a></p>
+<p style="clear: both;">여기에 보면 설정이 들어있으니 참조하시길~</p>
+<p><br class="final-break" style="clear: both;" /></p>

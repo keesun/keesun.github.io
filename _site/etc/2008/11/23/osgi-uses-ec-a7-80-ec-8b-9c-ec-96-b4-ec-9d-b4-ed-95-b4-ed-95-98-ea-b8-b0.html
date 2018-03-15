@@ -1,0 +1,152 @@
+<p>참조 및 번역: <a title="[http://blog.springsource.com/2008/10/20/understanding-the-osgi-uses-directive/]로 이동합니다." target="_blank" href="http://blog.springsource.com/2008/10/20/understanding-the-osgi-uses-directive/">Understanding the OSGi "uses" Directive</a></p>
+<p>스프링 DM 서버 또는 다른 어떤 OSGi 플랫폼 기반의 애플리케이션을 빌드 할 때, 여러분은 아마도 머지않아 "uses"라는 지시어를 보게 될 것이다. 이 지시어의 목적을 분명하게 이해하지 않는다면, 여러분은 언제 그것을 사용해야 하는지도 모를 뿐더러, "uses" 충돌("uses" conflict)로 인해 번들 resovle가 되지 않을 때 의문만 생길 것이다. 본 기사에서 "uses" 지시어를 이해하고, 언제 사용해야 하는지, 그리고 어떻게 "uses" 충돌을 디버깅하는지 살펴보겠다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">번들 리졸루션(Resolution)</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+OSGi는 일단 번들이 "리졸브"(resolve) 상태가 되도록 설계되어 있다. 클래스 캐스트 예외나 타입이 맞지 않아서 발생하는 그와 비슷한 문제들이 발생하지 않도록 해야 한다. 이는 OSGi가 각각의 번들마다 하나의 클래스 로더를 사용하기 때문에 사용자들이 타입 불일치 문제를 만나게 될 여지가 많다. 그래서 매우 중요하다.</p>
+<p>런타임에 사용하려면 일단 클래스 로더에 의해 자바 타입이 로딩이 되어야 해당 타입의 클래스나 객체 같은 것을 사용할 수 있다. 런타임 타입은 타입의 전체 클래스 이름과 해당 타입을 정의한 클래스 로더의 조합으로 정의한다. 만약 동일한 전체 클래스 이름이 두 개의 다른 클래스 로더를 사용하여 정의되어 있다면, 두 개의 호환하지 않는 런타임 타입을 생성한다. 이런 비호환성으로 인해 두 타입의 어떤 "접촉"(contact)을 하게 될 경우 런타임 에러를 발생한다. 예를 들어, 이 두 타입 중 하나를 다른 타입으로 캐스팅을 시도할 때 클래스 캐스트 예외가 발생한다.</p>
+<p>OSGi는 유일한 클래스 로더 기반 자바 모듈 시스템이 아니지만 지금까지 가장 성숙한 시스템이다. 즉 OSGi 설계자들은 오랫동안 힘들게 이런 종류의 문제들을 다려왔고 그 해결책을 OSGi 스펙에 포함시켜왔다. OSGi 설계는 이런 문제들을 애플리케이션 코드가 동작하기 전에 발경하는 것이다. 즉 리졸루션(resolusion)이라는 단계에서 말이다. 리졸루션(Resolution)은 자바와 같은 엄격한 타입 제한 프로그래밍 언어에서 애플리케이션 코드를 실행하기도 전에 특정 문제들을 발견할 수 있는 컴파일과 유사하다. 여러분의 번들을 resovle 하려면 가끔 머리가 아플 수도 있다 하지만 이는 클래스 캐스트 예외와 같은 런타임 에러 진단을 해준다.</p>
+<p>그래서 번들 리졸브(resolve)는 무엇을 의미하는가? 이것은 번들의 의존성을 확인했다는 뜻이다. 일반적으로 해당 번들이 사용하는(import) 패키지를 공개한(export) 번들들을 찾았고 그 버전 제약을 만족시킨다는 뜻이다. 가장 명확한 제약 사항은 모든 공개된(export) 패키지 버전이 사용하려는(import) 패키지 버전 범위 내에 포함되어야 한다. 또 다른 제약 사항으로는 패키지 임포트(import)에 기술 할 수 있는 임의 속성이 그에 대응하는 패키지 익스포트(export) 속성과 일치해야 한다는 것이다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">여러 번들에 의해 공개된 패키지</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+우리가 곧 살펴볼 uses 지시어는 하나 이상의 번들에 의해 공개되는 패키지에서 발생하는 타입 불일치를 해결할 목적으로 사용한다. 어떤 한 번들의 타입을 다른 번들의 타입으로 사용할 필요가 있을 때, 런타임 타입이 호환되지 않기 때문에, 타입 불일치 문제가 발생한다. 예를 들어, 어떤 번들에서 다른 번들의 클래스 이름이 같지만 다른 타입으로 타입 캐스팅을 시도할 때 클래스 캐스팅 예외가 발생한다. 어떻게 이런 일이 발생할까? 번들은 동일한 패키지를 하나 이상의 번들에서 가져올(import) 수 없기 때문이다. 상충하는 타입을 접촉(contact) 시킬 어떤 방법이 있어야 한다. It happens by a type being passed "through" a type in another package..</p>
+<p>어떤 타입을 다른 타입으로 전달(pasess through)하는 방법은 두 가지가 있다. 첫 번째 방법은 어떤 타입이 다른 타입을 명시적으로 참조하는 것이다,. 예를 들어, 다음은 org.bar 패키지에 있는 Bar 타입의 어떤 메소드는 org.foo 패키지의 Foo 타입을 참조할 수 있다.</p>
+<p>public Foo getFoo();</p>
+<p>어떤 타입을 다른 타입으로 암묵적으로 전달하는 두 번째 방법은 서브타입을 이용하는 것이다, 예를 들어, 다음은 서브타입을 참조하는 메소드 시그너쳐다.</p>
+<p>public Object getFoo();</p>
+<p>암묵적인 경우, 서브타입의 객체는 어느 순간에는 상충하는 타입으로 캐스팅될 것이다.</p>
+<p>자바 코드 수준에서 그런 타입 불일치가 어덯게 발생하는가. 번들 manifest가 어떻게 생겼는지 살펴보자. </p>
+<p>필요한 타입 Foo는 org.bar 패키지를 공개하는(export) 번들과 동일한 번들이 공개하거나</p>
+<p>bundle-symbolicname: B<br />
+bundle-manifestversion: 2<br />
+export-package: org.foo,org.bar</p>
+<p>또는 다른 번들(F)이 공개할 수도 있을 것이다.</p>
+<p>bundle-symbolicname: B<br />
+bundle-manifestversion: 2<br />
+export-package: org.bar<br />
+import-package: org.foo</p>
+<p>bundle-symbolicname: F<br />
+bundle-manifestversion: 2<br />
+export-package: org.foo</p>
+<p>"uses" 지시어는 OSGi가 위와 같은 타입 불일치를 번들 리졸루션 과정에서 진단할 수 있도록 도입되었다.</p>
+<p><span style="font-size: 11pt; font-weight: bold;">"uses" 지시어</span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+위와 같은 잠재적인 타입 불일치를 리졸루션 과정에서 찾아내기 위해, 자바 코스 수준에서의 명시적인 또는 암묵적인 타입을 그에 상응하는 번들 manifest에 선언해야 한다. 공개하는 패키지는 "uses" 지시어를 붙여서 해당 패키지가 참조할 패키지를 선언해준다.</p>
+<p>위 예제에서, 공개하는 패키지 org.bar는 org.foo 패키지를 "사용"(use) 한다고 선언한다.</p>
+<p>…<br />
+export-package: org.bar;uses:="org.foo"<br />
+…</p>
+<p>"uses" 지시어에서 사용하는 패키지나 패키지들은 "uses" 지시어를 사용하고 있는 번들 manifest에서 공개(export) 또는 가져올(import) 패키지에 명시되어 있는 것들이어야 한다. 따라서 다음은 유효한 manifest지만</p>
+<p>…<br />
+export-package: p;uses:="q,r", q<br />
+import-package: r<br />
+…</p>
+<p>다음은 유효하지 않은 manifest다.(q 패키지를 export 또는 import 하고 있지 않기 때문에)</p>
+<p>…<br />
+export-package: p;uses:="q,r"<br />
+import-package: r<br />
+…</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">추이적인 "ueses"</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+타입 참조는 추이적이다. 예를 들어, 타입 C를 참조하는 타입 B를 타입 A가 참조할 경우에, A의 사용자는 B를 통해서 C를 참조할 수 있다.</p>
+<p>타입 참조가 이렇게 추이적이기 때문에, OSGi는 자동적으로 이를 고려했다. "uses" 지시어의 "추이적인 클로져"(transitive closure)라고 알려져 있는 것이 바로 그것이다. 이것은 "uses" 지시어를 사용하기만 하면 OSGi가 알아서 추이적인 타입 참조를 다뤄준다는 것이다.</p>
+<p>예를 들어, 다음 번들 manifest를 보자</p>
+<p>…<br />
+export-package: p;uses:="q,r", q;uses:="r"<br />
+import-package: r<br />
+…</p>
+<p>문법에 맞다. 다음 번들 manifest는 "p에서 q", "q에서 r" 그리고 "(추이적으로) p에서 r" 타입 참조를 충분히 잘 표현한 것이다.</p>
+<p>…<br />
+export-package: p;uses:="q",q;uses:="r"<br />
+import-package: r<br />
+…</p>
+<p>(역자 주, 위랑 아래랑 같으니까 아래처럼 사용해도 된다는 뜻입니다.)</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">"uses" 충돌 감지하기(Diagnosing)</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+번들 레졸루션 과정은 모든 제약 사항을 확인하는 것이 주목적이다. 따라서 모든 "uses" 제약 사항이 만족하지 않을 경우 "uses" 충돌을 보고할 것이다. 스프링 dm 서버가 주는 진단 이슈는 이런 문제를 해결하는데 도움을 준다.</p>
+<p>원리를 이해하기 위해 만든 예제를 살펴보자. 클라이언트 번들 C가 사용할 몇몇 유틸리티 번들 F와 B을 만들고 있다고 가정해보자. 새로운 버전의 F를 추가하고다음 mainfest들을 가지고 서버에 배포한다고 가정해보자.</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: F<br />
+Bundle-Version: 1<br />
+Bundle-Name: F Bundle<br />
+Export-Package: org.foo;version=1</p>
+<p>(역자 주, 버전이 1이니까 이전에 사용하던 F 유틸 번들 이겠네요.)</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: F<br />
+Bundle-Version: 2<br />
+Bundle-Name: F Bundle<br />
+Export-Package: org.foo;version=2</p>
+<p>(역자 주, 버전이 2니까 이번에 새로 추가한 F 유틸 번들인가 봅니다.)</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: B<br />
+Bundle-Version: 1<br />
+Bundle-Name: B Bundle<br />
+Export-Package: org.bar;uses:="org.foo"<br />
+Import-Package: org.foo;version="[1,2)"</p>
+<p>(역자 주, 이것도 유틸 번들인데, F 유틸 번들 1와 2가 공개하는(export) org.foo 패키지 버전 1 이상 2 미만을 사용하고 있군요. 결국 F 유틸 번들 버전 1을 사용하겠네요.)</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: C<br />
+Bundle-Version: 1.0.0<br />
+Bundle-Name: C Bundle<br />
+Import-Package: org.bar,org.foo;version="[2,3)"</p>
+<p>(역자 주, 이건 클라이언트 번들인 C 인데 org.foo 패키지를 사용하는 데 그 버전이... 이런.. 2 이상 3 미만을 사용합니다. 그러면 이 번들은 지금 새로 설치한 F 유틸 번들 버전 2를 사용하게 됩니다. 뭔가 꼬였군요. 왜냐면 여기서 또 사용하기로(import)되어 있는 org.bar 패키지에서는 F 유틸 번들 버전 1의 org.foo 패키지를 사용하니까요. 두 패키지가 호환되지 않자나요. 같은 패키지지만 다른 번들이 공개한 거니까 런타임 타입이 다르죠. 왜냐면 클래스로더가 다르니까.)</p>
+<p>C 번들을 설치하려고 하면, dm 서버는 다음과 같은 로그 메시지를 출력한다,</p>
+<p>&lt;SPDE0018E&gt; Unable to install application from location 'file:/xxx/C.jar/'. Could not satisfy constraints for bundle 'C' at version '1.0.0'.<br />
+Cannot resolve: C<br />
+Resolver report:<br />
+Bundle: C_1.0.0 - Uses Conflict: Import-Package: org.bar; version="0.0.0"<br />
+Possible Supplier: B_1.0.0 - Export-Package: org.bar; version="0.0.0"<br />
+Possible Conflicts: org.foo</p>
+<p>이 중에서 </p>
+<p>Bundle: C_1.0.0 - Uses Conflict: Import-Package: org.bar; version="0.0.0"</p>
+<p>이 줄은 org.bar 패키지 임포트와 관련하여 "uses" 제약 위반이 있다는 것을 알려준다. 즉, C가 사용하려고 하는 공개된(export) org.bar의 "uses"가 만족스러운 상황이 아니라는 것이다.</p>
+<p>Possible Supplier: B_1.0.0 - Export-Package: org.bar; version="0.0.0"</p>
+<p>이 줄은 org.bar 공급자가 의심스럽다는 것이고</p>
+<p>Possible Conflicts: org.foo</p>
+<p>이 줄은 어떤 패키지에서 "uses" 제약 사항이 위반되는지 알려준다.</p>
+<p>구체적인 것에서 다시 돌아와서, 우리는 "uses" 충돌이 발생한 이유를 알고 있다. 번들 C가 가져오는 org.foo 패키지가 번들 B가 가져오는 것과 버전이 다르기 때문이다. B가 최신 버전의 F를 사용하도록 설정하는 것을 깜빡했다.</p>
+<p>B의 manifest를 다음과 같이 수정한다.</p>
+<p>Manifest-Version: 1.0<br />
+Bundle-ManifestVersion: 2<br />
+Bundle-SymbolicName: B<br />
+Bundle-Version: 1<br />
+Bundle-Name: B Bundle<br />
+Export-Package: org.bar;uses:="org.foo"<br />
+Import-Package: org.foo;version="[2,3)"</p>
+<p>이제 번들 C를 성공적으로 배포할 수 있다.</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">복잡한 "uses" 충돌 진단하기</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+의도적으로 만든 "uses" 충볼은 번들 manifest를 보고서로 알 수 있을 만큼 간단한 문제였다. 하지만 매우 많은 충돌 가능성이 있는 "uses" 지시어 목록과 같은 좀 더 복잡한 "uses" 충돌의 경우, Equinox 콘솔(2401포트로 telnet)을 사용하여 성공적으로 설치된 번들을 확인해 볼 수 있다.(dm 서버는 성공적으로 배포하지 못한 번들은 uninsatll 시킨다.)</p>
+<p>이퀴녹스 콘솔 명령어를 사용하여 설치된 번들 목록을 확인할 수 있다.,</p>
+<p>osgi&gt; ss</p>
+<p>위에서 만들어본 문제 상황에서 다음과 같은 목록을 확인할 수 있다.</p>
+<p>…<br />
+82 ACTIVE F_1.0.0<br />
+84 ACTIVE F_2.0.0<br />
+85 ACTIVE B_1.0.0</p>
+<p>B 번들 manifest를 보려면 다음과 같이 한다.</p>
+<p>osgi&gt; headers 85</p>
+<p>그리고 패키지 org.foo 패키지를 공개한 번들과 사용하는 번들을 보려면 다음과 같이 한다.</p>
+<p>osgi&gt; packages org.foo</p>
+<p><span style="font-weight: bold;"><span style="font-size: 11pt;">요약</span></span></p>
+<div>
+<hr style="border-color: black; border-width: 1px 0px 0px; height: 1px; display: block;" /></div>
+<p>
+본 기사는 "uses" 지시어 필요성을 살펴봤고, 이를 사용하여 타입 불일치 에러 문제를 조기에 진단할 수 있는 방법을 보았다. 그리고 dm 서버 진단과 이퀴녹스 콘솔을 사용하여 "uses" 제약 위반을 확인하는 방법도 살펴보았다.</p>
+<p>(마지막 단락은 번역 스킵)</p>
+<p>You may think the "uses" directive is more trouble than it is worth, but when you consider the alternative of tracking down the reason for a possibly obscure class cast exception while your application is running, you should start to see the rationale for "uses". Indeed any Java module system which doesn't provide the equivalent of "uses" constraints is likely to give you class cast exceptions at runtime once you have gotten to the point of having multiple versions of your application modules. The OSGi "uses" directive solves a general problem of Java modularity.</p>

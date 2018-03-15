@@ -1,0 +1,39 @@
+<h1>특징</h1>
+<ul>
+<li>Hibernate provides a feature that allows you to enforce naming standards automatically.</li>
+</ul>
+<h1>설정하기</h1>
+<ul>
+<li>NamingStrategy 인터페이스 구현하기</li>
+</ul>
+<ul>
+<li>ImprovedNamingStrategy 클래스 상속받아서 구현하기</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>네임스페이스 등록하기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">import</span> org.hibernate.cfg.ImprovedNamingStrategy;<br /><span class="code-keyword">import</span> org.hibernate.util.StringHelper;<br /><br /><span class="code-keyword">public</span> class CENamingStrategy <span class="code-keyword">extends</span> ImprovedNamingStrategy {<br />	<span class="code-keyword">public</span> <span class="code-object">String</span> classToTableName(<span class="code-object">String</span> className) {<br />		<span class="code-keyword">return</span> StringHelper.unqualify(className);<br />	}<br /><br />	<span class="code-keyword">public</span> <span class="code-object">String</span> propertyToColumnName(<span class="code-object">String</span> propertyName) {<br />		<span class="code-keyword">return</span> propertyName;<br />	}<br /><br />	<span class="code-keyword">public</span> <span class="code-object">String</span> tableName(<span class="code-object">String</span> tableName) {<br />		<span class="code-keyword">return</span> <span class="code-quote">"CE_"</span> + tableName;<br />	}<br /><br />	<span class="code-keyword">public</span> <span class="code-object">String</span> columnName(<span class="code-object">String</span> columnName) {<br />		<span class="code-keyword">return</span> columnName;<br />	}<br /><br />	<span class="code-keyword">public</span> <span class="code-object">String</span> propertyToTableName(<span class="code-object">String</span> className, <span class="code-object">String</span> propertyName) {<br />		<span class="code-keyword">return</span> <span class="code-quote">"CE_"</span> + classToTableName(className) + '_'<br />				+ propertyToColumnName(propertyName);<br />	}<br />}</pre>
+</div>
+</div>
+<ul>
+<li>classToTableName(): &lt;class&gt; 맵핑에서 table 속성에 값을 입력하지 않았을 때 호출.</li>
+</ul>
+<ul>
+<li>propertyToColumnName(): 명시적인 column 이름을 설정하지 않았을 때 호출.</li>
+</ul>
+<ul>
+<li>tableName(), columnName(): 명시적으로 이름을 설정했을 때 호출.</li>
+</ul>
+<ul>
+<li>동적으로 설정을 바꿀 수 있음.</li>
+</ul>
+<div class="code panel" style="border-width: 1px;">
+<div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>동적으로 네임스페이스 바꾸기</b></div>
+<div class="codeContent panelContent">
+<pre class="code-java">Configuration cfg = <span class="code-keyword">new</span> Configuration();<br />cfg.setNamingStrategy( <span class="code-keyword">new</span> CENamingStrategy() );<br />SessionFactory sessionFactory sf =<br />cfg.configure().buildSessionFactory();</pre>
+</div>
+</div>
+<h1>모르는 것</h1>
+<ul>
+<li>SessionFactory 설정할 때 구현한 클래스를 등록해 주면 되는건가?</li>
+</ul>

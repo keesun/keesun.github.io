@@ -1,0 +1,57 @@
+---
+layout: post
+title: OSAF 검색 폼 태그 파일 완성
+date: 2008-09-25 06:59:51.000000000 -07:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Coding
+tags:
+- OSAF
+- 검색 폼 태그
+- 태그 파일
+meta:
+  arkayne-cache-post: |2+
+
+
+
+
+
+
+
+    <!-- BlogGlue Plugin Error -->
+    <!-- This page cannot be linked by BlogGlue. -->
+    <!-- You need a valid token. Get one at the URL below. -->
+    <!-- http://www.blogglue.com/login/ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  arkayne-time-post: '1322873607'
+author:
+  login: whiteship
+  email: whiteship2000@gmail.com
+  display_name: 기선
+  first_name: 기선
+  last_name: 백
+---
+<p><img src="{{ site.baseurl }}/assets/ik280000000000.jpg" class="aligncenter" width="600" height="261" alt="사용자 삽입 이미지" /><br />태그 파일을 활요한 JSP 코드는 다음과 같습니다.</p>
+<div style="border: 1px solid rgb(144, 224, 255); padding: 10px; background-color: rgb(210, 242, 255);">&lt;o:searchpage title="사원관리"&gt;<br />&nbsp; &nbsp; &lt;o:searchbuttons popupheight="400" popupwidth="700" /&gt;</p>
+<p>&nbsp; &nbsp; &lt;o:searchform action="grid.do"&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;o:searchrow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;o:stext path="name" label="이름" size="20" maxlength="30" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;o:sselect path="location" label="국적" items="${ref.locations}" isCOV="yes" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;o:sdate path="birthday" label="생일" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/o:searchrow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;o:searchrow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;o:sradiobuttons path="sex" label="성별" items="${ref.sexType}" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/o:searchrow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;o:searchrow&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;o:scheckboxes path="hobbies" label="취미" items="${ref.hobbyType}" /&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp; &lt;/o:searchrow&gt;<br />&nbsp; &nbsp; &lt;/o:searchform&gt;<br />&lt;/o:searchpage&gt;</div>
+<p>뭔가 많아 보여도,  &lt;o:searchrow&gt;를 사용해서 세 줄로 표시했을 뿐,  &lt;o:searchrow&gt;를 빼면 별거 없습니다. 이젠 정말 폼 태그 파일 만들차례.. ㅎㄷㄷㄷ.. 어려울텐데.. ㄷㄷㄷㄷ DisplayTag로 만들어봐야지</p>

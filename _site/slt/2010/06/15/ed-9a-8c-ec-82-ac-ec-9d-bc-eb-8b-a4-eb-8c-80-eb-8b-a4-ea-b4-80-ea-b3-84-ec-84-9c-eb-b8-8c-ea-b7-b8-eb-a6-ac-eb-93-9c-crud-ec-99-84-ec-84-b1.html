@@ -1,0 +1,97 @@
+<p><img src="/assets/cfile30.uf.114C4E1F4C170BC544D7A9.jpg" class="aligncenter" width="600" height="436" alt="" filename="3.jpg" filemime="image/jpeg" /></p>
+<div>팝업은 팬시박스를 사용했습니다. 이게 저번에 선택했던 컬러 머시기 보다 더 깔끔하더군요.</div>
+<div>
+</div>
+<div>
+<a href="http://fancybox.net/home">http://fancybox.net/home</a></div>
+<div>
+</div>
+<div>
+jqGrid 다중 선택 기능을 사용했는데 아주 깔끔합니다. 그리드도 잘 선택한것 같아요.</div>
+<div id="">
+</div>
+<div id="">
+URL은 RESTful 하게 만든다고 만들어 봤는데..</div>
+<div id="">
+</div>
+<div id="">
+<div id=""></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="/{id}/rights", method = RequestMethod.GET)</div>
+<div id="">&nbsp;&nbsp; &nbsp;public void rights(@PathVariable Integer id, Model model, PageParam pageParam){</div>
+<div id="">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;model.addAttribute("list", service.rightListOfMember(id, pageParam));</div>
+<div id="">&nbsp;&nbsp; &nbsp;}</div>
+<div id="">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="/{id}/rights", method = RequestMethod.POST)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public @ResponseBody String addRights(@PathVariable("id") Integer id, @RequestParam("ids[]") Integer[] ids){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;service.addRightsToMember(id, ids);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return "success";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;@RequestMapping(value="/{id}/rights", method = RequestMethod.DELETE)</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;public @ResponseBody String deleteRights(@PathVariable("id") Integer id, @RequestParam("ids[]") Integer[] ids){</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;service.deleteRightsFromMember(id, ids);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;return "success";</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">&nbsp;&nbsp; &nbsp;}</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">잘 동작합니다. 히든 필드 이용해서 _method에 원하는 RequestMethod 실어서 보내주면 되니깐 아주 간단하네요. HTML5 부터는 이런일 안해도 될려나.. 근데 HTML5 지원하는 브라우저가 있어도 그걸 써야 말이죠;;</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+지금 상태에서 한가지 굉장히 맘이 불편한 코드가 있는데.. 바로 서비스 코드입니다.</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;List&lt;Right&gt; rightListOfMember(Integer memberId, PageParam pageParam);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;void addRightsToMember(Integer memberId, Integer[] rightsIds);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;void deleteRightsFromMember(Integer memberId, Integer[] rightsIds);</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">별로 객체지향적으로 보이지 않아요.. Request Parameter Oriented 프로그래밍 같지 않나요.@PathVariable로 넘어오는 값에도 분명히 바인딩이 적용될텐데... 컨트롤러에서부터 Member 타입으로 바인딩해서 가져오면 저런 코드가..</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown"></div>
+<div class="txc-textbox" style="border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); background-color: rgb(255, 255, 255); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;List&lt;Right&gt; rightListOfMember(Member member, PageParam pageParam);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;void addRightsToMember(Member member, Right[] rights);</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+&nbsp;&nbsp; &nbsp;void deleteRightsFromMember(Member member, Right[] rights);</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+</div>
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">
+</div>
+<div id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">이렇게 될텐데 말이죠. 흠.. 뭐좀 먹고 와서 해봐야지.</div>
+</div>
+<div>
+</div>
